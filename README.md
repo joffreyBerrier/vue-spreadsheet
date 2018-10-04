@@ -1,4 +1,4 @@
-# vuejs-table
+# vuejs-dynamic-table
 
 ## Project setup
 ```
