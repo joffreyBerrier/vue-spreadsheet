@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <tbody>
     <template v-for="(row, rowIndex) in rowData">
-      <div class="row" :key="row + '' + rowIndex">
+      <tr class="row" :key="row + '' + rowIndex">
         <template v-for="(value, index) in row">
-          <div class="td" v-on:dblclick="showInput($event)" :key="index">
+          <td class="td" v-on:dblclick="showInput($event)" :key="index">
             <!-- If Input -->
             <template v-if="type === 'input'">
               <span>{{row[index]}}</span>
@@ -17,11 +17,11 @@
                 </option>
               </select>
             </template>
-          </div>
+          </td>
         </template>
-      </div>
+      </tr>
     </template>
-  </div>
+  </tbody>
 </template>
 
 <script type="text/javascript">
@@ -50,7 +50,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .td {
   width: 120px;
   height: 40px;

@@ -1,8 +1,8 @@
 <template>
-  <div class="wrap">
+  <table class="wrap">
     <vue-thead :header="headers"></vue-thead>
     <vue-tbody :rowData="data" :type="type"></vue-tbody>
-  </div>
+  </table>
 </template>
 
 <script type="text/javascript">
@@ -40,14 +40,11 @@ body {
   text-align: center;
   font: 400 11px system-ui;
 }
-.row,
-.thead {
-  display: flex;
+table{
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 .wrap {
   margin: 10px auto;
-}
-.row:first-child {
-  border-top: 1px solid #dadada;
 }
 </style>

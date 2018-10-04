@@ -65,7 +65,4 @@ body {
 .wrap {
   margin: 10px auto;
 }
-.row:first-child {
-  border-top: 1px solid #dadada;
-}
 </style>

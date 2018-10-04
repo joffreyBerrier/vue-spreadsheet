@@ -1,11 +1,13 @@
 <template>
-  <div class="thead">
-    <template v-for="(header, index) in header">
-      <div class="th" :key="index">
-        <span>{{header}}</span>
-      </div>
-    </template>
-  </div>
+  <thead class="thead">
+    <tr>
+      <template v-for="(header, index) in header">
+        <th class="th" :key="index">
+          <span>{{header}}</span>
+        </th>
+      </template>
+    </tr>
+  </thead>
 </template>
 
 <script type="text/javascript">
@@ -22,7 +24,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .th {
   width: 120px;
   height: 40px;
