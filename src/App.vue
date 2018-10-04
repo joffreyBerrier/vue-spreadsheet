@@ -1,6 +1,8 @@
 <template>
   <div id="app">
+    <!-- Exemple -->
     <vue-table :data="products" type="select"></vue-table>
+    <vue-table :data="products" type="input"></vue-table>
   </div>
 </template>
 
