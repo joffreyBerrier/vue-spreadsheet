@@ -28,6 +28,10 @@ export default {
           headerName: 'Age',
           headerKey: 'age',
         },
+        {
+          headerName: 'Born',
+          headerKey: 'born',
+        },
       ],
       products: [
         {
@@ -48,6 +52,11 @@ export default {
             value: [28, 29, 30],
             selectedOptions: 28,
           },
+          born: {
+            type: 'select',
+            value: [1990, 1991, 1992],
+            selectedOptions: 1990,
+          },
         },
         {
           img: {
@@ -66,6 +75,11 @@ export default {
             type: 'select',
             value: [28, 29, 30],
             selectedOptions: 28,
+          },
+          born: {
+            type: 'select',
+            value: [1990, 1991, 1992],
+            selectedOptions: 1990,
           },
         },
       ],

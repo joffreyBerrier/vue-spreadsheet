@@ -2,14 +2,14 @@
   <tbody>
     <template v-for="(row, rowIndex) in rowData">
       <tr class="row" :key="row + '' + rowIndex">
-        <template v-for="(col, index, i) in row">
+        <template v-for="(col, name, index) in row">
           <td
             class="td"
-            :id="index"
+            :id="name"
             @dblclick="showInput($event)"
             @click="addClassActive"
-            :data-index="i"
-            :key="index"
+            :data-index="index"
+            :key="name"
             >
             <!-- If Img -->
             <template v-if="col.type === 'img'">
@@ -24,9 +24,14 @@
 
             <!-- If Select -->
             <template v-if="col.type === 'select'">
-              <i-select v-model="col.selectedOptions">
-                <i-option v-for="(val, index) in col.value" :value="val" :key="index">
-                {{val}}
+              <i-select
+                v-model="col.selectedOptions"
+                @on-change="selectChange(rowIndex, index)">
+                <i-option
+                  v-for="(val, index) in col.value"
+                  :value="val"
+                  :key="index">
+                    {{val}}
                 </i-option>
               </i-select>
             </template>
@@ -52,6 +57,10 @@ export default {
     window.addEventListener('keyup', this.moveKeydown);
   },
   methods: {
+    selectChange(rowIndex, colIndex) {
+      const nextElement = Object.values(this.rowData[rowIndex])[colIndex + 1];
+      nextElement.selectedOptions = nextElement.selectedOptions + 1;
+    },
     showInput(event) {
       if (this.activElement !== '') {
         this.activElement.classList.remove('show');
