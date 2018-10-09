@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- Exemple -->
     <vue-table :data="products" :headers="headers"></vue-table>
   </div>
 </template>

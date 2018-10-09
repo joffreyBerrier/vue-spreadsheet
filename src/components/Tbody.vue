@@ -24,11 +24,11 @@
 
             <!-- If Select -->
             <template v-if="col.type === 'select'">
-              <select v-model="col.selectedOptions">
-                <option v-for="(val, index) in col.value" :value="val" :key="index">
+              <i-select v-model="col.selectedOptions">
+                <i-option v-for="(val, index) in col.value" :value="val" :key="index">
                 {{val}}
-                </option>
-              </select>
+                </i-option>
+              </i-select>
             </template>
           </td>
         </template>
@@ -127,22 +127,18 @@ export default {
   line-height: 40px;
   position: relative;
   background: white;
-  border: 2px solid #dadada;
-  z-index: 15;
+  border: 1px solid #dadada;
+  padding: 0;
   text-align: left;
-  padding: 2px 5px;
   box-sizing: border-box;
-  border-right: 0;
-  border-top: 0;
   transition: all ease 0.5s;
   &:last-child {
     border-right: 1px solid #dadada;
   }
   &.active_td {
-    border: 2px solid red;
+    border-color: #17233d;
   }
   input,
-  select,
   span {
     position: absolute;
     top: 0;
@@ -153,6 +149,7 @@ export default {
     background: white;
     text-align: left;
     padding: 2px 5px;
+    line-height: 40px;
     box-sizing: border-box;
     outline: none;
     border: 0;
