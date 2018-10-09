@@ -1,9 +1,9 @@
 <template>
   <thead class="thead">
     <tr>
-      <template v-for="(header, index) in header">
-        <th class="th" :key="index">
-          <span>{{header}}</span>
+      <template v-for="header in header">
+        <th class="th" :key="header.headerKey">
+          <span>{{header.headerName}}</span>
         </th>
       </template>
     </tr>

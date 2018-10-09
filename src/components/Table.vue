@@ -1,7 +1,7 @@
 <template>
   <table class="wrap">
     <vue-thead :header="headers"></vue-thead>
-    <vue-tbody :rowData="data" :type="type"></vue-tbody>
+    <vue-tbody :rowData="data"></vue-tbody>
   </table>
 </template>
 
@@ -13,19 +13,11 @@ export default {
   name: 'VueTable',
   props: {
     data: Array,
-    type: String,
+    headers: Array,
   },
   components: {
     VueThead,
     VueTbody,
-  },
-  data() {
-    return {};
-  },
-  computed: {
-    headers() {
-      return Object.keys(this.data[0]);
-    },
   },
 };
 </script>
@@ -42,7 +34,17 @@ body {
 }
 table{
   border-collapse: collapse;
-  border-spacing: 0;
+  margin: 5px;
+  th {
+    background-color: #ccc;
+    color: #000;
+    font-weight: normal;
+  }
+  td, th {
+    border: 1px solid #ccc;
+    margin: 0;
+    padding: 4px;
+  }
 }
 .wrap {
   margin: 10px auto;

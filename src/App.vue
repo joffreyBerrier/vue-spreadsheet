@@ -1,8 +1,7 @@
 <template>
   <div id="app">
     <!-- Exemple -->
-    <vue-table :data="products" type="select"></vue-table>
-    <vue-table :data="products" type="input"></vue-table>
+    <vue-table :data="products" :headers="headers"></vue-table>
   </div>
 </template>
 
@@ -13,27 +12,62 @@ export default {
   name: 'app',
   data() {
     return {
+      headers: [
+        {
+          headerName: 'Image',
+          headerKey: 'img',
+        },
+        {
+          headerName: 'Nom',
+          headerKey: 'name',
+        },
+        {
+          headerName: 'Prénom',
+          headerKey: 'surname',
+        },
+        {
+          headerName: 'Age',
+          headerKey: 'age',
+        },
+      ],
       products: [
         {
-          ean: 'EAN 0',
-          ref: 'REF 0',
-          name: 'Nom 0',
-          couleurprincipale: 'couleur principale 0',
-          couleursecondaire: 'couleur principale 0',
+          img: {
+            type: 'img',
+            value: 'https://via.placeholder.com/350x150',
+          },
+          name: {
+            type: 'input',
+            value: 'Joffrey',
+          },
+          surname: {
+            type: 'input',
+            value: 'Berrier',
+          },
+          age: {
+            type: 'select',
+            value: [28, 29, 30],
+            selectedOptions: 28,
+          },
         },
         {
-          ean: 'EAN 1',
-          ref: 'REF 1',
-          name: 'Nom 1',
-          couleurprincipale: 'couleur principale 1',
-          couleursecondaire: 'couleur principale 1',
-        },
-        {
-          ean: 'EAN 2',
-          ref: 'REF 2',
-          name: 'Nom 2',
-          couleurprincipale: 'couleur principale 2',
-          couleursecondaire: 'couleur principale 2',
+          img: {
+            type: 'img',
+            value: 'https://via.placeholder.com/350x150',
+          },
+          name: {
+            type: 'input',
+            value: 'Joffrey',
+          },
+          surname: {
+            type: 'input',
+            value: 'Berrier',
+          },
+          age: {
+            type: 'select',
+            value: [28, 29, 30],
+            selectedOptions: 28,
+          },
         },
       ],
     };
