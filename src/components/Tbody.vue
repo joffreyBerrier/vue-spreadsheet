@@ -24,16 +24,16 @@
 
             <!-- If Select -->
             <template v-if="col.type === 'select'">
-              <i-select
+              <select
                 v-model="col.selectedOptions"
-                @on-change="selectChange(rowIndex, index)">
-                <i-option
+                @change="selectChange(rowIndex, index)">
+                <option
                   v-for="(val, index) in col.value"
                   :value="val"
                   :key="index">
                     {{val}}
-                </i-option>
-              </i-select>
+                </option>
+              </select>
             </template>
           </td>
         </template>
@@ -58,8 +58,17 @@ export default {
   },
   methods: {
     selectChange(rowIndex, colIndex) {
+      const activeElement = Object.values(this.rowData[rowIndex])[colIndex];
       const nextElement = Object.values(this.rowData[rowIndex])[colIndex + 1];
-      nextElement.selectedOptions = nextElement.selectedOptions + 1;
+      const prevElement = Object.values(this.rowData[rowIndex])[colIndex - 1];
+
+      const actualYear = new Date().getFullYear();
+      if (nextElement && nextElement.selectedOptions) {
+        nextElement.selectedOptions = actualYear - activeElement.selectedOptions;
+      }
+      if (prevElement && prevElement.selectedOptions) {
+        prevElement.selectedOptions = actualYear - activeElement.selectedOptions;
+      }
     },
     showInput(event) {
       if (this.activElement !== '') {
@@ -146,6 +155,11 @@ export default {
   }
   &.active_td {
     border-color: #17233d;
+  }
+  select {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
   input,
   span {

@@ -8,6 +8,11 @@ Vue.config.productionTip = false;
 
 Vue.use(iView);
 
+Vue.filter('truncate', (val) => {
+  if (!val || typeof (val) !== 'string') return '';
+  return val.slice(0, 10);
+});
+
 new Vue({
   render: h => h(App),
 }).$mount('#app');

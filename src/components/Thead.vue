@@ -3,7 +3,7 @@
     <tr>
       <template v-for="header in header">
         <th class="th" :key="header.headerKey">
-          <span>{{header.headerName}}</span>
+          <span>{{header.headerName | truncate}}</span>
         </th>
       </template>
     </tr>

@@ -37,16 +37,47 @@ props            | Description
   .. data        | format array object
 
 
-## Exemple of data
+## Exemple of headers
+
+```
+headers: [
+    {
+      headerName: 'Image',
+      headerKey: 'img',
+    },
+    {
+      headerName: 'Name',
+      headerKey: 'name',
+    },
+  ],
+```
+
 
 ```
 products: [
   {
-    ean: 'EAN 0',
-    ref: 'REF 0',
-    name: 'Nom 0',
-    couleurprincipale: 'couleur principale 0',
-    couleursecondaire: 'couleur principale 0',
+    img: {
+      type: 'img',
+      value: 'https://via.placeholder.com/350x150',
+    },
+    name: {
+      type: 'input',
+      value: '~',
+    },
+    surname: {
+      type: 'input',
+      value: '~',
+    },
+    age: {
+      type: 'select',
+      value: [~, ~, ~],
+      selectedOptions: ~,
+    },
+    born: {
+      type: 'select',
+      value: [~, ~, ~],
+      selectedOptions: ~,
+    },
   },
 ],
 ```
