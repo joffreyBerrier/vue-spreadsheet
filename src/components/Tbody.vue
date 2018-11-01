@@ -2,15 +2,36 @@
   <tbody>
     <template v-for="(row, rowIndex) in rowData">
       <tr class="row" :key="row + '' + rowIndex">
-        <template v-for="(col, name, index) in row">
+        <template v-for="(col, entry, colIndex) in row">
           <td
             class="td"
-            :id="name"
-            @dblclick="showInput($event)"
-            @click="addClassActive"
-            :data-index="index"
-            :key="name"
-            >
+            :id="entry"
+            @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
+            @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
+            @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
+            :data-col-index="colIndex"
+            :data-row-index="rowIndex"
+            :key="entry">
+
+            <template v-if="submenuTbody &&
+                submenuStatus &&
+                rowIndex === submenuEnableRow &&
+                colIndex === submenuEnableCol &&
+                submenuTbody.find(sub => sub.disabled.includes(entry) == 0)">
+              <div class="submenu_wrap">
+                <template v-for="(submenu, index) in submenuTbody">
+                  <template v-if="submenu.type === 'button'">
+                    <button
+                      v-if="submenu.disabled.includes(entry) == 0"
+                      :key="index"
+                      @click.stop="handleClickSubmenu($event, entry, rowIndex, colIndex, col.type, submenu.function)">
+                      {{submenu.value}}
+                    </button>
+                  </template>
+                </template>
+              </div>
+            </template>
+
             <!-- If Img -->
             <template v-if="col.type === 'img'">
               <img :src="col.value" />
@@ -18,15 +39,18 @@
 
             <!-- If Input -->
             <template v-if="col.type === 'input'">
-              <span>{{col.value}}</span>
-              <input type="text" v-model="col.value" />
+              <span :style="col.style">{{col.value}}</span>
+              <input
+                type="text"
+                v-model="col.value"
+                @change="inputHandleChange($event, entry, rowIndex, colIndex)" />
             </template>
 
             <!-- If Select -->
             <template v-if="col.type === 'select'">
               <select
                 v-model="col.selectedOptions"
-                @change="selectChange(rowIndex, index)">
+                @change="selectHandleChange($event, entry, rowIndex, colIndex)">
                 <option
                   v-for="(val, index) in col.value"
                   :value="val"
@@ -47,42 +71,54 @@ export default {
   name: 'vue-tbody',
   props: {
     rowData: Array,
+    submenuTbody: Array,
+    submenuStatus: Boolean,
   },
   data() {
     return {
       activElement: '',
+      submenuEnableCol: null,
+      submenuEnableRow: null,
     };
   },
   mounted() {
     window.addEventListener('keyup', this.moveKeydown);
   },
   methods: {
-    selectChange(rowIndex, colIndex) {
-      const activeElement = Object.values(this.rowData[rowIndex])[colIndex];
-      const nextElement = Object.values(this.rowData[rowIndex])[colIndex + 1];
-      const prevElement = Object.values(this.rowData[rowIndex])[colIndex - 1];
+    handleClickTd(event, entry, rowIndex, colIndex, type) {
+      document.querySelectorAll('.active_td').forEach((activeElement) => {
+        activeElement.classList.remove('active_td');
+      });
+      event.currentTarget.classList.add('active_td');
 
-      const actualYear = new Date().getFullYear();
-      if (nextElement && nextElement.selectedOptions) {
-        nextElement.selectedOptions = actualYear - activeElement.selectedOptions;
-      }
-      if (prevElement && prevElement.selectedOptions) {
-        prevElement.selectedOptions = actualYear - activeElement.selectedOptions;
-      }
+      // emit
+      this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
     },
-    showInput(event) {
+    handleDoubleClickTd(event, entry, rowIndex, colIndex, type) {
       if (this.activElement !== '') {
         this.activElement.classList.remove('show');
       }
       this.activElement = event.currentTarget;
       this.activElement.classList.add('show');
       this.activElement.lastElementChild.focus();
+
+      // emit
+      this.$emit('tbody-td-double-click', event, entry, rowIndex, colIndex, this.activElement, type);
     },
-    addClassActive(event) {
-      document.querySelectorAll('.active_td').forEach((activeElement) => {
-        activeElement.classList.remove('active_td');
-      });
-      event.currentTarget.classList.add('active_td');
+    handleContextMenuTd(event, entry, rowIndex, colIndex, type) {
+      this.submenuEnableCol = colIndex;
+      this.submenuEnableRow = rowIndex;
+      this.$emit('submenu-enable', 'tbody');
+      this.$emit('tbody-td-context-menu', event, entry, rowIndex, colIndex, type);
+    },
+    inputHandleChange(event, entry, rowIndex, colIndex) {
+      this.$emit('tbody-input-change', event, entry, rowIndex, colIndex);
+    },
+    selectHandleChange(event, entry, rowIndex, colIndex) {
+      this.$emit('tbody-select-change', event, entry, rowIndex, colIndex);
+    },
+    handleClickSubmenu(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      this.$emit(`tbody-submenu-click-${submenuFunction}`, event, entry, rowIndex, colIndex, type, submenuFunction);
     },
     moveKeydown(event) {
       const actualElement = document.getElementsByClassName('active_td')[0];
@@ -94,7 +130,11 @@ export default {
           // remove active class / blur
           actualElement.lastElementChild.blur();
           actualElement.classList.remove('active_td');
-          const index = actualElement.getAttribute('data-index');
+          const colIndex = Number(actualElement.getAttribute('data-col-index'));
+          const rowIndex = Number(actualElement.getAttribute('data-row-index'));
+
+          this.$emit('tbody-nav', event, event.keyCode, actualElement, rowIndex, colIndex);
+
           // right
           if (event.keyCode === 39) {
             if (!actualElement.nextElementSibling) {
@@ -114,21 +154,25 @@ export default {
           // bottom
           if (event.keyCode === 40) {
             if (!actualElement.parentElement.nextElementSibling) {
-              actualElement.parentElement.parentElement.firstElementChild.childNodes[index].classList.add('active_td');
+              actualElement.parentElement.parentElement.firstElementChild.childNodes[colIndex].classList.add('active_td');
             } else {
-              actualElement.parentElement.nextElementSibling.childNodes[index].classList.add('active_td');
+              actualElement.parentElement.nextElementSibling.childNodes[colIndex].classList.add('active_td');
             }
           }
           // top
           if (event.keyCode === 38) {
             if (!actualElement.parentElement.previousElementSibling) {
-              actualElement.parentElement.parentElement.lastElementChild.childNodes[index].classList.add('active_td');
+              actualElement.parentElement.parentElement.lastElementChild.childNodes[colIndex].classList.add('active_td');
             } else {
-              actualElement.parentElement.previousElementSibling.childNodes[index].classList.add('active_td');
+              actualElement.parentElement.previousElementSibling.childNodes[colIndex].classList.add('active_td');
             }
           }
         }
         if (event.keyCode === 13) {
+          const rowIndex = Number(actualElement.getAttribute('data-row-index'));
+          const colIndex = Number(actualElement.getAttribute('data-col-index'));
+          this.$emit('tbody-nav-enter', event, event.keyCode, actualElement, rowIndex, colIndex);
+
           actualElement.classList.add('show');
           actualElement.lastElementChild.focus();
         }
@@ -194,5 +238,30 @@ export default {
 .show input,
 .show select {
   z-index: 11;
+}
+.submenu_wrap {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  background: white;
+  z-index: 20;
+  padding: 7px 14px;
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
+  button {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+    text-align: center;
+    border-radius: 4px;
+    background: white;
+    border: 1px solid #eee;
+    outline: none;
+    &:focus {
+      box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+    }
+  }
 }
 </style>

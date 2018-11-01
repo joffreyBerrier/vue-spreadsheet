@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <vue-table :data="products" :headers="headers"></vue-table>
+    <vue-table :data="products" :headers="headers" :submenu-tbody="submenuTbody" :submenu-thead="submenuThead"></vue-table>
   </div>
 </template>
 
@@ -15,22 +15,37 @@ export default {
         {
           headerName: 'Image',
           headerKey: 'img',
+          style: {
+            color: '#ddd',
+          },
         },
         {
           headerName: 'Nom',
           headerKey: 'name',
+          style: {
+            color: '#ddd',
+          },
         },
         {
           headerName: 'Prénom',
           headerKey: 'surname',
+          style: {
+            color: '#ddd',
+          },
         },
         {
           headerName: 'Age',
           headerKey: 'age',
+          style: {
+            color: '#ddd',
+          },
         },
         {
           headerName: 'Born',
           headerKey: 'born',
+          style: {
+            color: '#ddd',
+          },
         },
       ],
       products: [
@@ -42,10 +57,16 @@ export default {
           name: {
             type: 'input',
             value: 'Joffrey',
+            style: {
+              color: '#ddd',
+            },
           },
           surname: {
             type: 'input',
             value: 'Berrier',
+            style: {
+              color: '#ddd',
+            },
           },
           age: {
             type: 'select',
@@ -66,10 +87,16 @@ export default {
           name: {
             type: 'input',
             value: 'Joffrey',
+            style: {
+              color: '#ddd',
+            },
           },
           surname: {
             type: 'input',
             value: 'Berrier',
+            style: {
+              color: '#ddd',
+            },
           },
           age: {
             type: 'select',
@@ -81,6 +108,34 @@ export default {
             value: [1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992],
             selectedOptions: 1990,
           },
+        },
+      ],
+      submenuTbody: [
+        {
+          type: 'button',
+          value: 'change color',
+          function: 'change-color',
+          disabled: ['img'],
+        },
+        {
+          type: 'button',
+          value: 'change value',
+          function: 'change-value',
+          disabled: ['img', 'name'],
+        },
+      ],
+      submenuThead: [
+        {
+          type: 'button',
+          value: 'change color',
+          function: 'change-color',
+          disabled: ['img'],
+        },
+        {
+          type: 'button',
+          value: 'change value',
+          function: 'change-value',
+          disabled: ['img', 'name'],
         },
       ],
     };
