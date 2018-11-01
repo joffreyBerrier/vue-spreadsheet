@@ -2,7 +2,9 @@
 
 ## Description
 
-This project is allready in progress
+** Project in progress **
+
+An easier Spreadsheet in Vue.js
 
 ## Project setup
 ```
@@ -31,12 +33,12 @@ yarn run lint
 
 ## Wiki
 
-props               | Description
---------------------|-------------------------
-  .. headers        | Array which contains headers
-  .. data           | Array which contains data
-  .. submenu-tbody  | Array which contains you submenu-tbody
-  .. submenu-thead  | Array which contains you submenu-thead
+props               | Type  |Description
+--------------------|-------|-------------------
+  .. headers        | Array | That contains headers
+  .. data           | Array | That contains data
+  .. submenu-tbody  | Array | That contains your submenu-tbody
+  .. submenu-thead  | Array | That contains your submenu-thead
   
 
 
@@ -44,9 +46,9 @@ props               | Description
 
 props               |  Type  | Description
 --------------------|--------|-------------------
-  .. headerName     | String | the name of your header write like you want
-  .. headerkey      | String | the slut name of your header
-  .. style          | Object | 
+  .. headerName     | String | The name of your header written like you want
+  .. headerkey      | String | The Slugify version of your headerName
+  .. style          | Object | The style of your td
 
 ```
 headers: [
@@ -92,11 +94,11 @@ headers: [
 
 props                 |  Type  | Description
 ----------------------|--------|-------------------
-  .. key              | String | the name of your header write like you want
-  .. type             | String | the type of render data (input, img, select)
-  .. value(img/input) | String | 
-  .. value(select)    | Array  | 
-  .. selectedOptions  | String | only for type select, the value by default
+  .. key              | String | The key of your object written in Slugify
+  .. type             | String | The type of render data (``<input>``, ``<img>``, ``<select>``)
+  .. value(img/input) | String | The value of your object in *String Type*
+  .. value(select)    | Array  | The value of your object in *Array Type*
+  .. selectedOptions  | String | The value by default - Only for type ``<select>``
 
 ```
 products: [
@@ -107,21 +109,21 @@ products: [
     },
     name: {
       type: 'input',
-      value: '~',
+      value: 'text',
     },
     surname: {
       type: 'input',
-      value: '~',
+      value: 'text',
     },
     age: {
       type: 'select',
-      value: [~, ~, ~],
-      selectedOptions: ~,
+      value: ['1', '2', '3'],
+      selectedOptions: '1',
     },
     born: {
       type: 'select',
-      value: [~, ~, ~],
-      selectedOptions: ~,
+      value: ['1', '2', '3'],
+      selectedOptions: '1',
     },
   },
 ],
@@ -131,10 +133,10 @@ products: [
 
 props                 |  Type  | Description
 ----------------------|--------|-------------------
-  .. type             | String | button
-  .. value            | String | value of the button
-  .. function         | String | function wich call when you click on the button | write like this (say-hello-world)
-  .. disabled         | Array  | name of these object contains on headers / datas
+  .. type             | String | The type of render data (``<button>``) - Only type ``<button>`` for now
+  .. value            | String | The value of your object in *String Type*
+  .. function         | String | The name of your function called when you click on the button - *Written in Slugify*
+  .. disabled         | Array  | The Name(s) of each objects you don't want to appear on submenu
 
 ```
   submenuTbody: [
