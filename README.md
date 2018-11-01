@@ -13,7 +13,7 @@ yarn install
 ```
 yarn run serve
 ```
-
+<!-- 
 ### Compiles and minifies for production
 ```
 yarn run build
@@ -27,31 +27,73 @@ yarn run test
 ### Lints and fixes files
 ```
 yarn run lint
-```
+``` -->
 
 ## Wiki
 
-props            | Description
------------------|-------------------------
-  .. type        | Type of what you want => 'input' or 'select'
-  .. data        | format array object
+:data="products" :headers="headers" :submenu-tbody="submenuTbody" :submenu-thead="submenuThead"></vue-table>
+
+props               | Description
+--------------------|-------------------------
+  .. headers        | Array which contains headers
+  .. data           | Array which contains data
+  .. submenu-tbody  | Array which contains you submenu-tbody
+  .. submenu-thead  | Array which contains you submenu-thead
+  
 
 
 ## Exemple of headers
 
+*headerName*: String / the name of your header write like you want
+*headerkey*: String / the slut name of your header
+*style*: Object
+
 ```
 headers: [
-    {
-      headerName: 'Image',
-      headerKey: 'img',
+  {
+    headerName: 'Image',
+    headerKey: 'img',
+    style: {
+      color: '#ddd',
     },
-    {
-      headerName: 'Name',
-      headerKey: 'name',
+  },
+  {
+    headerName: 'Nom',
+    headerKey: 'name',
+    style: {
+      color: '#ddd',
     },
-  ],
+  },
+  {
+    headerName: 'Prénom',
+    headerKey: 'surname',
+    style: {
+      color: '#ddd',
+    },
+  },
+  {
+    headerName: 'Age',
+    headerKey: 'age',
+    style: {
+      color: '#ddd',
+    },
+  },
+  {
+    headerName: 'Born',
+    headerKey: 'born',
+    style: {
+      color: '#ddd',
+    },
+  },
+],
 ```
 
+## Exemple of data
+
+*key*: name of your object
+*type*: String / the type of render data (input, img, select)
+*value*: String for img and input, Array for select
+*selectedOptions*: String / only for type select, the value by default
 
 ```
 products: [
@@ -80,4 +122,42 @@ products: [
     },
   },
 ],
+```
+
+## Exemple of submenu
+
+*type*: String  / 'button'
+*value*: String / value of the button
+*function*: String / function wich call when you click on the button | write like this (say-hello-world)
+*disabled*: Array / name of these object contains on headers / datas
+
+```
+  submenuTbody: [
+    {
+      type: 'button',
+      value: 'Change Color',
+      function: 'change-color',
+      disabled: ['img'],
+    },
+    {
+      type: 'button',
+      value: 'Change Value',
+      function: 'change-value',
+      disabled: ['img', 'name'],
+    },
+  ],
+  submenuThead: [
+    {
+      type: 'button',
+      value: 'Change Color',
+      function: 'change-color',
+      disabled: ['img', 'name'],
+    },
+    {
+      type: 'button',
+      value: 'Change Value',
+      function: 'change-value',
+      disabled: ['img', 'name'],
+    },
+  ],
 ```
