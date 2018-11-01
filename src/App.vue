@@ -16,35 +16,35 @@ export default {
           headerName: 'Image',
           headerKey: 'img',
           style: {
-            color: '#ddd',
+            color: '#000',
           },
         },
         {
           headerName: 'Nom',
           headerKey: 'name',
           style: {
-            color: '#ddd',
+            color: '#000',
           },
         },
         {
           headerName: 'Prénom',
           headerKey: 'surname',
           style: {
-            color: '#ddd',
+            color: '#000',
           },
         },
         {
           headerName: 'Age',
           headerKey: 'age',
           style: {
-            color: '#ddd',
+            color: '#000',
           },
         },
         {
           headerName: 'Born',
           headerKey: 'born',
           style: {
-            color: '#ddd',
+            color: '#000',
           },
         },
       ],

@@ -5,26 +5,38 @@
         <th
           class="th"
           :key="header.headerKey"
-          @contextmenu="handleContextMenuTd($event, header.headerKey, colIndex)">
+          :style="header.style">
           <span>{{header.headerName | truncate}}</span>
-            <template
-              v-if="submenuThead &&
-                submenuStatus &&
-                colIndex === submenuEnableCol &&
-                submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
-              <div class="submenu_wrap">
-                <template v-for="(submenu, index) in submenuThead">
-                  <template v-if="submenu.type === 'button'">
-                    <button
-                      v-if="submenu.disabled.includes(header.headerKey) == 0"
-                      :key="index"
-                      @click.stop="handleClickSubmenu($event, header.headerKey, colIndex, submenu.function)">
-                      {{submenu.value}}
-                    </button>
-                  </template>
+
+          <template
+            v-if="submenuThead &&
+            submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
+              <button
+                @click="handleContextMenuTd($event, header.headerKey, colIndex)"
+                class="button_submenu"
+                v-bind:class="{'active': submenuThead && submenuStatus && colIndex === submenuEnableCol}">
+                <i class="icon icon_menu"></i>
+              </button>
+          </template>
+
+          <template
+            v-if="submenuThead &&
+              submenuStatus &&
+              colIndex === submenuEnableCol &&
+              submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
+            <div class="submenu_wrap">
+              <template v-for="(submenu, index) in submenuThead">
+                <template v-if="submenu.type === 'button'">
+                  <button
+                    v-if="submenu.disabled.includes(header.headerKey) == 0"
+                    :key="index"
+                    @click.stop="handleClickSubmenu($event, header.headerKey, colIndex, submenu.function)">
+                    {{submenu.value}}
+                  </button>
                 </template>
-              </div>
-            </template>
+              </template>
+            </div>
+          </template>
         </th>
       </template>
     </tr>
@@ -49,7 +61,12 @@ export default {
   methods: {
     handleContextMenuTd(event, entry, colIndex) {
       this.submenuEnableCol = colIndex;
-      this.$emit('submenu-enable', 'thead');
+
+      if (this.submenuStatus === true) {
+        this.$emit('submenu-enable', 'tbody');  
+      } else {
+        this.$emit('submenu-enable', 'thead');
+      }
       this.$emit('thead-td-context-menu', event, entry, colIndex);
     },
     handleClickSubmenu(event, entry, colIndex, submenuFunction) {
@@ -67,17 +84,14 @@ export default {
   line-height: 40px;
   position: relative;
   background: #dadada;
-  border: 1px solid white;
   z-index: 15;
   text-align: left;
   padding: 2px 5px;
   box-sizing: border-box;
   border-right: 0;
   border-top: 0;
+  border-right: 1px solid white;
   transition: all ease 0.5s;
-  &:last-child {
-    border-right: 1px solid white;
-  }
 }
 .submenu_wrap {
   position: absolute;
@@ -102,6 +116,44 @@ export default {
     &:focus {
       box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
     }
+  }
+}
+.button_submenu {
+  float: right;
+  position: relative;
+  width: 10px;
+  height: 100%;
+  background: transparent;
+  outline: none;
+  border: 0;
+  cursor: pointer;
+  .icon_menu{
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%) rotate(180deg);
+    font-size: 16px;
+    transition: all ease .5s;
+    &:before {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 5px;
+      transform: rotate(45deg) translate(1px, -2px);
+      background: black;
+    }
+    &:after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 5px;
+      transform: rotate(135deg) translate(0px, 2px);
+      background: black;
+    }
+  }
+  &.active .icon_menu{
+    transform: translateY(-50%) rotate(0deg);
   }
 }
 </style>
