@@ -48,6 +48,7 @@
 
             <!-- If Select -->
             <template v-if="col.type === 'select'">
+              <span :style="col.style">{{col.selectedOptions}}</span>
               <select
                 v-model="col.selectedOptions"
                 @change="selectHandleChange($event, entry, rowIndex, colIndex)">
@@ -200,13 +201,9 @@ export default {
   &.active_td {
     border-color: #17233d;
   }
-  select {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
   input,
-  span {
+  span,
+  select {
     position: absolute;
     top: 0;
     left: 0;

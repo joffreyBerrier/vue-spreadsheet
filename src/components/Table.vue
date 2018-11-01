@@ -77,8 +77,8 @@ export default {
     handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
       console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
     },
-    handleTbodyNav(event, entry, keyCode, actualElement, rowIndex, colIndex) {
-      console.log('handleTbodyNav', event, entry, keyCode, actualElement, rowIndex, colIndex);
+    handleTbodyNav(event, keyCode, actualElement, rowIndex, colIndex) {
+      console.log('handleTbodyNav', event, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
     handleTbodyNavEnter(event, entry, keyCode, actualElement, rowIndex, colIndex) {
