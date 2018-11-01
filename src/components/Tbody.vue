@@ -34,7 +34,7 @@
 
             <!-- If Img -->
             <template v-if="col.type === 'img'">
-              <img :src="col.value" />
+              <span><img :src="col.value" :title="col.value" /></span>
             </template>
 
             <!-- If Input -->
@@ -190,16 +190,17 @@ export default {
   line-height: 40px;
   position: relative;
   background: white;
-  border: 1px solid #dadada;
+  border-right: 1px solid #dadada;
+  border-bottom: 1px solid #dadada;
   padding: 0;
   text-align: left;
   box-sizing: border-box;
   transition: all ease 0.5s;
-  &:last-child {
-    border-right: 1px solid #dadada;
+  &:first-child {
+    border-left: 1px solid #dadada;
   }
-  &.active_td {
-    border-color: #17233d;
+  &.active_td span {
+    border: 1px solid #5d5d5d;
   }
   input,
   span,
@@ -215,8 +216,8 @@ export default {
     padding: 2px 5px;
     line-height: 40px;
     box-sizing: border-box;
+    border: 1px solid transparent;
     outline: none;
-    border: 0;
   }
   input,
   select {

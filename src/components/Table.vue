@@ -144,14 +144,11 @@ table{
   border-collapse: collapse;
   margin: 5px;
   th {
-    background-color: #ccc;
     color: #000;
     font-weight: normal;
   }
   td, th {
-    border: 1px solid #ccc;
     margin: 0;
-    padding: 4px;
   }
 }
 .wrap {
