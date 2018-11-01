@@ -44,9 +44,11 @@ props               | Description
 
 ## Exemple of headers
 
-*headerName*: String / the name of your header write like you want
-*headerkey*: String / the slut name of your header
-*style*: Object
+props               |  Type  | Description
+--------------------|--------|-------------------
+  .. headerName     | String | the name of your header write like you want
+  .. headerkey      | String | the slut name of your header
+  .. style          | Object | 
 
 ```
 headers: [
@@ -90,10 +92,13 @@ headers: [
 
 ## Exemple of data
 
-*key*: name of your object
-*type*: String / the type of render data (input, img, select)
-*value*: String for img and input, Array for select
-*selectedOptions*: String / only for type select, the value by default
+props                 |  Type  | Description
+----------------------|--------|-------------------
+  .. key              | String | the name of your header write like you want
+  .. type             | String | the type of render data (input, img, select)
+  .. value(img/input) | String | 
+  .. value(select)    | Array  | 
+  .. selectedOptions  | String | only for type select, the value by default
 
 ```
 products: [
@@ -126,10 +131,12 @@ products: [
 
 ## Exemple of submenu
 
-*type*: String  / 'button'
-*value*: String / value of the button
-*function*: String / function wich call when you click on the button | write like this (say-hello-world)
-*disabled*: Array / name of these object contains on headers / datas
+props                 |  Type  | Description
+----------------------|--------|-------------------
+  .. type             | String | button
+  .. value            | String | value of the button
+  .. function         | String | function wich call when you click on the button | write like this (say-hello-world)
+  .. disabled         | Array  | name of these object contains on headers / datas
 
 ```
   submenuTbody: [
