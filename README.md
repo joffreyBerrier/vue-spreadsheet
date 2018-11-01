@@ -31,8 +31,6 @@ yarn run lint
 
 ## Wiki
 
-:data="products" :headers="headers" :submenu-tbody="submenuTbody" :submenu-thead="submenuThead"></vue-table>
-
 props               | Description
 --------------------|-------------------------
   .. headers        | Array which contains headers
