@@ -1,10 +1,12 @@
-# vuejs-dynamic-table
+# Spreadsheet Vue.js
 
 ## Description
 
 ** Project in progress **
 
-An easier Spreadsheet in Vue.js
+:facepunch: An easier Spreadsheet in Vue.js :facepunch:
+
+Do not hesitate to :star: my repo
 
 ## Project setup
 ```
@@ -31,7 +33,7 @@ yarn run test
 yarn run lint
 ``` -->
 
-## Wiki
+## Wiki :mortar_board:
 
 props               | Type  |Description
 --------------------|-------|-------------------
@@ -41,14 +43,15 @@ props               | Type  |Description
   .. submenu-thead  | Array | That contains your submenu-thead
   
 
-
-## Exemple of headers
+### Headers :tiger:
 
 props               |  Type  | Description
 --------------------|--------|-------------------
   .. headerName     | String | The name of your header written like you want
   .. headerkey      | String | The Slugify version of your headerName
   .. style          | Object | The style of your td
+
+#### Exemple
 
 ```
 headers: [
@@ -90,7 +93,7 @@ headers: [
 ],
 ```
 
-## Exemple of data
+### Data :honeybee:
 
 props                 |  Type  | Description
 ----------------------|--------|-------------------
@@ -99,6 +102,8 @@ props                 |  Type  | Description
   .. value(img/input) | String | The value of your object in *String Type*
   .. value(select)    | Array  | The value of your object in *Array Type*
   .. selectedOptions  | String | The value by default - Only for type ``<select>``
+
+#### Exemple
 
 ```
 products: [
@@ -129,7 +134,7 @@ products: [
 ],
 ```
 
-## Exemple of submenu
+### submenu :monkey_face:
 
 props                 |  Type  | Description
 ----------------------|--------|-------------------
@@ -137,6 +142,8 @@ props                 |  Type  | Description
   .. value            | String | The value of your object in *String Type*
   .. function         | String | The name of your function called when you click on the button - *Written in Slugify*
   .. disabled         | Array  | The Name(s) of each objects you don't want to appear on submenu
+
+#### Exemple
 
 ```
   submenuTbody: [
