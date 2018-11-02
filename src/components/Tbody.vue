@@ -9,9 +9,21 @@
             @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
+            @mousemove="handleMoveDragToFill($event, entry, col, rowIndex, colIndex)"
+            @mouseup="handleUpDragToFill($event, entry)"
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
+            v-bind:class="{'active_td': col.active}"
             :key="entry">
+            
+            <template
+              v-if="dragToFill">
+              <button
+                class="drag_to_fill"
+                @mousedown="handleDownDragToFill($event, entry, col, rowIndex, colIndex)"
+                @mouseup="handleUpDragToFill($event)">
+              </button>
+            </template>
 
             <template v-if="submenuTbody &&
                 submenuStatus &&
@@ -78,6 +90,11 @@ export default {
   data() {
     return {
       activElement: '',
+      drag: false,
+      dragToFill: true,
+      dragStartName: '',
+      dragStartRow: null,
+      arrayDragData: [],
       submenuEnableCol: null,
       submenuEnableRow: null,
     };
@@ -86,6 +103,36 @@ export default {
     window.addEventListener('keyup', this.moveKeydown);
   },
   methods: {
+    handleDownDragToFill(event, entry, data, rowIndex, colIndex) {
+      this.rowData[rowIndex][entry].active = true;
+      this.drag = true;
+      this.dragStartName = entry;
+      this.dragStartRow = rowIndex;
+    },
+    handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
+      // create an object wich contains new data
+      if (this.drag === true && entry === this.dragStartName && rowIndex > this.dragStartRow) {
+        this.rowData[rowIndex][entry].active = true;
+        this.dragStartRow = rowIndex;
+        this.arrayDragData.push({
+          key: entry,
+          value: col.value,
+          row: rowIndex,
+          col: colIndex,
+        });
+      }
+    },
+    handleUpDragToFill(event, entry) {
+      this.drag = false;
+      // remove active class
+      Object.values(this.rowData).filter(x => x[entry].active = false)
+      
+      // remplace data by new data
+      const _this = this;
+      this.arrayDragData.forEach(data => {
+        _this.rowData[data.row][data.key].value = data.value
+      });
+    },
     handleClickTd(event, entry, rowIndex, colIndex, type) {
       document.querySelectorAll('.active_td').forEach((activeElement) => {
         activeElement.classList.remove('active_td');
@@ -231,6 +278,24 @@ export default {
     height: 100%;
     display: block;
     margin: auto;
+  }
+  .drag_to_fill {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 8px;
+    height: 8px;
+    background: red;
+    display: block;
+    z-index: 11;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    outline: none;
+  }
+  &:hover .drag_to_fill {
+    opacity: 1;
+    visibility: visible;
   }
 }
 .show input,
