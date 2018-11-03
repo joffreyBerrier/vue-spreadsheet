@@ -6,12 +6,24 @@
           <td
             class="td"
             :id="entry"
+            @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
             @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
-            @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
+            @mousemove="handleMoveDragToFill($event, entry, col, rowIndex, colIndex)"
+            @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)"
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
+            v-bind:class="{'active_td': col.active, 'show': col.show}"
             :key="entry">
+
+            <template
+              v-if="dragToFill">
+              <button
+                class="drag_to_fill"
+                @mousedown="handleDownDragToFill($event, entry, col, rowIndex, colIndex)"
+                @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)">
+              </button>
+            </template>
 
             <template v-if="submenuTbody &&
                 submenuStatus &&
@@ -24,7 +36,9 @@
                     <button
                       v-if="submenu.disabled.includes(entry) == 0"
                       :key="index"
-                      @click.stop="handleClickSubmenu($event, entry, rowIndex, colIndex, col.type, submenu.function)">
+                      @click.stop="handleClickSubmenu(
+                        $event, entry, rowIndex, colIndex, col.type, submenu.function)"
+                      >
                       {{submenu.value}}
                     </button>
                   </template>
@@ -74,10 +88,11 @@ export default {
     rowData: Array,
     submenuTbody: Array,
     submenuStatus: Boolean,
+    dragToFill: Boolean,
   },
   data() {
     return {
-      activElement: '',
+      oldValue: null,
       submenuEnableCol: null,
       submenuEnableRow: null,
     };
@@ -86,25 +101,23 @@ export default {
     window.addEventListener('keyup', this.moveKeydown);
   },
   methods: {
+    handleDownDragToFill(event, entry, col, rowIndex, colIndex) {
+      this.$emit('tbody-down-dragtofill', event, entry, col, rowIndex, colIndex);
+    },
+    handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
+      // create an object wich contains new data
+      this.$emit('tbody-move-dragtofill', event, entry, col, rowIndex, colIndex);
+    },
+    handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
+      this.$emit('tbody-up-dragtofill', event, entry, rowIndex, colIndex, type);
+    },
     handleClickTd(event, entry, rowIndex, colIndex, type) {
-      document.querySelectorAll('.active_td').forEach((activeElement) => {
-        activeElement.classList.remove('active_td');
-      });
-      event.currentTarget.classList.add('active_td');
-
       // emit
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
     },
     handleDoubleClickTd(event, entry, rowIndex, colIndex, type) {
-      if (this.activElement !== '') {
-        this.activElement.classList.remove('show');
-      }
-      this.activElement = event.currentTarget;
-      this.activElement.classList.add('show');
-      this.activElement.lastElementChild.focus();
-
       // emit
-      this.$emit('tbody-td-double-click', event, entry, rowIndex, colIndex, this.activElement, type);
+      this.$emit('tbody-td-double-click', event, entry, rowIndex, colIndex, type);
     },
     handleContextMenuTd(event, entry, rowIndex, colIndex, type) {
       this.submenuEnableCol = colIndex;
@@ -231,6 +244,25 @@ export default {
     height: 100%;
     display: block;
     margin: auto;
+  }
+  .drag_to_fill {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 6px;
+    height: 6px;
+    background: #dadada;
+    display: block;
+    z-index: 11;
+    border: 0;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    outline: none;
+  }
+  &:hover .drag_to_fill {
+    opacity: 1;
+    visibility: visible;
   }
 }
 .show input,

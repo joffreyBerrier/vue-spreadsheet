@@ -11,8 +11,10 @@
     </vue-thead>
 
     <vue-tbody
+      :drag-to-fill="dragToFill"
       :rowData="data"
       :submenu-tbody="submenuTbody"
+      :submenu-status="submenuStatusTbody"
       v-on:tbody-td-click="handleTbodyTdClick"
       v-on:tbody-td-double-click="handleTbodyTdDoubleClick"
       v-on:tbody-td-context-menu="handleTbodyContextMenu"
@@ -20,10 +22,12 @@
       v-on:tbody-select-change="handleTbodySelectChange"
       v-on:tbody-nav="handleTbodyNav"
       v-on:tbody-nav-enter="handleTbodyNavEnter"
-      :submenu-status="submenuStatusTbody"
       v-on:submenu-enable="enableSubmenu"
       v-on:tbody-submenu-click-change-color="changeColor"
-      v-on:tbody-submenu-click-change-value="changeValue">
+      v-on:tbody-submenu-click-change-value="changeValue"
+      v-on:tbody-down-dragtofill="handleDownDragToFill"
+      v-on:tbody-move-dragtofill="handleMoveDragToFill"
+      v-on:tbody-up-dragtofill="handleUpDragToFill">
     </vue-tbody>
   </table>
 </template>
@@ -46,6 +50,14 @@ export default {
   },
   data() {
     return {
+      arrayDragData: [],
+      eventDrag: false,
+      dragToFill: true,
+      dragStartData: {},
+      dragStartName: '',
+      dragStartRow: null,
+      oldTdActive: null,
+      oldTdShow: null,
       submenuStatusTbody: false,
       submenuStatusThead: false,
       submenuEnableCol: null,
@@ -65,13 +77,84 @@ export default {
         this.submenuStatusTbody = false;
       }
     },
-    // tbody
-    handleTbodyTdDoubleClick(event, entry, rowIndex, colIndex, activElement, type) {
-      console.log('handleTbodyTdDoubleClick', event, entry, rowIndex, colIndex, activElement, type);
-      this.enableSubmenu();
+    bindClassActiveOnTd(entry, rowIndex, colIndex) {
+      this.data[rowIndex][entry].active = true;
+      // stock oldTdActive in object
+      if (this.oldTdActive) this.data[this.oldTdActive.row][this.oldTdActive.key].active = false;
+      this.oldTdActive = {
+        key: entry,
+        row: rowIndex,
+        col: colIndex,
+      };
     },
+    dragTofillReplaceData(entry, rowIndex, colIndex, type) {
+      // replace by the new data
+      if (type === 'input' || 'img') {
+        this.arrayDragData.forEach((data) => {
+          this.data[data.row][data.key].value = this.dragStartData.value;
+        });
+      }
+      if (type === 'select') {
+        this.arrayDragData.forEach((data) => {
+          this.data[data.row][data.key].selectedOptions = this.dragStartData.selectedOptions;
+        });
+      }
+      this.arrayDragData = [];
+      this.eventDrag = false;
+      this.bindClassActiveOnTd(entry, rowIndex, colIndex);
+    },
+    // dragToFill
+    handleDownDragToFill(event, entry, data, rowIndex, colIndex) {
+      console.log('handleDownDragToFill', event, entry, data, rowIndex, colIndex);
+      this.data[rowIndex][entry].active = true;
+      this.eventDrag = true;
+      this.dragStartName = entry;
+      this.dragStartData = data;
+      this.dragStartRow = rowIndex;
+    },
+    handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
+      // create an object wich contains new data
+      if (this.eventDrag === true && entry === this.dragStartName && rowIndex > this.dragStartRow) {
+        console.log('handleMoveDragToFill', event, entry, col, rowIndex, colIndex);
+
+        this.data[rowIndex][entry].active = true;
+        this.dragStartRow = rowIndex;
+        this.arrayDragData.push({
+          key: entry,
+          value: col.value,
+          row: rowIndex,
+          col: colIndex,
+        });
+      }
+    },
+    handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
+      if (this.eventDrag === true && entry === this.dragStartName) {
+        console.log('handleUpDragToFill', event, entry, rowIndex, colIndex, type);
+
+        this.dragTofillReplaceData(entry, rowIndex, colIndex, type);
+      }
+    },
+    // tbody
     handleTbodyTdClick(event, entry, rowIndex, colIndex, type) {
       console.log('handleTbodyTdClick', event, entry, rowIndex, colIndex, type);
+      this.bindClassActiveOnTd(entry, rowIndex, colIndex);
+      this.enableSubmenu();
+    },
+    handleTbodyTdDoubleClick(event, entry, rowIndex, colIndex, activElement, type) {
+      console.log('handleTbodyTdDoubleClick', event, entry, rowIndex, colIndex, activElement, type);
+
+      // add class show on element
+      this.data[rowIndex][entry].show = true;
+      if (type === 'input') {
+        event.currentTarget.lastElementChild.focus();
+      }
+      // stock oldTdShow in object
+      if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      this.oldTdShow = {
+        key: entry,
+        row: rowIndex,
+        col: colIndex,
+      };
       this.enableSubmenu();
     },
     handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
