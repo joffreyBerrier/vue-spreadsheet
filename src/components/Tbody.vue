@@ -95,6 +95,7 @@ export default {
       dragStartName: '',
       dragStartRow: null,
       arrayDragData: [],
+      oldValue: null,
       submenuEnableCol: null,
       submenuEnableRow: null,
     };
@@ -134,10 +135,15 @@ export default {
       });
     },
     handleClickTd(event, entry, rowIndex, colIndex, type) {
-      document.querySelectorAll('.active_td').forEach((activeElement) => {
-        activeElement.classList.remove('active_td');
-      });
-      event.currentTarget.classList.add('active_td');
+      this.rowData[rowIndex][entry].active = true;
+
+      // stock oldValue in object
+      if (this.oldValue) this.rowData[this.oldValue.row][this.oldValue.key].active = false;
+      this.oldValue = {
+        key: entry,
+        row: rowIndex,
+        col: colIndex,
+      };
 
       // emit
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
