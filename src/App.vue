@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <vue-table :data="products" :headers="headers" :submenu-tbody="submenuTbody" :submenu-thead="submenuThead"></vue-table>
+    <vue-table
+      :data="products"
+      :headers="headers"
+      :submenu-tbody="submenuTbody"
+      :submenu-thead="submenuThead">
+    </vue-table>
   </div>
 </template>
 
@@ -60,7 +65,7 @@ export default {
             value: 'Joffrey',
             active: false,
             style: {
-              color: '#ddd',
+              color: '#000',
             },
           },
           surname: {
@@ -68,7 +73,7 @@ export default {
             value: 'Berrier',
             active: false,
             style: {
-              color: '#ddd',
+              color: '#000',
             },
           },
           age: {
@@ -95,7 +100,7 @@ export default {
             value: 'Emma',
             active: false,
             style: {
-              color: '#ddd',
+              color: '#000',
             },
           },
           surname: {
@@ -103,7 +108,7 @@ export default {
             value: 'Hypopo',
             active: false,
             style: {
-              color: '#ddd',
+              color: '#000',
             },
           },
           age: {

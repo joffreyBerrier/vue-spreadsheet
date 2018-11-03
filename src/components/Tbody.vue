@@ -6,22 +6,22 @@
           <td
             class="td"
             :id="entry"
+            @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
             @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
-            @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
             @mousemove="handleMoveDragToFill($event, entry, col, rowIndex, colIndex)"
-            @mouseup="handleUpDragToFill($event, entry)"
+            @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)"
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
             v-bind:class="{'active_td': col.active}"
             :key="entry">
-            
+
             <template
               v-if="dragToFill">
               <button
                 class="drag_to_fill"
                 @mousedown="handleDownDragToFill($event, entry, col, rowIndex, colIndex)"
-                @mouseup="handleUpDragToFill($event)">
+                @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)">
               </button>
             </template>
 
@@ -86,15 +86,15 @@ export default {
     rowData: Array,
     submenuTbody: Array,
     submenuStatus: Boolean,
+    arrayDragData: Array,
+    drag: Boolean,
+    dragToFill: Boolean,
+    dragStartName: String,
+    dragStartRow: null,
   },
   data() {
     return {
       activElement: '',
-      drag: false,
-      dragToFill: true,
-      dragStartName: '',
-      dragStartRow: null,
-      arrayDragData: [],
       oldValue: null,
       submenuEnableCol: null,
       submenuEnableRow: null,
@@ -104,47 +104,17 @@ export default {
     window.addEventListener('keyup', this.moveKeydown);
   },
   methods: {
-    handleDownDragToFill(event, entry, data, rowIndex, colIndex) {
-      this.rowData[rowIndex][entry].active = true;
-      this.drag = true;
-      this.dragStartName = entry;
-      this.dragStartRow = rowIndex;
+    handleDownDragToFill(event, entry, col, rowIndex, colIndex) {
+      this.$emit('tbody-down-dragtofill', event, entry, col, rowIndex, colIndex);
     },
     handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
       // create an object wich contains new data
-      if (this.drag === true && entry === this.dragStartName && rowIndex > this.dragStartRow) {
-        this.rowData[rowIndex][entry].active = true;
-        this.dragStartRow = rowIndex;
-        this.arrayDragData.push({
-          key: entry,
-          value: col.value,
-          row: rowIndex,
-          col: colIndex,
-        });
-      }
+      this.$emit('tbody-move-dragtofill', event, entry, col, rowIndex, colIndex);
     },
-    handleUpDragToFill(event, entry) {
-      this.drag = false;
-      // remove active class
-      Object.values(this.rowData).filter(x => x[entry].active = false)
-      
-      // remplace data by new data
-      const _this = this;
-      this.arrayDragData.forEach(data => {
-        _this.rowData[data.row][data.key].value = data.value
-      });
+    handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
+      this.$emit('tbody-up-dragtofill', event, entry, rowIndex, colIndex, type);
     },
     handleClickTd(event, entry, rowIndex, colIndex, type) {
-      this.rowData[rowIndex][entry].active = true;
-
-      // stock oldValue in object
-      if (this.oldValue) this.rowData[this.oldValue.row][this.oldValue.key].active = false;
-      this.oldValue = {
-        key: entry,
-        row: rowIndex,
-        col: colIndex,
-      };
-
       // emit
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
     },
