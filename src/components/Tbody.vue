@@ -13,7 +13,7 @@
             @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)"
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
-            v-bind:class="{'active_td': col.active}"
+            v-bind:class="{'active_td': col.active, 'show': col.show}"
             :key="entry">
 
             <template
@@ -36,7 +36,9 @@
                     <button
                       v-if="submenu.disabled.includes(entry) == 0"
                       :key="index"
-                      @click.stop="handleClickSubmenu($event, entry, rowIndex, colIndex, col.type, submenu.function)">
+                      @click.stop="handleClickSubmenu(
+                        $event, entry, rowIndex, colIndex, col.type, submenu.function)"
+                      >
                       {{submenu.value}}
                     </button>
                   </template>
@@ -86,15 +88,10 @@ export default {
     rowData: Array,
     submenuTbody: Array,
     submenuStatus: Boolean,
-    arrayDragData: Array,
-    drag: Boolean,
     dragToFill: Boolean,
-    dragStartName: String,
-    dragStartRow: null,
   },
   data() {
     return {
-      activElement: '',
       oldValue: null,
       submenuEnableCol: null,
       submenuEnableRow: null,
@@ -119,15 +116,8 @@ export default {
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
     },
     handleDoubleClickTd(event, entry, rowIndex, colIndex, type) {
-      if (this.activElement !== '') {
-        this.activElement.classList.remove('show');
-      }
-      this.activElement = event.currentTarget;
-      this.activElement.classList.add('show');
-      this.activElement.lastElementChild.focus();
-
       // emit
-      this.$emit('tbody-td-double-click', event, entry, rowIndex, colIndex, this.activElement, type);
+      this.$emit('tbody-td-double-click', event, entry, rowIndex, colIndex, type);
     },
     handleContextMenuTd(event, entry, rowIndex, colIndex, type) {
       this.submenuEnableCol = colIndex;
@@ -259,11 +249,12 @@ export default {
     position: absolute;
     right: 0;
     bottom: 0;
-    width: 8px;
-    height: 8px;
-    background: red;
+    width: 6px;
+    height: 6px;
+    background: #dadada;
     display: block;
     z-index: 11;
+    border: 0;
     cursor: pointer;
     opacity: 0;
     visibility: hidden;
