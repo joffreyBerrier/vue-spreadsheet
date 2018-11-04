@@ -47,6 +47,22 @@ props                             | Type       | Description
   v-on-thead-submenu-click-{#}    | Function   | {#} - Name of your function declare on **submenu-thead**
   v-on:tbody-submenu-click-{#}    | Function   | {#} - Name of your function declare on **submenu-tbody**
 
+### Exemple
+
+```
+  <vue-table
+    :data="Array"
+    :headers="Array"
+    :drag-to-fill="Boolean"
+    :submenu-tbody="Array"
+    :submenu-thead="Array"
+    v-on:thead-submenu-click-customize-function="Function"
+    v-on:tbody-submenu-click-customize-function="Function"
+    v-on:tbody-input-change="Function"
+    v-on:tbody-select-change="Function">
+  </vue-table>
+```
+
 ### Headers :tiger:
 
   Name              |  Type   | Description
