@@ -3,6 +3,7 @@
     <vue-table
       :data="products"
       :headers="headers"
+      :drag-to-fill="dragToFill"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead">
     </vue-table>
@@ -16,6 +17,7 @@ export default {
   name: 'app',
   data() {
     return {
+      dragToFill: true,
       headers: [
         {
           headerName: 'Image',
@@ -62,7 +64,7 @@ export default {
           },
           name: {
             type: 'input',
-            value: 'Joffrey',
+            value: "Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.",
             active: false,
             style: {
               color: '#000',
@@ -70,7 +72,7 @@ export default {
           },
           surname: {
             type: 'input',
-            value: 'Berrier',
+            value: 'Doe',
             active: false,
             style: {
               color: '#000',
@@ -97,7 +99,7 @@ export default {
           },
           name: {
             type: 'input',
-            value: 'Emma',
+            value: 'Em',
             active: false,
             style: {
               color: '#000',
@@ -105,7 +107,7 @@ export default {
           },
           surname: {
             type: 'input',
-            value: 'Hypopo',
+            value: 'Doe',
             active: false,
             style: {
               color: '#000',
@@ -114,13 +116,13 @@ export default {
           age: {
             type: 'select',
             value: [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
-            selectedOptions: 28,
+            selectedOptions: 25,
             active: false,
           },
           born: {
             type: 'select',
             value: [1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992],
-            selectedOptions: 1990,
+            selectedOptions: 1993,
             active: false,
           },
         },
