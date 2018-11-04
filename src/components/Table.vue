@@ -6,8 +6,7 @@
       :submenu-status="submenuStatusThead"
       v-on:submenu-enable="enableSubmenu"
       v-on:thead-td-context-menu="handleTheadContextMenu"
-      v-on:thead-submenu-click-change-color="changeColorThead"
-      v-on:thead-submenu-click-change-value="changeValueThead">
+      v-on:thead-submenu-click-callback="callbackSubmenu">
     </vue-thead>
 
     <vue-tbody
@@ -64,6 +63,9 @@ export default {
     };
   },
   methods: {
+    callbackSubmenu(event, entry, colIndex, submenuFunction) {
+      this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, submenuFunction);
+    },
     // global
     enableSubmenu(place) {
       if (place === 'thead') {

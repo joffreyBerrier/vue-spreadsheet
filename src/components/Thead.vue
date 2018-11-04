@@ -14,9 +14,7 @@
               <button
                 @click="handleContextMenuTd($event, header.headerKey, colIndex)"
                 class="button_submenu"
-                v-bind:class="{
-                  'active': submenuThead && submenuStatus && colIndex === submenuEnableCol
-                }">
+                v-bind:class="{'active': submenuThead && submenuStatus && colIndex === submenuEnableCol}">
                 <i class="icon icon_menu"></i>
               </button>
           </template>
@@ -27,12 +25,12 @@
               colIndex === submenuEnableCol &&
               submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
             <div class="submenu_wrap">
-              <template v-for="(sub, index) in subThead">
+              <template v-for="(sub, index) in submenuThead">
                 <template v-if="sub.type === 'button'">
                   <button
                     v-if="sub.disabled.includes(header.headerKey) == 0"
                     :key="index"
-                    @click.stop="handleClicksub($event, header.headerKey, colIndex, sub.function)">
+                    @click.stop="handleClickSubmenu($event, header.headerKey, colIndex, sub.function)">
                     {{sub.value}}
                   </button>
                 </template>
@@ -72,8 +70,7 @@ export default {
       this.$emit('thead-td-context-menu', event, entry, colIndex);
     },
     handleClickSubmenu(event, entry, colIndex, submenuFunction) {
-      console.log(submenuFunction);
-      this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, submenuFunction);
+      this.$emit('thead-submenu-click-callback', event, entry, colIndex, submenuFunction);
     },
   },
 };
