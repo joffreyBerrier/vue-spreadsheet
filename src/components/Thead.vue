@@ -14,7 +14,9 @@
               <button
                 @click="handleContextMenuTd($event, header.headerKey, colIndex)"
                 class="button_submenu"
-                v-bind:class="{'active': submenuThead && submenuStatus && colIndex === submenuEnableCol}">
+                v-bind:class="{
+                  'active': submenuThead && submenuStatus && colIndex === submenuEnableCol
+                }">
                 <i class="icon icon_menu"></i>
               </button>
           </template>

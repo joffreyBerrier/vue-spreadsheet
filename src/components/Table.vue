@@ -6,7 +6,7 @@
       :submenu-status="submenuStatusThead"
       v-on:submenu-enable="enableSubmenu"
       v-on:thead-td-context-menu="handleTheadContextMenu"
-      v-on:thead-submenu-click-callback="callbackSubmenu">
+      v-on:thead-submenu-click-callback="callbackSubmenuThead">
     </vue-thead>
 
     <vue-tbody
@@ -18,12 +18,11 @@
       v-on:tbody-td-click="handleTbodyTdClick"
       v-on:tbody-td-double-click="handleTbodyTdDoubleClick"
       v-on:tbody-td-context-menu="handleTbodyContextMenu"
+      v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
       v-on:tbody-input-change="handleTbodyInputChange"
       v-on:tbody-select-change="handleTbodySelectChange"
       v-on:tbody-nav="handleTbodyNav"
       v-on:tbody-nav-enter="handleTbodyNavEnter"
-      v-on:tbody-submenu-click-change-color="changeColor"
-      v-on:tbody-submenu-click-change-value="changeValue"
       v-on:tbody-down-dragtofill="handleDownDragToFill"
       v-on:tbody-move-dragtofill="handleMoveDragToFill"
       v-on:tbody-up-dragtofill="handleUpDragToFill">
@@ -63,9 +62,6 @@ export default {
     };
   },
   methods: {
-    callbackSubmenu(event, entry, colIndex, submenuFunction) {
-      this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, submenuFunction);
-    },
     // global
     enableSubmenu(place) {
       if (place === 'thead') {
@@ -168,8 +164,15 @@ export default {
 
       this.enableSubmenu();
     },
+    // Context Menu
     handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
       console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
+    },
+    callbackSubmenuThead(event, entry, colIndex, submenuFunction) {
+      this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, submenuFunction);
+    },
+    callbackSubmenuTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      this.$emit(`tbody-submenu-click-${submenuFunction}`, event, entry, rowIndex, colIndex, type, submenuFunction);
     },
     handleTbodyNav(event, keyCode, actualElement, rowIndex, colIndex) {
       console.log('handleTbodyNav', event, keyCode, actualElement, rowIndex, colIndex);
@@ -195,27 +198,9 @@ export default {
       // callback
       this.$emit('tbody-select-change', event, entry, rowIndex, colIndex);
     },
-    changeColor(event, entry, rowIndex, colIndex, type, submenuFunction) {
-      console.log('changeColor', event, rowIndex, colIndex, type, submenuFunction);
-      this.data[rowIndex][entry].style.color = '#e40000';
-    },
-    changeValue(event, entry, rowIndex, colIndex, type, submenuFunction) {
-      console.log('changeValue', event, rowIndex, colIndex, type, submenuFunction);
-      this.data[rowIndex][entry].value = 'coucou';
-    },
     // thead
     handleTheadContextMenu(event, entry, colIndex) {
       console.log('handleTheadContextMenu', event, entry, colIndex);
-    },
-    // fake function
-    changeColorThead(event, entry, colIndex, submenuFunction) {
-      console.log('changeColor', event, entry, colIndex, submenuFunction);
-      this.headers[colIndex].style.color = '#e40000';
-    },
-    changeValueThead(event, entry, colIndex, submenuFunction) {
-      console.log('changeValue', event, entry, colIndex, submenuFunction);
-      this.headers[colIndex].headerName = 'T-shirt';
-      this.headers[colIndex].headerKey = 't-shirt';
     },
   },
 };

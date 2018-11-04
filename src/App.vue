@@ -8,8 +8,10 @@
       :submenu-thead="submenuThead"
       v-on:thead-submenu-click-change-color="changeColor"
       v-on:thead-submenu-click-change-value="changeValue"
-      v-on:tbody-input-change="handleTbodyInputChange"
-      v-on:tbody-select-change="handleTbodySelectChange">
+      v-on:tbody-submenu-click-change-color="changeColorTbody"
+      v-on:tbody-submenu-click-change-value="changeValueTbody"
+      v-on:tbody-input-change="inputChange"
+      v-on:tbody-select-change="selectChange">
     </vue-table>
   </div>
 </template>
@@ -165,16 +167,16 @@ export default {
     VueTable,
   },
   methods: {
-    handleTbodyInputChange(event, entry, rowIndex, colIndex) {
-      console.log('handleTbodyInputChange', event, entry, rowIndex, colIndex);
+    inputChange(event, entry, rowIndex, colIndex) {
+      console.log('InputChange', event, entry, rowIndex, colIndex);
     },
-    handleTbodySelectChange(event, entry, rowIndex, colIndex) {
-      console.log('handleTbodySelectChange', event, entry, rowIndex, colIndex);
+    selectChange(event, entry, rowIndex, colIndex) {
+      console.log('selectChange', event, entry, rowIndex, colIndex);
       this.changeValueSelect(rowIndex, colIndex);
     },
     // callback
     changeValueSelect(rowIndex, colIndex) {
-      console.log(rowIndex, colIndex);
+      console.log('changeValueSelect', rowIndex, colIndex);
       const activeElement = Object.values(this.products[rowIndex])[colIndex];
       const nextElement = Object.values(this.products[rowIndex])[colIndex + 1];
       const prevElement = Object.values(this.products[rowIndex])[colIndex - 1];
@@ -194,6 +196,18 @@ export default {
     changeValue(event, entry, colIndex, submenuFunction) {
       console.log('changeValue', event, entry, colIndex, submenuFunction);
       this.headers[colIndex].headerName = 'T-shirt';
+    },
+    changeColorTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      console.log('changeColorTbody', event, entry, rowIndex, colIndex, type, submenuFunction);
+      if (type === 'input') {
+        this.products[rowIndex][entry].style.color = '#e40000';
+      }
+    },
+    changeValueTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      console.log('changeValueTbody', event, entry, rowIndex, colIndex, type, submenuFunction);
+      if (type === 'input') {
+        this.products[rowIndex][entry].value = 'T-shirt';
+      }
     },
   },
 };
