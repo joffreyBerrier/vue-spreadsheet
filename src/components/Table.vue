@@ -178,35 +178,20 @@ export default {
       this.enableSubmenu();
     },
     handleTbodyInputChange(event, entry, rowIndex, colIndex) {
-      console.log('handleTbodyInputChange', event, entry, rowIndex, colIndex);
-
       // remove class show on input when it change
       if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
+
+      // callback
+      this.$emit('tbody-input-change', event, entry, rowIndex, colIndex);
     },
     handleTbodySelectChange(event, entry, rowIndex, colIndex) {
-      console.log('handleTbodySelectChange', event, entry, rowIndex, colIndex);
-
       // remove class show on select when it change
       if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
 
-      // call exemple function
-      this.changeValueSelect(rowIndex, colIndex);
-    },
-    // fake function
-    changeValueSelect(rowIndex, colIndex) {
-      const activeElement = Object.values(this.data[rowIndex])[colIndex];
-      const nextElement = Object.values(this.data[rowIndex])[colIndex + 1];
-      const prevElement = Object.values(this.data[rowIndex])[colIndex - 1];
-
-      const actualYear = new Date().getFullYear();
-      if (nextElement && nextElement.selectedOptions) {
-        nextElement.selectedOptions = actualYear - activeElement.selectedOptions;
-      }
-      if (prevElement && prevElement.selectedOptions) {
-        prevElement.selectedOptions = actualYear - activeElement.selectedOptions;
-      }
+      // callback
+      this.$emit('tbody-select-change', event, entry, rowIndex, colIndex);
     },
     changeColor(event, entry, rowIndex, colIndex, type, submenuFunction) {
       console.log('changeColor', event, rowIndex, colIndex, type, submenuFunction);

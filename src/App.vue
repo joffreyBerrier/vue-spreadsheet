@@ -5,7 +5,9 @@
       :headers="headers"
       :drag-to-fill="dragToFill"
       :submenu-tbody="submenuTbody"
-      :submenu-thead="submenuThead">
+      :submenu-thead="submenuThead"
+      v-on:tbody-input-change="handleTbodyInputChange"
+      v-on:tbody-select-change="handleTbodySelectChange">
     </vue-table>
   </div>
 </template>
@@ -159,6 +161,38 @@ export default {
   },
   components: {
     VueTable,
+  },
+  methods: {
+    handleTbodyInputChange(event, entry, rowIndex, colIndex) {
+      console.log('handleTbodyInputChange', event, entry, rowIndex, colIndex);
+    },
+    handleTbodySelectChange(event, entry, rowIndex, colIndex) {
+      console.log('handleTbodySelectChange', event, entry, rowIndex, colIndex);
+      // this.changeValueSelect(rowIndex, colIndex);
+    },
+    // callback
+    changeValueSelect(rowIndex, colIndex) {
+      console.log(rowIndex, colIndex);
+      const activeElement = Object.values(this.data[rowIndex])[colIndex];
+      const nextElement = Object.values(this.data[rowIndex])[colIndex + 1];
+      const prevElement = Object.values(this.data[rowIndex])[colIndex - 1];
+
+      const actualYear = new Date().getFullYear();
+      if (nextElement && nextElement.selectedOptions) {
+        nextElement.selectedOptions = actualYear - activeElement.selectedOptions;
+      }
+      if (prevElement && prevElement.selectedOptions) {
+        prevElement.selectedOptions = actualYear - activeElement.selectedOptions;
+      }
+    },
+    changeColor(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      console.log('changeColor', event, rowIndex, colIndex, type, submenuFunction);
+      this.data[rowIndex][entry].style.color = '#e40000';
+    },
+    changeValue(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      console.log('changeValue', event, rowIndex, colIndex, type, submenuFunction);
+      this.data[rowIndex][entry].value = 'coucou';
+    },
   },
 };
 </script>
