@@ -35,14 +35,17 @@ yarn run lint
 
 ## Wiki :mortar_board:
 
-props               | Type    | Description
---------------------|---------|-------------------
-  headers           |  Array  | That contains headers
-  data              |  Array  | That contains data
-  submenu-tbody     |  Array  | That contains your submenu-tbody
-  submenu-thead     |  Array  | That contains your submenu-thead
-  drag-to-fill      | Boolean | That active dragToFill
-
+props                             | Type       | Description
+----------------------------------|------------|-------------------
+  :data                           | Array      | That contains data
+  :headers                        | Array      | That contains headers
+  :drag-to-fill                   | Boolean    | That active dragToFill
+  :submenu-tbody                  | Array      | That contains your submenu-tbody
+  :submenu-thead                  | Array      | That contains your submenu-thead
+  v-on:tbody-input-change         | Function   | Name of your function called when **input change**
+  v-on:tbody-select-change        | Function   | Name of your function called when **select change**
+  v-on-thead-submenu-click-{#}    | Function   | {#} - Name of your function declare on **submenu-thead**
+  v-on:tbody-submenu-click-{#}    | Function   | {#} - Name of your function declare on **submenu-tbody**
 
 ### Headers :tiger:
 
@@ -167,12 +170,6 @@ products: [
       function: 'change-color',
       disabled: ['img'],
     },
-    {
-      type: 'button',
-      value: 'Change Value',
-      function: 'change-value',
-      disabled: ['img', 'name'],
-    },
   ],
   submenuThead: [
     {
@@ -181,11 +178,112 @@ products: [
       function: 'change-color',
       disabled: ['img', 'name'],
     },
-    {
-      type: 'button',
-      value: 'Change Value',
-      function: 'change-value',
-      disabled: ['img', 'name'],
-    },
   ],
 ```
+
+## Exemple :mortar_board: :tiger:
+
+````
+  # Template
+
+  <vue-table
+    :data="data"
+    :headers="headers"
+    :drag-to-fill="dragToFill"
+    :submenu-tbody="submenuTbody"
+    :submenu-thead="submenuThead"
+    v-on:tbody-input-change="InputChange"
+    v-on:tbody-select-change="SelectChange">
+    v-on:thead-submenu-click-change-color="changeColor"
+    v-on:tbody-submenu-click-change-color="changeColorTbody"
+  </vue-table>
+
+  # Data
+
+  data() {
+    return {
+      dragToFill: true,
+      headers: [
+        {
+          headerName: 'Image',
+          headerKey: 'img',
+          style: {
+            color: '#000',
+          },
+        },
+      ],
+      products: [
+        {
+          img: {
+            active: false,
+            type: 'img',
+            value: 'https://via.placeholder.com/350x150',
+          },
+          name: {
+            active: false,
+            type: 'input',
+            value: 'John',
+            style: {
+              color: '#000',
+            },
+          },
+          surname: {
+            active: false,
+            type: 'input',
+            value: 'Doe',
+            style: {
+              color: '#000',
+            },
+          },
+          age: {
+            active: false,
+            type: 'select',
+            value: [1, 2, 3],
+            selectedOptions: 2,
+          },
+          born: {
+            active: false,
+            type: 'select',
+            value: [11, 12, 13],
+            selectedOptions: 12,
+          },
+        },
+      ],
+      submenuThead: [
+        {
+          type: 'button',
+          value: 'change color',
+          function: 'change-color',
+          disabled: ['img', 'name'],
+        },
+      ],
+      submenuTbody: [
+        {
+          type: 'button',
+          value: 'change color',
+          function: 'change-color',
+          disabled: ['img'],
+        },
+      ],
+    };
+  },
+  methods: {
+    inputChange(event, entry, rowIndex, colIndex) {
+      // Called when <input /> change
+    },
+    selectChange(event, entry, rowIndex, colIndex) {
+      // Called when <select></select> change
+    },
+    changeColor(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      if (type === 'input') {
+        this.headers[colIndex].style.color = '#e40000';
+      }
+    },
+    changeColorTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      if (type === 'input') {
+        this.products[rowIndex][entry].value = 'T-shirt';
+      }
+    },
+  },
+
+````

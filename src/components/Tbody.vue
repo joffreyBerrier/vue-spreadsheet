@@ -144,7 +144,7 @@ export default {
       this.$emit('tbody-select-change', event, entry, rowIndex, colIndex);
     },
     handleClickSubmenu(event, entry, rowIndex, colIndex, type, submenuFunction) {
-      this.$emit(`tbody-submenu-click-${submenuFunction}`, event, entry, rowIndex, colIndex, type, submenuFunction);
+      this.$emit('tbody-submenu-click-callback', event, entry, rowIndex, colIndex, type, submenuFunction);
     },
     moveKeydown(event) {
       const actualElement = document.getElementsByClassName('active_td')[0];

@@ -5,7 +5,13 @@
       :headers="headers"
       :drag-to-fill="dragToFill"
       :submenu-tbody="submenuTbody"
-      :submenu-thead="submenuThead">
+      :submenu-thead="submenuThead"
+      v-on:thead-submenu-click-change-color="changeColor"
+      v-on:thead-submenu-click-change-value="changeValue"
+      v-on:tbody-submenu-click-change-color="changeColorTbody"
+      v-on:tbody-submenu-click-change-value="changeValueTbody"
+      v-on:tbody-input-change="inputChange"
+      v-on:tbody-select-change="selectChange">
     </vue-table>
   </div>
 </template>
@@ -127,7 +133,7 @@ export default {
           },
         },
       ],
-      submenuTbody: [
+      submenuThead: [
         {
           type: 'button',
           value: 'change color',
@@ -141,7 +147,7 @@ export default {
           disabled: ['img', 'name'],
         },
       ],
-      submenuThead: [
+      submenuTbody: [
         {
           type: 'button',
           value: 'change color',
@@ -160,6 +166,50 @@ export default {
   components: {
     VueTable,
   },
+  methods: {
+    inputChange(event, entry, rowIndex, colIndex) {
+      console.log('InputChange', event, entry, rowIndex, colIndex);
+    },
+    selectChange(event, entry, rowIndex, colIndex) {
+      console.log('selectChange', event, entry, rowIndex, colIndex);
+      this.changeValueSelect(rowIndex, colIndex);
+    },
+    // callback
+    changeValueSelect(rowIndex, colIndex) {
+      console.log('changeValueSelect', rowIndex, colIndex);
+      const activeElement = Object.values(this.products[rowIndex])[colIndex];
+      const nextElement = Object.values(this.products[rowIndex])[colIndex + 1];
+      const prevElement = Object.values(this.products[rowIndex])[colIndex - 1];
+
+      const actualYear = new Date().getFullYear();
+      if (nextElement && nextElement.selectedOptions) {
+        nextElement.selectedOptions = actualYear - activeElement.selectedOptions;
+      }
+      if (prevElement && prevElement.selectedOptions) {
+        prevElement.selectedOptions = actualYear - activeElement.selectedOptions;
+      }
+    },
+    changeColor(event, entry, colIndex, submenuFunction) {
+      console.log('changeColor', event, entry, colIndex, submenuFunction);
+      this.headers[colIndex].style.color = '#e40000';
+    },
+    changeValue(event, entry, colIndex, submenuFunction) {
+      console.log('changeValue', event, entry, colIndex, submenuFunction);
+      this.headers[colIndex].headerName = 'T-shirt';
+    },
+    changeColorTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      console.log('changeColorTbody', event, entry, rowIndex, colIndex, type, submenuFunction);
+      if (type === 'input') {
+        this.products[rowIndex][entry].style.color = '#e40000';
+      }
+    },
+    changeValueTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      console.log('changeValueTbody', event, entry, rowIndex, colIndex, type, submenuFunction);
+      if (type === 'input') {
+        this.products[rowIndex][entry].value = 'T-shirt';
+      }
+    },
+  },
 };
 </script>
 
@@ -167,8 +217,6 @@ export default {
 body {
   color: #2c3e50;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   background: #fff;
   display: flex;
   align-content: center;

@@ -14,7 +14,9 @@
               <button
                 @click="handleContextMenuTd($event, header.headerKey, colIndex)"
                 class="button_submenu"
-                v-bind:class="{'active': submenuThead && submenuStatus && colIndex === submenuEnableCol}">
+                v-bind:class="{
+                  'active': submenuThead && submenuStatus && colIndex === submenuEnableCol
+                }">
                 <i class="icon icon_menu"></i>
               </button>
           </template>
@@ -25,13 +27,13 @@
               colIndex === submenuEnableCol &&
               submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
             <div class="submenu_wrap">
-              <template v-for="(submenu, index) in submenuThead">
-                <template v-if="submenu.type === 'button'">
+              <template v-for="(sub, index) in submenuThead">
+                <template v-if="sub.type === 'button'">
                   <button
-                    v-if="submenu.disabled.includes(header.headerKey) == 0"
+                    v-if="sub.disabled.includes(header.headerKey) == 0"
                     :key="index"
-                    @click.stop="handleClickSubmenu($event, header.headerKey, colIndex, submenu.function)">
-                    {{submenu.value}}
+                    @click.stop="handleClickSubmenu($event, header.headerKey, colIndex, sub.function)">
+                    {{sub.value}}
                   </button>
                 </template>
               </template>
@@ -63,15 +65,14 @@ export default {
       this.submenuEnableCol = colIndex;
 
       if (this.submenuStatus === true) {
-        this.$emit('submenu-enable', 'tbody');  
+        this.$emit('submenu-enable', 'tbody');
       } else {
         this.$emit('submenu-enable', 'thead');
       }
       this.$emit('thead-td-context-menu', event, entry, colIndex);
     },
     handleClickSubmenu(event, entry, colIndex, submenuFunction) {
-      console.log(submenuFunction);
-      this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, submenuFunction);
+      this.$emit('thead-submenu-click-callback', event, entry, colIndex, submenuFunction);
     },
   },
 };

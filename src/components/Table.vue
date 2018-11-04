@@ -6,25 +6,23 @@
       :submenu-status="submenuStatusThead"
       v-on:submenu-enable="enableSubmenu"
       v-on:thead-td-context-menu="handleTheadContextMenu"
-      v-on:thead-submenu-click-change-color="changeColorThead"
-      v-on:thead-submenu-click-change-value="changeValueThead">
+      v-on:thead-submenu-click-callback="callbackSubmenuThead">
     </vue-thead>
 
     <vue-tbody
-      :drag-to-fill="dragToFill"
       :rowData="data"
+      :drag-to-fill="dragToFill"
       :submenu-tbody="submenuTbody"
       :submenu-status="submenuStatusTbody"
       v-on:submenu-enable="enableSubmenu"
       v-on:tbody-td-click="handleTbodyTdClick"
       v-on:tbody-td-double-click="handleTbodyTdDoubleClick"
       v-on:tbody-td-context-menu="handleTbodyContextMenu"
+      v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
       v-on:tbody-input-change="handleTbodyInputChange"
       v-on:tbody-select-change="handleTbodySelectChange"
       v-on:tbody-nav="handleTbodyNav"
       v-on:tbody-nav-enter="handleTbodyNavEnter"
-      v-on:tbody-submenu-click-change-color="changeColor"
-      v-on:tbody-submenu-click-change-value="changeValue"
       v-on:tbody-down-dragtofill="handleDownDragToFill"
       v-on:tbody-move-dragtofill="handleMoveDragToFill"
       v-on:tbody-up-dragtofill="handleUpDragToFill">
@@ -166,9 +164,6 @@ export default {
 
       this.enableSubmenu();
     },
-    handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
-      console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
-    },
     handleTbodyNav(event, keyCode, actualElement, rowIndex, colIndex) {
       console.log('handleTbodyNav', event, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
@@ -178,57 +173,34 @@ export default {
       this.enableSubmenu();
     },
     handleTbodyInputChange(event, entry, rowIndex, colIndex) {
-      console.log('handleTbodyInputChange', event, entry, rowIndex, colIndex);
-
       // remove class show on input when it change
       if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
+
+      // callback
+      this.$emit('tbody-input-change', event, entry, rowIndex, colIndex);
     },
     handleTbodySelectChange(event, entry, rowIndex, colIndex) {
-      console.log('handleTbodySelectChange', event, entry, rowIndex, colIndex);
-
       // remove class show on select when it change
       if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
 
-      // call exemple function
-      this.changeValueSelect(rowIndex, colIndex);
+      // callback
+      this.$emit('tbody-select-change', event, entry, rowIndex, colIndex);
     },
-    // fake function
-    changeValueSelect(rowIndex, colIndex) {
-      const activeElement = Object.values(this.data[rowIndex])[colIndex];
-      const nextElement = Object.values(this.data[rowIndex])[colIndex + 1];
-      const prevElement = Object.values(this.data[rowIndex])[colIndex - 1];
-
-      const actualYear = new Date().getFullYear();
-      if (nextElement && nextElement.selectedOptions) {
-        nextElement.selectedOptions = actualYear - activeElement.selectedOptions;
-      }
-      if (prevElement && prevElement.selectedOptions) {
-        prevElement.selectedOptions = actualYear - activeElement.selectedOptions;
-      }
+    // Context Menu
+    handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
+      console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
     },
-    changeColor(event, entry, rowIndex, colIndex, type, submenuFunction) {
-      console.log('changeColor', event, rowIndex, colIndex, type, submenuFunction);
-      this.data[rowIndex][entry].style.color = '#e40000';
+    callbackSubmenuThead(event, entry, colIndex, submenuFunction) {
+      this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, submenuFunction);
     },
-    changeValue(event, entry, rowIndex, colIndex, type, submenuFunction) {
-      console.log('changeValue', event, rowIndex, colIndex, type, submenuFunction);
-      this.data[rowIndex][entry].value = 'coucou';
+    callbackSubmenuTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      this.$emit(`tbody-submenu-click-${submenuFunction}`, event, entry, rowIndex, colIndex, type, submenuFunction);
     },
     // thead
     handleTheadContextMenu(event, entry, colIndex) {
       console.log('handleTheadContextMenu', event, entry, colIndex);
-    },
-    // fake function
-    changeColorThead(event, entry, colIndex, submenuFunction) {
-      console.log('changeColor', event, entry, colIndex, submenuFunction);
-      this.headers[colIndex].style.color = '#e40000';
-    },
-    changeValueThead(event, entry, colIndex, submenuFunction) {
-      console.log('changeValue', event, entry, colIndex, submenuFunction);
-      this.headers[colIndex].headerName = 'T-shirt';
-      this.headers[colIndex].headerKey = 't-shirt';
     },
   },
 };
