@@ -10,8 +10,8 @@
     </vue-thead>
 
     <vue-tbody
-      :drag-to-fill="dragToFill"
       :rowData="data"
+      :drag-to-fill="dragToFill"
       :submenu-tbody="submenuTbody"
       :submenu-status="submenuStatusTbody"
       v-on:submenu-enable="enableSubmenu"
@@ -164,16 +164,6 @@ export default {
 
       this.enableSubmenu();
     },
-    // Context Menu
-    handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
-      console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
-    },
-    callbackSubmenuThead(event, entry, colIndex, submenuFunction) {
-      this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, submenuFunction);
-    },
-    callbackSubmenuTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
-      this.$emit(`tbody-submenu-click-${submenuFunction}`, event, entry, rowIndex, colIndex, type, submenuFunction);
-    },
     handleTbodyNav(event, keyCode, actualElement, rowIndex, colIndex) {
       console.log('handleTbodyNav', event, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
@@ -197,6 +187,16 @@ export default {
 
       // callback
       this.$emit('tbody-select-change', event, entry, rowIndex, colIndex);
+    },
+    // Context Menu
+    handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
+      console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
+    },
+    callbackSubmenuThead(event, entry, colIndex, submenuFunction) {
+      this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, submenuFunction);
+    },
+    callbackSubmenuTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      this.$emit(`tbody-submenu-click-${submenuFunction}`, event, entry, rowIndex, colIndex, type, submenuFunction);
     },
     // thead
     handleTheadContextMenu(event, entry, colIndex) {

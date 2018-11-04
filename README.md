@@ -274,11 +274,15 @@ products: [
     selectChange(event, entry, rowIndex, colIndex) {
       // Called when <select></select> change
     },
-    changeColor(event, entry, colIndex, submenuFunction) {
-      this.headers[colIndex].style.color = '#e40000';
+    changeColor(event, entry, rowIndex, colIndex, type, submenuFunction) {
+      if (type === 'input') {
+        this.headers[colIndex].style.color = '#e40000';
+      }
     },
     changeColorTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
-      this.products[rowIndex][entry].style.color = '#e40000';
+      if (type === 'input') {
+        this.products[rowIndex][entry].value = 'T-shirt';
+      }
     },
   },
 
