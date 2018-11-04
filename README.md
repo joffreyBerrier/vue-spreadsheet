@@ -35,21 +35,22 @@ yarn run lint
 
 ## Wiki :mortar_board:
 
-props               | Type  |Description
---------------------|-------|-------------------
-  .. headers        | Array | That contains headers
-  .. data           | Array | That contains data
-  .. submenu-tbody  | Array | That contains your submenu-tbody
-  .. submenu-thead  | Array | That contains your submenu-thead
-  
+props               | Type    | Description
+--------------------|---------|-------------------
+  headers           |  Array  | That contains headers
+  data              |  Array  | That contains data
+  submenu-tbody     |  Array  | That contains your submenu-tbody
+  submenu-thead     |  Array  | That contains your submenu-thead
+  drag-to-fill      | Boolean | That active dragToFill
+
 
 ### Headers :tiger:
 
-props               |  Type  | Description
---------------------|--------|-------------------
-  .. headerName     | String | The name of your header written like you want
-  .. headerkey      | String | The Slugify version of your headerName
-  .. style          | Object | The style of your td
+  Name              |  Type   | Description
+--------------------|---------|-------------------
+  headerName        | String  | The name of your header written like you want
+  headerkey         | String  | The Slugify version of your headerName
+  style             | Object  | The style of your td
 
 #### Exemple
 
@@ -95,13 +96,15 @@ headers: [
 
 ### Data :honeybee:
 
-props                 |  Type  | Description
-----------------------|--------|-------------------
-  .. key              | String | The key of your object written in Slugify
-  .. type             | String | The type of render data (``<input>``, ``<img>``, ``<select>``)
-  .. value(img/input) | String | The value of your object in *String Type*
-  .. value(select)    | Array  | The value of your object in *Array Type*
-  .. selectedOptions  | String | The value by default - Only for type ``<select>``
+  Name                |  Type   | Description
+----------------------|---------|-------------------
+  key                 | String  | The key of your object written in Slugify
+  type                | String  | The type of render data (``<textarea>``, ``<img>``, ``<select>``)
+  value(img/input)    | String  | The value of your object in *String Type*
+  value(select)       | Array   | The value of your object in *Array Type*
+  selectedOptions     | String  | The value by default - Only for type ``<select>``
+  active              | Boolean | The status of cell false by default
+  style               | Object  | The Style of your cell
 
 #### Exemple
 
@@ -109,26 +112,37 @@ props                 |  Type  | Description
 products: [
   {
     img: {
+      active: false,
       type: 'img',
       value: 'https://via.placeholder.com/350x150',
     },
     name: {
+      active: false,
       type: 'input',
-      value: 'text',
+      value: 'John',
+      style: {
+        color: '#000',
+      },
     },
     surname: {
+      active: false,
       type: 'input',
-      value: 'text',
+      value: 'Doe',
+      style: {
+        color: '#000',
+      },
     },
     age: {
+      active: false,
       type: 'select',
-      value: ['1', '2', '3'],
-      selectedOptions: '1',
+      value: [1, 2, 3],
+      selectedOptions: 2,
     },
     born: {
+      active: false,
       type: 'select',
-      value: ['1', '2', '3'],
-      selectedOptions: '1',
+      value: [11, 12, 13],
+      selectedOptions: 12,
     },
   },
 ],
@@ -136,12 +150,12 @@ products: [
 
 ### submenu :monkey_face:
 
-props                 |  Type  | Description
-----------------------|--------|-------------------
-  .. type             | String | The type of render data (``<button>``) - Only type ``<button>`` for now
-  .. value            | String | The value of your object in *String Type*
-  .. function         | String | The name of your function called when you click on the button - *Written in Slugify*
-  .. disabled         | Array  | The Name(s) of each objects you don't want to appear on submenu
+  Name             |  Type  | Description
+-------------------|--------|-------------------
+  type             | String | The type of render data (``<button>``) - Only type ``<button>`` for now
+  value            | String | The value of your object in *String Type*
+  function         | String | The name of your function called when you click on the button - *Written in Slugify*
+  disabled         | Array  | The Name(s) of each objects you don't want to appear on submenu
 
 #### Exemple
 

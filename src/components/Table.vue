@@ -3,9 +3,9 @@
     <vue-thead
       :header="headers"
       :submenu-thead="submenuThead"
-      v-on:thead-td-context-menu="handleTheadContextMenu"
       :submenu-status="submenuStatusThead"
       v-on:submenu-enable="enableSubmenu"
+      v-on:thead-td-context-menu="handleTheadContextMenu"
       v-on:thead-submenu-click-change-color="changeColorThead"
       v-on:thead-submenu-click-change-value="changeValueThead">
     </vue-thead>
@@ -15,6 +15,7 @@
       :rowData="data"
       :submenu-tbody="submenuTbody"
       :submenu-status="submenuStatusTbody"
+      v-on:submenu-enable="enableSubmenu"
       v-on:tbody-td-click="handleTbodyTdClick"
       v-on:tbody-td-double-click="handleTbodyTdDoubleClick"
       v-on:tbody-td-context-menu="handleTbodyContextMenu"
@@ -22,7 +23,6 @@
       v-on:tbody-select-change="handleTbodySelectChange"
       v-on:tbody-nav="handleTbodyNav"
       v-on:tbody-nav-enter="handleTbodyNavEnter"
-      v-on:submenu-enable="enableSubmenu"
       v-on:tbody-submenu-click-change-color="changeColor"
       v-on:tbody-submenu-click-change-value="changeValue"
       v-on:tbody-down-dragtofill="handleDownDragToFill"
@@ -41,6 +41,7 @@ export default {
   props: {
     data: Array,
     headers: Array,
+    dragToFill: Boolean,
     submenuTbody: Array,
     submenuThead: Array,
   },
@@ -52,7 +53,6 @@ export default {
     return {
       arrayDragData: [],
       eventDrag: false,
-      dragToFill: true,
       dragStartData: {},
       dragStartName: '',
       dragStartRow: null,
@@ -80,6 +80,7 @@ export default {
     bindClassActiveOnTd(entry, rowIndex, colIndex) {
       this.data[rowIndex][entry].active = true;
       // stock oldTdActive in object
+
       if (this.oldTdActive) this.data[this.oldTdActive.row][this.oldTdActive.key].active = false;
       this.oldTdActive = {
         key: entry,
@@ -87,6 +88,7 @@ export default {
         col: colIndex,
       };
     },
+    // dragToFill
     dragTofillReplaceData(entry, rowIndex, colIndex, type) {
       // replace by the new data
       if (type === 'input' || 'img') {
@@ -103,9 +105,9 @@ export default {
       this.eventDrag = false;
       this.bindClassActiveOnTd(entry, rowIndex, colIndex);
     },
-    // dragToFill
     handleDownDragToFill(event, entry, data, rowIndex, colIndex) {
       console.log('handleDownDragToFill', event, entry, data, rowIndex, colIndex);
+      // Store the data of the cell which it start
       this.data[rowIndex][entry].active = true;
       this.eventDrag = true;
       this.dragStartName = entry;
@@ -113,10 +115,13 @@ export default {
       this.dragStartRow = rowIndex;
     },
     handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
-      // create an object wich contains new data
+      // Only eventDrag &&
+      // dragStartName equal the actual entry data &&
+      // rowIndex is > at dragStartRow
       if (this.eventDrag === true && entry === this.dragStartName && rowIndex > this.dragStartRow) {
         console.log('handleMoveDragToFill', event, entry, col, rowIndex, colIndex);
 
+        // create an object wich contains new data
         this.data[rowIndex][entry].active = true;
         this.dragStartRow = rowIndex;
         this.arrayDragData.push({
@@ -130,7 +135,6 @@ export default {
     handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
       if (this.eventDrag === true && entry === this.dragStartName) {
         console.log('handleUpDragToFill', event, entry, rowIndex, colIndex, type);
-
         this.dragTofillReplaceData(entry, rowIndex, colIndex, type);
       }
     },
@@ -139,22 +143,27 @@ export default {
       console.log('handleTbodyTdClick', event, entry, rowIndex, colIndex, type);
       this.bindClassActiveOnTd(entry, rowIndex, colIndex);
       this.enableSubmenu();
+      if (this.oldTdShow && this.oldTdShow.col !== colIndex) {
+        this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      }
     },
     handleTbodyTdDoubleClick(event, entry, rowIndex, colIndex, activElement, type) {
       console.log('handleTbodyTdDoubleClick', event, entry, rowIndex, colIndex, activElement, type);
+
+      // stock oldTdShow in object
+      if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
 
       // add class show on element
       this.data[rowIndex][entry].show = true;
       if (type === 'input') {
         event.currentTarget.lastElementChild.focus();
       }
-      // stock oldTdShow in object
-      if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.oldTdShow = {
         key: entry,
         row: rowIndex,
         col: colIndex,
       };
+
       this.enableSubmenu();
     },
     handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
@@ -170,9 +179,23 @@ export default {
     },
     handleTbodyInputChange(event, entry, rowIndex, colIndex) {
       console.log('handleTbodyInputChange', event, entry, rowIndex, colIndex);
+
+      // remove class show on input when it change
+      if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
     },
     handleTbodySelectChange(event, entry, rowIndex, colIndex) {
+      console.log('handleTbodySelectChange', event, entry, rowIndex, colIndex);
+
+      // remove class show on select when it change
+      if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      this.enableSubmenu();
+
+      // call exemple function
+      this.changeValueSelect(rowIndex, colIndex);
+    },
+    // fake function
+    changeValueSelect(rowIndex, colIndex) {
       const activeElement = Object.values(this.data[rowIndex])[colIndex];
       const nextElement = Object.values(this.data[rowIndex])[colIndex + 1];
       const prevElement = Object.values(this.data[rowIndex])[colIndex - 1];
@@ -184,30 +207,28 @@ export default {
       if (prevElement && prevElement.selectedOptions) {
         prevElement.selectedOptions = actualYear - activeElement.selectedOptions;
       }
-
-      console.log('handleTbodySelectChange', event, entry, rowIndex, colIndex);
-      this.enableSubmenu();
     },
     changeColor(event, entry, rowIndex, colIndex, type, submenuFunction) {
-      this.data[rowIndex][entry].style.color = '#000';
       console.log('changeColor', event, rowIndex, colIndex, type, submenuFunction);
+      this.data[rowIndex][entry].style.color = '#e40000';
     },
     changeValue(event, entry, rowIndex, colIndex, type, submenuFunction) {
-      this.data[rowIndex][entry].value = 'coucou';
       console.log('changeValue', event, rowIndex, colIndex, type, submenuFunction);
+      this.data[rowIndex][entry].value = 'coucou';
     },
     // thead
     handleTheadContextMenu(event, entry, colIndex) {
       console.log('handleTheadContextMenu', event, entry, colIndex);
     },
+    // fake function
     changeColorThead(event, entry, colIndex, submenuFunction) {
-      this.headers[colIndex].style.color = '#000';
       console.log('changeColor', event, entry, colIndex, submenuFunction);
+      this.headers[colIndex].style.color = '#e40000';
     },
     changeValueThead(event, entry, colIndex, submenuFunction) {
+      console.log('changeValue', event, entry, colIndex, submenuFunction);
       this.headers[colIndex].headerName = 'T-shirt';
       this.headers[colIndex].headerKey = 't-shirt';
-      console.log('changeValue', event, entry, colIndex, submenuFunction);
     },
   },
 };

@@ -6,13 +6,13 @@
           <td
             class="td"
             :id="entry"
+            :data-col-index="colIndex"
+            :data-row-index="rowIndex"
             @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
             @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @mousemove="handleMoveDragToFill($event, entry, col, rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)"
-            :data-col-index="colIndex"
-            :data-row-index="rowIndex"
             v-bind:class="{'active_td': col.active, 'show': col.show}"
             :key="entry">
 
@@ -54,10 +54,10 @@
             <!-- If Input -->
             <template v-if="col.type === 'input'">
               <span :style="col.style">{{col.value}}</span>
-              <input
-                type="text"
+              <textarea
+                :style="textareaStyle(col.value)"
                 v-model="col.value"
-                @change="inputHandleChange($event, entry, rowIndex, colIndex)" />
+                @change="inputHandleChange($event, entry, rowIndex, colIndex)"></textarea>
             </template>
 
             <!-- If Select -->
@@ -101,6 +101,18 @@ export default {
     window.addEventListener('keyup', this.moveKeydown);
   },
   methods: {
+    textareaStyle(value) {
+      if (value.length > 100) {
+        return {
+          height: `${150}px`,
+          width: `${400}px`,
+        };
+      }
+      return {
+        height: `${100}%`,
+        width: `${100}%`,
+      };
+    },
     handleDownDragToFill(event, entry, col, rowIndex, colIndex) {
       this.$emit('tbody-down-dragtofill', event, entry, col, rowIndex, colIndex);
     },
@@ -213,9 +225,28 @@ export default {
     border-left: 1px solid #dadada;
   }
   &.active_td span {
-    border: 1px solid #5d5d5d;
+    border: 1px solid #e9e9e9;
+    background: aliceblue;
   }
-  input,
+  &.show {
+    textarea,
+    select {
+      z-index: 11;
+    }
+    textarea {
+      font-size: 12px;
+      line-height: 1.3;
+      background: aliceblue;
+      border: 1px solid #e9e9e9;
+      z-index: 20;
+      resize: none;
+      opacity: 1;
+    }
+  }
+  textarea {
+    opacity: 0;
+  }
+  textarea,
   span,
   select {
     position: absolute;
@@ -232,12 +263,15 @@ export default {
     border: 1px solid transparent;
     outline: none;
   }
-  input,
+  textarea,
   select {
     z-index: 5;
   }
   span {
     z-index: 10;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   img {
     width: auto;
@@ -264,10 +298,6 @@ export default {
     opacity: 1;
     visibility: visible;
   }
-}
-.show input,
-.show select {
-  z-index: 11;
 }
 .submenu_wrap {
   position: absolute;
