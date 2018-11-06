@@ -16,6 +16,7 @@
       :submenu-status="submenuStatusTbody"
       v-on:submenu-enable="enableSubmenu"
       v-on:tbody-td-click="handleTbodyTdClick"
+      v-on:tbody-select-multiple-cell="handleSelectMultipleCell"
       v-on:tbody-td-double-click="handleTbodyTdDoubleClick"
       v-on:tbody-td-context-menu="handleTbodyContextMenu"
       v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
@@ -51,11 +52,14 @@ export default {
     return {
       arrayDragData: [],
       eventDrag: false,
+      dataStock: [],
       dragStartData: {},
       dragStartName: '',
       dragStartRow: null,
       oldTdActive: null,
       oldTdShow: null,
+      selectedCell: null,
+      selectedMultipleCell: null,
       submenuStatusTbody: false,
       submenuStatusThead: false,
       submenuEnableCol: null,
@@ -137,8 +141,47 @@ export default {
       }
     },
     // tbody
+    handleSelectMultipleCell(event, entry, rowIndex, colIndex, type) {
+      console.log('handleSelectMultipleCell', event, entry, rowIndex, colIndex, type);
+      this.selectedMultipleCell = {
+        rowStart: this.selectedCell.row,
+        colStart: this.selectedCell.col,
+        rowEnd: rowIndex,
+        colEnd: colIndex,
+      }
+
+      this.stockDataCell();
+
+      this.selectedMultipleCell = null;
+      this.dataStock = [];
+    },
+    stockDataCell() {
+      for (let row = this.selectedMultipleCell.rowStart; row < this.selectedMultipleCell.rowEnd + 1; row++) {
+        for (let col = this.selectedMultipleCell.colStart; col < this.selectedMultipleCell.colEnd + 1; col++) {
+          var cellName = Object.keys(this.data[row])[col];
+          var cellObject = Object.values(this.data[row])[col];
+          this.dataStock.push(
+            {
+              cellName,
+              cellObject,
+            }
+          );
+        }
+      }
+      document.addEventListener('copy', function(e){
+        e.clipboardData.setData('text/html', this.dataStock);
+        e.preventDefault(); // We want to write our data to the clipboard, not data from any user selection
+      });
+      console.log(this.dataStock);
+    },
     handleTbodyTdClick(event, entry, rowIndex, colIndex, type) {
       console.log('handleTbodyTdClick', event, entry, rowIndex, colIndex, type);
+      if (!this.selectedMultipleCell) {
+        this.selectedCell = {
+          row: rowIndex,
+          col: colIndex,
+        };
+      }
       this.bindClassActiveOnTd(entry, rowIndex, colIndex);
       this.enableSubmenu();
       if (this.oldTdShow && this.oldTdShow.col !== colIndex) {

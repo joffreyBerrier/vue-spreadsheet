@@ -8,6 +8,7 @@
             :id="entry"
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
+            @click.shift.exact="handleSelectMultipleCell($event, entry, rowIndex, colIndex, col.type)"
             @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
             @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
@@ -112,6 +113,9 @@ export default {
         height: `${100}%`,
         width: `${100}%`,
       };
+    },
+    handleSelectMultipleCell(event, entry, rowIndex, colIndex, type) {
+      this.$emit('tbody-select-multiple-cell', event, entry, rowIndex, colIndex, type);
     },
     handleDownDragToFill(event, entry, col, rowIndex, colIndex) {
       this.$emit('tbody-down-dragtofill', event, entry, col, rowIndex, colIndex);
