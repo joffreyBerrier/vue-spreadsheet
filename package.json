@@ -1,6 +1,6 @@
 {
-  "name": "Spreadsheet Vue.js",
-  "description": "An easier Spreadsheet in Vue.js",
+  "name": "Spreadsheet-vuejs",
+  "description": "An easier Spreadsheet in Vue",
   "author": "jasonm00n <joffrey.berrier@gmail.com>",
   "version": "0.2.0",
   "private": true,
