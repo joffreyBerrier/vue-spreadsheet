@@ -4,8 +4,9 @@
       <template v-for="(header, colIndex) in header">
         <th
           class="th"
-          :key="header.headerKey"
-          :style="header.style">
+          :style="header.style"
+          v-bind:class="{'disabled': header.disabled}"
+          :key="header.headerKey">
           <span>{{header.headerName | truncate}}</span>
 
           <template
@@ -93,6 +94,13 @@ export default {
   border-top: 0;
   border-right: 1px solid white;
   transition: all ease 0.5s;
+  &.disabled {
+    pointer-events: none;
+    span { 
+      background: #cccccc;
+      opacity: .5;
+    }
+  }
 }
 .submenu_wrap {
   position: absolute;
