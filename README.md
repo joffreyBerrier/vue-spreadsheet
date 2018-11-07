@@ -70,6 +70,7 @@ props                             | Type       | Description
   headerName        | String  | The name of your header written like you want
   headerkey         | String  | The Slugify version of your headerName
   style             | Object  | The style of your td
+  disabled          | Boolean | not mandatory - Disabled cell
 
 #### Exemple
 
@@ -124,6 +125,7 @@ headers: [
   selectedOptions     | String  | The value by default - Only for type ``<select>``
   active              | Boolean | The status of cell false by default
   style               | Object  | The Style of your cell
+  disabled            | Boolean | not mandatory - Disabled cell
 
 #### Exemple
 

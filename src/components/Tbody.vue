@@ -14,7 +14,7 @@
             @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @mousemove="handleMoveDragToFill($event, entry, col, rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)"
-            v-bind:class="{'active_td': col.active, 'show': col.show, 'selected': col.selected}"
+            v-bind:class="{'active_td': col.active, 'show': col.show, 'disabled': col.disabled, 'selected': col.selected}"
             :key="entry">
 
             <template
@@ -227,6 +227,13 @@ export default {
   &.selected span {
     border: 1px solid #e9e9e9;
     background: aliceblue;
+  }
+  &.disabled {
+    pointer-events: none;
+    span { 
+      background: #cccccc;
+      opacity: .5;
+    }
   }
   &.show {
     textarea,

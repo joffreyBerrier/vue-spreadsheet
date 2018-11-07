@@ -67,6 +67,7 @@ export default {
             type: 'img',
             value: 'https://via.placeholder.com/350x150',
             active: false,
+            disabled: true,
           },
           name: {
             type: 'input',
