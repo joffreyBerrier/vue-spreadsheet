@@ -52,7 +52,7 @@ export default {
     return {
       arrayDragData: [],
       eventDrag: false,
-      dataStock: [],
+      storeCopyDatas: [],
       dragStartData: {},
       dragStartName: '',
       dragStartRow: null,
@@ -64,6 +64,22 @@ export default {
       submenuStatusThead: false,
       submenuEnableCol: null,
     };
+  },
+  mounted() {
+    const _this = this;
+
+    document.addEventListener('copy', function () {
+      _this.copyStoreData();
+      _this.cleanActiveOnTd('selected');
+    });
+    document.addEventListener('paste', function () {
+      if (_this.storeCopyDatas.length > 0) {
+        _this.pasteReplaceData();
+        _this.storeCopyDatas = [];
+        _this.selectedMultipleCell = null;
+        _this.cleanActiveOnTd('selected');
+      }
+    });
   },
   methods: {
     // global
@@ -80,9 +96,9 @@ export default {
       }
     },
     bindClassActiveOnTd(entry, rowIndex, colIndex) {
+      this.cleanActiveOnTd('active');
       this.data[rowIndex][entry].active = true;
       // stock oldTdActive in object
-
       if (this.oldTdActive) this.data[this.oldTdActive.row][this.oldTdActive.key].active = false;
       this.oldTdActive = {
         key: entry,
@@ -140,53 +156,103 @@ export default {
         this.dragTofillReplaceData(entry, rowIndex, colIndex, type);
       }
     },
-    // tbody
     handleSelectMultipleCell(event, entry, rowIndex, colIndex, type) {
       console.log('handleSelectMultipleCell', event, entry, rowIndex, colIndex, type);
       this.selectedMultipleCell = {
         rowStart: this.selectedCell.row,
         colStart: this.selectedCell.col,
+        keyStart: this.selectedCell.key,
         rowEnd: rowIndex,
         colEnd: colIndex,
-      }
-
-      this.stockDataCell();
-
-      this.selectedMultipleCell = null;
-      this.dataStock = [];
+        keyEnd: entry,
+      };
+      // Add active on cells selected
+      this.modifyMultipleCell('selected');
     },
-    stockDataCell() {
-      for (let row = this.selectedMultipleCell.rowStart; row < this.selectedMultipleCell.rowEnd + 1; row++) {
-        for (let col = this.selectedMultipleCell.colStart; col < this.selectedMultipleCell.colEnd + 1; col++) {
-          var cellName = Object.keys(this.data[row])[col];
-          var cellObject = Object.values(this.data[row])[col];
-          this.dataStock.push(
-            {
-              cellName,
-              cellObject,
-            }
-          );
+    copyStoreData() {
+      // stock data in new Data
+      const newData = JSON.parse(JSON.stringify(this.data));
+
+      if (this.selectedMultipleCell) {
+        let rowMin = this.selectedMultipleCell.rowStart;
+        let colMin = this.selectedMultipleCell.colStart;
+        const rowMax = this.selectedMultipleCell.rowEnd;
+        const colMax = this.selectedMultipleCell.colEnd;
+
+        let rowValues = Object.values(newData[rowMin]);
+        const colName = Object.keys(newData[rowMin]);
+
+        let storeData = {};
+
+        while (rowMin <= rowMax) {
+          storeData[colName[colMin]] = rowValues[colMin];
+          colMin += 1;
+          if (colMin > colMax) {
+            this.storeCopyDatas.push(storeData);
+            colMin = this.selectedMultipleCell.colStart;
+            rowValues = Object.values(newData[rowMin]);
+            rowMin += 1;
+            storeData = {};
+          }
+        }
+      } else if (this.selectedCell) {
+        this.storeCopyDatas.push(newData[this.selectedCell.row][this.selectedCell.key]);
+      }
+    },
+    pasteReplaceData() {
+      if (this.selectedMultipleCell) {
+        this.modifyMultipleCell('replace');
+      } else if (this.selectedCell) {
+        this.data[this.selectedCell.row][this.selectedCell.key] = this.storeCopyDatas[0];
+      }
+      this.storeCopyDatas = [];
+    },
+    modifyMultipleCell(params) {
+      const rowMax = this.selectedMultipleCell.rowEnd;
+      const colMax = this.selectedMultipleCell.colEnd;
+      let rowMin = this.selectedMultipleCell.rowStart;
+      let colMin = this.selectedMultipleCell.colStart;
+
+      while (rowMin <= rowMax) {
+        const key = rowMin - this.selectedMultipleCell.rowStart;
+        const keyValue = Object.keys(this.data[rowMin])[colMin];
+
+        if (params === 'selected') {
+          this.data[rowMin][keyValue].selected = true;
+        } else if (params === 'replace') {
+          this.data[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
+        }
+        colMin += 1;
+        if (colMin > colMax) {
+          colMin = this.selectedMultipleCell.colStart;
+          rowMin += 1;
         }
       }
-      document.addEventListener('copy', function(e){
-        e.clipboardData.setData('text/html', this.dataStock);
-        e.preventDefault(); // We want to write our data to the clipboard, not data from any user selection
-      });
-      console.log(this.dataStock);
     },
     handleTbodyTdClick(event, entry, rowIndex, colIndex, type) {
       console.log('handleTbodyTdClick', event, entry, rowIndex, colIndex, type);
-      if (!this.selectedMultipleCell) {
-        this.selectedCell = {
-          row: rowIndex,
-          col: colIndex,
-        };
-      }
       this.bindClassActiveOnTd(entry, rowIndex, colIndex);
+      this.selectedCell = {
+        key: entry,
+        row: rowIndex,
+        col: colIndex,
+      };
       this.enableSubmenu();
       if (this.oldTdShow && this.oldTdShow.col !== colIndex) {
         this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
       }
+    },
+    cleanActiveOnTd(params) {
+      this.data.forEach((data, index) => {
+        Object.keys(data).forEach((key) => {
+          if (this.data[index][key].active === true && params === 'active') {
+            this.data[index][key].active = false;
+          }
+          if (this.data[index][key].selected === true && params === 'selected') {
+            this.data[index][key].selected = false;
+          }
+        });
+      });
     },
     handleTbodyTdDoubleClick(event, entry, rowIndex, colIndex, activElement, type) {
       console.log('handleTbodyTdDoubleClick', event, entry, rowIndex, colIndex, activElement, type);
