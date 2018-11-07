@@ -8,12 +8,13 @@
             :id="entry"
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
+            @click.shift.exact="handleSelectMultipleCell($event, entry, rowIndex, colIndex, col.type)"
             @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
             @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @mousemove="handleMoveDragToFill($event, entry, col, rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)"
-            v-bind:class="{'active_td': col.active, 'show': col.show}"
+            v-bind:class="{'active_td': col.active, 'show': col.show, 'selected': col.selected}"
             :key="entry">
 
             <template
@@ -36,9 +37,7 @@
                     <button
                       v-if="submenu.disabled.includes(entry) == 0"
                       :key="index"
-                      @click.stop="handleClickSubmenu(
-                        $event, entry, rowIndex, colIndex, col.type, submenu.function)"
-                      >
+                      @click.stop="handleClickSubmenu($event, entry, rowIndex, colIndex, col.type, submenu.function)">
                       {{submenu.value}}
                     </button>
                   </template>
@@ -113,22 +112,22 @@ export default {
         width: `${100}%`,
       };
     },
+    handleSelectMultipleCell(event, entry, rowIndex, colIndex, type) {
+      this.$emit('tbody-select-multiple-cell', event, entry, rowIndex, colIndex, type);
+    },
     handleDownDragToFill(event, entry, col, rowIndex, colIndex) {
       this.$emit('tbody-down-dragtofill', event, entry, col, rowIndex, colIndex);
     },
     handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
-      // create an object wich contains new data
       this.$emit('tbody-move-dragtofill', event, entry, col, rowIndex, colIndex);
     },
     handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
       this.$emit('tbody-up-dragtofill', event, entry, rowIndex, colIndex, type);
     },
     handleClickTd(event, entry, rowIndex, colIndex, type) {
-      // emit
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
     },
     handleDoubleClickTd(event, entry, rowIndex, colIndex, type) {
-      // emit
       this.$emit('tbody-td-double-click', event, entry, rowIndex, colIndex, type);
     },
     handleContextMenuTd(event, entry, rowIndex, colIndex, type) {
@@ -224,7 +223,8 @@ export default {
   &:first-child {
     border-left: 1px solid #dadada;
   }
-  &.active_td span {
+  &.active_td span,
+  &.selected span {
     border: 1px solid #e9e9e9;
     background: aliceblue;
   }
