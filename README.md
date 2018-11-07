@@ -123,8 +123,8 @@ headers: [
   value(img/input)    | String  | The value of your object in *String Type*
   value(select)       | Array   | The value of your object in *Array Type*
   selectedOptions     | String  | The value by default - Only for type ``<select>``
-  active              | Boolean | The status of cell false by default
   style               | Object  | The Style of your cell
+  active              | Boolean | The status of cell false by default
   disabled            | Boolean | not mandatory - Disabled cell
 
 #### Exemple
