@@ -61,7 +61,6 @@ export default {
   methods: {
     handleContextMenuTd(event, entry, colIndex) {
       this.submenuEnableCol = colIndex;
-
       if (this.submenuStatus === true) {
         this.$emit('submenu-enable', 'tbody');
       } else {

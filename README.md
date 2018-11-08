@@ -125,6 +125,7 @@ headers: [
   selectedOptions     | String  | The value by default - Only for type ``<select>``
   style               | Object  | The Style of your cell
   active              | Boolean | The status of cell false by default
+  search              | Boolean | Active search on select
   disabled            | Boolean | not mandatory - Disabled cell
 
 #### Exemple
@@ -156,6 +157,7 @@ products: [
     age: {
       active: false,
       type: 'select',
+      search: true,
       value: [1, 2, 3],
       selectedOptions: 2,
     },
@@ -257,6 +259,7 @@ products: [
             active: false,
             type: 'select',
             value: [1, 2, 3],
+            search: true,
             selectedOptions: 2,
           },
           born: {

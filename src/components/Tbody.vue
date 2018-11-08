@@ -11,7 +11,7 @@
             @click.shift.exact="handleSelectMultipleCell($event, entry, rowIndex, colIndex, col.type)"
             @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
             @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
-            @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
+            @dblclick="handleDoubleClickTd($event, entry, col, rowIndex, colIndex, col.type)"
             @mousemove="handleMoveDragToFill($event, entry, col, rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)"
             v-bind:class="{'active_td': col.active, 'show': col.show, 'disabled': col.disabled, 'selected': col.selected}"
@@ -62,18 +62,7 @@
             </template>
 
             <!-- If Select -->
-            <template v-if="col.type === 'select'">
-              <!-- <span :style="col.style">{{col.selectedOptions}}</span> -->
-              <!-- <select
-                v-model="col.selectedOptions"
-                @change="selectHandleChange($event, entry, rowIndex, colIndex)">
-                <option
-                  v-for="(val, index) in col.value"
-                  :value="val"
-                  :key="index">
-                    {{val}}
-                </option>
-              </select> -->
+            <template v-if="col.type === 'select' && col.search">
               <span :style="col.style">{{col.selectedOptions}}</span>
               <div class="dropdown">
                 <input
@@ -89,6 +78,19 @@
                   </li>
                 </ul>
               </div>
+            </template>
+            <template v-else-if="col.type === 'select'">
+              <span :style="col.style">{{col.selectedOptions}}</span>
+              <select
+                v-model="col.selectedOptions"
+                @change="selectHandleChange($event, entry, rowIndex, colIndex)">
+                <option
+                  v-for="(val, index) in col.value"
+                  :value="val"
+                  :key="index">
+                    {{val}}
+                </option>
+              </select>
             </template>
           </td>
         </template>
@@ -145,9 +147,11 @@ export default {
     handleClickTd(event, entry, rowIndex, colIndex, type) {
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
     },
-    handleDoubleClickTd(event, entry, rowIndex, colIndex, type) {
-      this.$refs['input-' + colIndex + '-' + rowIndex][0].focus();
-      this.$emit('tbody-td-double-click', event, entry, rowIndex, colIndex, type);
+    handleDoubleClickTd(event, entry, col, rowIndex, colIndex, type) {
+      if (type === 'input' || (col.type === 'select' && col.search)) {
+        this.$refs['input-' + colIndex + '-' + rowIndex][0].focus();
+      }
+      this.$emit('tbody-td-double-click', event, entry, col, rowIndex, colIndex, type);
     },
     handleContextMenuTd(event, entry, rowIndex, colIndex, type) {
       this.submenuEnableCol = colIndex;
