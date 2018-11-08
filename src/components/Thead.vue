@@ -82,7 +82,7 @@ export default {
   height: 40px;
   line-height: 40px;
   position: relative;
-  background: #dadada;
+  background: #e7ecf5;
   z-index: 15;
   text-align: left;
   padding: 2px 5px;

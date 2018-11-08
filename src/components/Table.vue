@@ -264,9 +264,7 @@ export default {
 
       // add class show on element
       this.data[rowIndex][entry].show = true;
-      if (type === 'input') {
-        event.currentTarget.lastElementChild.focus();
-      }
+
       this.oldTdShow = {
         key: entry,
         row: rowIndex,
