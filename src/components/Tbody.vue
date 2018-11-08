@@ -13,7 +13,7 @@
             @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @mousemove="handleMoveDragToFill($event, entry, col, rowIndex, colIndex)"
-            @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)"
+            @mouseup="handleUpDragToFill($event, entry, col, rowIndex, colIndex, col.type)"
             v-bind:class="{'active_td': col.active, 'show': col.show, 'disabled': col.disabled, 'selected': col.selected}"
             :key="entry">
 
@@ -22,7 +22,7 @@
               <button
                 class="drag_to_fill"
                 @mousedown="handleDownDragToFill($event, entry, col, rowIndex, colIndex)"
-                @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)">
+                @mouseup="handleUpDragToFill($event, entry, col, rowIndex, colIndex, col.type)">
               </button>
             </template>
 
@@ -121,8 +121,8 @@ export default {
     handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
       this.$emit('tbody-move-dragtofill', event, entry, col, rowIndex, colIndex);
     },
-    handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
-      this.$emit('tbody-up-dragtofill', event, entry, rowIndex, colIndex, type);
+    handleUpDragToFill(event, entry, col, rowIndex, colIndex, type) {
+      this.$emit('tbody-up-dragtofill', event, entry, col, rowIndex, colIndex, type);
     },
     handleClickTd(event, entry, rowIndex, colIndex, type) {
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
