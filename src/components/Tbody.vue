@@ -11,10 +11,11 @@
             @click.shift.exact="handleSelectMultipleCell($event, entry, rowIndex, colIndex, col.type)"
             @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
             @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
-            @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
+            @dblclick="handleDoubleClickTd($event, entry, col, rowIndex, colIndex, col.type)"
             @mousemove="handleMoveDragToFill($event, entry, col, rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)"
             v-bind:class="{'active_td': col.active, 'show': col.show, 'disabled': col.disabled, 'selected': col.selected}"
+            :ref="'td-' + colIndex + '-' + rowIndex"
             :key="entry">
 
             <template
@@ -56,11 +57,29 @@
               <textarea
                 :style="textareaStyle(col.value)"
                 v-model="col.value"
+                :ref="'input-' + colIndex + '-' + rowIndex"
                 @change="inputHandleChange($event, entry, rowIndex, colIndex)"></textarea>
             </template>
 
             <!-- If Select -->
-            <template v-if="col.type === 'select'">
+            <template v-if="col.type === 'select' && col.search">
+              <span :style="col.style">{{col.selectedOptions}}</span>
+              <div class="dropdown">
+                <input
+                  v-model="col.selectedOptions"
+                  :ref="'input-' + colIndex + '-' + rowIndex"
+                  @keyup="searchHandleChange($event, entry, col, rowIndex, colIndex)"/>
+                <ul v-bind:class="{'show': col.search}">
+                  <li v-for="(val, index) in filteredList"
+                    @click.stop="validSearch($event, val, col, rowIndex, colIndex)"
+                    :value="val"
+                    :key="index">
+                      {{val}}
+                  </li>
+                </ul>
+              </div>
+            </template>
+            <template v-else-if="col.type === 'select'">
               <span :style="col.style">{{col.selectedOptions}}</span>
               <select
                 v-model="col.selectedOptions"
@@ -92,6 +111,7 @@ export default {
   data() {
     return {
       oldValue: null,
+      filteredList: [],
       submenuEnableCol: null,
       submenuEnableRow: null,
     };
@@ -127,8 +147,11 @@ export default {
     handleClickTd(event, entry, rowIndex, colIndex, type) {
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
     },
-    handleDoubleClickTd(event, entry, rowIndex, colIndex, type) {
-      this.$emit('tbody-td-double-click', event, entry, rowIndex, colIndex, type);
+    handleDoubleClickTd(event, entry, col, rowIndex, colIndex, type) {
+      if (type === 'input' || (col.type === 'select' && col.search)) {
+        this.$refs['input-' + colIndex + '-' + rowIndex][0].focus();
+      }
+      this.$emit('tbody-td-double-click', event, entry, col, rowIndex, colIndex, type);
     },
     handleContextMenuTd(event, entry, rowIndex, colIndex, type) {
       this.submenuEnableCol = colIndex;
@@ -141,6 +164,20 @@ export default {
     },
     selectHandleChange(event, entry, rowIndex, colIndex) {
       this.$emit('tbody-select-change', event, entry, rowIndex, colIndex);
+    },
+    searchHandleChange(event, entry, col, rowIndex, colIndex) {
+      col.search = true;
+      this.filteredList = col.value.filter((val) => {
+        if (typeof val === "number") {
+          return val.toString().toLowerCase().includes(col.selectedOptions.toString().toLocaleLowerCase());
+        } else {
+          return val.toLowerCase().include(col.selectedOptions.toLocaleLowerCase());
+        }
+      });
+    },
+    validSearch($event, val, col, rowIndex, colIndex) {
+      col.search = false;
+      return col.selectedOptions = val;
     },
     handleClickSubmenu(event, entry, rowIndex, colIndex, type, submenuFunction) {
       this.$emit('tbody-submenu-click-callback', event, entry, rowIndex, colIndex, type, submenuFunction);
@@ -197,7 +234,6 @@ export default {
           const rowIndex = Number(actualElement.getAttribute('data-row-index'));
           const colIndex = Number(actualElement.getAttribute('data-col-index'));
           this.$emit('tbody-nav-enter', event, event.keyCode, actualElement, rowIndex, colIndex);
-
           actualElement.classList.add('show');
           actualElement.lastElementChild.focus();
         }
@@ -214,14 +250,14 @@ export default {
   line-height: 40px;
   position: relative;
   background: white;
-  border-right: 1px solid #dadada;
-  border-bottom: 1px solid #dadada;
+  border-right: 1px solid #e7ecf5;
+  border-bottom: 1px solid #e7ecf5;
   padding: 0;
   text-align: left;
   box-sizing: border-box;
   transition: all ease 0.5s;
   &:first-child {
-    border-left: 1px solid #dadada;
+    border-left: 1px solid #e7ecf5;
   }
   &.active_td span,
   &.selected span {
@@ -237,7 +273,8 @@ export default {
   }
   &.show {
     textarea,
-    select {
+    select,
+    .dropdown {
       z-index: 11;
     }
     textarea {
@@ -250,7 +287,8 @@ export default {
       opacity: 1;
     }
   }
-  textarea {
+  textarea,
+  .dropdown {
     opacity: 0;
   }
   textarea,
@@ -292,7 +330,7 @@ export default {
     bottom: 0;
     width: 6px;
     height: 6px;
-    background: #dadada;
+    background: #e7ecf5;
     display: block;
     z-index: 11;
     border: 0;
@@ -304,6 +342,59 @@ export default {
   &:hover .drag_to_fill {
     opacity: 1;
     visibility: visible;
+  }
+  .dropdown {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: white;
+    line-height: 40px;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    outline: none;
+    opacity: 1;
+    input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 2px 5px;
+      text-align: left;
+      height: 100%;
+      width: 100%;
+      border: 0;
+      outline: none;
+    }
+    ul {
+      display: none;
+      position: absolute;
+      top: 38px;
+      background-color: #fff;
+      width: 100%;
+      border: 1px solid #e7ecf5;
+      box-shadow: 0px -8px 34px 0px rgba(0, 0, 0, 0.05);
+      z-index: 1;
+      padding: 0;
+      margin: 0;
+      li {
+        list-style: none;
+        font-size: 11px;
+        line-height: 40px;
+        padding: 2px 5px;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+        transition: all ease .5s;
+        &:hover {
+          background: #e7ecf5;
+        }
+      }
+      &.show {
+        display: block;
+      }
+    }
   }
 }
 .submenu_wrap {

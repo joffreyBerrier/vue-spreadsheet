@@ -83,11 +83,11 @@ export default {
   },
   methods: {
     // global
-    enableSubmenu(place) {
-      if (place === 'thead') {
+    enableSubmenu(target) {
+      if (target === 'thead') {
         this.submenuStatusThead = true;
         this.submenuStatusTbody = false;
-      } else if (place === 'tbody') {
+      } else if (target === 'tbody') {
         this.submenuStatusThead = false;
         this.submenuStatusTbody = true;
       } else {
@@ -256,17 +256,15 @@ export default {
         this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
       }
     },
-    handleTbodyTdDoubleClick(event, entry, rowIndex, colIndex, activElement, type) {
-      console.log('handleTbodyTdDoubleClick', event, entry, rowIndex, colIndex, activElement, type);
+    handleTbodyTdDoubleClick(event, entry, col, rowIndex, colIndex, type) {
+      console.log('handleTbodyTdDoubleClick', event, entry, col, rowIndex, colIndex, type);
 
       // stock oldTdShow in object
       if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
 
       // add class show on element
       this.data[rowIndex][entry].show = true;
-      if (type === 'input') {
-        event.currentTarget.lastElementChild.focus();
-      }
+
       this.oldTdShow = {
         key: entry,
         row: rowIndex,
@@ -311,6 +309,7 @@ export default {
     },
     // thead
     handleTheadContextMenu(event, entry, colIndex) {
+      this.submenuStatusTbody = false;
       console.log('handleTheadContextMenu', event, entry, colIndex);
     },
   },
