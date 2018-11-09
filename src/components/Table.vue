@@ -109,6 +109,7 @@ export default {
         Object.keys(data).forEach((key) => {
           if (this.data[index][key].active === true && params === 'active') {
             this.data[index][key].active = false;
+            this.data[index][key].show = false;
           }
           if (this.data[index][key].selected === true && params === 'selected') {
             this.data[index][key].selected = false;
