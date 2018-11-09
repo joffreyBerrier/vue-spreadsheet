@@ -73,9 +73,9 @@ export default {
     document.addEventListener('paste', () => {
       if (this.storeCopyDatas.length > 0) {
         this.pasteReplaceData();
+        this.cleanActiveOnTd('selected');
         this.storeCopyDatas = [];
         this.selectedMultipleCell = null;
-        this.cleanActiveOnTd('selected');
       }
     });
   },
@@ -106,15 +106,20 @@ export default {
     },
     cleanActiveOnTd(params) {
       this.data.forEach((data, index) => {
-        Object.keys(data).forEach((key) => {
-          if (this.data[index][key].active === true && params === 'active') {
-            this.data[index][key].active = false;
-            this.data[index][key].show = false;
-          }
-          if (this.data[index][key].selected === true && params === 'selected') {
-            this.data[index][key].selected = false;
-          }
-        });
+        if (params === 'active') {
+          Object.keys(data).forEach((key) => {
+            if (this.data[index][key].active === true) {
+              this.data[index][key].active = false;
+              this.data[index][key].show = false;
+            }
+          });
+        } else if (params === 'selected') {
+          Object.keys(data).forEach((key) => {
+            if (this.data[index][key].selected === true) {
+              this.data[index][key].selected = false;
+            }
+          });
+        }
       });
     },
     // Copy / Paste
@@ -136,6 +141,8 @@ export default {
       const newData = JSON.parse(JSON.stringify(this.data));
 
       if (this.selectedMultipleCell) {
+        const maxRow = newData.length;
+
         let rowMin = this.selectedMultipleCell.rowStart;
         let colMin = this.selectedMultipleCell.colStart;
         const rowMax = this.selectedMultipleCell.rowEnd;
@@ -153,7 +160,11 @@ export default {
             this.storeCopyDatas.push(storeData);
             colMin = this.selectedMultipleCell.colStart;
             rowMin += 1;
-            rowValues = Object.values(newData[rowMin]);
+            if (rowMin !== maxRow) {
+              rowValues = Object.values(newData[rowMin]);
+            } else {
+              rowValues = Object.values(newData[rowMin - 1]);
+            }
             storeData = {};
           }
         }
@@ -182,7 +193,11 @@ export default {
         if (params === 'selected') {
           this.data[rowMin][keyValue].selected = true;
         } else if (params === 'replace') {
-          this.data[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
+          if (colMin === colMax) {
+            this.data[rowMin][keyValue] = Object.values(this.storeCopyDatas[key])[0];
+          } else {
+            this.data[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
+          }
         }
         colMin += 1;
         if (colMin > colMax) {
