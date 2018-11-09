@@ -187,58 +187,68 @@ export default {
     },
     moveKeydown(event) {
       const actualElement = document.getElementsByClassName('active_td')[0];
-      if (actualElement) {
-        if (event.keyCode === 37 ||
-            event.keyCode === 39 ||
-            event.keyCode === 40 ||
-            event.keyCode === 38) {
-          // remove active class / blur
-          actualElement.lastElementChild.blur();
-          actualElement.classList.remove('active_td');
-          const colIndex = Number(actualElement.getAttribute('data-col-index'));
-          const rowIndex = Number(actualElement.getAttribute('data-row-index'));
+      if (actualElement &&
+        (event.keyCode === 37 ||
+        event.keyCode === 39 ||
+        event.keyCode === 40 ||
+        event.keyCode === 38 ||
+        event.keyCode === 13)) {
 
-          this.$emit('tbody-nav', event, event.keyCode, actualElement, rowIndex, colIndex);
+        const colIndex = Number(actualElement.getAttribute('data-col-index'));
+        const rowIndex = Number(actualElement.getAttribute('data-row-index'));
+        // remove active to before-active cell
+        const actualCol = Object.keys(this.rowData[rowIndex])[colIndex];
+        this.rowData[rowIndex][actualCol].active = false;
 
-          // right
-          if (event.keyCode === 39) {
-            if (!actualElement.nextElementSibling) {
-              actualElement.parentElement.firstElementChild.classList.add('active_td');
-            } else {
-              actualElement.nextElementSibling.classList.add('active_td');
-            }
-          }
-          // left
-          if (event.keyCode === 37) {
-            if (!actualElement.previousElementSibling) {
-              actualElement.parentElement.lastElementChild.classList.add('active_td');
-            } else {
-              actualElement.previousElementSibling.classList.add('active_td');
-            }
-          }
-          // bottom
-          if (event.keyCode === 40) {
-            if (!actualElement.parentElement.nextElementSibling) {
-              actualElement.parentElement.parentElement.firstElementChild.childNodes[colIndex].classList.add('active_td');
-            } else {
-              actualElement.parentElement.nextElementSibling.childNodes[colIndex].classList.add('active_td');
-            }
-          }
-          // top
-          if (event.keyCode === 38) {
-            if (!actualElement.parentElement.previousElementSibling) {
-              actualElement.parentElement.parentElement.lastElementChild.childNodes[colIndex].classList.add('active_td');
-            } else {
-              actualElement.parentElement.previousElementSibling.childNodes[colIndex].classList.add('active_td');
-            }
+        // remove active class / blur
+        actualElement.lastElementChild.blur();
+        actualElement.classList.remove('active_td');
+
+        // set colMax rowMax
+        const colMax = Object.keys(this.rowData).length;
+        const rowMax = this.rowData.length;
+
+        // right
+        if (event.keyCode === 39) {
+          let col = Object.keys(this.rowData[rowIndex])[colIndex + 1];
+          if (col) {
+            this.rowData[rowIndex][col].active = true;
+          } else {
+            col = Object.keys(this.rowData[rowIndex])[colIndex - colMax];
+            this.rowData[rowIndex][col].active = true;
           }
         }
+        // left
+        if (event.keyCode === 37) {
+          let col = Object.keys(this.rowData[rowIndex])[colIndex - 1];
+          if (col) {
+            this.rowData[rowIndex][col].active = true;
+          } else {
+            col = Object.keys(this.rowData[rowIndex])[colIndex + colMax];
+            this.rowData[rowIndex][col].active = true;
+          }
+        }
+        // bottom
+        if (event.keyCode === 40) {
+          if (rowIndex + 1 !== rowMax) {
+            this.rowData[rowIndex + 1][actualCol].active = true;
+          } else {
+            this.rowData[(rowIndex + 1) - rowMax][actualCol].active = true;
+          }
+        }
+        // top
+        if (event.keyCode === 38) {
+          if (rowIndex !== 0) {
+            this.rowData[rowIndex - 1][actualCol].active = true;
+          } else {
+            this.rowData[(rowIndex + rowMax) - 1][actualCol].active = true;
+          }
+        }
+        // press enter
         if (event.keyCode === 13) {
-          const rowIndex = Number(actualElement.getAttribute('data-row-index'));
-          const colIndex = Number(actualElement.getAttribute('data-col-index'));
+          this.rowData[rowIndex][actualCol].show = true;
+          this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
           this.$emit('tbody-nav-enter', event, event.keyCode, actualElement, rowIndex, colIndex);
-          actualElement.classList.add('show');
-          actualElement.lastElementChild.focus();
         }
       }
     },
