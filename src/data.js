@@ -63,13 +63,14 @@ export default {
       },
       age: {
         type: 'select',
-        search: true,
+        handleSearch: true,
         value: [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
         selectedOptions: 28,
         active: false,
       },
       born: {
         type: 'select',
+        handleSearch: true,
         value: [1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992],
         selectedOptions: 1990,
         active: false,

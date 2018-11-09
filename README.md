@@ -125,7 +125,7 @@ headers: [
   selectedOptions     | String  | The value by default - Only for type ``<select>``
   style               | Object  | The Style of your cell
   active              | Boolean | The status of cell false by default
-  search              | Boolean | Active search on select
+  handleSearch        | Boolean | Active search on select
   disabled            | Boolean | not mandatory - Disabled cell
 
 #### Exemple

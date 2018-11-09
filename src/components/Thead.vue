@@ -92,7 +92,7 @@ export default {
   transition: all ease 0.5s;
   &.disabled {
     pointer-events: none;
-    span { 
+    span {
       background: #cccccc;
       opacity: .5;
     }

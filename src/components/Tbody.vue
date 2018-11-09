@@ -62,16 +62,16 @@
             </template>
 
             <!-- If Select -->
-            <template v-if="col.type === 'select' && col.search">
+            <template v-if="col.type === 'select' && col.handleSearch">
               <span :style="col.style">{{col.selectedOptions}}</span>
               <div class="dropdown">
                 <input
                   v-model="col.selectedOptions"
                   :ref="'input-' + colIndex + '-' + rowIndex"
-                  @keyup="searchHandleChange($event, entry, col, rowIndex, colIndex)"/>
+                  @keyup="searchHandleChange(col)"/>
                 <ul v-bind:class="{'show': col.search}">
                   <li v-for="(val, index) in filteredList"
-                    @click.stop="validSearch($event, val, col, rowIndex, colIndex)"
+                    @click.stop="validSearch(val, col)"
                     :value="val"
                     :key="index">
                       {{val}}
@@ -149,7 +149,7 @@ export default {
     },
     handleDoubleClickTd(event, entry, col, rowIndex, colIndex, type) {
       if (type === 'input' || (col.type === 'select' && col.search)) {
-        this.$refs['input-' + colIndex + '-' + rowIndex][0].focus();
+        this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
       }
       this.$emit('tbody-td-double-click', event, entry, col, rowIndex, colIndex, type);
     },
@@ -165,19 +165,22 @@ export default {
     selectHandleChange(event, entry, rowIndex, colIndex) {
       this.$emit('tbody-select-change', event, entry, rowIndex, colIndex);
     },
-    searchHandleChange(event, entry, col, rowIndex, colIndex) {
-      col.search = true;
+    searchHandleChange(col) {
+      const column = col;
+      column.search = true;
+
       this.filteredList = col.value.filter((val) => {
-        if (typeof val === "number") {
+        if (typeof val === 'number') {
           return val.toString().toLowerCase().includes(col.selectedOptions.toString().toLocaleLowerCase());
-        } else {
-          return val.toLowerCase().include(col.selectedOptions.toLocaleLowerCase());
         }
+        return val.toLowerCase().include(col.selectedOptions.toLocaleLowerCase());
       });
     },
-    validSearch($event, val, col, rowIndex, colIndex) {
-      col.search = false;
-      return col.selectedOptions = val;
+    validSearch(val, col) {
+      const column = col;
+      column.search = false;
+      column.show = false;
+      column.selectedOptions = val;
     },
     handleClickSubmenu(event, entry, rowIndex, colIndex, type, submenuFunction) {
       this.$emit('tbody-submenu-click-callback', event, entry, rowIndex, colIndex, type, submenuFunction);
@@ -266,7 +269,7 @@ export default {
   }
   &.disabled {
     pointer-events: none;
-    span { 
+    span {
       background: #cccccc;
       opacity: .5;
     }
