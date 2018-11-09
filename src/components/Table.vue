@@ -192,18 +192,11 @@ export default {
       }
     },
     // drag To Fill
-    dragTofillReplaceData(entry, rowIndex, colIndex, type) {
+    dragTofillReplaceData(entry, rowIndex, colIndex) {
       // replace by the new data
-      if (type === 'input' || 'img') {
-        this.arrayDragData.forEach((data) => {
-          this.data[data.row][data.key].value = this.dragStartData.value;
-        });
-      }
-      if (type === 'select') {
-        this.arrayDragData.forEach((data) => {
-          this.data[data.row][data.key].selectedOptions = this.dragStartData.selectedOptions;
-        });
-      }
+      this.arrayDragData.forEach((data) => {
+        this.data[data.row][data.key].value = this.dragStartData.value;
+      });
       this.arrayDragData = [];
       this.eventDrag = false;
       this.bindClassActiveOnTd(entry, rowIndex, colIndex);
@@ -238,7 +231,7 @@ export default {
     handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
       if (this.eventDrag === true && entry === this.dragStartName) {
         console.log('handleUpDragToFill', event, entry, rowIndex, colIndex, type);
-        this.dragTofillReplaceData(entry, rowIndex, colIndex, type);
+        this.dragTofillReplaceData(entry, rowIndex, colIndex);
       }
     },
     // On click on td

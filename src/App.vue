@@ -39,17 +39,7 @@ export default {
     // callback
     changeValueSelect(rowIndex, colIndex) {
       console.log('changeValueSelect', rowIndex, colIndex);
-      const activeElement = Object.values(this.products[rowIndex])[colIndex];
-      const nextElement = Object.values(this.products[rowIndex])[colIndex + 1];
-      const prevElement = Object.values(this.products[rowIndex])[colIndex - 1];
-
-      const actualYear = new Date().getFullYear();
-      if (nextElement && nextElement.selectedOptions) {
-        nextElement.selectedOptions = actualYear - activeElement.selectedOptions;
-      }
-      if (prevElement && prevElement.selectedOptions) {
-        prevElement.selectedOptions = actualYear - activeElement.selectedOptions;
-      }
+      const element = Object.values(this.products[rowIndex])[colIndex];
     },
     changeColor(event, entry, colIndex, submenuFunction) {
       console.log('changeColor', event, entry, colIndex, submenuFunction);

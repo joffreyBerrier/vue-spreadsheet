@@ -63,32 +63,32 @@
 
             <!-- If Select -->
             <template v-if="col.type === 'select' && col.handleSearch">
-              <span :style="col.style">{{col.selectedOptions}}</span>
+              <span :style="col.style">{{col.value}}</span>
               <div class="dropdown">
                 <input
-                  v-model="col.selectedOptions"
+                  v-model="col.value"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup="searchHandleChange(col)"/>
                 <ul v-bind:class="{'show': col.search}">
-                  <li v-for="(val, index) in filteredList"
-                    @click.stop="validSearch(val, col)"
-                    :value="val"
+                  <li v-for="(option, index) in filteredList"
+                    @click.stop="validSearch(option.value, col)"
+                    :value="option.value"
                     :key="index">
-                      {{val}}
+                      {{option.label}}
                   </li>
                 </ul>
               </div>
             </template>
             <template v-else-if="col.type === 'select'">
-              <span :style="col.style">{{col.selectedOptions}}</span>
+              <span :style="col.style">{{col.value}}</span>
               <select
-                v-model="col.selectedOptions"
+                v-model="col.value"
                 @change="selectHandleChange($event, entry, rowIndex, colIndex)">
                 <option
-                  v-for="(val, index) in col.value"
-                  :value="val"
+                  v-for="(option, index) in col.selectOptions"
+                  :value="option.value"
                   :key="index">
-                    {{val}}
+                    {{option.label}}
                 </option>
               </select>
             </template>
@@ -169,18 +169,18 @@ export default {
       const column = col;
       column.search = true;
 
-      this.filteredList = col.value.filter((val) => {
-        if (typeof val === 'number') {
-          return val.toString().toLowerCase().includes(col.selectedOptions.toString().toLocaleLowerCase());
+      this.filteredList = col.selectOptions.filter((option) => {
+        if (typeof option.value === 'number') {
+          return option.value.toString().toLowerCase().includes(col.value.toString().toLocaleLowerCase());
         }
-        return val.toLowerCase().include(col.selectedOptions.toLocaleLowerCase());
+        return option.value.toLowerCase().include(col.value.toLocaleLowerCase());
       });
     },
     validSearch(val, col) {
       const column = col;
       column.search = false;
       column.show = false;
-      column.selectedOptions = val;
+      column.value = val;
     },
     handleClickSubmenu(event, entry, rowIndex, colIndex, type, submenuFunction) {
       this.$emit('tbody-submenu-click-callback', event, entry, rowIndex, colIndex, type, submenuFunction);

@@ -122,7 +122,7 @@ headers: [
   type                | String  | The type of render data (``<textarea>``, ``<img>``, ``<select>``)
   value(img/input)    | String  | The value of your object in *String Type*
   value(select)       | Array   | The value of your object in *Array Type*
-  selectedOptions     | String  | The value by default - Only for type ``<select>``
+  selectOptions       | Array   | That contains objects {value: ~, label: ~}
   style               | Object  | The Style of your cell
   active              | Boolean | The status of cell false by default
   handleSearch        | Boolean | Active search on select
@@ -134,38 +134,58 @@ headers: [
 products: [
   {
     img: {
-      active: false,
       type: 'img',
       value: 'https://via.placeholder.com/350x150',
+      active: false,
+      disabled: true,
     },
     name: {
-      active: false,
       type: 'input',
       value: 'John',
+      active: false,
       style: {
         color: '#000',
       },
     },
     surname: {
-      active: false,
       type: 'input',
       value: 'Doe',
+      active: false,
       style: {
         color: '#000',
       },
     },
     age: {
-      active: false,
       type: 'select',
-      search: true,
-      value: [1, 2, 3],
-      selectedOptions: 2,
+      handleSearch: true,
+      selectOptions: [
+        {
+          value: 'paris',
+          label: 'Paris',
+        },
+        {
+          value: 'new-york',
+          label: 'New York',
+        },
+      ],
+      value: 'paris',
+      active: false,
     },
     born: {
-      active: false,
       type: 'select',
-      value: [11, 12, 13],
-      selectedOptions: 12,
+      handleSearch: true,
+      selectOptions: [
+        {
+          value: 'france',
+          label: 'France',
+        },
+        {
+          value: 'usa',
+          label: 'United States of America',
+        },
+      ],
+      value: 'france',
+      active: false,
     },
   },
 ],
@@ -235,38 +255,58 @@ products: [
       products: [
         {
           img: {
-            active: false,
             type: 'img',
             value: 'https://via.placeholder.com/350x150',
+            active: false,
+            disabled: true,
           },
           name: {
-            active: false,
             type: 'input',
             value: 'John',
+            active: false,
             style: {
               color: '#000',
             },
           },
           surname: {
-            active: false,
             type: 'input',
             value: 'Doe',
+            active: false,
             style: {
               color: '#000',
             },
           },
           age: {
-            active: false,
             type: 'select',
-            value: [1, 2, 3],
-            search: true,
-            selectedOptions: 2,
+            handleSearch: true,
+            selectOptions: [
+              {
+                value: 'paris',
+                label: 'Paris',
+              },
+              {
+                value: 'new-york',
+                label: 'New York',
+              },
+            ],
+            value: 'paris',
+            active: false,
           },
           born: {
-            active: false,
             type: 'select',
-            value: [11, 12, 13],
-            selectedOptions: 12,
+            handleSearch: true,
+            selectOptions: [
+              {
+                value: 'france',
+                label: 'France',
+              },
+              {
+                value: 'usa',
+                label: 'United States of America',
+              },
+            ],
+            value: 'france',
+            active: false,
           },
         },
       ],
