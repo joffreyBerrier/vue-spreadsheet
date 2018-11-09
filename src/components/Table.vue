@@ -293,8 +293,13 @@ export default {
     handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
       console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
     },
-    callbackSubmenuThead(event, entry, colIndex, submenuFunction) {
-      this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, submenuFunction);
+    callbackSubmenuThead(event, entry, colIndex, submenuFunction, selectOptions) {
+      this.submenuStatusThead = false;
+      if (selectOptions) {
+        this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, selectOptions);
+      } else {
+        this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex);
+      }
     },
     callbackSubmenuTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
       this.$emit(`tbody-submenu-click-${submenuFunction}`, event, entry, rowIndex, colIndex, type, submenuFunction);
