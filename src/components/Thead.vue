@@ -34,6 +34,24 @@
                     {{sub.value}}
                   </button>
                 </template>
+                <template v-if="sub.type === 'select'">
+                  <div class="menu_option" :key="index" v-if="sub.disabled.includes(header.headerKey) == 0">
+                    <template v-if="sub.subtitle"><h3>{{sub.subtitle}}</h3></template>
+                    <select v-model="sub.value">
+                      <option
+                        v-for="(option, index) in sub.selectOptions"
+                        :value="option.value"
+                        :key="index">
+                          {{option.label}}
+                      </option>
+                    </select>
+                    <button
+                      :style="sub.buttonOption.style"
+                      @click.stop="handleClickSubmenu($event, header.headerKey, colIndex, sub.buttonOption.function, sub.value)">
+                        {{sub.buttonOption.value}}
+                    </button>
+                  </div>
+                </template>
               </template>
             </div>
           </template>
@@ -68,8 +86,12 @@ export default {
       }
       this.$emit('thead-td-context-menu', event, entry, colIndex);
     },
-    handleClickSubmenu(event, entry, colIndex, submenuFunction) {
-      this.$emit('thead-submenu-click-callback', event, entry, colIndex, submenuFunction);
+    handleClickSubmenu(event, entry, colIndex, submenuFunction, selectOptions) {
+      if (selectOptions) {
+        this.$emit('thead-submenu-click-callback', event, entry, colIndex, submenuFunction, selectOptions);
+      } else {
+        this.$emit('thead-submenu-click-callback', event, entry, colIndex, submenuFunction);
+      }
     },
   },
 };
@@ -106,20 +128,43 @@ export default {
   margin: 0 auto;
   background: white;
   z-index: 20;
-  padding: 7px 14px;
+  padding: 7px 0;
   box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
   button {
-    width: 100%;
+    display: block;
     height: 30px;
-    line-height: 30px;
-    padding: 0;
+    line-height: 20px;
+    padding: 4px 8px;
+    margin: 0 auto;
     text-align: center;
     border-radius: 4px;
     background: white;
     border: 1px solid #eee;
     outline: none;
+    cursor: pointer;
+    &:hover {
+      background: #e7ecf5;
+    }
     &:focus {
       box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+    }
+  }
+  .menu_option {
+    background: #eee;
+    margin: 7px auto 7px;
+    padding: 10px 8px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    h3 {
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1;
+    }
+    select {
+      display: block;
+      width: 100%;
+      margin: 15px auto;
+      background: white;
     }
   }
 }

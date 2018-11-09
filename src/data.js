@@ -367,6 +367,29 @@ export default {
       disabled: ['img'],
     },
     {
+      type: 'select',
+      disabled: ['img'],
+      subtitle: 'Select state:',
+      selectOptions: [
+        {
+          value: 'new-york',
+          label: 'new-york',
+        },
+        {
+          value: 'france',
+          label: 'france',
+        },
+      ],
+      value: 'new-york',
+      buttonOption: {
+        value: 'change city',
+        function: 'change-city',
+        style: {
+          display: 'block',
+        },
+      },
+    },
+    {
       type: 'button',
       value: 'change value',
       function: 'change-value',

@@ -194,11 +194,20 @@ products: [
 ### submenu :monkey_face:
 
   Name             |  Type  | Description
--------------------|--------|-------------------
-  type             | String | The type of render data (``<button>``) - Only type ``<button>`` for now
-  value            | String | The value of your object in *String Type*
+-------------------|--------|---------------------------------------------------------------------------------------
+  type             | String | The type of render data (``<button>`` || ``<select>``)
+  value            | String | The value of your function
   function         | String | The name of your function called when you click on the button - *Written in Slugify*
   disabled         | Array  | The Name(s) of each objects you don't want to appear on submenu
+  subtitle         | String | The subtitle of you select
+  selectOptions    | Array  | That contains objects {value: ~, label: ~}
+-------------------|--------|----------------------------------------------------------------------------------------
+  buttonOption     | Object | Description
+-------------------|--------|----------------------------------------------------------------------------------------
+    value          | String | The value of your button
+    function       | String | The name of your function called when you click on the button - *Written in Slugify*
+    style          | Object | The style of your button
+-------------------|--------|----------------------------------------------------------------------------------------
 
 #### Exemple
 
@@ -211,12 +220,35 @@ products: [
       disabled: ['img'],
     },
   ],
-  submenuThead: [
+  submenuThead: [ 
     {
       type: 'button',
       value: 'Change Color',
       function: 'change-color',
       disabled: ['img', 'name'],
+    },
+    {
+      type: 'select',
+      disabled: ['img'],
+      subtitle: 'Select state:',
+      selectOptions: [
+        {
+          value: 'new-york',
+          label: 'new-york',
+        },
+        {
+          value: 'france',
+          label: 'france',
+        },
+      ],
+      value: 'new-york',
+      buttonOption: {
+        value: 'change city',
+        function: 'change-city',
+        style: {
+          display: 'block',
+        },
+      },
     },
   ],
 ```
