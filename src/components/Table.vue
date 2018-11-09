@@ -66,18 +66,16 @@ export default {
     };
   },
   mounted() {
-    const _this = this;
-
-    document.addEventListener('copy', function () {
-      _this.copyStoreData();
-      _this.cleanActiveOnTd('selected');
+    document.addEventListener('copy', () => {
+      this.copyStoreData();
+      this.cleanActiveOnTd('selected');
     });
-    document.addEventListener('paste', function () {
-      if (_this.storeCopyDatas.length > 0) {
-        _this.pasteReplaceData();
-        _this.storeCopyDatas = [];
-        _this.selectedMultipleCell = null;
-        _this.cleanActiveOnTd('selected');
+    document.addEventListener('paste', () => {
+      if (this.storeCopyDatas.length > 0) {
+        this.pasteReplaceData();
+        this.storeCopyDatas = [];
+        this.selectedMultipleCell = null;
+        this.cleanActiveOnTd('selected');
       }
     });
   },
