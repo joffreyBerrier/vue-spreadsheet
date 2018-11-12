@@ -196,12 +196,17 @@ export default {
         } else if (params === 'replace') {
           this.$set(this.data[rowMin][keyValue], 'selected', false);
           if (Object.keys(this.storeCopyDatas[0]).length === 1) {
-            // col to col
+            // 0 => 1
+            // 0 => 1
             this.data[rowMin][keyValue] = Object.values(this.storeCopyDatas[key])[0];
-          } else if (this.dragToFill && this.storeCopyDatas.length === 1) {
+          } else if (this.dragToFill && this.eventDrag && this.storeCopyDatas.length === 1) {
             // multiple colCells dragToFill
             const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
             this.data[rowMin][keyValue] = newCopyData[0][keyValue];
+          } else if (Object.keys(this.storeCopyDatas[key]).filter(x => x === keyValue).length === 0 && !this.eventDrag) {
+            const index = colMin - Object.values(this.storeCopyDatas[key]).length - 1;
+            const entry = Object.keys(this.storeCopyDatas[key])[index];
+            this.data[rowMin][keyValue] = this.storeCopyDatas[key][entry];
           } else {
             // multiple rowCells copyPaste
             this.data[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
@@ -265,10 +270,10 @@ export default {
         // if drag col to col in row to row to row
       } else if (this.eventDrag === true && this.selectedMultipleCell) {
         this.selectedMultipleCell.rowEnd = rowIndex;
-        this.eventDrag = false;
         this.modifyMultipleCell('replace');
         this.cleanActiveOnTd('selected');
         this.cleanActiveOnTd('active');
+        this.eventDrag = false;
         this.storeCopyDatas = [];
       }
     },
@@ -361,27 +366,27 @@ export default {
 </script>
 
 <style lang="scss">
-body {
-  background: #fff;
-  display: flex;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font: 400 11px system-ui;
-}
-table{
-  border-collapse: collapse;
-  margin: 5px;
-  th {
-    color: #000;
-    font-weight: normal;
+  body {
+    background: #fff;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font: 400 11px system-ui;
   }
-  td, th {
-    margin: 0;
+  table{
+    border-collapse: collapse;
+    margin: 5px;
+    th {
+      color: #000;
+      font-weight: normal;
+    }
+    td, th {
+      margin: 0;
+    }
   }
-}
-.wrap {
-  margin: 10px auto;
-}
+  .wrap {
+    margin: 10px auto;
+  }
 </style>
