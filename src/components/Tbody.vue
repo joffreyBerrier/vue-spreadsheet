@@ -13,7 +13,7 @@
             @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
             @dblclick="handleDoubleClickTd($event, entry, col, rowIndex, colIndex, col.type)"
             @mousemove="handleMoveDragToFill($event, entry, col, rowIndex, colIndex)"
-            @mouseup="handleUpDragToFill($event, entry, col, rowIndex, colIndex, col.type)"
+            @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)"
             v-bind:class="{'active_td': col.active, 'show': col.show, 'disabled': col.disabled, 'selected': col.selected}"
             :ref="'td-' + colIndex + '-' + rowIndex"
             :key="entry">
@@ -23,7 +23,7 @@
               <button
                 class="drag_to_fill"
                 @mousedown="handleDownDragToFill($event, entry, col, rowIndex, colIndex)"
-                @mouseup="handleUpDragToFill($event, entry, col, rowIndex, colIndex, col.type)">
+                @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)">
               </button>
             </template>
 
@@ -110,8 +110,9 @@ export default {
   },
   data() {
     return {
-      oldValue: null,
+      eventDrag: false,
       filteredList: [],
+      oldValue: null,
       submenuEnableCol: null,
       submenuEnableRow: null,
     };
@@ -136,13 +137,19 @@ export default {
       this.$emit('tbody-select-multiple-cell', event, entry, rowIndex, colIndex, type);
     },
     handleDownDragToFill(event, entry, col, rowIndex, colIndex) {
+      this.eventDrag = true;
       this.$emit('tbody-down-dragtofill', event, entry, col, rowIndex, colIndex);
     },
     handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
-      this.$emit('tbody-move-dragtofill', event, entry, col, rowIndex, colIndex);
+      if (this.eventDrag) {
+        this.$emit('tbody-move-dragtofill', event, entry, col, rowIndex, colIndex);
+      }
     },
-    handleUpDragToFill(event, entry, col, rowIndex, colIndex, type) {
-      this.$emit('tbody-up-dragtofill', event, entry, col, rowIndex, colIndex, type);
+    handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
+      if (this.eventDrag) {
+        this.eventDrag = false;
+        this.$emit('tbody-up-dragtofill', event, entry, rowIndex, colIndex, type);
+      }
     },
     handleClickTd(event, entry, rowIndex, colIndex, type) {
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
@@ -193,7 +200,6 @@ export default {
         event.keyCode === 40 ||
         event.keyCode === 38 ||
         event.keyCode === 13)) {
-
         const colIndex = Number(actualElement.getAttribute('data-col-index'));
         const rowIndex = Number(actualElement.getAttribute('data-row-index'));
         // remove active to before-active cell
@@ -272,9 +278,14 @@ export default {
   &:first-child {
     border-left: 1px solid #e7ecf5;
   }
+  &.active_td {
+    .drag_to_fill {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
   &.active_td span,
   &.selected span {
-    border: 1px solid #e9e9e9;
     background: aliceblue;
   }
   &.disabled {
@@ -341,28 +352,26 @@ export default {
     position: absolute;
     right: 0;
     bottom: 0;
-    width: 6px;
-    height: 6px;
-    background: #e7ecf5;
+    width: 7px;
+    height: 7px;
+    background: #0760fe;
     display: block;
     z-index: 11;
     border: 0;
+    padding: 0;
     cursor: pointer;
     opacity: 0;
     visibility: hidden;
     outline: none;
-  }
-  &:hover .drag_to_fill {
-    opacity: 1;
-    visibility: visible;
+    transition: all .3s ease;
   }
   .dropdown {
     position: relative;
     top: 0;
     left: 0;
     display: block;
-    width: 100%;
-    height: 100%;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
     background: white;
     line-height: 40px;
     box-sizing: border-box;

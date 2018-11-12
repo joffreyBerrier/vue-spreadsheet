@@ -53,8 +53,11 @@ export default {
       arrayDragData: [],
       eventDrag: false,
       storeCopyDatas: [],
-      dragStartData: {},
-      dragEndData: {},
+      dragStart: {
+        name: '',
+        row: null,
+        data: {},
+      },
       oldTdActive: null,
       oldTdShow: null,
       selectedCell: null,
@@ -177,7 +180,6 @@ export default {
       } else if (this.selectedCell) {
         this.data[this.selectedCell.row][this.selectedCell.key] = this.storeCopyDatas[0];
       }
-      this.storeCopyDatas = [];
     },
     modifyMultipleCell(params) {
       const rowMax = this.selectedMultipleCell.rowEnd;
@@ -190,11 +192,18 @@ export default {
         const keyValue = Object.keys(this.data[rowMin])[colMin];
 
         if (params === 'selected') {
-          this.data[rowMin][keyValue].selected = true;
+          this.$set(this.data[rowMin][keyValue], 'selected', true);
         } else if (params === 'replace') {
-          if (colMin === colMax) {
+          this.$set(this.data[rowMin][keyValue], 'selected', false);
+          if (Object.keys(this.storeCopyDatas[0]).length === 1) {
+            // col to col
             this.data[rowMin][keyValue] = Object.values(this.storeCopyDatas[key])[0];
+          } else if (this.dragToFill && this.storeCopyDatas.length === 1) {
+            // multiple colCells dragToFill
+            const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
+            this.data[rowMin][keyValue] = newCopyData[0][keyValue];
           } else {
+            // multiple rowCells copyPaste
             this.data[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
           }
         }
@@ -208,69 +217,66 @@ export default {
     // drag To Fill
     handleDownDragToFill(event, entry, data, rowIndex, colIndex) {
       console.log('handleDownDragToFill', event, entry, data, rowIndex, colIndex);
+      // if drag col to col in vertical
       // Store the data of the cell which it start
       this.data[rowIndex][entry].active = true;
       this.eventDrag = true;
-      this.dragStartData = {
-        col: colIndex,
+      this.dragStart = {
         data,
-        key: entry,
+        name: entry,
         row: rowIndex,
-      }
-      this.selectedMultipleCell = {
-        rowStart: rowIndex,
-        colStart: colIndex,
-        keyStart: entry,
       };
+
+      // if drag col to col in row to row to row
+      if (this.selectedMultipleCell && this.selectedMultipleCell.rowEnd === rowIndex) {
+        this.selectedMultipleCell.rowStart = rowIndex;
+        this.copyStoreData();
+      }
     },
     handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
-      // if (this.eventDrag === true && entry === this.dragStartData.key && rowIndex > this.dragStartData.row) {
-      //   console.log('handleMoveDragToFill', event, entry, col, rowIndex, colIndex);
+      // console.log('handleMoveDragToFill', event, entry, col, rowIndex, colIndex);
 
-      //   // create an object wich contains new data
-      //   this.data[rowIndex][entry].active = true;
-      //   this.dragStartData.row = rowIndex;
-      //   this.arrayDragData.push({
-      //     key: entry,
-      //     value: col.value,
-      //     row: rowIndex,
-      //     col: colIndex,
-      //   });
-      // }
-      let keysData = Object.keys(this.data[rowIndex]);
-
-      if (this.eventDrag === true && keysData.find(x => x === entry).length > 0) {
+      // if drag col to col in vertical
+      if (this.eventDrag === true && entry === this.dragStart.name && rowIndex > this.dragStart.row && !this.selectedMultipleCell) {
         this.data[rowIndex][entry].active = true;
-        this.selectedMultipleCell.rowEnd = rowIndex;
-        this.selectedMultipleCell.colEnd = colIndex;
-        this.selectedMultipleCell.keyEnd = entry;
+        this.dragStart.row = rowIndex;
 
-        // Add active on cells selected
-        this.modifyMultipleCell('selected');
+        this.arrayDragData.push({
+          key: entry,
+          value: col.value,
+          row: rowIndex,
+          col: colIndex,
+        });
+
+        // if drag col to col in row to row to row
+      } else if (this.eventDrag === true && this.selectedMultipleCell) {
+        if (this.selectedMultipleCell.rowEnd !== rowIndex) {
+          this.selectedMultipleCell.rowEnd = rowIndex;
+          this.modifyMultipleCell('selected');
+        }
       }
     },
-    handleUpDragToFill(event, entry, data, rowIndex, colIndex, type) {
-      // this.selectedMultipleCell.rowEnd = rowIndex;
-      // this.selectedMultipleCell.colEnd = colIndex;
-      // this.selectedMultipleCell.keyEnd = entry;
-      this.eventDrag = false;
-      if (this.eventDrag === true && entry === this.dragStartData.key) {
-        console.log('handleUpDragToFill', event, entry, rowIndex, colIndex, type);
+    handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
+      console.log('handleUpDragToFill', event, entry, rowIndex, colIndex, type);
+      // if drag col to col in vertical
+      if (this.eventDrag === true && entry === this.dragStart.name && !this.selectedMultipleCell) {
         this.dragTofillReplaceData(entry, rowIndex, colIndex);
+
+        // if drag col to col in row to row to row
+      } else if (this.eventDrag === true && this.selectedMultipleCell) {
+        this.selectedMultipleCell.rowEnd = rowIndex;
+        this.eventDrag = false;
+        this.modifyMultipleCell('replace');
+        this.cleanActiveOnTd('selected');
+        this.cleanActiveOnTd('active');
+        this.storeCopyDatas = [];
       }
     },
-    dragTofillReplaceData(entry, rowIndex, colIndex, type) {
+    dragTofillReplaceData(entry, rowIndex, colIndex) {
       // replace by the new data
-      if (type === 'input' || 'img') {
-        this.arrayDragData.forEach((data) => {
-          this.data[data.row][data.key].value = this.dragStart.data.value;
-        });
-      }
-      if (type === 'select') {
-        this.arrayDragData.forEach((data) => {
-          this.data[data.row][data.key].selectedOptions = this.dragStart.data.selectedOptions;
-        });
-      }
+      this.arrayDragData.forEach((data) => {
+        this.data[data.row][data.key].value = this.dragStart.data.value;
+      });
       this.arrayDragData = [];
       this.eventDrag = false;
       this.bindClassActiveOnTd(entry, rowIndex, colIndex);
