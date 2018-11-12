@@ -166,7 +166,7 @@ export default {
             label: 30,
           },
         ],
-        value: 28,
+        value: 26,
         active: false,
       },
       born: {
@@ -246,7 +246,7 @@ export default {
             label: 30,
           },
         ],
-        value: 28,
+        value: 30,
         active: false,
       },
       born: {

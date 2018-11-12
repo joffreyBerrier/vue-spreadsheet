@@ -193,7 +193,6 @@ export default {
         event.keyCode === 40 ||
         event.keyCode === 38 ||
         event.keyCode === 13)) {
-
         const colIndex = Number(actualElement.getAttribute('data-col-index'));
         const rowIndex = Number(actualElement.getAttribute('data-row-index'));
         // remove active to before-active cell
@@ -274,7 +273,6 @@ export default {
   }
   &.active_td span,
   &.selected span {
-    border: 1px solid #e9e9e9;
     background: aliceblue;
   }
   &.disabled {
@@ -343,10 +341,11 @@ export default {
     bottom: 0;
     width: 6px;
     height: 6px;
-    background: #e7ecf5;
+    background: #555;
     display: block;
     z-index: 11;
     border: 0;
+    padding: 0;
     cursor: pointer;
     opacity: 0;
     visibility: hidden;
@@ -361,8 +360,8 @@ export default {
     top: 0;
     left: 0;
     display: block;
-    width: 100%;
-    height: 100%;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
     background: white;
     line-height: 40px;
     box-sizing: border-box;
