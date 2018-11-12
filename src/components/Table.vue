@@ -180,7 +180,6 @@ export default {
       } else if (this.selectedCell) {
         this.data[this.selectedCell.row][this.selectedCell.key] = this.storeCopyDatas[0];
       }
-      this.storeCopyDatas = [];
     },
     modifyMultipleCell(params) {
       const rowMax = this.selectedMultipleCell.rowEnd;
@@ -193,13 +192,18 @@ export default {
         const keyValue = Object.keys(this.data[rowMin])[colMin];
 
         if (params === 'selected') {
-          this.data[rowMin][keyValue].selected = true;
+          this.$set(this.data[rowMin][keyValue], 'selected', true);
         } else if (params === 'replace') {
+          this.$set(this.data[rowMin][keyValue], 'selected', false);
           if (Object.keys(this.storeCopyDatas[0]).length === 1) {
+            // col to col
             this.data[rowMin][keyValue] = Object.values(this.storeCopyDatas[key])[0];
           } else if (this.dragToFill && this.storeCopyDatas.length === 1) {
-            this.data[rowMin][keyValue] = this.storeCopyDatas[0][keyValue];
+            // multiple colCells dragToFill
+            const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
+            this.data[rowMin][keyValue] = newCopyData[0][keyValue];
           } else {
+            // multiple rowCells copyPaste
             this.data[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
           }
         }
@@ -262,8 +266,10 @@ export default {
       } else if (this.eventDrag === true && this.selectedMultipleCell) {
         this.selectedMultipleCell.rowEnd = rowIndex;
         this.eventDrag = false;
-        this.cleanActiveOnTd('selected');
         this.modifyMultipleCell('replace');
+        this.cleanActiveOnTd('selected');
+        this.cleanActiveOnTd('active');
+        this.storeCopyDatas = [];
       }
     },
     dragTofillReplaceData(entry, rowIndex, colIndex) {

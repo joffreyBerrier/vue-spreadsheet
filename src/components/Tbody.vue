@@ -110,8 +110,9 @@ export default {
   },
   data() {
     return {
-      oldValue: null,
+      eventDrag: false,
       filteredList: [],
+      oldValue: null,
       submenuEnableCol: null,
       submenuEnableRow: null,
     };
@@ -136,13 +137,19 @@ export default {
       this.$emit('tbody-select-multiple-cell', event, entry, rowIndex, colIndex, type);
     },
     handleDownDragToFill(event, entry, col, rowIndex, colIndex) {
+      this.eventDrag = true;
       this.$emit('tbody-down-dragtofill', event, entry, col, rowIndex, colIndex);
     },
     handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
-      this.$emit('tbody-move-dragtofill', event, entry, col, rowIndex, colIndex);
+      if (this.eventDrag) {
+        this.$emit('tbody-move-dragtofill', event, entry, col, rowIndex, colIndex);
+      }
     },
     handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
-      this.$emit('tbody-up-dragtofill', event, entry, rowIndex, colIndex, type);
+      if (this.eventDrag) {
+        this.eventDrag = false;
+        this.$emit('tbody-up-dragtofill', event, entry, rowIndex, colIndex, type);
+      }
     },
     handleClickTd(event, entry, rowIndex, colIndex, type) {
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
@@ -271,6 +278,12 @@ export default {
   &:first-child {
     border-left: 1px solid #e7ecf5;
   }
+  &.active_td {
+    .drag_to_fill {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
   &.active_td span,
   &.selected span {
     background: aliceblue;
@@ -339,9 +352,9 @@ export default {
     position: absolute;
     right: 0;
     bottom: 0;
-    width: 6px;
-    height: 6px;
-    background: #555;
+    width: 7px;
+    height: 7px;
+    background: #0760fe;
     display: block;
     z-index: 11;
     border: 0;
@@ -350,10 +363,7 @@ export default {
     opacity: 0;
     visibility: hidden;
     outline: none;
-  }
-  &:hover .drag_to_fill {
-    opacity: 1;
-    visibility: visible;
+    transition: all .3s ease;
   }
   .dropdown {
     position: relative;
