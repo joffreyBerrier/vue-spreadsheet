@@ -211,24 +211,17 @@ export default {
       }
     },
     // drag To Fill
-    dragTofillReplaceData(entry, rowIndex, colIndex) {
-      // replace by the new data
-      this.arrayDragData.forEach((data) => {
-        this.data[data.row][data.key].value = this.dragStart.data.value;
-      });
-      this.arrayDragData = [];
-      this.eventDrag = false;
-      this.bindClassActiveOnTd(entry, rowIndex, colIndex);
-    },
     handleDownDragToFill(event, entry, data, rowIndex, colIndex) {
       console.log('handleDownDragToFill', event, entry, data, rowIndex, colIndex);
       // if drag col to col in vertical
       // Store the data of the cell which it start
       this.data[rowIndex][entry].active = true;
       this.eventDrag = true;
-      this.dragStart.name = entry;
-      this.dragStart.data = data;
-      this.dragStart.row = rowIndex;
+      this.dragStart = {
+        data,
+        name: entry,
+        row: rowIndex,
+      };
 
       // if drag col to col in row to row to row
       if (this.selectedMultipleCell && this.selectedMultipleCell.rowEnd === rowIndex) {
@@ -237,16 +230,13 @@ export default {
       }
     },
     handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
-      console.log('handleMoveDragToFill', event, entry, col, rowIndex, colIndex);
+      // console.log('handleMoveDragToFill', event, entry, col, rowIndex, colIndex);
 
       // if drag col to col in vertical
-      if (this.eventDrag === true &&
-        entry === this.dragStart.name &&
-        rowIndex > this.dragStart.row &&
-        !this.selectedMultipleCell) {
+      if (this.eventDrag === true && entry === this.dragStart.name && rowIndex > this.dragStart.row && !this.selectedMultipleCell) {
         this.data[rowIndex][entry].active = true;
         this.dragStart.row = rowIndex;
-        // create an object wich contains new data
+
         this.arrayDragData.push({
           key: entry,
           value: col.value,
@@ -271,8 +261,19 @@ export default {
         // if drag col to col in row to row to row
       } else if (this.eventDrag === true && this.selectedMultipleCell) {
         this.selectedMultipleCell.rowEnd = rowIndex;
+        this.eventDrag = false;
+        this.cleanActiveOnTd('selected');
         this.modifyMultipleCell('replace');
       }
+    },
+    dragTofillReplaceData(entry, rowIndex, colIndex) {
+      // replace by the new data
+      this.arrayDragData.forEach((data) => {
+        this.data[data.row][data.key].value = this.dragStart.data.value;
+      });
+      this.arrayDragData = [];
+      this.eventDrag = false;
+      this.bindClassActiveOnTd(entry, rowIndex, colIndex);
     },
     // On click on td
     handleTbodyTdClick(event, entry, rowIndex, colIndex, type) {
