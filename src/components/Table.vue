@@ -54,8 +54,7 @@ export default {
       eventDrag: false,
       storeCopyDatas: [],
       dragStartData: {},
-      dragStartName: '',
-      dragStartRow: null,
+      dragEndData: {},
       oldTdActive: null,
       oldTdShow: null,
       selectedCell: null,
@@ -207,47 +206,74 @@ export default {
       }
     },
     // drag To Fill
-    dragTofillReplaceData(entry, rowIndex, colIndex) {
-      // replace by the new data
-      this.arrayDragData.forEach((data) => {
-        this.data[data.row][data.key].value = this.dragStartData.value;
-      });
-      this.arrayDragData = [];
-      this.eventDrag = false;
-      this.bindClassActiveOnTd(entry, rowIndex, colIndex);
-    },
     handleDownDragToFill(event, entry, data, rowIndex, colIndex) {
       console.log('handleDownDragToFill', event, entry, data, rowIndex, colIndex);
       // Store the data of the cell which it start
       this.data[rowIndex][entry].active = true;
       this.eventDrag = true;
-      this.dragStartName = entry;
-      this.dragStartData = data;
-      this.dragStartRow = rowIndex;
+      this.dragStartData = {
+        col: colIndex,
+        data,
+        key: entry,
+        row: rowIndex,
+      }
+      this.selectedMultipleCell = {
+        rowStart: rowIndex,
+        colStart: colIndex,
+        keyStart: entry,
+      };
     },
     handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
-      // Only eventDrag &&
-      // dragStartName equal the actual entry data &&
-      // rowIndex is > at dragStartRow
-      if (this.eventDrag === true && entry === this.dragStartName && rowIndex > this.dragStartRow) {
-        console.log('handleMoveDragToFill', event, entry, col, rowIndex, colIndex);
+      // if (this.eventDrag === true && entry === this.dragStartData.key && rowIndex > this.dragStartData.row) {
+      //   console.log('handleMoveDragToFill', event, entry, col, rowIndex, colIndex);
 
-        // create an object wich contains new data
+      //   // create an object wich contains new data
+      //   this.data[rowIndex][entry].active = true;
+      //   this.dragStartData.row = rowIndex;
+      //   this.arrayDragData.push({
+      //     key: entry,
+      //     value: col.value,
+      //     row: rowIndex,
+      //     col: colIndex,
+      //   });
+      // }
+      let keysData = Object.keys(this.data[rowIndex]);
+
+      if (this.eventDrag === true && keysData.find(x => x === entry).length > 0) {
         this.data[rowIndex][entry].active = true;
-        this.dragStartRow = rowIndex;
-        this.arrayDragData.push({
-          key: entry,
-          value: col.value,
-          row: rowIndex,
-          col: colIndex,
-        });
+        this.selectedMultipleCell.rowEnd = rowIndex;
+        this.selectedMultipleCell.colEnd = colIndex;
+        this.selectedMultipleCell.keyEnd = entry;
+
+        // Add active on cells selected
+        this.modifyMultipleCell('selected');
       }
     },
-    handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
-      if (this.eventDrag === true && entry === this.dragStartName) {
+    handleUpDragToFill(event, entry, data, rowIndex, colIndex, type) {
+      // this.selectedMultipleCell.rowEnd = rowIndex;
+      // this.selectedMultipleCell.colEnd = colIndex;
+      // this.selectedMultipleCell.keyEnd = entry;
+      this.eventDrag = false;
+      if (this.eventDrag === true && entry === this.dragStartData.key) {
         console.log('handleUpDragToFill', event, entry, rowIndex, colIndex, type);
         this.dragTofillReplaceData(entry, rowIndex, colIndex);
       }
+    },
+    dragTofillReplaceData(entry, rowIndex, colIndex, type) {
+      // replace by the new data
+      if (type === 'input' || 'img') {
+        this.arrayDragData.forEach((data) => {
+          this.data[data.row][data.key].value = this.dragStart.data.value;
+        });
+      }
+      if (type === 'select') {
+        this.arrayDragData.forEach((data) => {
+          this.data[data.row][data.key].selectedOptions = this.dragStart.data.selectedOptions;
+        });
+      }
+      this.arrayDragData = [];
+      this.eventDrag = false;
+      this.bindClassActiveOnTd(entry, rowIndex, colIndex);
     },
     // On click on td
     handleTbodyTdClick(event, entry, rowIndex, colIndex, type) {
