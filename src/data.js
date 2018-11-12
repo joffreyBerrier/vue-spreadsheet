@@ -55,7 +55,7 @@ export default {
       },
       surname: {
         type: 'input',
-        value: '1',
+        value: 'Doe',
         active: false,
         style: {
           color: '#000',
@@ -63,14 +63,58 @@ export default {
       },
       age: {
         type: 'select',
-        value: [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
-        selectedOptions: 28,
+        handleSearch: true,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 28,
         active: false,
       },
       born: {
         type: 'select',
-        value: [1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992],
-        selectedOptions: 1990,
+        handleSearch: true,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
         active: false,
       },
     },
@@ -79,10 +123,11 @@ export default {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
         active: false,
+        disabled: false,
       },
       name: {
         type: 'input',
-        value: 'Em',
+        value: 'Jane',
         active: false,
         style: {
           color: '#000',
@@ -90,7 +135,7 @@ export default {
       },
       surname: {
         type: 'input',
-        value: '2',
+        value: 'Boe',
         active: false,
         style: {
           color: '#000',
@@ -98,14 +143,58 @@ export default {
       },
       age: {
         type: 'select',
-        value: [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
-        selectedOptions: 25,
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 28,
         active: false,
       },
       born: {
         type: 'select',
-        value: [1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992],
-        selectedOptions: 1993,
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
         active: false,
       },
     },
@@ -114,10 +203,11 @@ export default {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
         active: false,
+        disabled: false,
       },
       name: {
         type: 'input',
-        value: 'Tom',
+        value: 'Jim',
         active: false,
         style: {
           color: '#000',
@@ -125,7 +215,7 @@ export default {
       },
       surname: {
         type: 'input',
-        value: '3',
+        value: 'Die',
         active: false,
         style: {
           color: '#000',
@@ -133,14 +223,58 @@ export default {
       },
       age: {
         type: 'select',
-        value: [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
-        selectedOptions: 25,
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 28,
         active: false,
       },
       born: {
         type: 'select',
-        value: [1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992],
-        selectedOptions: 1998,
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
         active: false,
       },
     },
@@ -149,10 +283,11 @@ export default {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
         active: false,
+        disabled: false,
       },
       name: {
         type: 'input',
-        value: 'Tim',
+        value: 'Jam',
         active: false,
         style: {
           color: '#000',
@@ -160,7 +295,7 @@ export default {
       },
       surname: {
         type: 'input',
-        value: '4',
+        value: 'Dam',
         active: false,
         style: {
           color: '#000',
@@ -168,14 +303,58 @@ export default {
       },
       age: {
         type: 'select',
-        value: [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
-        selectedOptions: 25,
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 28,
         active: false,
       },
       born: {
         type: 'select',
-        value: [1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992],
-        selectedOptions: 1995,
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
         active: false,
       },
     },
@@ -186,6 +365,29 @@ export default {
       value: 'change color',
       function: 'change-color',
       disabled: ['img'],
+    },
+    {
+      type: 'select',
+      disabled: ['img'],
+      subtitle: 'Select state:',
+      selectOptions: [
+        {
+          value: 'new-york',
+          label: 'new-york',
+        },
+        {
+          value: 'france',
+          label: 'france',
+        },
+      ],
+      value: 'new-york',
+      buttonOption: {
+        value: 'change city',
+        function: 'change-city',
+        style: {
+          display: 'block',
+        },
+      },
     },
     {
       type: 'button',

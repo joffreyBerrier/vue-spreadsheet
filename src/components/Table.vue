@@ -65,28 +65,26 @@ export default {
     };
   },
   mounted() {
-    const _this = this;
-
-    document.addEventListener('copy', function () {
-      _this.copyStoreData();
-      _this.cleanActiveOnTd('selected');
+    document.addEventListener('copy', () => {
+      this.copyStoreData();
+      this.cleanActiveOnTd('selected');
     });
-    document.addEventListener('paste', function () {
-      if (_this.storeCopyDatas.length > 0) {
-        _this.pasteReplaceData();
-        _this.storeCopyDatas = [];
-        _this.selectedMultipleCell = null;
-        _this.cleanActiveOnTd('selected');
+    document.addEventListener('paste', () => {
+      if (this.storeCopyDatas.length > 0) {
+        this.pasteReplaceData();
+        this.cleanActiveOnTd('selected');
+        this.storeCopyDatas = [];
+        this.selectedMultipleCell = null;
       }
     });
   },
   methods: {
     // global
-    enableSubmenu(place) {
-      if (place === 'thead') {
+    enableSubmenu(target) {
+      if (target === 'thead') {
         this.submenuStatusThead = true;
         this.submenuStatusTbody = false;
-      } else if (place === 'tbody') {
+      } else if (target === 'tbody') {
         this.submenuStatusThead = false;
         this.submenuStatusTbody = true;
       } else {
@@ -107,14 +105,20 @@ export default {
     },
     cleanActiveOnTd(params) {
       this.data.forEach((data, index) => {
-        Object.keys(data).forEach((key) => {
-          if (this.data[index][key].active === true && params === 'active') {
-            this.data[index][key].active = false;
-          }
-          if (this.data[index][key].selected === true && params === 'selected') {
-            this.data[index][key].selected = false;
-          }
-        });
+        if (params === 'active') {
+          Object.keys(data).forEach((key) => {
+            if (this.data[index][key].active === true) {
+              this.data[index][key].active = false;
+              this.data[index][key].show = false;
+            }
+          });
+        } else if (params === 'selected') {
+          Object.keys(data).forEach((key) => {
+            if (this.data[index][key].selected === true) {
+              this.data[index][key].selected = false;
+            }
+          });
+        }
       });
     },
     // Copy / Paste
@@ -136,6 +140,8 @@ export default {
       const newData = JSON.parse(JSON.stringify(this.data));
 
       if (this.selectedMultipleCell) {
+        const maxRow = newData.length;
+
         let rowMin = this.selectedMultipleCell.rowStart;
         let colMin = this.selectedMultipleCell.colStart;
         const rowMax = this.selectedMultipleCell.rowEnd;
@@ -153,7 +159,11 @@ export default {
             this.storeCopyDatas.push(storeData);
             colMin = this.selectedMultipleCell.colStart;
             rowMin += 1;
-            rowValues = Object.values(newData[rowMin]);
+            if (rowMin !== maxRow) {
+              rowValues = Object.values(newData[rowMin]);
+            } else {
+              rowValues = Object.values(newData[rowMin - 1]);
+            }
             storeData = {};
           }
         }
@@ -182,7 +192,11 @@ export default {
         if (params === 'selected') {
           this.data[rowMin][keyValue].selected = true;
         } else if (params === 'replace') {
-          this.data[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
+          if (colMin === colMax) {
+            this.data[rowMin][keyValue] = Object.values(this.storeCopyDatas[key])[0];
+          } else {
+            this.data[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
+          }
         }
         colMin += 1;
         if (colMin > colMax) {
@@ -242,7 +256,7 @@ export default {
       this.eventDrag = false;
       if (this.eventDrag === true && entry === this.dragStartData.key) {
         console.log('handleUpDragToFill', event, entry, rowIndex, colIndex, type);
-        this.dragTofillReplaceData(entry, rowIndex, colIndex, type);
+        this.dragTofillReplaceData(entry, rowIndex, colIndex);
       }
     },
     dragTofillReplaceData(entry, rowIndex, colIndex, type) {
@@ -275,17 +289,15 @@ export default {
         this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
       }
     },
-    handleTbodyTdDoubleClick(event, entry, rowIndex, colIndex, activElement, type) {
-      console.log('handleTbodyTdDoubleClick', event, entry, rowIndex, colIndex, activElement, type);
+    handleTbodyTdDoubleClick(event, entry, col, rowIndex, colIndex, type) {
+      console.log('handleTbodyTdDoubleClick', event, entry, col, rowIndex, colIndex, type);
 
       // stock oldTdShow in object
       if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
 
       // add class show on element
       this.data[rowIndex][entry].show = true;
-      if (type === 'input') {
-        event.currentTarget.lastElementChild.focus();
-      }
+
       this.oldTdShow = {
         key: entry,
         row: rowIndex,
@@ -322,14 +334,20 @@ export default {
     handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
       console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
     },
-    callbackSubmenuThead(event, entry, colIndex, submenuFunction) {
-      this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, submenuFunction);
+    callbackSubmenuThead(event, entry, colIndex, submenuFunction, selectOptions) {
+      this.submenuStatusThead = false;
+      if (selectOptions) {
+        this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, selectOptions);
+      } else {
+        this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex);
+      }
     },
     callbackSubmenuTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
       this.$emit(`tbody-submenu-click-${submenuFunction}`, event, entry, rowIndex, colIndex, type, submenuFunction);
     },
     // thead
     handleTheadContextMenu(event, entry, colIndex) {
+      this.submenuStatusTbody = false;
       console.log('handleTheadContextMenu', event, entry, colIndex);
     },
   },

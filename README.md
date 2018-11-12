@@ -122,9 +122,10 @@ headers: [
   type                | String  | The type of render data (``<textarea>``, ``<img>``, ``<select>``)
   value(img/input)    | String  | The value of your object in *String Type*
   value(select)       | Array   | The value of your object in *Array Type*
-  selectedOptions     | String  | The value by default - Only for type ``<select>``
+  selectOptions       | Array   | That contains objects {value: ~, label: ~}
   style               | Object  | The Style of your cell
   active              | Boolean | The status of cell false by default
+  handleSearch        | Boolean | Active search on select
   disabled            | Boolean | not mandatory - Disabled cell
 
 #### Exemple
@@ -133,37 +134,58 @@ headers: [
 products: [
   {
     img: {
-      active: false,
       type: 'img',
       value: 'https://via.placeholder.com/350x150',
+      active: false,
+      disabled: true,
     },
     name: {
-      active: false,
       type: 'input',
       value: 'John',
+      active: false,
       style: {
         color: '#000',
       },
     },
     surname: {
-      active: false,
       type: 'input',
       value: 'Doe',
+      active: false,
       style: {
         color: '#000',
       },
     },
     age: {
-      active: false,
       type: 'select',
-      value: [1, 2, 3],
-      selectedOptions: 2,
+      handleSearch: true,
+      selectOptions: [
+        {
+          value: 'paris',
+          label: 'Paris',
+        },
+        {
+          value: 'new-york',
+          label: 'New York',
+        },
+      ],
+      value: 'paris',
+      active: false,
     },
     born: {
-      active: false,
       type: 'select',
-      value: [11, 12, 13],
-      selectedOptions: 12,
+      handleSearch: true,
+      selectOptions: [
+        {
+          value: 'france',
+          label: 'France',
+        },
+        {
+          value: 'usa',
+          label: 'United States of America',
+        },
+      ],
+      value: 'france',
+      active: false,
     },
   },
 ],
@@ -172,11 +194,20 @@ products: [
 ### submenu :monkey_face:
 
   Name             |  Type  | Description
--------------------|--------|-------------------
-  type             | String | The type of render data (``<button>``) - Only type ``<button>`` for now
-  value            | String | The value of your object in *String Type*
+-------------------|--------|---------------------------------------------------------------------------------------
+  type             | String | The type of render data (``<button>`` || ``<select>``)
+  value            | String | The value of your function
   function         | String | The name of your function called when you click on the button - *Written in Slugify*
   disabled         | Array  | The Name(s) of each objects you don't want to appear on submenu
+  subtitle         | String | The subtitle of you select
+  selectOptions    | Array  | That contains objects {value: ~, label: ~}
+-------------------|--------|----------------------------------------------------------------------------------------
+  buttonOption     | Object | Description
+-------------------|--------|----------------------------------------------------------------------------------------
+    value          | String | The value of your button
+    function       | String | The name of your function called when you click on the button - *Written in Slugify*
+    style          | Object | The style of your button
+-------------------|--------|----------------------------------------------------------------------------------------
 
 #### Exemple
 
@@ -189,12 +220,35 @@ products: [
       disabled: ['img'],
     },
   ],
-  submenuThead: [
+  submenuThead: [ 
     {
       type: 'button',
       value: 'Change Color',
       function: 'change-color',
       disabled: ['img', 'name'],
+    },
+    {
+      type: 'select',
+      disabled: ['img'],
+      subtitle: 'Select state:',
+      selectOptions: [
+        {
+          value: 'new-york',
+          label: 'new-york',
+        },
+        {
+          value: 'france',
+          label: 'france',
+        },
+      ],
+      value: 'new-york',
+      buttonOption: {
+        value: 'change city',
+        function: 'change-city',
+        style: {
+          display: 'block',
+        },
+      },
     },
   ],
 ```
@@ -233,37 +287,58 @@ products: [
       products: [
         {
           img: {
-            active: false,
             type: 'img',
             value: 'https://via.placeholder.com/350x150',
+            active: false,
+            disabled: true,
           },
           name: {
-            active: false,
             type: 'input',
             value: 'John',
+            active: false,
             style: {
               color: '#000',
             },
           },
           surname: {
-            active: false,
             type: 'input',
             value: 'Doe',
+            active: false,
             style: {
               color: '#000',
             },
           },
           age: {
-            active: false,
             type: 'select',
-            value: [1, 2, 3],
-            selectedOptions: 2,
+            handleSearch: true,
+            selectOptions: [
+              {
+                value: 'paris',
+                label: 'Paris',
+              },
+              {
+                value: 'new-york',
+                label: 'New York',
+              },
+            ],
+            value: 'paris',
+            active: false,
           },
           born: {
-            active: false,
             type: 'select',
-            value: [11, 12, 13],
-            selectedOptions: 12,
+            handleSearch: true,
+            selectOptions: [
+              {
+                value: 'france',
+                label: 'France',
+              },
+              {
+                value: 'usa',
+                label: 'United States of America',
+              },
+            ],
+            value: 'france',
+            active: false,
           },
         },
       ],

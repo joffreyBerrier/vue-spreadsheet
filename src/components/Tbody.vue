@@ -11,10 +11,11 @@
             @click.shift.exact="handleSelectMultipleCell($event, entry, rowIndex, colIndex, col.type)"
             @contextmenu="handleContextMenuTd($event, entry, rowIndex, colIndex, col.type)"
             @click="handleClickTd($event, entry, rowIndex, colIndex, col.type)"
-            @dblclick="handleDoubleClickTd($event, entry, rowIndex, colIndex, col.type)"
+            @dblclick="handleDoubleClickTd($event, entry, col, rowIndex, colIndex, col.type)"
             @mousemove="handleMoveDragToFill($event, entry, col, rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, entry, col, rowIndex, colIndex, col.type)"
             v-bind:class="{'active_td': col.active, 'show': col.show, 'disabled': col.disabled, 'selected': col.selected}"
+            :ref="'td-' + colIndex + '-' + rowIndex"
             :key="entry">
 
             <template
@@ -56,20 +57,38 @@
               <textarea
                 :style="textareaStyle(col.value)"
                 v-model="col.value"
+                :ref="'input-' + colIndex + '-' + rowIndex"
                 @change="inputHandleChange($event, entry, rowIndex, colIndex)"></textarea>
             </template>
 
             <!-- If Select -->
-            <template v-if="col.type === 'select'">
-              <span :style="col.style">{{col.selectedOptions}}</span>
+            <template v-if="col.type === 'select' && col.handleSearch">
+              <span :style="col.style">{{col.value}}</span>
+              <div class="dropdown">
+                <input
+                  v-model="col.value"
+                  :ref="'input-' + colIndex + '-' + rowIndex"
+                  @keyup="searchHandleChange(col)"/>
+                <ul v-bind:class="{'show': col.search}">
+                  <li v-for="(option, index) in filteredList"
+                    @click.stop="validSearch(option.value, col)"
+                    :value="option.value"
+                    :key="index">
+                      {{option.label}}
+                  </li>
+                </ul>
+              </div>
+            </template>
+            <template v-else-if="col.type === 'select'">
+              <span :style="col.style">{{col.value}}</span>
               <select
-                v-model="col.selectedOptions"
+                v-model="col.value"
                 @change="selectHandleChange($event, entry, rowIndex, colIndex)">
                 <option
-                  v-for="(val, index) in col.value"
-                  :value="val"
+                  v-for="(option, index) in col.selectOptions"
+                  :value="option.value"
                   :key="index">
-                    {{val}}
+                    {{option.label}}
                 </option>
               </select>
             </template>
@@ -92,6 +111,7 @@ export default {
   data() {
     return {
       oldValue: null,
+      filteredList: [],
       submenuEnableCol: null,
       submenuEnableRow: null,
     };
@@ -127,8 +147,11 @@ export default {
     handleClickTd(event, entry, rowIndex, colIndex, type) {
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
     },
-    handleDoubleClickTd(event, entry, rowIndex, colIndex, type) {
-      this.$emit('tbody-td-double-click', event, entry, rowIndex, colIndex, type);
+    handleDoubleClickTd(event, entry, col, rowIndex, colIndex, type) {
+      if (type === 'input' || (col.type === 'select' && col.search)) {
+        this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+      }
+      this.$emit('tbody-td-double-click', event, entry, col, rowIndex, colIndex, type);
     },
     handleContextMenuTd(event, entry, rowIndex, colIndex, type) {
       this.submenuEnableCol = colIndex;
@@ -142,64 +165,90 @@ export default {
     selectHandleChange(event, entry, rowIndex, colIndex) {
       this.$emit('tbody-select-change', event, entry, rowIndex, colIndex);
     },
+    searchHandleChange(col) {
+      const column = col;
+      column.search = true;
+
+      this.filteredList = col.selectOptions.filter((option) => {
+        if (typeof option.value === 'number') {
+          return option.value.toString().toLowerCase().includes(col.value.toString().toLocaleLowerCase());
+        }
+        return option.value.toLowerCase().include(col.value.toLocaleLowerCase());
+      });
+    },
+    validSearch(val, col) {
+      const column = col;
+      column.search = false;
+      column.show = false;
+      column.value = val;
+    },
     handleClickSubmenu(event, entry, rowIndex, colIndex, type, submenuFunction) {
       this.$emit('tbody-submenu-click-callback', event, entry, rowIndex, colIndex, type, submenuFunction);
     },
     moveKeydown(event) {
       const actualElement = document.getElementsByClassName('active_td')[0];
-      if (actualElement) {
-        if (event.keyCode === 37 ||
-            event.keyCode === 39 ||
-            event.keyCode === 40 ||
-            event.keyCode === 38) {
-          // remove active class / blur
-          actualElement.lastElementChild.blur();
-          actualElement.classList.remove('active_td');
-          const colIndex = Number(actualElement.getAttribute('data-col-index'));
-          const rowIndex = Number(actualElement.getAttribute('data-row-index'));
+      if (actualElement &&
+        (event.keyCode === 37 ||
+        event.keyCode === 39 ||
+        event.keyCode === 40 ||
+        event.keyCode === 38 ||
+        event.keyCode === 13)) {
 
-          this.$emit('tbody-nav', event, event.keyCode, actualElement, rowIndex, colIndex);
+        const colIndex = Number(actualElement.getAttribute('data-col-index'));
+        const rowIndex = Number(actualElement.getAttribute('data-row-index'));
+        // remove active to before-active cell
+        const actualCol = Object.keys(this.rowData[rowIndex])[colIndex];
+        this.rowData[rowIndex][actualCol].active = false;
 
-          // right
-          if (event.keyCode === 39) {
-            if (!actualElement.nextElementSibling) {
-              actualElement.parentElement.firstElementChild.classList.add('active_td');
-            } else {
-              actualElement.nextElementSibling.classList.add('active_td');
-            }
-          }
-          // left
-          if (event.keyCode === 37) {
-            if (!actualElement.previousElementSibling) {
-              actualElement.parentElement.lastElementChild.classList.add('active_td');
-            } else {
-              actualElement.previousElementSibling.classList.add('active_td');
-            }
-          }
-          // bottom
-          if (event.keyCode === 40) {
-            if (!actualElement.parentElement.nextElementSibling) {
-              actualElement.parentElement.parentElement.firstElementChild.childNodes[colIndex].classList.add('active_td');
-            } else {
-              actualElement.parentElement.nextElementSibling.childNodes[colIndex].classList.add('active_td');
-            }
-          }
-          // top
-          if (event.keyCode === 38) {
-            if (!actualElement.parentElement.previousElementSibling) {
-              actualElement.parentElement.parentElement.lastElementChild.childNodes[colIndex].classList.add('active_td');
-            } else {
-              actualElement.parentElement.previousElementSibling.childNodes[colIndex].classList.add('active_td');
-            }
+        // remove active class / blur
+        actualElement.lastElementChild.blur();
+        actualElement.classList.remove('active_td');
+
+        // set colMax rowMax
+        const colMax = Object.keys(this.rowData).length;
+        const rowMax = this.rowData.length;
+
+        // right
+        if (event.keyCode === 39) {
+          let col = Object.keys(this.rowData[rowIndex])[colIndex + 1];
+          if (col) {
+            this.rowData[rowIndex][col].active = true;
+          } else {
+            col = Object.keys(this.rowData[rowIndex])[colIndex - colMax];
+            this.rowData[rowIndex][col].active = true;
           }
         }
+        // left
+        if (event.keyCode === 37) {
+          let col = Object.keys(this.rowData[rowIndex])[colIndex - 1];
+          if (col) {
+            this.rowData[rowIndex][col].active = true;
+          } else {
+            col = Object.keys(this.rowData[rowIndex])[colIndex + colMax];
+            this.rowData[rowIndex][col].active = true;
+          }
+        }
+        // bottom
+        if (event.keyCode === 40) {
+          if (rowIndex + 1 !== rowMax) {
+            this.rowData[rowIndex + 1][actualCol].active = true;
+          } else {
+            this.rowData[(rowIndex + 1) - rowMax][actualCol].active = true;
+          }
+        }
+        // top
+        if (event.keyCode === 38) {
+          if (rowIndex !== 0) {
+            this.rowData[rowIndex - 1][actualCol].active = true;
+          } else {
+            this.rowData[(rowIndex + rowMax) - 1][actualCol].active = true;
+          }
+        }
+        // press enter
         if (event.keyCode === 13) {
-          const rowIndex = Number(actualElement.getAttribute('data-row-index'));
-          const colIndex = Number(actualElement.getAttribute('data-col-index'));
+          this.rowData[rowIndex][actualCol].show = true;
+          this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
           this.$emit('tbody-nav-enter', event, event.keyCode, actualElement, rowIndex, colIndex);
-
-          actualElement.classList.add('show');
-          actualElement.lastElementChild.focus();
         }
       }
     },
@@ -214,14 +263,14 @@ export default {
   line-height: 40px;
   position: relative;
   background: white;
-  border-right: 1px solid #dadada;
-  border-bottom: 1px solid #dadada;
+  border-right: 1px solid #e7ecf5;
+  border-bottom: 1px solid #e7ecf5;
   padding: 0;
   text-align: left;
   box-sizing: border-box;
   transition: all ease 0.5s;
   &:first-child {
-    border-left: 1px solid #dadada;
+    border-left: 1px solid #e7ecf5;
   }
   &.active_td span,
   &.selected span {
@@ -230,14 +279,15 @@ export default {
   }
   &.disabled {
     pointer-events: none;
-    span { 
+    span {
       background: #cccccc;
       opacity: .5;
     }
   }
   &.show {
     textarea,
-    select {
+    select,
+    .dropdown {
       z-index: 11;
     }
     textarea {
@@ -250,7 +300,8 @@ export default {
       opacity: 1;
     }
   }
-  textarea {
+  textarea,
+  .dropdown {
     opacity: 0;
   }
   textarea,
@@ -292,7 +343,7 @@ export default {
     bottom: 0;
     width: 6px;
     height: 6px;
-    background: #dadada;
+    background: #e7ecf5;
     display: block;
     z-index: 11;
     border: 0;
@@ -304,6 +355,59 @@ export default {
   &:hover .drag_to_fill {
     opacity: 1;
     visibility: visible;
+  }
+  .dropdown {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: white;
+    line-height: 40px;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    outline: none;
+    opacity: 1;
+    input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 2px 5px;
+      text-align: left;
+      height: 100%;
+      width: 100%;
+      border: 0;
+      outline: none;
+    }
+    ul {
+      display: none;
+      position: absolute;
+      top: 38px;
+      background-color: #fff;
+      width: 100%;
+      border: 1px solid #e7ecf5;
+      box-shadow: 0px -8px 34px 0px rgba(0, 0, 0, 0.05);
+      z-index: 1;
+      padding: 0;
+      margin: 0;
+      li {
+        list-style: none;
+        font-size: 11px;
+        line-height: 40px;
+        padding: 2px 5px;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+        transition: all ease .5s;
+        &:hover {
+          background: #e7ecf5;
+        }
+      }
+      &.show {
+        display: block;
+      }
+    }
   }
 }
 .submenu_wrap {
