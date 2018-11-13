@@ -11,6 +11,9 @@ Do not hesitate to :star: my repo
 
 ## Project setup
 
+``yarn add spreadsheet-vuejs ``
+``npm i spreadsheet-vuejs ``
+
 ```
   import VueTable from 'spreadsheet-vuejs'
 ```
