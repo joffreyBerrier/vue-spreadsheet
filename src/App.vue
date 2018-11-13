@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import VueTable from './components/Table.vue';
+import VueTable from './components/VueTable.vue';
 import exempleData from './data';
 
 export default {
