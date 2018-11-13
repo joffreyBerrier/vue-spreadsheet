@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "author": "Joffrey Berrier <joffrey.berrier@gmail.com>",
   "repository": {
-    "url": "https://github.com/joffreyBerrier/vuejs-dynamic-table",
+    "url": "git+https://github.com/joffreyBerrier/vuejs-dynamic-table.git",
     "type": "git"
   },
   "keywords": [
@@ -33,5 +33,9 @@
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "vue-template-compiler": "^2.5.17"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/joffreyBerrier/vuejs-dynamic-table/issues"
+  },
+  "homepage": "https://github.com/joffreyBerrier/vuejs-dynamic-table#readme"
 }

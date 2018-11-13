@@ -7,7 +7,7 @@
           :style="header.style"
           v-bind:class="{'disabled': header.disabled}"
           :key="header.headerKey">
-          <span>{{header.headerName | truncate}}</span>
+          <span>{{header.headerName}}</span>
 
           <template
             v-if="submenuThead && submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
