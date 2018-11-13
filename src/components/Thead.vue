@@ -30,7 +30,7 @@
                   <button
                     v-if="sub.disabled.includes(header.headerKey) == 0"
                     :key="index"
-                    @click.stop="handleClickSubmenu($event, header.headerKey, colIndex, sub.function)">
+                    @click.stop="handleClickSubmenu($event, header, colIndex, sub.function)">
                     {{sub.value}}
                   </button>
                 </template>
@@ -47,7 +47,7 @@
                     </select>
                     <button
                       :style="sub.buttonOption.style"
-                      @click.stop="handleClickSubmenu($event, header.headerKey, colIndex, sub.buttonOption.function, sub.value)">
+                      @click.stop="handleClickSubmenu($event, header, colIndex, sub.buttonOption.function, sub.value)">
                         {{sub.buttonOption.value}}
                     </button>
                   </div>
