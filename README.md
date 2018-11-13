@@ -37,13 +37,13 @@ props                             | Type       | Description
 ----------------------------------|------------|-------------------
   :data                           | Array      | That contains data
   :headers                        | Array      | That contains headers
-  :drag-to-fill                   | Boolean    | That active dragToFill
-  :submenu-tbody                  | Array      | That contains your submenu-tbody
-  :submenu-thead                  | Array      | That contains your submenu-thead
-  v-on:tbody-input-change         | Function   | Name of your function called when **input change**
-  v-on:tbody-select-change        | Function   | Name of your function called when **select change**
-  v-on-thead-submenu-click-{#}    | Function   | {#} - Name of your function declare on **submenu-thead**
-  v-on:tbody-submenu-click-{#}    | Function   | {#} - Name of your function declare on **submenu-tbody**
+  :drag-to-fill                   | Boolean    | That active dragToFill = activates
+  :submenu-tbody                  | Array      | That contains the submenu-tbody
+  :submenu-thead                  | Array      | That contains the submenu-thead
+  v-on:tbody-input-change         | Function   | Name of the function called when **input change**
+  v-on:tbody-select-change        | Function   | Name of the function called when **select change**
+  v-on-thead-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-thead**
+  v-on:tbody-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-tbody**
 
 ### Exemple
 
@@ -65,9 +65,9 @@ props                             | Type       | Description
 
   Name              |  Type   | Description
 --------------------|---------|-------------------
-  headerName        | String  | The name of your header written like you want
-  headerkey         | String  | The Slugify version of your headerName
-  style             | Object  | The style of your td
+  headerName        | String  | The chosen header name
+  headerkey         | String  | The Slugify version of the headerName
+  style             | Object  | The style of the td
   disabled          | Boolean | not mandatory - Disabled cell
 
 #### Exemple
@@ -116,12 +116,12 @@ headers: [
 
   Name                |  Type   | Description
 ----------------------|---------|-------------------
-  key                 | String  | The key of your object written in Slugify
-  type                | String  | The type of render data (``<textarea>``, ``<img>``, ``<select>``)
-  value(img/input)    | String  | The value of your object in *String Type*
-  value(select)       | Array   | The value of your object in *Array Type*
+  key                 | String  | The key of the object written in Slugify
+  type                | String  | The type of data rendered (``<textarea>``, ``<img>``, ``<select>``)
+  value(img/input)    | String  | The value of the object in *String Type*
+  value(select)       | Array   | The value of the object in *Array Type*
   selectOptions       | Array   | That contains objects {value: ~, label: ~}
-  style               | Object  | The Style of your cell
+  style               | Object  | The Style of the cell
   active              | Boolean | The status of cell false by default
   handleSearch        | Boolean | Active search on select
   disabled            | Boolean | not mandatory - Disabled cell
@@ -194,17 +194,17 @@ products: [
   Name             |  Type  | Description
 -------------------|--------|---------------------------------------------------------------------------------------
   type             | String | The type of render data (``<button>`` || ``<select>``)
-  value            | String | The value of your function
-  function         | String | The name of your function called when you click on the button - *Written in Slugify*
+  value            | String | The value of the function
+  function         | String | The name of the function called when you click on the button - *Written in Slugify*
   disabled         | Array  | The Name(s) of each objects you don't want to appear on submenu
   subtitle         | String | The subtitle of you select
   selectOptions    | Array  | That contains objects {value: ~, label: ~}
 -------------------|--------|----------------------------------------------------------------------------------------
   buttonOption     | Object | Description
 -------------------|--------|----------------------------------------------------------------------------------------
-    value          | String | The value of your button
-    function       | String | The name of your function called when you click on the button - *Written in Slugify*
-    style          | Object | The style of your button
+    value          | String | The value of the button
+    function       | String | The name of the function called when you click on the button - *Written in Slugify*
+    style          | Object | The style of the button
 -------------------|--------|----------------------------------------------------------------------------------------
 
 #### Exemple
