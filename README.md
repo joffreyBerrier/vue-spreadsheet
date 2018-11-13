@@ -8,15 +8,21 @@
 
 Do not hesitate to :star: my repo
 
+
 ## Project setup
+
 ```
+  import VueTable from 'spreadsheet-vuejs'
+```
+
+<!-- ```
 yarn install
 ```
 
 ### Compiles and hot-reloads for development
 ```
 yarn run serve
-```
+``` -->
 <!-- 
 ### Compiles and minifies for production
 ```
