@@ -126,7 +126,7 @@ export default {
     },
     // Copy / Paste
     handleSelectMultipleCell(event, entry, rowIndex, colIndex, type) {
-      console.log('handleSelectMultipleCell', event, entry, rowIndex, colIndex, type);
+      // console.log('handleSelectMultipleCell', event, entry, rowIndex, colIndex, type);
       this.selectedMultipleCell = {
         rowStart: this.selectedCell.row,
         colStart: this.selectedCell.col,
@@ -221,7 +221,7 @@ export default {
     },
     // drag To Fill
     handleDownDragToFill(event, entry, data, rowIndex, colIndex) {
-      console.log('handleDownDragToFill', event, entry, data, rowIndex, colIndex);
+      // console.log('handleDownDragToFill', event, entry, data, rowIndex, colIndex);
       // if drag col to col in vertical
       // Store the data of the cell which it start
       this.data[rowIndex][entry].active = true;
@@ -262,7 +262,7 @@ export default {
       }
     },
     handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
-      console.log('handleUpDragToFill', event, entry, rowIndex, colIndex, type);
+      // console.log('handleUpDragToFill', event, entry, rowIndex, colIndex, type);
       // if drag col to col in vertical
       if (this.eventDrag === true && entry === this.dragStart.name && !this.selectedMultipleCell) {
         this.dragTofillReplaceData(entry, rowIndex, colIndex);
@@ -288,7 +288,7 @@ export default {
     },
     // On click on td
     handleTbodyTdClick(event, entry, rowIndex, colIndex, type) {
-      console.log('handleTbodyTdClick', event, entry, rowIndex, colIndex, type);
+      // console.log('handleTbodyTdClick', event, entry, rowIndex, colIndex, type);
       this.bindClassActiveOnTd(entry, rowIndex, colIndex);
       this.selectedCell = {
         key: entry,
@@ -301,7 +301,7 @@ export default {
       }
     },
     handleTbodyTdDoubleClick(event, entry, col, rowIndex, colIndex, type) {
-      console.log('handleTbodyTdDoubleClick', event, entry, col, rowIndex, colIndex, type);
+      // console.log('handleTbodyTdDoubleClick', event, entry, col, rowIndex, colIndex, type);
 
       // stock oldTdShow in object
       if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
@@ -318,11 +318,11 @@ export default {
       this.enableSubmenu();
     },
     handleTbodyNav(event, keyCode, actualElement, rowIndex, colIndex) {
-      console.log('handleTbodyNav', event, keyCode, actualElement, rowIndex, colIndex);
+      // console.log('handleTbodyNav', event, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
     handleTbodyNavEnter(event, entry, keyCode, actualElement, rowIndex, colIndex) {
-      console.log('handleTbodyNavEnter', event, entry, keyCode, actualElement, rowIndex, colIndex);
+      // console.log('handleTbodyNavEnter', event, entry, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
     handleTbodyInputChange(event, entry, rowIndex, colIndex) {
@@ -343,7 +343,7 @@ export default {
     },
     // Context Menu
     handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
-      console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
+      // console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
     },
     callbackSubmenuThead(event, entry, colIndex, submenuFunction, selectOptions) {
       this.submenuStatusThead = false;
@@ -359,7 +359,7 @@ export default {
     // thead
     handleTheadContextMenu(event, entry, colIndex) {
       this.submenuStatusTbody = false;
-      console.log('handleTheadContextMenu', event, entry, colIndex);
+      // console.log('handleTheadContextMenu', event, entry, colIndex);
     },
   },
 };

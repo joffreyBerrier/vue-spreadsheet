@@ -17,7 +17,19 @@ yarn add spreadsheet-vuejs
 npm i spreadsheet-vuejs
 ```
 
-``` import VueTable from 'spreadsheet-vuejs' ```
+```
+<script>
+  import VueTable from 'spreadsheet-vuejs';
+  export default {
+    name: 'app',
+    data() {
+    },
+    components: {
+      VueTable,
+    },
+  };
+</script>
+```
 
 <!-- ```
 yarn install
