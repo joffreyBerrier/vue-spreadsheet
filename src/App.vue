@@ -92,7 +92,7 @@ body {
   color: #2c3e50;
   background: transparent;
 }
-.row,
+.table_row,
 .thead {
   display: flex;
 }

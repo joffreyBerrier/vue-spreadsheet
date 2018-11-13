@@ -1,7 +1,7 @@
 <template>
   <tbody>
     <template v-for="(row, rowIndex) in rowData">
-      <tr class="row" :key="row + '' + rowIndex">
+      <tr class="table_row" :key="row + '' + rowIndex">
         <template v-for="(col, entry, colIndex) in row">
           <td
             class="td"
