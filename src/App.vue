@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <vue-table
-      :data="products"
+      :tbody-data="products"
       :headers="headers"
       :drag-to-fill="dragToFill"
       :submenu-tbody="submenuTbody"
