@@ -16,7 +16,8 @@
             @mouseup="handleUpDragToFill($event, entry, rowIndex, colIndex, col.type)"
             v-bind:class="{'active_td': col.active, 'show': col.show, 'disabled': col.disabled, 'selected': col.selected}"
             :ref="'td-' + colIndex + '-' + rowIndex"
-            :key="entry">
+            :key="entry"
+            :style="col.style">
 
             <template
               v-if="dragToFill">

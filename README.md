@@ -37,15 +37,15 @@ props                             | Type       | Description
 ----------------------------------|------------|-------------------
   :data                           | Array      | That contains data
   :headers                        | Array      | That contains headers
-  :drag-to-fill                   | Boolean    | That active dragToFill = activates
+  :drag-to-fill                   | Boolean    | That activates drag to fill
   :submenu-tbody                  | Array      | That contains the submenu-tbody
   :submenu-thead                  | Array      | That contains the submenu-thead
-  v-on:tbody-input-change         | Function   | Name of the function called when **input change**
-  v-on:tbody-select-change        | Function   | Name of the function called when **select change**
+  v-on:tbody-input-change         | Function   | When the **input changes**
+  v-on:tbody-select-change        | Function   | When the **select change**
   v-on-thead-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-thead**
   v-on:tbody-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-tbody**
 
-### Exemple
+### Example
 
 ```
   <vue-table
@@ -68,9 +68,9 @@ props                             | Type       | Description
   headerName        | String  | The chosen header name
   headerkey         | String  | The Slugify version of the headerName
   style             | Object  | The style of the td
-  disabled          | Boolean | not mandatory - Disabled cell
+  disabled          | Boolean | optional - Disabled cell
 
-#### Exemple
+#### Example
 
 ```
 headers: [
@@ -122,11 +122,11 @@ headers: [
   value(select)       | Array   | The value of the object in *Array Type*
   selectOptions       | Array   | That contains objects {value: ~, label: ~}
   style               | Object  | The Style of the cell
-  active              | Boolean | The status of cell false by default
-  handleSearch        | Boolean | Active search on select
-  disabled            | Boolean | not mandatory - Disabled cell
+  active              | Boolean | Of the cell, false by default
+  handleSearch        | Boolean | -	Activates search when selected
+  disabled            | Boolean | optional - Disabled cell
 
-#### Exemple
+#### Example
 
 ```
 products: [
@@ -193,11 +193,11 @@ products: [
 
   Name             |  Type  | Description
 -------------------|--------|---------------------------------------------------------------------------------------
-  type             | String | The type of render data (``<button>`` || ``<select>``)
+  type             | String | The type of data rendered (``<button>`` || ``<select>``)
   value            | String | The value of the function
   function         | String | The name of the function called when you click on the button - *Written in Slugify*
-  disabled         | Array  | The Name(s) of each objects you don't want to appear on submenu
-  subtitle         | String | The subtitle of you select
+  disabled         | Array  | Each object which you want to hide on the submenu
+  subtitle         | String | Of the select
   selectOptions    | Array  | That contains objects {value: ~, label: ~}
 -------------------|--------|----------------------------------------------------------------------------------------
   buttonOption     | Object | Description
@@ -207,7 +207,7 @@ products: [
     style          | Object | The style of the button
 -------------------|--------|----------------------------------------------------------------------------------------
 
-#### Exemple
+#### Example
 
 ```
   submenuTbody: [
@@ -251,7 +251,7 @@ products: [
   ],
 ```
 
-## Exemple :mortar_board: :tiger:
+## Example :mortar_board: :tiger:
 
 ````
   # Template

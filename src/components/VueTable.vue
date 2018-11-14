@@ -10,7 +10,7 @@
     </vue-thead>
 
     <vue-tbody
-      :rowData="data"
+      :rowData="tbodyData"
       :drag-to-fill="dragToFill"
       :submenu-tbody="submenuTbody"
       :submenu-status="submenuStatusTbody"
@@ -38,7 +38,7 @@ import VueTbody from './Tbody.vue';
 export default {
   name: 'VueTable',
   props: {
-    data: Array,
+    tbodyData: Array,
     headers: Array,
     dragToFill: Boolean,
     submenuTbody: Array,
@@ -81,6 +81,14 @@ export default {
       }
     });
   },
+  watch: {
+    tbodyData() {
+      deeep: true
+    },
+    headers() {
+      deeep: true
+    }
+  },
   methods: {
     // global
     enableSubmenu(target) {
@@ -97,9 +105,9 @@ export default {
     },
     bindClassActiveOnTd(entry, rowIndex, colIndex) {
       this.cleanActiveOnTd('active');
-      this.data[rowIndex][entry].active = true;
+      this.tbodyData[rowIndex][entry].active = true;
       // stock oldTdActive in object
-      if (this.oldTdActive) this.data[this.oldTdActive.row][this.oldTdActive.key].active = false;
+      if (this.oldTdActive) this.tbodyData[this.oldTdActive.row][this.oldTdActive.key].active = false;
       this.oldTdActive = {
         key: entry,
         row: rowIndex,
@@ -107,18 +115,18 @@ export default {
       };
     },
     cleanActiveOnTd(params) {
-      this.data.forEach((data, index) => {
+      this.tbodyData.forEach((data, index) => {
         if (params === 'active') {
           Object.keys(data).forEach((key) => {
-            if (this.data[index][key].active === true) {
-              this.data[index][key].active = false;
-              this.data[index][key].show = false;
+            if (this.tbodyData[index][key].active === true) {
+              this.tbodyData[index][key].active = false;
+              this.tbodyData[index][key].show = false;
             }
           });
         } else if (params === 'selected') {
           Object.keys(data).forEach((key) => {
-            if (this.data[index][key].selected === true) {
-              this.data[index][key].selected = false;
+            if (this.tbodyData[index][key].selected === true) {
+              this.tbodyData[index][key].selected = false;
             }
           });
         }
@@ -140,7 +148,7 @@ export default {
     },
     copyStoreData() {
       // stock data in new Data
-      const newData = JSON.parse(JSON.stringify(this.data));
+      const newData = JSON.parse(JSON.stringify(this.tbodyData));
 
       if (this.selectedMultipleCell) {
         const maxRow = newData.length;
@@ -178,7 +186,7 @@ export default {
       if (this.selectedMultipleCell) {
         this.modifyMultipleCell('replace');
       } else if (this.selectedCell) {
-        this.data[this.selectedCell.row][this.selectedCell.key] = this.storeCopyDatas[0];
+        this.tbodyData[this.selectedCell.row][this.selectedCell.key] = this.storeCopyDatas[0];
       }
     },
     modifyMultipleCell(params) {
@@ -189,27 +197,27 @@ export default {
 
       while (rowMin <= rowMax) {
         const key = rowMin - this.selectedMultipleCell.rowStart;
-        const keyValue = Object.keys(this.data[rowMin])[colMin];
+        const keyValue = Object.keys(this.tbodyData[rowMin])[colMin];
 
         if (params === 'selected') {
-          this.$set(this.data[rowMin][keyValue], 'selected', true);
+          this.$set(this.tbodyData[rowMin][keyValue], 'selected', true);
         } else if (params === 'replace') {
-          this.$set(this.data[rowMin][keyValue], 'selected', false);
+          this.$set(this.tbodyData[rowMin][keyValue], 'selected', false);
           if (Object.keys(this.storeCopyDatas[0]).length === 1) {
             // 0 => 1
             // 0 => 1
-            this.data[rowMin][keyValue] = Object.values(this.storeCopyDatas[key])[0];
+            this.tbodyData[rowMin][keyValue] = Object.values(this.storeCopyDatas[key])[0];
           } else if (this.dragToFill && this.eventDrag && this.storeCopyDatas.length === 1) {
             // multiple colCells dragToFill
             const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
-            this.data[rowMin][keyValue] = newCopyData[0][keyValue];
+            this.tbodyData[rowMin][keyValue] = newCopyData[0][keyValue];
           } else if (Object.keys(this.storeCopyDatas[key]).filter(x => x === keyValue).length === 0 && !this.eventDrag) {
             const index = colMin - Object.values(this.storeCopyDatas[key]).length - 1;
             const entry = Object.keys(this.storeCopyDatas[key])[index];
-            this.data[rowMin][keyValue] = this.storeCopyDatas[key][entry];
+            this.tbodyData[rowMin][keyValue] = this.storeCopyDatas[key][entry];
           } else {
             // multiple rowCells copyPaste
-            this.data[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
+            this.tbodyData[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
           }
         }
         colMin += 1;
@@ -224,7 +232,7 @@ export default {
       // console.log('handleDownDragToFill', event, entry, data, rowIndex, colIndex);
       // if drag col to col in vertical
       // Store the data of the cell which it start
-      this.data[rowIndex][entry].active = true;
+      this.tbodyData[rowIndex][entry].active = true;
       this.eventDrag = true;
       this.dragStart = {
         data,
@@ -243,7 +251,7 @@ export default {
 
       // if drag col to col in vertical
       if (this.eventDrag === true && entry === this.dragStart.name && rowIndex > this.dragStart.row && !this.selectedMultipleCell) {
-        this.data[rowIndex][entry].active = true;
+        this.tbodyData[rowIndex][entry].active = true;
         this.dragStart.row = rowIndex;
 
         this.arrayDragData.push({
@@ -280,7 +288,7 @@ export default {
     dragTofillReplaceData(entry, rowIndex, colIndex) {
       // replace by the new data
       this.arrayDragData.forEach((data) => {
-        this.data[data.row][data.key].value = this.dragStart.data.value;
+        this.tbodyData[data.row][data.key].value = this.dragStart.data.value;
       });
       this.arrayDragData = [];
       this.eventDrag = false;
@@ -297,17 +305,17 @@ export default {
       };
       this.enableSubmenu();
       if (this.oldTdShow && this.oldTdShow.col !== colIndex) {
-        this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
+        this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       }
     },
     handleTbodyTdDoubleClick(event, entry, col, rowIndex, colIndex, type) {
       // console.log('handleTbodyTdDoubleClick', event, entry, col, rowIndex, colIndex, type);
 
       // stock oldTdShow in object
-      if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
 
       // add class show on element
-      this.data[rowIndex][entry].show = true;
+      this.tbodyData[rowIndex][entry].show = true;
 
       this.oldTdShow = {
         key: entry,
@@ -327,7 +335,7 @@ export default {
     },
     handleTbodyInputChange(event, entry, rowIndex, colIndex) {
       // remove class show on input when it change
-      if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
 
       // callback
@@ -335,7 +343,7 @@ export default {
     },
     handleTbodySelectChange(event, entry, rowIndex, colIndex) {
       // remove class show on select when it change
-      if (this.oldTdShow) this.data[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
 
       // callback
