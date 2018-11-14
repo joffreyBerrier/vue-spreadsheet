@@ -82,12 +82,20 @@ export default {
     });
   },
   watch: {
-    tbodyData() {
-      deeep: true
+    tbodyData: {
+      // immediate: true,
+      deep: true,
+      handler (val, oldVal) {
+        // console.log(val, oldVal);
+      }
     },
-    headers() {
-      deeep: true
-    }
+    headers: {
+      // immediate: true,
+      deep: true,
+      handler (val, oldVal) {
+        // console.log(val, oldVal);
+      }
+    },
   },
   methods: {
     // global
