@@ -93,6 +93,12 @@ export default {
   },
   methods: {
     // global
+    createCell(rowIndex, entry, type) {
+      if (type === 'newCol') {
+        const data = JSON.parse(JSON.stringify(this.newData));
+        this.$set(this.tbodyData[rowIndex], entry, data);
+      }
+    },
     enableSubmenu(target) {
       if (target === 'thead') {
         this.submenuStatusThead = true;
@@ -298,10 +304,8 @@ export default {
     },
     // On click on td
     handleTbodyTdClick(event, entry, rowIndex, colIndex, type) {
+      this.createCell(rowIndex, entry, type);
       // console.log('handleTbodyTdClick', event, entry, rowIndex, colIndex, type);
-      if (type === 'newCol') {
-        this.$set(this.tbodyData[rowIndex], entry, this.newData);
-      }
       this.bindClassActiveOnTd(entry, rowIndex, colIndex);
       this.selectedCell = {
         key: entry,
@@ -315,6 +319,7 @@ export default {
     },
     handleTbodyTdDoubleClick(event, entry, col, rowIndex, colIndex, type) {
       // console.log('handleTbodyTdDoubleClick', event, entry, col, rowIndex, colIndex, type);
+      this.createCell(rowIndex, entry, type);
 
       // stock oldTdShow in object
       if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
@@ -356,6 +361,7 @@ export default {
     },
     // Context Menu
     handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
+      this.createCell(rowIndex, entry, type);
       // console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
     },
     callbackSubmenuThead(event, entry, colIndex, submenuFunction, selectOptions) {

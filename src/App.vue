@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     inputChange(event, entry, rowIndex, colIndex) {
-      console.log('InputChange', event, entry, rowIndex, colIndex);
+      // console.log('InputChange', event, entry, rowIndex, colIndex);
     },
     selectChange(event, entry, rowIndex, colIndex) {
       // console.log('selectChange', event, entry, rowIndex, colIndex);
@@ -46,7 +46,7 @@ export default {
       });
     },
     changeValueSelect(rowIndex, colIndex) {
-      console.log('changeValueSelect', rowIndex, colIndex);
+      // console.log('changeValueSelect', rowIndex, colIndex);
       // to get our element => Object.values(this.products[rowIndex])[colIndex];
     },
     changeColor(event, entry, colIndex) {

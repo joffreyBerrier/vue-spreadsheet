@@ -48,22 +48,6 @@ export default {
   ],
   products: [
     {
-      name: {
-        type: 'input',
-        value: 'John',
-        active: false,
-        style: {
-          color: '#000',
-        },
-      },
-      surname: {
-        type: 'input',
-        value: 'Doe',
-        active: false,
-        style: {
-          color: '#000',
-        },
-      },
       age: {
         type: 'select',
         handleSearch: true,
