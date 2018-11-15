@@ -55,7 +55,7 @@
 
             <!-- If Input -->
             <template v-if="row[col].type === 'input'">
-              <span :style="row[col].style">{{row[col].value}}</span>
+              <span>{{row[col].value}}</span>
               <textarea
                 :style="textareaStyle(row[col].value)"
                 v-model="row[col].value"
@@ -65,7 +65,7 @@
 
             <!-- If Select -->
             <template v-if="row[col].type === 'select' && row[col].handleSearch">
-              <span :style="row[col].style">{{row[col].value}}</span>
+              <span>{{row[col].value}}</span>
               <div class="dropdown">
                 <input
                   v-model="row[col].value"
@@ -82,7 +82,7 @@
               </div>
             </template>
             <template v-else-if="row[col].type === 'select'">
-              <span :style="row[col].style">{{row[col].value}}</span>
+              <span>{{row[col].value}}</span>
               <select
                 v-model="row[col].value"
                 @change="selectHandleChange($event, col, row[col], rowIndex, colIndex)">
@@ -96,6 +96,7 @@
             </template>
           </td>
 
+          <!-- If Empty Cell -->
           <td
             v-else
             class="td"
@@ -111,46 +112,9 @@
             <!-- If Input -->
             <span></span>
             <textarea
-              v-model="fake"
+              v-model="emptyCell"
               :ref="'input-' + colIndex + '-' + rowIndex"
               @change="inputHandleChange($event, col, rowIndex, colIndex)"></textarea>
-
-            <!-- If Img -->
-            <!-- <template v-if="row[col].type === 'img'">
-              <span><img :src="row[col].value" :title="row[col].value" /></span>
-            </template> -->
-
-            <!-- If Select -->
-            <!-- <template v-if="row[col].type === 'select' && row[col].handleSearch">
-              <span :style="row[col].style">{{row[col].value}}</span>
-              <div class="dropdown">
-                <input
-                  v-model="row[col].value"
-                  :ref="'input-' + colIndex + '-' + rowIndex"
-                  @keyup="searchHandleChange(row[col])"/>
-                <ul v-bind:class="{'show': row[col].search}">
-                  <li v-for="(option, index) in filteredList"
-                    @click.stop="validSearch(option.value, row[col])"
-                    :value="option.value"
-                    :key="index">
-                      {{option.label}}
-                  </li>
-                </ul>
-              </div>
-            </template>
-            <template v-else-if="row[col].type === 'select'">
-              <span :style="row[col].style">{{row[col].value}}</span>
-              <select
-                v-model="row[col].value"
-                @change="selectHandleChange($event, col, row[col], rowIndex, colIndex)">
-                <option
-                  v-for="(option, index) in row[col].selectOptions"
-                  :value="option.value"
-                  :key="index">
-                    {{option.label}}
-                </option>
-              </select>
-            </template> -->
           </td>
         </template>
       </tr>
@@ -162,21 +126,21 @@
 export default {
   name: 'vue-tbody',
   props: {
-    rowData: Array,
-    headers: Array,
-    submenuTbody: Array,
-    submenuStatus: Boolean,
     dragToFill: Boolean,
+    headers: Array,
+    rowData: Array,
+    submenuStatus: Boolean,
+    submenuTbody: Array,
   },
   data() {
     return {
-      fake: '',
+      emptyCell: '',
       eventDrag: false,
       filteredList: [],
+      headerKeys: [],
       oldValue: null,
       submenuEnableCol: null,
       submenuEnableRow: null,
-      headerKeys: [],
     };
   },
   mounted() {
@@ -218,7 +182,6 @@ export default {
       this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
     },
     handleDoubleClickTd(event, entry, col, rowIndex, colIndex, type) {
-      console.log(this.rowData[entry]);
       if (type === 'input' || (col.type === 'select' && col.search)) {
         this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
       }
@@ -401,6 +364,7 @@ export default {
     z-index: 5;
   }
   span {
+    width: 100%;
     z-index: 10;
     white-space: nowrap;
     overflow: hidden;
