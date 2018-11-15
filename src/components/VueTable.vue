@@ -1,7 +1,7 @@
 <template>
   <table class="wrap" oncontextmenu="return false;">
     <vue-thead
-      :header="headers"
+      :headers="headers"
       :submenu-thead="submenuThead"
       :submenu-status="submenuStatusThead"
       v-on:submenu-enable="enableSubmenu"
@@ -11,6 +11,7 @@
 
     <vue-tbody
       :rowData="tbodyData"
+      :headers="headers"
       :drag-to-fill="dragToFill"
       :submenu-tbody="submenuTbody"
       :submenu-status="submenuStatusTbody"
@@ -43,6 +44,7 @@ export default {
     dragToFill: Boolean,
     submenuTbody: Array,
     submenuThead: Array,
+    newData: Object,
   },
   components: {
     VueThead,
@@ -82,20 +84,12 @@ export default {
     });
   },
   watch: {
-    tbodyData: {
-      // immediate: true,
-      deep: true,
-      handler (val, oldVal) {
-        // console.log(val, oldVal);
-      }
-    },
-    headers: {
-      // immediate: true,
-      deep: true,
-      handler (val, oldVal) {
-        // console.log(val, oldVal);
-      }
-    },
+    // tbodyData: {
+    //   deep: true,
+    // },
+    // headers: {
+    //   deep: true,
+    // },
   },
   methods: {
     // global
@@ -305,6 +299,9 @@ export default {
     // On click on td
     handleTbodyTdClick(event, entry, rowIndex, colIndex, type) {
       // console.log('handleTbodyTdClick', event, entry, rowIndex, colIndex, type);
+      if (type === 'newCol') {
+        this.$set(this.tbodyData[rowIndex], entry, this.newData);
+      }
       this.bindClassActiveOnTd(entry, rowIndex, colIndex);
       this.selectedCell = {
         key: entry,
@@ -349,13 +346,13 @@ export default {
       // callback
       this.$emit('tbody-input-change', event, entry, rowIndex, colIndex);
     },
-    handleTbodySelectChange(event, entry, rowIndex, colIndex) {
+    handleTbodySelectChange(event, entry, col, rowIndex, colIndex) {
       // remove class show on select when it change
       if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
 
       // callback
-      this.$emit('tbody-select-change', event, entry, rowIndex, colIndex);
+      this.$emit('tbody-select-change', event, entry, col, rowIndex, colIndex);
     },
     // Context Menu
     handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {

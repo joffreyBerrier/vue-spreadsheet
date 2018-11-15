@@ -40,6 +40,7 @@ props                             | Type       | Description
   :drag-to-fill                   | Boolean    | That activates drag to fill
   :submenu-tbody                  | Array      | That contains the submenu-tbody
   :submenu-thead                  | Array      | That contains the submenu-thead
+  :new-data                       | Object     | That contains the type of data when you have empty cell in a row
   v-on:tbody-input-change         | Function   | When the **input changes**
   v-on:tbody-select-change        | Function   | When the **select change**
   v-on-thead-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-thead**
@@ -54,6 +55,7 @@ props                             | Type       | Description
     :drag-to-fill="Boolean"
     :submenu-tbody="Array"
     :submenu-thead="Array"
+    :new-data="Object"
     v-on:thead-submenu-click-customize-function="Function"
     v-on:tbody-submenu-click-customize-function="Function"
     v-on:tbody-input-change="Function"
@@ -188,6 +190,24 @@ products: [
   },
 ],
 ```
+
+### New Data :tiger:
+
+#### Example
+
+Same Object describe on the top
+
+If you choose an input
+
+newData: {
+  type: 'input',
+  value: '',
+  active: false,
+  style: {
+    color: '#000',
+    background: '#cfffcf',
+  },
+},
 
 ### submenu :monkey_face:
 

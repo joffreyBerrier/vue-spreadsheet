@@ -1,5 +1,14 @@
 export default {
   dragToFill: true,
+  newData: {
+    type: 'input',
+    value: '',
+    active: false,
+    style: {
+      color: '#000',
+      background: '#cfffcf',
+    },
+  },
   headers: [
     {
       headerName: 'Image',
@@ -39,12 +48,6 @@ export default {
   ],
   products: [
     {
-      img: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
-        disabled: true,
-      },
       name: {
         type: 'input',
         value: 'John',

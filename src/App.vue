@@ -6,6 +6,7 @@
       :drag-to-fill="dragToFill"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead"
+      :new-data="newData"
       v-on:thead-submenu-click-change-color="changeColor"
       v-on:thead-submenu-click-change-value="changeValue"
       v-on:thead-submenu-click-change-city="changeCity"
