@@ -1,7 +1,7 @@
 <template>
   <thead class="thead">
     <tr>
-      <template v-for="(header, colIndex) in header">
+      <template v-for="(header, colIndex) in headers">
         <th
           class="th"
           :style="header.style"
@@ -65,7 +65,7 @@
 export default {
   name: 'vue-thead',
   props: {
-    header: Array,
+    headers: Array,
     submenuThead: Array,
     submenuStatus: Boolean,
   },
