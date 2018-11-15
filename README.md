@@ -199,6 +199,7 @@ Same Object describe on the top
 
 If you choose an input
 
+```
 newData: {
   type: 'input',
   value: '',
@@ -208,6 +209,7 @@ newData: {
     background: '#cfffcf',
   },
 },
+```
 
 ### submenu :monkey_face:
 
