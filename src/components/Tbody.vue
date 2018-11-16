@@ -226,11 +226,12 @@ export default {
         event.keyCode === 39 ||
         event.keyCode === 40 ||
         event.keyCode === 38 ||
-        event.keyCode === 13)) {
+        event.keyCode === 13 ||
+        event.keyCode === 8)) {
         const colIndex = Number(actualElement.getAttribute('data-col-index'));
         const rowIndex = Number(actualElement.getAttribute('data-row-index'));
         // remove active to before-active cell
-        const actualCol = Object.keys(this.rowData[rowIndex])[colIndex];
+        const actualCol = Object.values(this.headerKeys)[colIndex];
         this.rowData[rowIndex][actualCol].active = false;
 
         // remove active class / blur
@@ -243,7 +244,7 @@ export default {
 
         // right
         if (event.keyCode === 39) {
-          let col = Object.keys(this.rowData[rowIndex])[colIndex + 1];
+          let col = Object.values(this.headerKeys)[colIndex + 1];
           if (col) {
             this.rowData[rowIndex][col].active = true;
           } else {
@@ -253,7 +254,7 @@ export default {
         }
         // left
         if (event.keyCode === 37) {
-          let col = Object.keys(this.rowData[rowIndex])[colIndex - 1];
+          let col = Object.values(this.headerKeys)[colIndex - 1];
           if (col) {
             this.rowData[rowIndex][col].active = true;
           } else {
@@ -282,6 +283,11 @@ export default {
           this.rowData[rowIndex][actualCol].show = true;
           this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
           this.$emit('tbody-nav-enter', event, event.keyCode, actualElement, rowIndex, colIndex);
+        }
+        // press backspace
+        if (event.keyCode === 8) {
+          this.$emit('tbody-nav-backspace', event, actualElement, actualCol, rowIndex, colIndex);
+          this.rowData[rowIndex][actualCol].value = '';
         }
       }
     },
