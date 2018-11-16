@@ -1,6 +1,6 @@
 {
   "name": "spreadsheet-vuejs",
-  "version": "0.5.91",
+  "version": "0.5.92",
   "description": "An easier Spreadsheet in Vue",
   "main": "src/index.js",
   "author": "Joffrey Berrier <joffrey.berrier@gmail.com>",
