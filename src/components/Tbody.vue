@@ -12,8 +12,8 @@
             @click.shift.exact="handleSelectMultipleCell($event, col, rowIndex, colIndex, row[col].type)"
             @contextmenu="handleContextMenuTd($event, col, rowIndex, colIndex, row[col].type)"
             @click="handleClickTd($event, col, rowIndex, colIndex, row[col].type)"
-            @dblclick="handleDoubleClickTd($event, col, col, rowIndex, colIndex, row[col].type)"
-            @mousemove="handleMoveDragToFill($event, col, col, rowIndex, colIndex)"
+            @dblclick="handleDoubleClickTd($event, col, row[col], rowIndex, colIndex, row[col].type)"
+            @mousemove="handleMoveDragToFill($event, col, row[col], rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, col, rowIndex, colIndex, row[col].type)"
             v-bind:class="{'active_td': row[col].active, 'show': row[col].show, 'disabled': row[col].disabled, 'selected': row[col].selected}"
             :ref="'td-' + colIndex + '-' + rowIndex"
@@ -66,18 +66,29 @@
             <!-- If Select -->
             <template v-if="row[col].type === 'select' && row[col].handleSearch">
               <span>{{row[col].value}}</span>
+              <button @click="enableSelect(row[col], rowIndex, colIndex, row[col].type)" v-bind:class="{'active': row[col].search === true}" class="enable_select"><i></i></button>
               <div class="dropdown">
                 <input
                   v-model="row[col].value"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup="searchHandleChange(row[col])"/>
                 <ul v-bind:class="{'show': row[col].search}">
-                  <li v-for="(option, index) in filteredList"
-                    @click.stop="validSearch(option.value, row[col])"
-                    :value="option.value"
-                    :key="index">
-                      {{option.label}}
-                  </li>
+                  <template v-if="!row[col].typing">
+                    <li v-for="(option, index) in row[col].selectOptions"
+                      @click.stop="validSearch(option.value, row[col])"
+                      :value="option.value"
+                      :key="index + 'option'">
+                        {{option.label}}
+                    </li>
+                  </template>
+                  <template v-if="row[col].typing">
+                    <li v-for="(option, index) in filteredList"
+                      @click.stop="validSearch(option.value, row[col])"
+                      :value="option.value"
+                      :key="index">
+                        {{option.label}}
+                    </li>
+                  </template>
                 </ul>
               </div>
             </template>
@@ -136,8 +147,8 @@ export default {
     return {
       emptyCell: '',
       eventDrag: false,
-      filteredList: [],
       headerKeys: [],
+      filteredList: [],
       oldValue: null,
       submenuEnableCol: null,
       submenuEnableRow: null,
@@ -148,6 +159,16 @@ export default {
     window.addEventListener('keyup', this.moveKeydown);
   },
   methods: {
+    enableSelect(col, rowIndex, colIndex, type) {
+      if (!col.search) {
+        this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+        col.search = true;
+        col.typing = false;
+      } else {
+        col.search = false;
+        col.typing = false;
+      }
+    },
     textareaStyle(value) {
       if (value.length > 100) {
         return {
@@ -201,13 +222,12 @@ export default {
     },
     searchHandleChange(col) {
       const column = col;
-      column.search = true;
-
+      column.typing = true;
       this.filteredList = col.selectOptions.filter((option) => {
         if (typeof option.value === 'number') {
-          return option.value.toString().toLowerCase().includes(col.value.toString().toLocaleLowerCase());
+          return option.value.toString().toLowerCase().includes(col.value.toString().toLowerCase());
         }
-        return option.value.toLowerCase().include(col.value.toLocaleLowerCase());
+        return option.value.toLowerCase().includes(col.value.toLowerCase());
       });
     },
     validSearch(val, col) {
@@ -404,8 +424,8 @@ export default {
     top: 0;
     left: 0;
     display: block;
-    width: calc(100% - 10px);
-    height: calc(100% - 10px);
+    width: 92%;
+    height: 92%;
     background: white;
     line-height: 40px;
     box-sizing: border-box;
@@ -449,8 +469,53 @@ export default {
       }
       &.show {
         display: block;
+        z-index: 11;
       }
     }
+  }
+}
+.enable_select {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  z-index: 12;
+  transform: translateY(-50%);
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  width: 5px;
+  height: 15px;
+  outline: none;
+  cursor: pointer;
+  transform: translateY(-50%) rotate(0deg);
+  transition: all ease .5s;
+  i {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%) rotate(180deg);
+    font-size: 16px;
+    transition: all ease .5s;
+    &:before {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 5px;
+      transform: rotate(45deg) translate(1px, -2px);
+      background: black;
+    }
+    &:after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 5px;
+      transform: rotate(135deg) translate(0px, 2px);
+      background: black;
+    }
+  }
+  &.active {
+    transform: translateY(-50%) rotate(180deg);
   }
 }
 .submenu_wrap {

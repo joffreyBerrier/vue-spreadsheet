@@ -53,27 +53,27 @@ export default {
         handleSearch: true,
         selectOptions: [
           {
-            value: 26,
-            label: 26,
+            value: 'paris',
+            label: 'paris',
           },
           {
-            value: 27,
-            label: 27,
+            value: 'new york',
+            label: 'new york',
           },
           {
-            value: 28,
-            label: 28,
+            value: 'berlin',
+            label: 'berlin',
           },
           {
-            value: 29,
-            label: 29,
+            value: 'monaco',
+            label: 'monaco',
           },
           {
-            value: 30,
-            label: 30,
+            value: 'Clermont-Ferrand',
+            label: 'Clermont-Ferrand',
           },
         ],
-        value: 28,
+        value: '',
         active: false,
       },
       born: {
