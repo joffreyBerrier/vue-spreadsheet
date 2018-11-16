@@ -454,6 +454,9 @@ export default {
       z-index: 1;
       padding: 0;
       margin: 0;
+      height: 140px;
+      width: 110%;
+      overflow-y: auto;
       li {
         list-style: none;
         font-size: 11px;
@@ -469,7 +472,7 @@ export default {
       }
       &.show {
         display: block;
-        z-index: 11;
+        z-index: 13;
       }
     }
   }
@@ -483,7 +486,7 @@ export default {
   border: 0;
   box-shadow: none;
   background: transparent;
-  width: 5px;
+  width: 15px;
   height: 15px;
   outline: none;
   cursor: pointer;
