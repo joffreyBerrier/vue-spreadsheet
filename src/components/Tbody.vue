@@ -75,7 +75,7 @@
                 <ul v-bind:class="{'show': row[col].search}">
                   <template v-if="!row[col].typing">
                     <li v-for="(option, index) in row[col].selectOptions"
-                      @click.stop="validSearch(option.value, row[col])"
+                      @click.stop="validSearch($event, col, row[col], rowIndex, colIndex, option.value)"
                       :value="option.value"
                       :key="index + 'option'">
                         {{option.label}}
@@ -83,7 +83,7 @@
                   </template>
                   <template v-if="row[col].typing">
                     <li v-for="(option, index) in filteredList"
-                      @click.stop="validSearch(option.value, row[col])"
+                      @click.stop="validSearch($event, col, row[col], rowIndex, colIndex, option.value)"
                       :value="option.value"
                       :key="index">
                         {{option.label}}
@@ -230,11 +230,12 @@ export default {
         return option.value.toLowerCase().includes(col.value.toLowerCase());
       });
     },
-    validSearch(val, col) {
+    validSearch($event, entry, col, rowIndex, colIndex, val) {
       const column = col;
       column.search = false;
       column.show = false;
       column.value = val;
+      this.$emit('tbody-select-change', event, entry, col, rowIndex, colIndex);
     },
     handleClickSubmenu(event, entry, rowIndex, colIndex, type, submenuFunction) {
       this.$emit('tbody-submenu-click-callback', event, entry, rowIndex, colIndex, type, submenuFunction);
