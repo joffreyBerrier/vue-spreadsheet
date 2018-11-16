@@ -163,9 +163,11 @@ export default {
       if (!col.search) {
         this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
         col.search = true;
+        col.show = true;
         col.typing = false;
       } else {
         col.search = false;
+        col.show = false;
         col.typing = false;
       }
     },
@@ -322,7 +324,7 @@ export default {
   height: 40px;
   line-height: 40px;
   position: relative;
-  background: white;
+  background-color: white;
   border-right: 1px solid #e7ecf5;
   border-bottom: 1px solid #e7ecf5;
   padding: 0;
@@ -338,8 +340,8 @@ export default {
       visibility: visible;
     }
   }
-  &.active_td span,
-  &.selected span {
+  &.active_td,
+  &.selected {
     background: aliceblue;
   }
   &.disabled {
@@ -356,19 +358,22 @@ export default {
     textarea,
     select,
     .dropdown {
+      opacity: 1;
       z-index: 11;
     }
     textarea {
       font-size: 12px;
       line-height: 1.3;
-      background: aliceblue;
       border: 1px solid #e9e9e9;
       z-index: 20;
       resize: none;
-      opacity: 1;
+    }
+    span {
+      opacity: 0;
     }
   }
   textarea,
+  select,
   .dropdown {
     opacity: 0;
   }
@@ -381,7 +386,7 @@ export default {
     display: block;
     width: 100%;
     height: 100%;
-    background: white;
+    background: transparent;
     text-align: left;
     padding: 2px 5px;
     line-height: 40px;
@@ -396,6 +401,7 @@ export default {
   span {
     width: 100%;
     z-index: 10;
+    opacity: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -430,12 +436,10 @@ export default {
     display: block;
     width: 92%;
     height: 92%;
-    background: white;
     line-height: 40px;
     box-sizing: border-box;
     border: 1px solid transparent;
     outline: none;
-    opacity: 1;
     input {
       position: absolute;
       top: 0;

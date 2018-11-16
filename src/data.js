@@ -75,6 +75,9 @@ export default {
         ],
         value: '',
         active: false,
+        style: {
+          background: 'red',
+        },
       },
       born: {
         type: 'select',
