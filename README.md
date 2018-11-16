@@ -57,6 +57,7 @@ props                             | Type       | Description
     :submenu-tbody="Array"
     :submenu-thead="Array"
     :new-data="Object"
+    v-on:tbody-nav-backspace="Function"
     v-on:thead-submenu-click-customize-function="Function"
     v-on:tbody-submenu-click-customize-function="Function"
     v-on:tbody-input-change="Function"

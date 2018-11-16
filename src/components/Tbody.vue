@@ -348,6 +348,9 @@ export default {
       background: #cccccc;
       opacity: .5;
     }
+    .enable_select {
+      opacity: 0;
+    }
   }
   &.show {
     textarea,
@@ -455,7 +458,7 @@ export default {
       z-index: 1;
       padding: 0;
       margin: 0;
-      height: 140px;
+      max-height: 140px;
       width: 110%;
       overflow-y: auto;
       li {
@@ -486,9 +489,10 @@ export default {
   transform: translateY(-50%);
   border: 0;
   box-shadow: none;
-  background: transparent;
-  width: 15px;
-  height: 15px;
+  background: white;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
   outline: none;
   cursor: pointer;
   transform: translateY(-50%) rotate(0deg);
