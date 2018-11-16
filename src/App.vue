@@ -13,7 +13,8 @@
       v-on:tbody-submenu-click-change-color="changeColorTbody"
       v-on:tbody-submenu-click-change-value="changeValueTbody"
       v-on:tbody-input-change="inputChange"
-      v-on:tbody-select-change="selectChange">
+      v-on:tbody-select-change="selectChange"
+      v-on:tbody-nav-backspace="deleteCell">
     </vue-table>
   </div>
 </template>
@@ -31,6 +32,9 @@ export default {
     VueTable,
   },
   methods: {
+    deleteCell(event, actualElement, actualCol, rowIndex, colIndex) {
+      console.log(event, actualElement, actualCol, rowIndex, colIndex);
+    },
     inputChange(event, entry, rowIndex, colIndex) {
       // console.log('InputChange', event, entry, rowIndex, colIndex);
     },

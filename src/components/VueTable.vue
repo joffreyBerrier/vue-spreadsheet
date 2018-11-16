@@ -25,6 +25,7 @@
       v-on:tbody-select-change="handleTbodySelectChange"
       v-on:tbody-nav="handleTbodyNav"
       v-on:tbody-nav-enter="handleTbodyNavEnter"
+      v-on:tbody-nav-backspace="handleTbodyNavBackspace"
       v-on:tbody-down-dragtofill="handleDownDragToFill"
       v-on:tbody-move-dragtofill="handleMoveDragToFill"
       v-on:tbody-up-dragtofill="handleUpDragToFill">
@@ -342,6 +343,9 @@ export default {
     handleTbodyNavEnter(event, entry, keyCode, actualElement, rowIndex, colIndex) {
       // console.log('handleTbodyNavEnter', event, entry, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
+    },
+    handleTbodyNavBackspace(event, actualElement, actualCol, rowIndex, colIndex) {
+      this.$emit('tbody-nav-backspace', event, actualElement, actualCol, rowIndex, colIndex);
     },
     handleTbodyInputChange(event, entry, rowIndex, colIndex) {
       // remove class show on input when it change

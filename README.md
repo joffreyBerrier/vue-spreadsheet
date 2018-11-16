@@ -43,6 +43,7 @@ props                             | Type       | Description
   :new-data                       | Object     | That contains the type of data when you have empty cell in a row
   v-on:tbody-input-change         | Function   | When the **input changes**
   v-on:tbody-select-change        | Function   | When the **select change**
+  v-on:tbody-nav-backspace        | Function   | When you press backspace on cell
   v-on-thead-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-thead**
   v-on:tbody-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-tbody**
 
