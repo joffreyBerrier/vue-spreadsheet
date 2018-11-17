@@ -359,7 +359,7 @@ export default {
     select,
     .dropdown {
       opacity: 1;
-      z-index: 11;
+      z-index: 13;
     }
     textarea {
       font-size: 12px;
@@ -449,6 +449,7 @@ export default {
       height: 100%;
       width: 100%;
       border: 0;
+      background: transparent;
       outline: none;
     }
     ul {
@@ -456,7 +457,6 @@ export default {
       position: absolute;
       top: 38px;
       background-color: #fff;
-      width: 100%;
       border: 1px solid #e7ecf5;
       box-shadow: 0px -8px 34px 0px rgba(0, 0, 0, 0.05);
       z-index: 1;
