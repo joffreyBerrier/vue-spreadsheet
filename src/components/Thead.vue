@@ -4,9 +4,12 @@
       <template v-for="(header, colIndex) in headers">
         <th
           class="th"
-          :style="header.style"
           v-bind:class="{'disabled': header.disabled}"
-          :key="header.headerKey">
+          :key="header.headerKey"
+          @mousemove="handleMoveChangeSize($event, header, colIndex)"
+          @mouseup="handleUpDragToFill($event, header, colIndex)"
+          :style="header.style">
+
           <span>{{header.headerName}}</span>
 
           <template
@@ -55,6 +58,14 @@
               </template>
             </div>
           </template>
+
+          <button
+            :ref="'resize-' + colIndex"
+            @mousedown="handleDownChangeSize($event, header, colIndex)"
+            @mouseup="handleUpDragToFill($event, header, colIndex)"
+            class="resize"
+            v-bind:class="{'active': header.active}">
+          </button>
         </th>
       </template>
     </tr>
@@ -71,12 +82,45 @@ export default {
   },
   data() {
     return {
+      eventDrag: false,
       submenuEnableCol: null,
+      beforeChangeSize: {},
+      newSize: '',
     };
   },
   computed: {
   },
   methods: {
+    handleDownChangeSize(event, header, colIndex) {
+      this.eventDrag = true;
+      const element = this.$refs['resize-' + colIndex][0];
+      this.beforeChangeSize = {
+        col: colIndex,
+        elementLeft: event.currentTarget.parentElement.offsetLeft,
+        header: header,
+        width: parseInt(header.style.width),
+      }
+      header.active = true;
+      header.style.left = event.clientX;
+      this.$forceUpdate();
+    },
+    handleMoveChangeSize(event, header, colIndex) {
+      if (this.eventDrag) {
+        const newWidth = ((event.clientX - this.beforeChangeSize.elementLeft) - this.beforeChangeSize.width) + (event.clientX - this.beforeChangeSize.elementLeft) + 10;
+        const element = this.$refs['resize-' + this.beforeChangeSize.col][0];
+        this.newSize = newWidth + 'px';
+        element.style.left = event.clientX + 'px';
+        this.$forceUpdate();
+      }
+    },
+    handleUpDragToFill(event, header, colIndex) {
+      this.eventDrag = false;
+      const element = this.$refs['resize-' + this.beforeChangeSize.col][0];
+      element.style.left = 'auto';
+      this.headers[this.beforeChangeSize.col].style.width = this.newSize;
+      this.beforeChangeSize.header.active = false;
+      this.$forceUpdate();
+    },
     handleContextMenuTd(event, entry, colIndex) {
       this.submenuEnableCol = colIndex;
       if (this.submenuStatus === true) {
@@ -99,7 +143,6 @@ export default {
 
 <style lang="scss" scoped>
 .th {
-  width: 120px;
   height: 40px;
   line-height: 40px;
   position: relative;
@@ -117,6 +160,44 @@ export default {
     span {
       background: #cccccc;
       opacity: .5;
+    }
+  }
+}
+.resize {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 43px;
+  background: #c7d6f3;
+  width: 5px;
+  padding: 0;
+  border: 0;
+  cursor: col-resize;
+  box-shadow: none;
+  outline: none;
+  opacity: 0;
+  transition: all ease .5s;
+  &:hover {
+    opacity: 1;
+  }
+  &:after {
+    content: '';
+    display: block;
+    height: 200px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 1px dashed #c7d6f3;
+    opacity: 0;
+    visibility: hidden;
+  }
+  &.active {
+    opacity: 1;
+    position: fixed;
+    top: auto;
+    &:after {
+      opacity: 1;
+      visibility: visible;
     }
   }
 }

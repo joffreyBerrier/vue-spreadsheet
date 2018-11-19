@@ -87,10 +87,6 @@ export default {
   color: #2c3e50;
   background: transparent;
 }
-.table_row,
-.thead {
-  display: flex;
-}
 .wrap {
   margin: 10px auto;
 }
