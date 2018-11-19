@@ -36,15 +36,16 @@ npm i spreadsheet-vuejs
 props                             | Type       | Description
 ----------------------------------|------------|-------------------
   :data                           | Array      | That contains data
-  :headers                        | Array      | That contains headers
   :drag-to-fill                   | Boolean    | That activates drag to fill
+  :headers                        | Array      | That contains headers
+  :new-data                       | Object     | That contains the type of data when you have empty cell in a row
   :submenu-tbody                  | Array      | That contains the submenu-tbody
   :submenu-thead                  | Array      | That contains the submenu-thead
-  :new-data                       | Object     | That contains the type of data when you have empty cell in a row
-  v-on:tbody-input-change         | Function   | When the **input changes**
-  v-on:tbody-select-change        | Function   | When the **select change**
-  v-on:tbody-nav-backspace        | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
+  :disable-cells                  | Array      | That contains the headerKey you want to disable
   v-on-thead-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-thead**
+  v-on:tbody-input-change         | Function   | When the **input changes**
+  v-on:tbody-nav-backspace        | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
+  v-on:tbody-select-change        | Function   | When the **select change**
   v-on:tbody-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-tbody**
 
 ### Example
@@ -52,16 +53,17 @@ props                             | Type       | Description
 ```
   <vue-table
     :data="Array"
-    :headers="Array"
+    :disable-cells="disableCells"
     :drag-to-fill="Boolean"
+    :headers="Array"
+    :new-data="Object"
     :submenu-tbody="Array"
     :submenu-thead="Array"
-    :new-data="Object"
-    v-on:tbody-nav-backspace="Function"
-    v-on:thead-submenu-click-customize-function="Function"
-    v-on:tbody-submenu-click-customize-function="Function"
     v-on:tbody-input-change="Function"
-    v-on:tbody-select-change="Function">
+    v-on:tbody-nav-backspace="Function"
+    v-on:tbody-select-change="Function"
+    v-on:tbody-submenu-click-customize-function="Function"
+    v-on:thead-submenu-click-customize-function="Function">
   </vue-table>
 ```
 
@@ -282,20 +284,22 @@ newData: {
 
   <vue-table
     :data="data"
-    :headers="headers"
+    :disable-cells="disableCells"
     :drag-to-fill="dragToFill"
+    :headers="headers"
     :submenu-tbody="submenuTbody"
     :submenu-thead="submenuThead"
     v-on:tbody-input-change="InputChange"
     v-on:tbody-select-change="SelectChange">
-    v-on:thead-submenu-click-change-color="changeColor"
     v-on:tbody-submenu-click-change-color="changeColorTbody"
+    v-on:thead-submenu-click-change-color="changeColor">
   </vue-table>
 
   # Data
 
   data() {
     return {
+      disableCells: ['img'],
       dragToFill: true,
       headers: [
         {

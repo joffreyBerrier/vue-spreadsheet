@@ -2,32 +2,33 @@
   <table class="wrap" oncontextmenu="return false;">
     <vue-thead
       :headers="headers"
-      :submenu-thead="submenuThead"
       :submenu-status="submenuStatusThead"
+      :submenu-thead="submenuThead"
       v-on:submenu-enable="enableSubmenu"
-      v-on:thead-td-context-menu="handleTheadContextMenu"
-      v-on:thead-submenu-click-callback="callbackSubmenuThead">
+      v-on:thead-submenu-click-callback="callbackSubmenuThead"
+      v-on:thead-td-context-menu="handleTheadContextMenu">
     </vue-thead>
 
     <vue-tbody
-      :rowData="tbodyData"
-      :headers="headers"
+      :disable-cells="disableCells"
       :drag-to-fill="dragToFill"
-      :submenu-tbody="submenuTbody"
+      :headers="headers"
+      :rowData="tbodyData"
       :submenu-status="submenuStatusTbody"
+      :submenu-tbody="submenuTbody"
       v-on:submenu-enable="enableSubmenu"
-      v-on:tbody-td-click="handleTbodyTdClick"
-      v-on:tbody-select-multiple-cell="handleSelectMultipleCell"
-      v-on:tbody-td-double-click="handleTbodyTdDoubleClick"
-      v-on:tbody-td-context-menu="handleTbodyContextMenu"
-      v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
-      v-on:tbody-input-change="handleTbodyInputChange"
-      v-on:tbody-select-change="handleTbodySelectChange"
-      v-on:tbody-nav="handleTbodyNav"
-      v-on:tbody-nav-enter="handleTbodyNavEnter"
-      v-on:tbody-nav-backspace="handleTbodyNavBackspace"
       v-on:tbody-down-dragtofill="handleDownDragToFill"
+      v-on:tbody-input-change="handleTbodyInputChange"
       v-on:tbody-move-dragtofill="handleMoveDragToFill"
+      v-on:tbody-nav-backspace="handleTbodyNavBackspace"
+      v-on:tbody-nav-enter="handleTbodyNavEnter"
+      v-on:tbody-nav="handleTbodyNav"
+      v-on:tbody-select-change="handleTbodySelectChange"
+      v-on:tbody-select-multiple-cell="handleSelectMultipleCell"
+      v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
+      v-on:tbody-td-click="handleTbodyTdClick"
+      v-on:tbody-td-context-menu="handleTbodyContextMenu"
+      v-on:tbody-td-double-click="handleTbodyTdDoubleClick"
       v-on:tbody-up-dragtofill="handleUpDragToFill">
     </vue-tbody>
   </table>
@@ -40,6 +41,7 @@ import VueTbody from './Tbody.vue';
 export default {
   name: 'VueTable',
   props: {
+    disableCells: Array,
     tbodyData: Array,
     headers: Array,
     dragToFill: Boolean,
@@ -198,7 +200,7 @@ export default {
       }
     },
     modifyMultipleCell(params) {
-      let headerKeys = this.headers.map(x => x.headerKey);
+      const headerKeys = this.headers.map(x => x.headerKey);
       const rowMax = this.selectedMultipleCell.rowEnd;
       const colMax = this.selectedMultipleCell.colEnd;
       let rowMin = this.selectedMultipleCell.rowStart;

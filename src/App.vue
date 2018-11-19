@@ -1,20 +1,21 @@
 <template>
   <div id="app">
     <vue-table
-      :tbody-data="products"
-      :headers="headers"
+      :disable-cells="disableCells"
       :drag-to-fill="dragToFill"
+      :headers="headers"
+      :new-data="newData"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead"
-      :new-data="newData"
-      v-on:thead-submenu-click-change-color="changeColor"
-      v-on:thead-submenu-click-change-value="changeValue"
-      v-on:thead-submenu-click-change-city="changeCity"
+      :tbody-data="products"
+      v-on:tbody-input-change="inputChange"
+      v-on:tbody-nav-backspace="deleteCell"
+      v-on:tbody-select-change="selectChange"
       v-on:tbody-submenu-click-change-color="changeColorTbody"
       v-on:tbody-submenu-click-change-value="changeValueTbody"
-      v-on:tbody-input-change="inputChange"
-      v-on:tbody-select-change="selectChange"
-      v-on:tbody-nav-backspace="deleteCell">
+      v-on:thead-submenu-click-change-city="changeCity"
+      v-on:thead-submenu-click-change-color="changeColor"
+      v-on:thead-submenu-click-change-value="changeValue">
     </vue-table>
   </div>
 </template>

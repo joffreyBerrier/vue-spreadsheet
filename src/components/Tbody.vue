@@ -15,7 +15,13 @@
             @dblclick="handleDoubleClickTd($event, col, row[col], rowIndex, colIndex, row[col].type)"
             @mousemove="handleMoveDragToFill($event, col, row[col], rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, col, rowIndex, colIndex, row[col].type)"
-            v-bind:class="{'active_td': row[col].active, 'show': row[col].show, 'disabled': row[col].disabled, 'selected': row[col].selected}"
+            v-bind:class="{
+              'active_td': row[col].active,
+              'show': row[col].show,
+              'disabled': row[col].disabled,
+              'selected': row[col].selected,
+              'disabled': disableCells.find(x => x === col),
+            }"
             :ref="'td-' + colIndex + '-' + rowIndex"
             :key="col"
             :style="row[col].style">
@@ -118,6 +124,9 @@
             @contextmenu="handleContextMenuTd($event, col, rowIndex, colIndex, 'newCol')"
             @click="handleClickTd($event, col, rowIndex, colIndex, 'newCol')"
             @dblclick="handleDoubleClickTd($event, col, col, rowIndex, colIndex, 'newCol')"
+            v-bind:class="{
+              'disabled': disableCells.find(x => x === col),
+            }"
             :key="col[col]">
 
             <!-- If Input -->
@@ -137,6 +146,7 @@
 export default {
   name: 'vue-tbody',
   props: {
+    disableCells: Array,
     dragToFill: Boolean,
     headers: Array,
     rowData: Array,
