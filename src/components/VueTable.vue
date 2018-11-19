@@ -13,6 +13,7 @@
       :disable-cells="disableCells"
       :drag-to-fill="dragToFill"
       :headers="headers"
+      :newData="newData"
       :rowData="tbodyData"
       :submenu-status="submenuStatusTbody"
       :submenu-tbody="submenuTbody"

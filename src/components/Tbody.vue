@@ -73,7 +73,7 @@
             <!-- If Select -->
             <template v-if="row[col].type === 'select' && row[col].handleSearch">
               <span>{{row[col].value}}</span>
-              <button @click="enableSelect(row[col], rowIndex, colIndex, row[col].type)" v-bind:class="{'active': row[col].search === true}" class="enable_select"><i></i></button>
+              <button @click.stop="enableSelect(row[col], rowIndex, colIndex, row[col].type)" v-bind:class="{'active': row[col].search === true}" class="enable_select"><i></i></button>
               <div class="dropdown">
                 <input
                   v-model="row[col].value"
@@ -117,27 +117,35 @@
           </td>
 
           <!-- If Empty Cell -->
-          <td
-            v-else
+          <td v-else
             class="td"
             :id="col"
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
-            :ref="'td-' + colIndex + '-' + rowIndex"
             @contextmenu="handleContextMenuTd($event, col, rowIndex, colIndex, 'newCol')"
             @click="handleClickTd($event, row[col], col, rowIndex, colIndex, 'newCol')"
             @dblclick="handleDoubleClickTd($event, col, col, rowIndex, colIndex, 'newCol')"
             v-bind:class="{
+              'active_td': newData.active,
+              'show': newData.show,
+              'disabled': newData.disabled,
+              'selected': newData.selected,
               'disabled': disableCells.find(x => x === col),
             }"
-            :key="col[col]">
+            :ref="'td-' + colIndex + '-' + rowIndex"
+            :key="col"
+            :style="newData.style">
 
             <!-- If Input -->
-            <span></span>
-            <textarea
-              v-model="emptyCell"
+            <template v-if="newData.type === 'input'">
+              <span>{{newData.value}}</span>
+              <textarea
+              v-model="newData.value"
+              @change="inputHandleChange($event, col, rowIndex, colIndex)"
+              @keyup.esc="escKeyup(newData, rowIndex, colIndex, newData.type)"
               :ref="'input-' + colIndex + '-' + rowIndex"
-              @change="inputHandleChange($event, col, rowIndex, colIndex)"></textarea>
+              :style="textareaStyle(newData.value)"></textarea>
+            </template>
           </td>
         </template>
       </tr>
@@ -155,6 +163,7 @@ export default {
     rowData: Array,
     submenuStatus: Boolean,
     submenuTbody: Array,
+    newData: Object,
   },
   data() {
     return {
@@ -174,13 +183,11 @@ export default {
   methods: {
     enableSelect(col, rowIndex, colIndex, type) {
       if (!col.search) {
-        this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
-        col.active = true;
         col.search = true;
         col.show = true;
         col.typing = false;
+        this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
       } else {
-        col.active = true;
         col.search = false;
         col.show = false;
         col.typing = true;
@@ -225,9 +232,7 @@ export default {
       }
     },
     handleClickTd(event, col, entry, rowIndex, colIndex, type) {
-      if (!col.handleSearch) {
-        this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
-      }
+      this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
     },
     handleDoubleClickTd(event, entry, col, rowIndex, colIndex, type) {
       if (type === 'input' || (col.type === 'select' && col.search)) {
@@ -411,7 +416,8 @@ export default {
   }
   textarea,
   span,
-  select {
+  select,
+  .dropdown {
     position: absolute;
     top: 0;
     left: 0;
@@ -462,16 +468,6 @@ export default {
     transition: all .3s ease;
   }
   .dropdown {
-    position: relative;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 92%;
-    height: 92%;
-    line-height: 40px;
-    box-sizing: border-box;
-    border: 1px solid transparent;
-    outline: none;
     input {
       position: absolute;
       top: 0;
@@ -487,15 +483,17 @@ export default {
     ul {
       display: none;
       position: absolute;
-      top: 38px;
+      top: 39px;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
       background-color: #fff;
       border: 1px solid #e7ecf5;
       box-shadow: 0px -8px 34px 0px rgba(0, 0, 0, 0.05);
-      z-index: 1;
       padding: 0;
       margin: 0;
       max-height: 140px;
-      width: 110%;
+      width: 100%;
       overflow-y: auto;
       li {
         list-style: none;
