@@ -169,13 +169,18 @@ export default {
         let colMin = this.selectedMultipleCell.colStart;
         const rowMax = this.selectedMultipleCell.rowEnd;
         const colMax = this.selectedMultipleCell.colEnd;
+        const keyStart = this.selectedMultipleCell.keyStart;
 
+        const headerKeys = this.headers.map(x => x.headerKey);
         let rowValues = Object.values(newData[rowMin]);
-        const colName = Object.keys(newData[rowMin]);
         let storeData = {};
 
         while (rowMin <= rowMax) {
-          storeData[colName[colMin]] = rowValues[colMin];
+          if (colMin === colMax) {
+            storeData[headerKeys[colMin]] = newData[rowMin][keyStart];
+          } else {
+            storeData[headerKeys[colMin]] = rowValues[colMin];
+          }
           colMin += 1;
           if (colMin > colMax) {
             this.storeCopyDatas.push(storeData);
@@ -278,6 +283,7 @@ export default {
         this.cleanActiveOnTd('active');
         this.eventDrag = false;
         this.storeCopyDatas = [];
+        this.selectedMultipleCell = null;
       }
     },
     // On click on td
