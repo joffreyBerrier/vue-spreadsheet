@@ -11,7 +11,7 @@
             :data-row-index="rowIndex"
             @click.shift.exact="handleSelectMultipleCell($event, col, rowIndex, colIndex, row[col].type)"
             @contextmenu="handleContextMenuTd($event, col, rowIndex, colIndex, row[col].type)"
-            @click="handleClickTd($event, col, rowIndex, colIndex, row[col].type)"
+            @click="handleClickTd($event, row[col], col, rowIndex, colIndex, row[col].type)"
             @dblclick="handleDoubleClickTd($event, col, row[col], rowIndex, colIndex, row[col].type)"
             @mousemove="handleMoveDragToFill($event, col, row[col], rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, col, rowIndex, colIndex, row[col].type)"
@@ -63,10 +63,11 @@
             <template v-if="row[col].type === 'input'">
               <span>{{row[col].value}}</span>
               <textarea
-                :style="textareaStyle(row[col].value)"
                 v-model="row[col].value"
+                @change="inputHandleChange($event, col, rowIndex, colIndex)"
+                @keyup.esc="escKeyup(row[col], rowIndex, colIndex, row[col].type)"
                 :ref="'input-' + colIndex + '-' + rowIndex"
-                @change="inputHandleChange($event, col, rowIndex, colIndex)"></textarea>
+                :style="textareaStyle(row[col].value)"></textarea>
             </template>
 
             <!-- If Select -->
@@ -77,6 +78,7 @@
                 <input
                   v-model="row[col].value"
                   :ref="'input-' + colIndex + '-' + rowIndex"
+                  @keyup.esc="escKeyup(row[col], rowIndex, colIndex, row[col].type)"
                   @keyup="searchHandleChange(row[col])"/>
                 <ul v-bind:class="{'show': row[col].search}">
                   <template v-if="!row[col].typing">
@@ -98,6 +100,7 @@
                 </ul>
               </div>
             </template>
+
             <template v-else-if="row[col].type === 'select'">
               <span>{{row[col].value}}</span>
               <select
@@ -122,7 +125,7 @@
             :data-row-index="rowIndex"
             :ref="'td-' + colIndex + '-' + rowIndex"
             @contextmenu="handleContextMenuTd($event, col, rowIndex, colIndex, 'newCol')"
-            @click="handleClickTd($event, col, rowIndex, colIndex, 'newCol')"
+            @click="handleClickTd($event, row[col], col, rowIndex, colIndex, 'newCol')"
             @dblclick="handleDoubleClickTd($event, col, col, rowIndex, colIndex, 'newCol')"
             v-bind:class="{
               'disabled': disableCells.find(x => x === col),
@@ -172,14 +175,24 @@ export default {
     enableSelect(col, rowIndex, colIndex, type) {
       if (!col.search) {
         this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+        col.active = true;
         col.search = true;
         col.show = true;
         col.typing = false;
       } else {
+        col.active = true;
         col.search = false;
         col.show = false;
-        col.typing = false;
+        col.typing = true;
       }
+      this.$forceUpdate();
+    },
+    escKeyup(col, rowIndex, colIndex, type) {
+      col.show = false;
+      if (type === 'select') {
+        col.search = false;
+      }
+      this.$forceUpdate();
     },
     textareaStyle(value) {
       if (value.length > 100) {
@@ -211,8 +224,10 @@ export default {
         this.$emit('tbody-up-dragtofill', event, entry, rowIndex, colIndex, type);
       }
     },
-    handleClickTd(event, entry, rowIndex, colIndex, type) {
-      this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
+    handleClickTd(event, col, entry, rowIndex, colIndex, type) {
+      if (!col.handleSearch) {
+        this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
+      }
     },
     handleDoubleClickTd(event, entry, col, rowIndex, colIndex, type) {
       if (type === 'input' || (col.type === 'select' && col.search)) {
@@ -260,6 +275,7 @@ export default {
         event.keyCode === 40 ||
         event.keyCode === 38 ||
         event.keyCode === 13 ||
+        event.keyCode === 27 ||
         event.keyCode === 8)) {
         const colIndex = Number(actualElement.getAttribute('data-col-index'));
         const rowIndex = Number(actualElement.getAttribute('data-row-index'));
@@ -314,13 +330,19 @@ export default {
         // press enter
         if (event.keyCode === 13) {
           this.rowData[rowIndex][actualCol].show = true;
-          this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+          if (this.$refs[`input-${colIndex}-${rowIndex}`]) {
+            this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+          }
           this.$emit('tbody-nav-enter', event, event.keyCode, actualElement, rowIndex, colIndex);
         }
         // press backspace
         if (event.keyCode === 8) {
           this.$emit('tbody-nav-backspace', event, actualElement, actualCol, rowIndex, colIndex);
           this.rowData[rowIndex][actualCol].value = '';
+        }
+        // press esc
+        if (event.keyCode === 27) {
+          this.rowData[rowIndex][actualCol].active = false;
         }
       }
     },
