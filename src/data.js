@@ -7,7 +7,6 @@ export default {
     active: false,
     style: {
       color: '#000',
-      background: '#cfffcf',
     },
   },
   headers: [
@@ -74,7 +73,7 @@ export default {
             label: 'Clermont-Ferrand',
           },
         ],
-        value: '',
+        value: 'monaco',
         active: false,
       },
       born: {
