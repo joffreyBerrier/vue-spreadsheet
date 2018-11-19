@@ -357,7 +357,6 @@ export default {
 
 <style lang="scss" scoped>
 .td {
-  width: 120px;
   height: 40px;
   line-height: 40px;
   position: relative;

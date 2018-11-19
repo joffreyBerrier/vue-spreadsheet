@@ -14,6 +14,7 @@ export default {
       headerName: 'Image',
       headerKey: 'img',
       style: {
+        width: '120px',
         color: '#000',
       },
     },
@@ -21,6 +22,7 @@ export default {
       headerName: 'Nom',
       headerKey: 'name',
       style: {
+        width: '120px',
         color: '#000',
       },
     },
@@ -28,6 +30,7 @@ export default {
       headerName: 'Prénom',
       headerKey: 'surname',
       style: {
+        width: '120px',
         color: '#000',
       },
     },
@@ -35,6 +38,7 @@ export default {
       headerName: 'Age',
       headerKey: 'age',
       style: {
+        width: '120px',
         color: '#000',
       },
     },
@@ -42,6 +46,7 @@ export default {
       headerName: 'Born',
       headerKey: 'born',
       style: {
+        width: '120px',
         color: '#000',
       },
     },
