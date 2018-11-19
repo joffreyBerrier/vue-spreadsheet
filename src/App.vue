@@ -78,18 +78,7 @@ export default {
 </script>
 
 <style lang="scss">
-body {
-  color: #2c3e50;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  background: #fff;
-  display: flex;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font: 400 11px system-ui;
-}
-::-moz-selection { /* Code for Firefox */
+::-moz-selection {
   color: #2c3e50;
   background: transparent;
 }
