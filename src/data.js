@@ -2,6 +2,7 @@ export default {
   dragToFill: true,
   disableCells: ['img'],
   sortHeader: true,
+  tbodyIndex: true,
   newData: {
     type: 'input',
     value: '',
@@ -14,6 +15,22 @@ export default {
     {
       headerName: 'Image',
       headerKey: 'img',
+      style: {
+        width: '120px',
+        color: '#000',
+      },
+    },
+    {
+      headerName: 'country',
+      headerKey: 'country',
+      style: {
+        width: '120px',
+        color: '#000',
+      },
+    },
+    {
+      headerName: 'city',
+      headerKey: 'city',
       style: {
         width: '120px',
         color: '#000',
@@ -54,64 +71,6 @@ export default {
   ],
   products: [
     {
-      age: {
-        type: 'select',
-        handleSearch: true,
-        selectOptions: [
-          {
-            value: 'paris',
-            label: 'paris',
-          },
-          {
-            value: 'new york',
-            label: 'new york',
-          },
-          {
-            value: 'berlin',
-            label: 'berlin',
-          },
-          {
-            value: 'monaco',
-            label: 'monaco',
-          },
-          {
-            value: 'Clermont-Ferrand',
-            label: 'Clermont-Ferrand',
-          },
-        ],
-        value: 'monaco',
-        active: false,
-      },
-      born: {
-        type: 'select',
-        handleSearch: true,
-        selectOptions: [
-          {
-            value: 1980,
-            label: 1980,
-          },
-          {
-            value: 1981,
-            label: 1981,
-          },
-          {
-            value: 1982,
-            label: 1982,
-          },
-          {
-            value: 1983,
-            label: 1983,
-          },
-          {
-            value: 1984,
-            label: 1984,
-          },
-        ],
-        value: 1990,
-        active: false,
-      },
-    },
-    {
       img: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -121,6 +80,22 @@ export default {
       name: {
         type: 'input',
         value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
         active: false,
         style: {
           color: '#000',
@@ -200,7 +175,23 @@ export default {
       },
       name: {
         type: 'input',
-        value: 'Jim',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
         active: false,
         style: {
           color: '#000',
@@ -208,7 +199,7 @@ export default {
       },
       surname: {
         type: 'input',
-        value: 'Die',
+        value: 'Boe',
         active: false,
         style: {
           color: '#000',
@@ -239,7 +230,7 @@ export default {
             label: 30,
           },
         ],
-        value: 30,
+        value: 26,
         active: false,
       },
       born: {
@@ -280,7 +271,23 @@ export default {
       },
       name: {
         type: 'input',
-        value: 'Jam',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
         active: false,
         style: {
           color: '#000',
@@ -288,7 +295,7 @@ export default {
       },
       surname: {
         type: 'input',
-        value: 'Dam',
+        value: 'Boe',
         active: false,
         style: {
           color: '#000',
@@ -319,7 +326,4327 @@ export default {
             label: 30,
           },
         ],
-        value: 28,
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
+        active: false,
+      },
+      born: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1990,
+        active: false,
+      },
+    },
+    {
+      img: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+        disabled: false,
+      },
+      name: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      country: {
+        type: 'input',
+        value: 'Paris',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      city: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      surname: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      age: {
+        type: 'select',
+        handleSearch: false,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+          },
+        ],
+        value: 26,
         active: false,
       },
       born: {
