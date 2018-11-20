@@ -143,6 +143,7 @@ export default {
           });
         }
       });
+      this.$forceUpdate();
     },
     // Copy / Paste
     handleSelectMultipleCell(event, entry, rowIndex, colIndex, type) {
@@ -197,6 +198,7 @@ export default {
       } else if (this.selectedCell) {
         this.storeCopyDatas.push(newData[this.selectedCell.row][this.selectedCell.key]);
       }
+      this.$forceUpdate();
     },
     pasteReplaceData() {
       if (this.selectedMultipleCell) {
@@ -244,6 +246,7 @@ export default {
           rowMin += 1;
         }
       }
+      this.$forceUpdate();
     },
     // drag To Fill
     handleDownDragToFill(event, entry, data, rowIndex, colIndex) {
