@@ -382,8 +382,8 @@ export default {
   }
   &.disabled {
     pointer-events: none;
+    background: #cccccc;
     span {
-      background: #cccccc;
       opacity: .5;
     }
     .enable_select {
