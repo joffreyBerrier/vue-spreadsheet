@@ -1,40 +1,44 @@
 <template>
-  <table class="wrap" oncontextmenu="return false;">
-    <vue-thead
-      :headers="headers"
-      :sort-header="sortHeader"
-      :submenu-status="submenuStatusThead"
-      :submenu-thead="submenuThead"
-      v-on:thead-td-sort="callbackSort"
-      v-on:submenu-enable="enableSubmenu"
-      v-on:thead-submenu-click-callback="callbackSubmenuThead"
-      v-on:thead-td-context-menu="handleTheadContextMenu">
-    </vue-thead>
+  <div>
+    <table class="wrap" oncontextmenu="return false;">
+      <vue-thead
+        :headers="headers"
+        :sort-header="sortHeader"
+        :submenu-status-thead="submenuStatusThead"
+        :submenu-thead="submenuThead"
+        :tbody-index="tbodyIndex"
+        v-on:submenu-enable="enableSubmenu"
+        v-on:thead-submenu-click-callback="callbackSubmenuThead"
+        v-on:thead-td-context-menu="handleTheadContextMenu">
+        v-on:thead-td-sort="callbackSort"
+      </vue-thead>
 
-    <vue-tbody
-      :disable-cells="disableCells"
-      :drag-to-fill="dragToFill"
-      :headers="headers"
-      :newData="newData"
-      :rowData="tbodyData"
-      :submenu-status="submenuStatusTbody"
-      :submenu-tbody="submenuTbody"
-      v-on:submenu-enable="enableSubmenu"
-      v-on:tbody-down-dragtofill="handleDownDragToFill"
-      v-on:tbody-input-change="handleTbodyInputChange"
-      v-on:tbody-move-dragtofill="handleMoveDragToFill"
-      v-on:tbody-nav-backspace="handleTbodyNavBackspace"
-      v-on:tbody-nav-enter="handleTbodyNavEnter"
-      v-on:tbody-nav="handleTbodyNav"
-      v-on:tbody-select-change="handleTbodySelectChange"
-      v-on:tbody-select-multiple-cell="handleSelectMultipleCell"
-      v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
-      v-on:tbody-td-click="handleTbodyTdClick"
-      v-on:tbody-td-context-menu="handleTbodyContextMenu"
-      v-on:tbody-td-double-click="handleTbodyTdDoubleClick"
-      v-on:tbody-up-dragtofill="handleUpDragToFill">
-    </vue-tbody>
-  </table>
+      <vue-tbody
+        :disable-cells="disableCells"
+        :drag-to-fill="dragToFill"
+        :headers="headers"
+        :newData="newData"
+        :tbody-data="tbodyData"
+        :submenu-status-tbody="submenuStatusTbody"
+        :submenu-tbody="submenuTbody"
+        :tbody-index="tbodyIndex"
+        v-on:submenu-enable="enableSubmenu"
+        v-on:tbody-down-dragtofill="handleDownDragToFill"
+        v-on:tbody-input-change="handleTbodyInputChange"
+        v-on:tbody-move-dragtofill="handleMoveDragToFill"
+        v-on:tbody-nav-backspace="handleTbodyNavBackspace"
+        v-on:tbody-nav-enter="handleTbodyNavEnter"
+        v-on:tbody-nav="handleTbodyNav"
+        v-on:tbody-select-change="handleTbodySelectChange"
+        v-on:tbody-select-multiple-cell="handleSelectMultipleCell"
+        v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
+        v-on:tbody-td-click="handleTbodyTdClick"
+        v-on:tbody-td-context-menu="handleTbodyContextMenu"
+        v-on:tbody-td-double-click="handleTbodyTdDoubleClick"
+        v-on:tbody-up-dragtofill="handleUpDragToFill">
+      </vue-tbody>
+    </table>
+  </div>
 </template>
 
 <script type="text/javascript">
@@ -44,14 +48,42 @@ import VueTbody from './Tbody.vue';
 export default {
   name: 'VueTable',
   props: {
-    disableCells: Array,
-    dragToFill: Boolean,
-    headers: Array,
-    newData: Object,
-    sortHeader: Boolean,
-    submenuTbody: Array,
-    submenuThead: Array,
-    tbodyData: Array,
+    headers: {
+      type: Array,
+      required: true,
+    },
+    tbodyData: {
+      type: Array,
+      required: true,
+    },
+    disableCells: {
+      type: Array,
+      required: false,
+    },
+    dragToFill: {
+      type: Boolean,
+      required: false,
+    },
+    newData: {
+      type: Object,
+      required: false,
+    },
+    sortHeader: {
+      type: Boolean,
+      required: false,
+    },
+    submenuTbody: {
+      type: Array,
+      required: false,
+    },
+    submenuThead: {
+      type: Array,
+      required: false,
+    },
+    tbodyIndex: {
+      type: Boolean,
+      required: false,
+    },
   },
   components: {
     VueThead,
@@ -67,6 +99,7 @@ export default {
         row: null,
         data: {},
       },
+      headerKeys: [],
       oldTdActive: null,
       oldTdShow: null,
       selectedCell: null,
@@ -77,6 +110,7 @@ export default {
     };
   },
   mounted() {
+    this.headerKeys = this.headers.map(x => x.headerKey);
     document.addEventListener('copy', () => {
       this.copyStoreData();
       this.cleanActiveOnTd('selected');
@@ -167,34 +201,19 @@ export default {
       const newData = JSON.parse(JSON.stringify(this.tbodyData));
 
       if (this.selectedMultipleCell) {
-        const maxRow = newData.length;
-
         let rowMin = this.selectedMultipleCell.rowStart;
         let colMin = this.selectedMultipleCell.colStart;
         const rowMax = this.selectedMultipleCell.rowEnd;
         const colMax = this.selectedMultipleCell.colEnd;
-        const keyStart = this.selectedMultipleCell.keyStart;
-
-        const headerKeys = this.headers.map(x => x.headerKey);
-        let rowValues = Object.values(newData[rowMin]);
         let storeData = {};
 
         while (rowMin <= rowMax) {
-          if (colMin === colMax) {
-            storeData[headerKeys[colMin]] = newData[rowMin][keyStart];
-          } else {
-            storeData[headerKeys[colMin]] = rowValues[colMin];
-          }
+          storeData[this.headerKeys[colMin]] = newData[rowMin][this.headerKeys[colMin]];
           colMin += 1;
           if (colMin > colMax) {
             this.storeCopyDatas.push(storeData);
             colMin = this.selectedMultipleCell.colStart;
             rowMin += 1;
-            if (rowMin !== maxRow) {
-              rowValues = Object.values(newData[rowMin]);
-            } else {
-              rowValues = Object.values(newData[rowMin - 1]);
-            }
             storeData = {};
           }
         }
@@ -211,7 +230,6 @@ export default {
       }
     },
     modifyMultipleCell(params) {
-      const headerKeys = this.headers.map(x => x.headerKey);
       const rowMax = this.selectedMultipleCell.rowEnd;
       const colMax = this.selectedMultipleCell.colEnd;
       let rowMin = this.selectedMultipleCell.rowStart;
@@ -219,7 +237,7 @@ export default {
 
       while (rowMin <= rowMax) {
         const key = rowMin - this.selectedMultipleCell.rowStart;
-        const keyValue = headerKeys[colMin];
+        const keyValue = this.headerKeys[colMin];
 
         if (params === 'selected') {
           this.$set(this.tbodyData[rowMin][keyValue], 'selected', true);
@@ -383,17 +401,11 @@ export default {
 
 <style lang="scss">
   body {
-    background: #fff;
-    display: flex;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    margin: 0;
     font: 400 11px system-ui;
   }
   table{
     border-collapse: collapse;
-    margin: 5px;
     th {
       color: #000;
       font-weight: normal;
@@ -401,8 +413,5 @@ export default {
     td, th {
       margin: 0;
     }
-  }
-  .wrap {
-    margin: 10px auto;
   }
 </style>

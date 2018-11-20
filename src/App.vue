@@ -4,12 +4,12 @@
       :disable-cells="disableCells"
       :drag-to-fill="dragToFill"
       :headers="headers"
-      :sort-header="sortHeader"
       :new-data="newData"
+      :sort-header="sortHeader"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead"
       :tbody-data="products"
-      v-on:thead-td-sort="sortProduct"
+      :tbody-index="tbodyIndex"
       v-on:tbody-input-change="inputChange"
       v-on:tbody-nav-backspace="deleteCell"
       v-on:tbody-select-change="selectChange"
@@ -18,6 +18,7 @@
       v-on:thead-submenu-click-change-city="changeCity"
       v-on:thead-submenu-click-change-color="changeColor"
       v-on:thead-submenu-click-change-value="changeValue">
+      v-on:thead-td-sort="sortProduct"
     </vue-table>
   </div>
 </template>
@@ -91,8 +92,5 @@ export default {
 ::selection {
   color: #2c3e50;
   background: transparent;
-}
-.wrap {
-  margin: 10px auto;
 }
 </style>

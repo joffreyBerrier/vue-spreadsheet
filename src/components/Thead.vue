@@ -3,7 +3,7 @@
     <tr
       @mousemove="handleMoveChangeSize($event)"
       @mouseup="handleUpDragToFill($event)">
-
+      <th v-if="tbodyIndex" class="index" key="th-index"></th>
       <template v-for="(header, colIndex) in headers">
         <th
           class="th"
@@ -17,7 +17,7 @@
             v-if="submenuThead && submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
               <button
                 @click="handleContextMenuTd($event, header.headerKey, colIndex)"
-                v-bind:class="{'active': submenuThead && submenuStatus && colIndex === submenuEnableCol}"
+                v-bind:class="{'active': submenuThead && submenuStatusThead && colIndex === submenuEnableCol}"
                 class="button_submenu button_submenu-2">
                 <span class="icon icon_menu">
                   <i class="bullet bullet-1"></i>
@@ -39,7 +39,7 @@
           <transition name="fade">
             <div
               v-if="submenuThead &&
-              submenuStatus &&
+              submenuStatusThead &&
               colIndex === submenuEnableCol &&
               submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)"
               :key="'submenu-' + header.headerKey"
@@ -92,10 +92,26 @@
 export default {
   name: 'vue-thead',
   props: {
-    headers: Array,
-    sortHeader: Boolean,
-    submenuStatus: Boolean,
-    submenuThead: Array,
+    headers: {
+      type: Array,
+      required: true,
+    },
+    sortHeader: {
+      type: Boolean,
+      required: false,
+    },
+    tbodyIndex: {
+      type: Boolean,
+      required: false,
+    },
+    submenuStatusThead: {
+      type: Boolean,
+      required: false,
+    },
+    submenuThead: {
+      type: Array,
+      required: false,
+    },
   },
   data() {
     return {
@@ -111,7 +127,7 @@ export default {
   methods: {
     handleDownChangeSize(event, header, colIndex) {
       this.eventDrag = true;
-      const element = this.$refs['resize-' + colIndex][0];
+      const element = this.$refs[`resize-${colIndex}`][0];
       this.beforeChangeSize = {
         col: colIndex,
         elementLeft: event.currentTarget.parentElement.offsetLeft,
@@ -125,7 +141,7 @@ export default {
     handleMoveChangeSize(event) {
       if (this.eventDrag) {
         const newWidth = event.clientX - this.beforeChangeSize.elementLeft + 5;
-        const element = this.$refs['resize-' + this.beforeChangeSize.col][0];
+        const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
         this.newSize = newWidth + 'px';
         element.style.left = event.clientX + 'px';
       }
@@ -133,7 +149,7 @@ export default {
     handleUpDragToFill(event) {
       if (this.eventDrag) {
         this.eventDrag = false;
-        const element = this.$refs['resize-' + this.beforeChangeSize.col][0];
+        const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
         element.style.left = 'auto';
         this.headers[this.beforeChangeSize.col].style.width = this.newSize;
         this.beforeChangeSize.header.active = false;
@@ -149,7 +165,7 @@ export default {
     },
     handleContextMenuTd(event, entry, colIndex) {
       this.submenuEnableCol = colIndex;
-      if (this.submenuStatus === true) {
+      if (this.submenuStatusThead === true) {
         this.$emit('submenu-enable', 'tbody');
       } else {
         this.$emit('submenu-enable', 'thead');
@@ -169,8 +185,8 @@ export default {
 
 <style lang="scss" scoped>
 .th {
-  height: 40px;
-  line-height: 40px;
+  height: 45px;
+  line-height: 41px;
   position: relative;
   background: #e7ecf5;
   z-index: 15;
@@ -209,7 +225,7 @@ export default {
   &:after {
     content: '';
     display: block;
-    height: 200px;
+    height: 100vh;
     position: absolute;
     top: 0;
     right: 0;
@@ -229,20 +245,20 @@ export default {
 }
 .submenu_wrap {
   position: absolute;
-  top: 40px;
-  left: 0;
+  top: 45px;
   right: 0;
-  margin: 0 auto;
+  max-width: 180px;
+  min-width: 180px;
   background: white;
   z-index: 20;
-  padding: 7px 0 0 0;
+  padding: 0 0 0 0;
   box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
   button {
     display: block;
     height: 30px;
     line-height: 20px;
     padding: 4px 8px;
-    margin: 0 auto;
+    margin: 7px auto;
     text-align: center;
     border-radius: 4px;
     background: white;
@@ -344,6 +360,16 @@ export default {
       background: #000;
     }
   }
+}
+
+.index {
+  width: 20px;
+  padding: 0;
+  text-align: center;
+  border-top: 1px solid #e6ecf6;
+  border-bottom: 1px solid #e6ecf6;
+  border-left: 1px solid #e6ecf6;
+  box-sizing: border-box;
 }
 
 .fade-enter-active,

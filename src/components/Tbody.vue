@@ -1,7 +1,10 @@
 <template>
   <tbody>
-    <template v-for="(row, rowIndex) in rowData">
+    <template v-for="(row, rowIndex) in tbodyData">
       <tr class="table_row" :key="row + '' + rowIndex">
+        <td class="index" v-if="tbodyIndex" :key="'td-index-' + rowIndex">
+          {{rowIndex}}
+        </td>
         <template v-for="(col, colIndex) in headerKeys">
           <td
             v-if="row[col]"
@@ -36,7 +39,7 @@
             </template>
 
             <template v-if="submenuTbody &&
-                submenuStatus &&
+                submenuStatusTbody &&
                 rowIndex === submenuEnableRow &&
                 colIndex === submenuEnableCol &&
                 submenuTbody.find(sub => sub.disabled.includes(col) == 0)">
@@ -73,7 +76,7 @@
             <!-- If Select -->
             <template v-if="row[col].type === 'select' && row[col].handleSearch">
               <span>{{row[col].value}}</span>
-              <button @click.stop="enableSelect(row[col], rowIndex, colIndex, row[col].type)" v-bind:class="{'active': row[col].search === true}" class="enable_select"><i></i></button>
+              <button @click.stop="enableSelect(row[col], rowIndex, colIndex)" v-bind:class="{'active': row[col].search === true}" class="enable_select"><i></i></button>
               <div class="dropdown">
                 <input
                   v-model="row[col].value"
@@ -157,13 +160,38 @@
 export default {
   name: 'vue-tbody',
   props: {
-    disableCells: Array,
-    dragToFill: Boolean,
-    headers: Array,
-    rowData: Array,
-    submenuStatus: Boolean,
-    submenuTbody: Array,
-    newData: Object,
+    headers: {
+      type: Array,
+      required: true,
+    },
+    tbodyData: {
+      type: Array,
+      required: true,
+    },
+    disableCells: {
+      type: Array,
+      required: false,
+    },
+    dragToFill: {
+      type: Boolean,
+      required: false,
+    },
+    newData: {
+      type: Object,
+      required: false,
+    },
+    tbodyIndex: {
+      type: Boolean,
+      required: false,
+    },
+    submenuStatusTbody: {
+      type: Boolean,
+      required: false,
+    },
+    submenuTbody: {
+      type: Array,
+      required: false,
+    },
   },
   data() {
     return {
@@ -181,23 +209,25 @@ export default {
     window.addEventListener('keyup', this.moveKeydown);
   },
   methods: {
-    enableSelect(col, rowIndex, colIndex, type) {
+    enableSelect(col, rowIndex, colIndex) {
+      const column = col;
       if (!col.search) {
-        col.search = true;
-        col.show = true;
-        col.typing = false;
+        column.search = true;
+        column.show = true;
+        column.typing = false;
         this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
       } else {
-        col.search = false;
-        col.show = false;
-        col.typing = true;
+        column.search = false;
+        column.show = false;
+        column.typing = true;
       }
       this.$forceUpdate();
     },
     escKeyup(col, rowIndex, colIndex, type) {
-      col.show = false;
+      const column = col;
+      column.show = false;
       if (type === 'select') {
-        col.search = false;
+        column.search = false;
       }
       this.$forceUpdate();
     },
@@ -262,7 +292,7 @@ export default {
         return option.value.toLowerCase().includes(col.value.toLowerCase());
       });
     },
-    validSearch($event, entry, col, rowIndex, colIndex, val) {
+    validSearch(event, entry, col, rowIndex, colIndex, val) {
       const column = col;
       column.search = false;
       column.show = false;
@@ -286,55 +316,55 @@ export default {
         const rowIndex = Number(actualElement.getAttribute('data-row-index'));
         // remove active to before-active cell
         const actualCol = Object.values(this.headerKeys)[colIndex];
-        this.rowData[rowIndex][actualCol].active = false;
+        this.tbodyData[rowIndex][actualCol].active = false;
 
         // remove active class / blur
         actualElement.lastElementChild.blur();
         actualElement.classList.remove('active_td');
 
         // set colMax rowMax
-        const colMax = Object.keys(this.rowData).length;
-        const rowMax = this.rowData.length;
+        const colMax = Object.keys(this.tbodyData).length;
+        const rowMax = this.tbodyData.length;
 
         // right
         if (event.keyCode === 39) {
           let col = Object.values(this.headerKeys)[colIndex + 1];
           if (col) {
-            this.rowData[rowIndex][col].active = true;
+            this.tbodyData[rowIndex][col].active = true;
           } else {
-            col = Object.keys(this.rowData[rowIndex])[colIndex - colMax];
-            this.rowData[rowIndex][col].active = true;
+            col = Object.keys(this.tbodyData[rowIndex])[colIndex - colMax];
+            this.tbodyData[rowIndex][col].active = true;
           }
         }
         // left
         if (event.keyCode === 37) {
           let col = Object.values(this.headerKeys)[colIndex - 1];
           if (col) {
-            this.rowData[rowIndex][col].active = true;
+            this.tbodyData[rowIndex][col].active = true;
           } else {
-            col = Object.keys(this.rowData[rowIndex])[colIndex + colMax];
-            this.rowData[rowIndex][col].active = true;
+            col = Object.keys(this.tbodyData[rowIndex])[colIndex + colMax];
+            this.tbodyData[rowIndex][col].active = true;
           }
         }
         // bottom
         if (event.keyCode === 40) {
           if (rowIndex + 1 !== rowMax) {
-            this.rowData[rowIndex + 1][actualCol].active = true;
+            this.tbodyData[rowIndex + 1][actualCol].active = true;
           } else {
-            this.rowData[(rowIndex + 1) - rowMax][actualCol].active = true;
+            this.tbodyData[(rowIndex + 1) - rowMax][actualCol].active = true;
           }
         }
         // top
         if (event.keyCode === 38) {
           if (rowIndex !== 0) {
-            this.rowData[rowIndex - 1][actualCol].active = true;
+            this.tbodyData[rowIndex - 1][actualCol].active = true;
           } else {
-            this.rowData[(rowIndex + rowMax) - 1][actualCol].active = true;
+            this.tbodyData[(rowIndex + rowMax) - 1][actualCol].active = true;
           }
         }
         // press enter
         if (event.keyCode === 13) {
-          this.rowData[rowIndex][actualCol].show = true;
+          this.tbodyData[rowIndex][actualCol].show = true;
           if (this.$refs[`input-${colIndex}-${rowIndex}`]) {
             this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
           }
@@ -343,11 +373,11 @@ export default {
         // press backspace
         if (event.keyCode === 8) {
           this.$emit('tbody-nav-backspace', event, actualElement, actualCol, rowIndex, colIndex);
-          this.rowData[rowIndex][actualCol].value = '';
+          this.tbodyData[rowIndex][actualCol].value = '';
         }
         // press esc
         if (event.keyCode === 27) {
-          this.rowData[rowIndex][actualCol].active = false;
+          this.tbodyData[rowIndex][actualCol].active = false;
         }
       }
     },
@@ -584,5 +614,13 @@ export default {
       box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
     }
   }
+}
+.index {
+  width: 20px;
+  padding: 0;
+  text-align: center;
+  border-bottom: 1px solid #e6ecf6;
+  border-left: 1px solid #e6ecf6;
+  box-sizing: border-box;
 }
 </style>
