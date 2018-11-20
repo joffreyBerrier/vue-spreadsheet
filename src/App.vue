@@ -17,8 +17,8 @@
       v-on:tbody-submenu-click-change-value="changeValueTbody"
       v-on:thead-submenu-click-change-city="changeCity"
       v-on:thead-submenu-click-change-color="changeColor"
-      v-on:thead-submenu-click-change-value="changeValue">
-      v-on:thead-td-sort="sortProduct"
+      v-on:thead-submenu-click-change-value="changeValue"
+      v-on:thead-td-sort="sortProduct">
     </vue-table>
   </div>
 </template>
