@@ -112,6 +112,7 @@ export default {
   mounted() {
     this.headerKeys = this.headers.map(x => x.headerKey);
     document.addEventListener('copy', () => {
+      this.storeCopyDatas = [];
       this.copyStoreData();
       this.cleanActiveOnTd('selected');
     });
@@ -119,18 +120,9 @@ export default {
       if (this.storeCopyDatas.length > 0) {
         this.pasteReplaceData();
         this.cleanActiveOnTd('selected');
-        this.storeCopyDatas = [];
         this.selectedMultipleCell = null;
       }
     });
-  },
-  watch: {
-    // tbodyData: {
-    //   deep: true,
-    // },
-    // headers: {
-    //   deep: true,
-    // },
   },
   methods: {
     // global
@@ -220,13 +212,13 @@ export default {
       } else if (this.selectedCell) {
         this.storeCopyDatas.push(newData[this.selectedCell.row][this.selectedCell.key]);
       }
-      this.$forceUpdate();
     },
     pasteReplaceData() {
       if (this.selectedMultipleCell) {
         this.modifyMultipleCell('replace');
       } else if (this.selectedCell) {
-        this.tbodyData[this.selectedCell.row][this.selectedCell.key] = this.storeCopyDatas[0];
+        const store = JSON.parse(JSON.stringify(this.storeCopyDatas[0]));
+        this.tbodyData[this.selectedCell.row][this.selectedCell.key] = store;
       }
     },
     modifyMultipleCell(params) {
