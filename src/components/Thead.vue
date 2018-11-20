@@ -1,13 +1,14 @@
 <template>
   <thead class="thead">
-    <tr>
+    <tr
+      @mousemove="handleMoveChangeSize($event)"
+      @mouseup="handleUpDragToFill($event)">
+
       <template v-for="(header, colIndex) in headers">
         <th
           class="th"
           v-bind:class="{'disabled': header.disabled}"
           :key="header.headerKey"
-          @mousemove="handleMoveChangeSize($event, header, colIndex)"
-          @mouseup="handleUpDragToFill($event, header, colIndex)"
           :style="header.style">
 
           <span>{{header.headerName}}</span>
@@ -104,22 +105,20 @@ export default {
       header.style.left = event.clientX;
       this.$forceUpdate();
     },
-    handleMoveChangeSize(event, header, colIndex) {
+    handleMoveChangeSize(event) {
       if (this.eventDrag) {
-        const newWidth = ((event.clientX - this.beforeChangeSize.elementLeft) - this.beforeChangeSize.width) + (event.clientX - this.beforeChangeSize.elementLeft) + 10;
+        const newWidth = event.clientX - this.beforeChangeSize.elementLeft + 5;
         const element = this.$refs['resize-' + this.beforeChangeSize.col][0];
         this.newSize = newWidth + 'px';
         element.style.left = event.clientX + 'px';
-        this.$forceUpdate();
       }
     },
-    handleUpDragToFill(event, header, colIndex) {
+    handleUpDragToFill(event) {
       this.eventDrag = false;
       const element = this.$refs['resize-' + this.beforeChangeSize.col][0];
       element.style.left = 'auto';
       this.headers[this.beforeChangeSize.col].style.width = this.newSize;
       this.beforeChangeSize.header.active = false;
-      this.$forceUpdate();
     },
     handleContextMenuTd(event, entry, colIndex) {
       this.submenuEnableCol = colIndex;
