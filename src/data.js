@@ -1,6 +1,7 @@
 export default {
   dragToFill: true,
   disableCells: ['img'],
+  sortHeader: true,
   newData: {
     type: 'input',
     value: '',

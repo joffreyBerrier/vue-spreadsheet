@@ -4,10 +4,12 @@
       :disable-cells="disableCells"
       :drag-to-fill="dragToFill"
       :headers="headers"
+      :sort-header="sortHeader"
       :new-data="newData"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead"
       :tbody-data="products"
+      v-on:thead-td-sort="sortProduct"
       v-on:tbody-input-change="inputChange"
       v-on:tbody-nav-backspace="deleteCell"
       v-on:tbody-select-change="selectChange"
@@ -33,8 +35,11 @@ export default {
     VueTable,
   },
   methods: {
+    sortProduct(event, entry, colIndex) {
+      // console.log('sort product');
+    },
     deleteCell(event, actualElement, actualCol, rowIndex, colIndex) {
-      console.log(event, actualElement, actualCol, rowIndex, colIndex);
+      // console.log(event, actualElement, actualCol, rowIndex, colIndex);
     },
     inputChange(event, entry, rowIndex, colIndex) {
       // console.log('InputChange', event, entry, rowIndex, colIndex);

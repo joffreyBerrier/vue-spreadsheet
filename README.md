@@ -42,6 +42,8 @@ props                             | Type       | Description
   :submenu-tbody                  | Array      | That contains the submenu-tbody
   :submenu-thead                  | Array      | That contains the submenu-thead
   :disable-cells                  | Array      | That contains the headerKey you want to disable
+  :sort-header                    | Boolean    | That activates sort button on header
+  v-on:thead-td-sort              | Function   | When you press the button 
   v-on-thead-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-thead**
   v-on:tbody-input-change         | Function   | When the **input changes**
   v-on:tbody-nav-backspace        | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
@@ -57,8 +59,10 @@ props                             | Type       | Description
     :drag-to-fill="Boolean"
     :headers="Array"
     :new-data="Object"
+    :sort-header="Boolean"
     :submenu-tbody="Array"
     :submenu-thead="Array"
+    v-on:thead-td-sort="Function"
     v-on:tbody-input-change="Function"
     v-on:tbody-nav-backspace="Function"
     v-on:tbody-select-change="Function"
@@ -283,15 +287,19 @@ newData: {
   # Template
 
   <vue-table
-    :data="data"
+    :tbody-data="products"
+    :headers="headers"
+    :new-data="newData"
     :disable-cells="disableCells"
     :drag-to-fill="dragToFill"
-    :headers="headers"
+    :sort-header="sortHeader"
     :submenu-tbody="submenuTbody"
     :submenu-thead="submenuThead"
+    v-on:tbody-nav-backspace="deleteCell"
     v-on:tbody-input-change="InputChange"
     v-on:tbody-select-change="SelectChange">
     v-on:tbody-submenu-click-change-color="changeColorTbody"
+    v-on:thead-td-sort="sortProduct"
     v-on:thead-submenu-click-change-color="changeColor">
   </vue-table>
 
@@ -301,6 +309,7 @@ newData: {
     return {
       disableCells: ['img'],
       dragToFill: true,
+      sortHeader: true,
       headers: [
         {
           headerName: 'Image',
@@ -368,6 +377,15 @@ newData: {
           },
         },
       ],
+      newData: {
+        type: 'input',
+        value: '',
+        active: false,
+        style: {
+          color: '#000',
+          background: '#cfffcf',
+        },
+      },
       submenuThead: [
         {
           type: 'button',
@@ -387,6 +405,12 @@ newData: {
     };
   },
   methods: {
+    sortProduct(event, entry, colIndex) {
+      // console.log('sort product');
+    },
+    deleteCell(event, actualElement, actualCol, rowIndex, colIndex) {
+      // console.log(event, actualElement, actualCol, rowIndex, colIndex);
+    },
     inputChange(event, entry, rowIndex, colIndex) {
       // Called when <input /> change
     },
