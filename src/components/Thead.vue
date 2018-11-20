@@ -17,18 +17,33 @@
             v-if="submenuThead && submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
               <button
                 @click="handleContextMenuTd($event, header.headerKey, colIndex)"
-                class="button_submenu"
-                v-bind:class="{'active': submenuThead && submenuStatus && colIndex === submenuEnableCol}">
-                <i class="icon icon_menu"></i>
+                v-bind:class="{'active': submenuThead && submenuStatus && colIndex === submenuEnableCol}"
+                class="button_submenu button_submenu-2">
+                <span class="icon icon_menu">
+                  <i class="bullet bullet-1"></i>
+                  <i class="bullet bullet-2"></i>
+                  <i class="bullet bullet-3"></i>
+                </span>
               </button>
           </template>
 
-          <template
-            v-if="submenuThead &&
+          <template v-if="sortHeader">
+              <button
+                @click="handleSort($event, header.headerKey, colIndex)"
+                v-bind:class="{'active': activeSort === header.headerKey}"
+                class="button_submenu">
+                <i class="icon sort"></i>
+              </button>
+          </template>
+
+          <transition name="fade">
+            <div
+              v-if="submenuThead &&
               submenuStatus &&
               colIndex === submenuEnableCol &&
-              submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
-            <div class="submenu_wrap">
+              submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)"
+              :key="'submenu-' + header.headerKey"
+              class="submenu_wrap">
               <template v-for="(sub, index) in submenuThead">
                 <template v-if="sub.type === 'button'">
                   <button
@@ -58,7 +73,7 @@
                 </template>
               </template>
             </div>
-          </template>
+          </transition>
 
           <button
             :ref="'resize-' + colIndex"
@@ -78,12 +93,14 @@ export default {
   name: 'vue-thead',
   props: {
     headers: Array,
-    submenuThead: Array,
+    sortHeader: Boolean,
     submenuStatus: Boolean,
+    submenuThead: Array,
   },
   data() {
     return {
       eventDrag: false,
+      activeSort: null,
       submenuEnableCol: null,
       beforeChangeSize: {},
       newSize: '',
@@ -114,11 +131,21 @@ export default {
       }
     },
     handleUpDragToFill(event) {
-      this.eventDrag = false;
-      const element = this.$refs['resize-' + this.beforeChangeSize.col][0];
-      element.style.left = 'auto';
-      this.headers[this.beforeChangeSize.col].style.width = this.newSize;
-      this.beforeChangeSize.header.active = false;
+      if (this.eventDrag) {
+        this.eventDrag = false;
+        const element = this.$refs['resize-' + this.beforeChangeSize.col][0];
+        element.style.left = 'auto';
+        this.headers[this.beforeChangeSize.col].style.width = this.newSize;
+        this.beforeChangeSize.header.active = false;
+      }
+    },
+    handleSort(event, entry, colIndex) {
+      if (!this.activeSort) {
+        this.activeSort = entry;
+      } else {
+        this.activeSort = null;
+      }
+      this.$emit('thead-td-sort', event, entry, colIndex);
     },
     handleContextMenuTd(event, entry, colIndex) {
       this.submenuEnableCol = colIndex;
@@ -208,7 +235,7 @@ export default {
   margin: 0 auto;
   background: white;
   z-index: 20;
-  padding: 7px 0;
+  padding: 7px 0 0 0;
   box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
   button {
     display: block;
@@ -231,7 +258,7 @@ export default {
   }
   .menu_option {
     background: #eee;
-    margin: 7px auto 7px;
+    margin: 7px auto 0;
     padding: 10px 8px;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
@@ -239,6 +266,7 @@ export default {
       font-size: 12px;
       font-weight: 400;
       line-height: 1;
+      margin: 0;
     }
     select {
       display: block;
@@ -248,42 +276,82 @@ export default {
     }
   }
 }
+
 .button_submenu {
-  float: right;
-  position: relative;
+  position: absolute;
+  right: 10px;
   width: 10px;
   height: 100%;
+  top: 50%;
+  transform: translateY(-50%);
   background: transparent;
   outline: none;
   border: 0;
+  padding: 0;
+  &-2 {
+    right: 10px;
+    & + .button_submenu {
+      right: 25px;
+    }
+  }
   cursor: pointer;
-  .icon_menu{
+  .sort{
     display: block;
     position: absolute;
     top: 50%;
-    right: 5px;
+    right: 2px;
     transform: translateY(-50%) rotate(180deg);
     font-size: 16px;
     transition: all ease .5s;
-    &:before {
-      content: '';
-      display: block;
-      height: 1px;
-      width: 5px;
-      transform: rotate(45deg) translate(1px, -2px);
-      background: black;
-    }
+    &:before,
     &:after {
       content: '';
       display: block;
       height: 1px;
       width: 5px;
+      background: #555;
+      transform: rotate(45deg) translate(1px, -2px);
+    }
+    &:after {
       transform: rotate(135deg) translate(0px, 2px);
-      background: black;
     }
   }
-  &.active .icon_menu{
+  &.active .sort{
     transform: translateY(-50%) rotate(0deg);
   }
+  .icon_menu {
+    width: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    .bullet {
+      display: block;
+      width: 3px;
+      height: 3px;
+      margin: 0 auto;
+      background: #555;
+      border-radius: 50%;
+      transition: all ease .5s;
+      &-2 {
+        margin: 2px auto;
+      }
+    }
+  }
+  &.active .icon_menu .bullet{
+    background: #000;
+    &-2 {
+      background: #000;
+    }
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

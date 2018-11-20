@@ -2,8 +2,10 @@
   <table class="wrap" oncontextmenu="return false;">
     <vue-thead
       :headers="headers"
+      :sort-header="sortHeader"
       :submenu-status="submenuStatusThead"
       :submenu-thead="submenuThead"
+      v-on:thead-td-sort="callbackSort"
       v-on:submenu-enable="enableSubmenu"
       v-on:thead-submenu-click-callback="callbackSubmenuThead"
       v-on:thead-td-context-menu="handleTheadContextMenu">
@@ -43,12 +45,13 @@ export default {
   name: 'VueTable',
   props: {
     disableCells: Array,
-    tbodyData: Array,
-    headers: Array,
     dragToFill: Boolean,
+    headers: Array,
+    newData: Object,
+    sortHeader: Boolean,
     submenuTbody: Array,
     submenuThead: Array,
-    newData: Object,
+    tbodyData: Array,
   },
   components: {
     VueThead,
@@ -370,6 +373,9 @@ export default {
     handleTheadContextMenu(event, entry, colIndex) {
       this.submenuStatusTbody = false;
       // console.log('handleTheadContextMenu', event, entry, colIndex);
+    },
+    callbackSort(event, entry, colIndex) {
+      this.$emit('thead-td-sort', event, entry, colIndex);
     },
   },
 };
