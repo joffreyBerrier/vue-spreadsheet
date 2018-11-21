@@ -1,16 +1,18 @@
 <template>
   <div>
-    <table class="wrap" oncontextmenu="return false;">
+    <table class="vue_table" oncontextmenu="return false;">
       <vue-thead
         :headers="headers"
         :sort-header="sortHeader"
         :submenu-status-thead="submenuStatusThead"
         :submenu-thead="submenuThead"
         :tbody-index="tbodyIndex"
+        v-on:handle-up-drag-to-fill="handleUpDragToFill"
         v-on:submenu-enable="enableSubmenu"
         v-on:thead-submenu-click-callback="callbackSubmenuThead"
-        v-on:thead-td-context-menu="handleTheadContextMenu">
-        v-on:thead-td-sort="callbackSort"
+        v-on:handle-up-drag-size-header="handleUpDragSizeHeader"
+        v-on:thead-td-context-menu="handleTheadContextMenu"
+        v-on:thead-td-sort="callbackSort">
       </vue-thead>
 
       <vue-tbody
@@ -124,8 +126,16 @@ export default {
       }
     });
   },
+  computed: {
+    colHeaderWidths() {
+      return this.headers.map(x => parseInt(x.style.width));
+    },
+  },
   methods: {
     // global
+    handleUpDragSizeHeader(event, headers) {
+      this.$emit('handle-up-drag-size-header', event, headers);
+    },
     createCell(rowIndex, entry, type) {
       if (type === 'newCol') {
         const data = JSON.parse(JSON.stringify(this.newData));
@@ -391,12 +401,10 @@ export default {
 };
 </script>
 
+
 <style lang="scss">
-  body {
-    margin: 0;
-    font: 400 11px system-ui;
-  }
   table{
+    margin: 0;
     border-collapse: collapse;
     th {
       color: #000;
