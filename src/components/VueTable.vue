@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div
+    class="wrap_vue_table"
+    ref="vueTable"
+    v-on:scroll="scrollFunction">
     <table class="vue_table" oncontextmenu="return false;">
       <vue-thead
         :headers="headers"
@@ -24,6 +27,8 @@
         :submenu-status-tbody="submenuStatusTbody"
         :submenu-tbody="submenuTbody"
         :tbody-index="tbodyIndex"
+        v-on:handle-to-calculate-position="calculPosition"
+        v-on:handle-to-open-select="enableSelect"
         v-on:submenu-enable="enableSubmenu"
         v-on:tbody-down-dragtofill="handleDownDragToFill"
         v-on:tbody-input-change="handleTbodyInputChange"
@@ -106,6 +111,7 @@ export default {
       oldTdShow: null,
       selectedCell: null,
       selectedMultipleCell: null,
+      lastSelectOpen: null,
       submenuStatusTbody: false,
       submenuStatusThead: false,
       submenuEnableCol: null,
@@ -133,6 +139,48 @@ export default {
   },
   methods: {
     // global
+    scrollFunction() {
+      this.enableSubmenu('thead');
+      if (this.lastSelectOpen) {
+        this.enableSelect(this.lastSelectOpen.event, this.lastSelectOpen.entry, this.lastSelectOpen.col, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex);
+      };
+    },
+    enableSelect(event, entry, col, rowIndex, colIndex) {
+      if (!col.search) {
+        this.lastSelectOpen = {
+          event,
+          entry,
+          col,
+          rowIndex,
+          colIndex,
+        };
+        this.$set(this.tbodyData[rowIndex][entry], 'search', true);
+        this.$set(this.tbodyData[rowIndex][entry], 'show', true);
+        this.$set(this.tbodyData[rowIndex][entry], 'typing', false);
+        this.$children[1].$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+        this.calculPosition(event, rowIndex, colIndex, 'dropdown');
+      } else {
+        this.$set(this.tbodyData[rowIndex][entry], 'search', false);
+        this.$set(this.tbodyData[rowIndex][entry], 'show', false);
+        this.$set(this.tbodyData[rowIndex][entry], 'typing', true);
+        this.lastSelectOpen = null;
+      }
+    },
+    calculPosition(event, rowIndex, colIndex, entry) {
+      // stock scrollLeft / scrollTop position of parent
+      const scrollLeft = this.$refs.vueTable.scrollLeft;
+      const scrollTop = this.$refs.vueTable.scrollTop;
+
+      // stock size / offsetTop / offsetLeft of the element
+      const width = this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetWidth;
+      const top = (this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40;
+      const left = this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
+
+      // set size / top position / left position
+      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.width = width + 'px';
+      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.top = top + 'px';
+      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.left = left + 'px';
+    },
     handleUpDragSizeHeader(event, headers) {
       this.$emit('handle-up-drag-size-header', event, headers);
     },
@@ -413,5 +461,9 @@ export default {
     td, th {
       margin: 0;
     }
+  }
+  .wrap_vue_table {
+    width: 600px;
+    overflow: scroll;
   }
 </style>
