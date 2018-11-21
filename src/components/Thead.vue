@@ -127,23 +127,22 @@ export default {
   methods: {
     handleDownChangeSize(event, header, colIndex) {
       this.eventDrag = true;
-      const element = this.$refs[`resize-${colIndex}`][0];
       this.beforeChangeSize = {
         col: colIndex,
         elementLeft: event.currentTarget.parentElement.offsetLeft,
-        header: header,
+        header,
         width: parseInt(header.style.width),
-      }
+      };
       header.active = true;
       header.style.left = event.clientX;
       this.$forceUpdate();
     },
     handleMoveChangeSize(event) {
       if (this.eventDrag) {
-        const newWidth = event.clientX - this.beforeChangeSize.elementLeft + 5;
+        const newWidth = (event.clientX - this.beforeChangeSize.elementLeft) + 5;
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
-        this.newSize = newWidth + 'px';
-        element.style.left = event.clientX + 'px';
+        this.newSize = `${newWidth}px`;
+        element.style.left = `${event.clientX}px`;
       }
     },
     handleUpDragToFill(event) {
@@ -152,7 +151,9 @@ export default {
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
         element.style.left = 'auto';
         this.headers[this.beforeChangeSize.col].style.width = this.newSize;
+        this.headers[this.beforeChangeSize.col].style.minWidth = this.newSize;
         this.beforeChangeSize.header.active = false;
+        this.$emit('handle-up-drag-size-header', event, this.headers);
       }
     },
     handleSort(event, entry, colIndex) {
