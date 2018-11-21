@@ -122,8 +122,6 @@ export default {
       newSize: '',
     };
   },
-  computed: {
-  },
   methods: {
     handleDownChangeSize(event, header, colIndex) {
       this.eventDrag = true;
@@ -204,6 +202,13 @@ export default {
       background: #cccccc;
       opacity: .5;
     }
+  }
+  span {
+    display: block;
+    width: calc(100% - 30px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 .resize {
