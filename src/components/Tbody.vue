@@ -197,7 +197,6 @@ export default {
     return {
       emptyCell: '',
       eventDrag: false,
-      headerKeys: [],
       filteredList: [],
       oldValue: null,
       submenuEnableCol: null,
@@ -205,8 +204,12 @@ export default {
     };
   },
   mounted() {
-    this.headerKeys = this.headers.map(x => x.headerKey);
     window.addEventListener('keyup', this.moveKeydown);
+  },
+  computed: {
+    headerKeys() {
+      return this.headers.map(x => x.headerKey);
+    }
   },
   methods: {
     enableSelect(col, rowIndex, colIndex) {
