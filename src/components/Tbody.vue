@@ -38,12 +38,14 @@
               </button>
             </template>
 
-            <template v-if="submenuTbody &&
+            <div class="submenu" :ref="'contextMenu-' + colIndex + '-' + rowIndex">
+              <div
+                class="submenu_wrap"
+                v-if="submenuTbody &&
                 submenuStatusTbody &&
                 rowIndex === submenuEnableRow &&
                 colIndex === submenuEnableCol &&
                 submenuTbody.find(sub => sub.disabled.includes(col) == 0)">
-              <div class="submenu_wrap">
                 <template v-for="(submenu, index) in submenuTbody">
                   <template v-if="submenu.type === 'button'">
                     <button
@@ -55,7 +57,7 @@
                   </template>
                 </template>
               </div>
-            </template>
+            </div>
 
             <!-- If Img -->
             <template v-if="row[col].type === 'img'">
@@ -76,14 +78,16 @@
             <!-- If Select -->
             <template v-if="row[col].type === 'select' && row[col].handleSearch">
               <span>{{row[col].value}}</span>
-              <button @click.stop="enableSelect(row[col], rowIndex, colIndex)" v-bind:class="{'active': row[col].search === true}" class="enable_select"><i></i></button>
+              <button @click.stop="enableSelect($event, col, row[col], rowIndex, colIndex)" v-bind:class="{'active': row[col].search === true}" class="enable_select"><i></i></button>
               <div class="dropdown">
                 <input
                   v-model="row[col].value"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup.esc="escKeyup(row[col], rowIndex, colIndex, row[col].type)"
                   @keyup="searchHandleChange(row[col])"/>
-                <ul v-bind:class="{'show': row[col].search}">
+                <ul
+                  v-bind:class="{'show': row[col].search}"
+                  :ref="'dropdown-' + colIndex + '-' + rowIndex">
                   <template v-if="!row[col].typing">
                     <li v-for="(option, index) in row[col].selectOptions"
                       @click.stop="validSearch($event, col, row[col], rowIndex, colIndex, option.value)"
@@ -212,18 +216,8 @@ export default {
     }
   },
   methods: {
-    enableSelect(col, rowIndex, colIndex) {
-      const column = col;
-      if (!col.search) {
-        column.search = true;
-        column.show = true;
-        column.typing = false;
-        this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
-      } else {
-        column.search = false;
-        column.show = false;
-        column.typing = true;
-      }
+    enableSelect(event, entry, col, rowIndex, colIndex) {
+      this.$emit('handle-to-open-select', event, entry, col, rowIndex, colIndex);
       this.$forceUpdate();
     },
     escKeyup(col, rowIndex, colIndex, type) {
@@ -276,6 +270,7 @@ export default {
     handleContextMenuTd(event, entry, rowIndex, colIndex, type) {
       this.submenuEnableCol = colIndex;
       this.submenuEnableRow = rowIndex;
+      this.$emit('handle-to-calculate-position', event, rowIndex, colIndex, 'contextMenu');
       this.$emit('submenu-enable', 'tbody');
       this.$emit('tbody-td-context-menu', event, entry, rowIndex, colIndex, type);
     },
@@ -425,10 +420,12 @@ export default {
   }
   &.show {
     textarea,
-    select,
-    .dropdown {
+    select {
       opacity: 1;
       z-index: 13;
+    }
+    .dropdown {
+      opacity: 1;
     }
     textarea {
       font-size: 12px;
@@ -514,10 +511,7 @@ export default {
     }
     ul {
       display: none;
-      position: absolute;
-      top: 39px;
-      left: 0;
-      right: 0;
+      position: fixed;
       margin: 0 auto;
       background-color: #fff;
       border: 1px solid #e7ecf5;
@@ -525,7 +519,6 @@ export default {
       padding: 0;
       margin: 0;
       max-height: 140px;
-      width: 100%;
       overflow-y: auto;
       li {
         list-style: none;
@@ -542,7 +535,7 @@ export default {
       }
       &.show {
         display: block;
-        z-index: 13;
+        z-index: 14;
       }
     }
   }
@@ -551,7 +544,7 @@ export default {
   position: absolute;
   top: 50%;
   right: 5px;
-  z-index: 14;
+  z-index: 13;
   transform: translateY(-50%);
   border: 0;
   box-shadow: none;
@@ -593,14 +586,13 @@ export default {
     transform: translateY(-50%) rotate(180deg);
   }
 }
-.submenu_wrap {
-  position: absolute;
-  top: 40px;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  background: white;
+.submenu{
+  position: fixed;
   z-index: 20;
+  background: white;
+}
+.submenu_wrap {
+  margin: 0 auto;
   padding: 7px 14px;
   box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
   button {
@@ -620,7 +612,7 @@ export default {
 }
 .index {
   width: 20px;
-  padding: 0;
+  padding: 10px;
   text-align: center;
   border-bottom: 1px solid #e6ecf6;
   border-left: 1px solid #e6ecf6;
