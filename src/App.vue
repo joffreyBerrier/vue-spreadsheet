@@ -56,7 +56,7 @@ export default {
     inputChange(event, entry, rowIndex, colIndex) {
       // console.log('InputChange', event, entry, rowIndex, colIndex);
     },
-    selectChange(event, entry, rowIndex, colIndex) {
+    selectChange(event, entry, col, option, rowIndex, colIndex) {
       // console.log('selectChange', event, entry, rowIndex, colIndex);
       this.changeValueSelect(rowIndex, colIndex);
     },

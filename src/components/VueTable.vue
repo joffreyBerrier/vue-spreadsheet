@@ -444,13 +444,13 @@ export default {
       // callback
       this.$emit('tbody-input-change', event, entry, rowIndex, colIndex);
     },
-    handleTbodySelectChange(event, entry, col, rowIndex, colIndex) {
+    handleTbodySelectChange(event, entry, col, option, rowIndex, colIndex) {
       // remove class show on select when it change
       if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
 
       // callback
-      this.$emit('tbody-select-change', event, entry, col, rowIndex, colIndex);
+      this.$emit('tbody-select-change', event, entry, col, option, rowIndex, colIndex);
     },
     // Context Menu
     handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
