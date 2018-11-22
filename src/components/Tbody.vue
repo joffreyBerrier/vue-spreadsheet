@@ -370,7 +370,6 @@ export default {
         // press backspace
         if (event.keyCode === 8) {
           this.$emit('tbody-nav-backspace', event, actualElement, actualCol, rowIndex, colIndex);
-          this.tbodyData[rowIndex][actualCol].value = '';
         }
         // press esc
         if (event.keyCode === 27) {

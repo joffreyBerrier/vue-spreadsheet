@@ -253,8 +253,8 @@ export default {
       this.$forceUpdate();
     },
     // Copy / Paste
-    handleSelectMultipleCell(event, entry, rowIndex, colIndex, type) {
-      // console.log('handleSelectMultipleCell', event, entry, rowIndex, colIndex, type);
+    handleSelectMultipleCell(event, entry, rowIndex, colIndex) {
+      // console.log('handleSelectMultipleCell', event, entry, rowIndex, colIndex);
       this.selectedMultipleCell = {
         rowStart: this.selectedCell.row,
         colStart: this.selectedCell.col,
@@ -309,6 +309,10 @@ export default {
         const key = rowMin - this.selectedMultipleCell.rowStart;
         const keyValue = this.headerKeys[colMin];
 
+        if (params === 'removeValue') {
+          this.$set(this.tbodyData[rowMin][keyValue], 'value', '');
+          this.$set(this.tbodyData[rowMin][keyValue], 'selected', false);
+        }
         if (params === 'selected') {
           this.$set(this.tbodyData[rowMin][keyValue], 'selected', true);
         } else if (params === 'replace') {
@@ -375,6 +379,7 @@ export default {
         this.modifyMultipleCell('replace');
         this.cleanActiveOnTd('selected');
         this.cleanActiveOnTd('active');
+        this.$emit('tbody-up-dragtofill', this.selectedMultipleCell, entry, rowIndex, colIndex);
         this.eventDrag = false;
         this.storeCopyDatas = [];
         this.selectedMultipleCell = null;
@@ -423,6 +428,12 @@ export default {
       this.enableSubmenu();
     },
     handleTbodyNavBackspace(event, actualElement, actualCol, rowIndex, colIndex) {
+      if (this.selectedMultipleCell) {
+        this.modifyMultipleCell('removeValue');
+      } else {
+        this.tbodyData[rowIndex][actualCol].value = '';
+      }
+
       this.$emit('tbody-nav-backspace', event, actualElement, actualCol, rowIndex, colIndex);
     },
     handleTbodyInputChange(event, entry, rowIndex, colIndex) {
