@@ -213,7 +213,7 @@ export default {
   computed: {
     headerKeys() {
       return this.headers.map(x => x.headerKey);
-    }
+    },
   },
   methods: {
     enableSelect(event, entry, col, rowIndex, colIndex) {

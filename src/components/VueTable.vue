@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     colHeaderWidths() {
-      return this.headers.map(x => parseInt(x.style.width));
+      return this.headers.map(x => parseInt(x.style.width, 10));
     },
   },
   methods: {
@@ -143,7 +143,7 @@ export default {
       this.enableSubmenu('thead');
       if (this.lastSelectOpen) {
         this.enableSelect(this.lastSelectOpen.event, this.lastSelectOpen.entry, this.lastSelectOpen.col, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex);
-      };
+      }
     },
     enableSelect(event, entry, col, rowIndex, colIndex) {
       if (!col.search) {
@@ -177,9 +177,9 @@ export default {
       const left = this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
 
       // set size / top position / left position
-      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.width = width + 'px';
-      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.top = top + 'px';
-      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.left = left + 'px';
+      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.width = `${width}px`;
+      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.top = `${top}px`;
+      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.left = `${left}px`;
     },
     handleUpDragSizeHeader(event, headers) {
       this.$emit('handle-up-drag-size-header', event, headers);

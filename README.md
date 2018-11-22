@@ -35,26 +35,26 @@ npm i spreadsheet-vuejs
 
 props                             | Type       | Description
 ----------------------------------|------------|-------------------
-  :data                           | Array      | That contains data
+  :disable-cells                  | Array      | That contains the headerKey you want to disable
   :drag-to-fill                   | Boolean    | That activates drag to fill
   :headers                        | Array      | That contains headers
   :new-data                       | Object     | That contains the type of data when you have empty cell in a row
+  :sort-header                    | Boolean    | That activates sort button on header
   :submenu-tbody                  | Array      | That contains the submenu-tbody
   :submenu-thead                  | Array      | That contains the submenu-thead
-  :disable-cells                  | Array      | That contains the headerKey you want to disable
-  :sort-header                    | Boolean    | That activates sort button on header
-  v-on:thead-td-sort              | Function   | When you press the button 
+  :tbody-data                     | Array      | That contains data
+  :tbody-index                    | Boolean    | That displays the index of each row on the left of the table
   v-on-thead-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-thead**
   v-on:tbody-input-change         | Function   | When the **input changes**
   v-on:tbody-nav-backspace        | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
   v-on:tbody-select-change        | Function   | When the **select change**
   v-on:tbody-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-tbody**
+  v-on:thead-td-sort              | Function   | When you press the button 
 
 ### Example
 
 ```
   <vue-table
-    :data="Array"
     :disable-cells="disableCells"
     :drag-to-fill="Boolean"
     :headers="Array"
@@ -62,12 +62,14 @@ props                             | Type       | Description
     :sort-header="Boolean"
     :submenu-tbody="Array"
     :submenu-thead="Array"
-    v-on:thead-td-sort="Function"
+    :tbody-data="Array"
+    :tbody-index="Boolean"
     v-on:tbody-input-change="Function"
     v-on:tbody-nav-backspace="Function"
     v-on:tbody-select-change="Function"
     v-on:tbody-submenu-click-customize-function="Function"
     v-on:thead-submenu-click-customize-function="Function">
+    v-on:thead-td-sort="Function"
   </vue-table>
 ```
 
@@ -78,6 +80,8 @@ props                             | Type       | Description
   headerName        | String  | The chosen header name
   headerkey         | String  | The Slugify version of the headerName
   style             | Object  | The style of the td
+    - width         | String  | Indicate the width of ``<th>``
+    - minWidth      | String  | minWidth must be equal to width
   disabled          | Boolean | optional - Disabled cell
 
 #### Example

@@ -125,14 +125,16 @@ export default {
   methods: {
     handleDownChangeSize(event, header, colIndex) {
       this.eventDrag = true;
+      const head = header;
+
       this.beforeChangeSize = {
         col: colIndex,
         elementLeft: event.currentTarget.parentElement.offsetLeft,
-        header,
-        width: parseInt(header.style.width),
+        head,
+        width: parseInt(head.style.width, 10),
       };
-      header.active = true;
-      header.style.left = event.clientX;
+      head.active = true;
+      head.style.left = event.clientX;
       this.$forceUpdate();
     },
     handleMoveChangeSize(event) {
