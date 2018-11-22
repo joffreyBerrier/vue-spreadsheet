@@ -310,6 +310,7 @@ export default {
         const keyValue = this.headerKeys[colMin];
 
         if (params === 'removeValue') {
+          this.$emit('tbody-nav-multiple-backspace', rowMin, colMin, keyValue);
           this.$set(this.tbodyData[rowMin][keyValue], 'value', '');
           this.$set(this.tbodyData[rowMin][keyValue], 'selected', false);
         }
