@@ -428,13 +428,12 @@ export default {
       this.enableSubmenu();
     },
     handleTbodyNavBackspace(event, actualElement, actualCol, rowIndex, colIndex) {
+      this.$emit('tbody-nav-backspace', event, actualElement, actualCol, rowIndex, colIndex);
       if (this.selectedMultipleCell) {
         this.modifyMultipleCell('removeValue');
       } else {
         this.tbodyData[rowIndex][actualCol].value = '';
       }
-
-      this.$emit('tbody-nav-backspace', event, actualElement, actualCol, rowIndex, colIndex);
     },
     handleTbodyInputChange(event, entry, rowIndex, colIndex) {
       // remove class show on input when it change
