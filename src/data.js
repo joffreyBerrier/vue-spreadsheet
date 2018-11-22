@@ -3,6 +3,10 @@ export default {
   disableCells: ['img'],
   sortHeader: true,
   tbodyIndex: true,
+  styleWrapVueTable: {
+    width: '100%',
+    overflow: 'scroll',
+  },
   newData: {
     type: 'input',
     value: '',

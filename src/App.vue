@@ -10,6 +10,7 @@
       :submenu-thead="submenuThead"
       :tbody-data="products"
       :tbody-index="tbodyIndex"
+      :style-wrap-vue-table="styleWrapVueTable"
       v-on:tbody-input-change="inputChange"
       v-on:tbody-nav-backspace="deleteCell"
       v-on:tbody-select-change="selectChange"
@@ -19,6 +20,11 @@
       v-on:thead-submenu-click-change-color="changeColor"
       v-on:thead-submenu-click-change-value="changeValue"
       v-on:thead-td-sort="sortProduct">
+
+    <div slot="header">
+      Specific Header
+    </div>
+
     </vue-table>
   </div>
 </template>

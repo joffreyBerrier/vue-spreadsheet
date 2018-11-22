@@ -1,8 +1,12 @@
 <template>
   <div
-    class="wrap_vue_table"
+    :style="styleWrapVueTable"
     ref="vueTable"
     v-on:scroll="scrollFunction">
+
+    <slot name="header">
+    </slot>
+
     <table class="vue_table" oncontextmenu="return false;">
       <vue-thead
         :headers="headers"
@@ -91,6 +95,14 @@ export default {
       type: Boolean,
       required: false,
     },
+    selectPosition: {
+      type: Object,
+      required: false,
+    },
+    styleWrapVueTable: {
+      type: Object,
+      required: false,
+    },
   },
   components: {
     VueThead,
@@ -173,9 +185,14 @@ export default {
 
       // stock size / offsetTop / offsetLeft of the element
       const width = this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetWidth;
-      const top = (this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40;
-      const left = this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
 
+      let top = ((this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40);
+      let left = this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
+
+      if (this.selectPosition) {
+        top = ((this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top;
+        left = (this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.selectPosition.left;
+      }
       // set size / top position / left position
       this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.width = `${width}px`;
       this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.top = `${top}px`;

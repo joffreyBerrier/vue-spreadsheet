@@ -19,6 +19,11 @@
       v-on:thead-submenu-click-change-color="changeColor"
       v-on:thead-submenu-click-change-value="changeValue"
       v-on:thead-td-sort="sortProduct">
+
+    <div slot="header">
+      Specific Header
+    </div>
+
     </vue-table>
   </div>
 </template>
