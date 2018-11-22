@@ -462,8 +462,4 @@ export default {
       margin: 0;
     }
   }
-  .wrap_vue_table {
-    width: 600px;
-    overflow: scroll;
-  }
 </style>
