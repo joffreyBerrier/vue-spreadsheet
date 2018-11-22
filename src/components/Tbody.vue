@@ -21,9 +21,8 @@
             v-bind:class="{
               'active_td': row[col].active,
               'show': row[col].show,
-              'disabled': row[col].disabled,
               'selected': row[col].selected,
-              'disabled': disableCells.find(x => x === col),
+              'disabled': row[col].disabled || disableCells.find(x => x === col),
             }"
             :ref="'td-' + colIndex + '-' + rowIndex"
             :key="col"
