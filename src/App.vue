@@ -14,6 +14,7 @@
       v-on:tbody-input-change="inputChange"
       v-on:tbody-nav-backspace="deleteCell"
       v-on:tbody-select-change="selectChange"
+      v-on:tbody-up-dragtofill="handleUpDragToFill"
       v-on:tbody-submenu-click-change-color="changeColorTbody"
       v-on:tbody-submenu-click-change-value="changeValueTbody"
       v-on:thead-submenu-click-change-city="changeCity"
@@ -42,6 +43,9 @@ export default {
     VueTable,
   },
   methods: {
+    handleUpDragToFill(selectedMultipleCell, entry, rowIndex, colIndex) {
+      // console.log(selectedMultipleCell, entry, rowIndex, colIndex);
+    },
     sortProduct(event, entry, colIndex) {
       // console.log('sort product');
     },
