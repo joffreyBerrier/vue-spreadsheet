@@ -1,18 +1,24 @@
 <template>
   <div id="app">
     <vue-table
-      :data="products"
-      :headers="headers"
+      :disable-cells="disableCells"
       :drag-to-fill="dragToFill"
+      :headers="headers"
+      :new-data="newData"
+      :sort-header="sortHeader"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead"
-      v-on:thead-submenu-click-change-color="changeColor"
-      v-on:thead-submenu-click-change-value="changeValue"
-      v-on:thead-submenu-click-change-city="changeCity"
+      :tbody-data="products"
+      :tbody-index="tbodyIndex"
+      v-on:tbody-input-change="inputChange"
+      v-on:tbody-nav-backspace="deleteCell"
+      v-on:tbody-select-change="selectChange"
       v-on:tbody-submenu-click-change-color="changeColorTbody"
       v-on:tbody-submenu-click-change-value="changeValueTbody"
-      v-on:tbody-input-change="inputChange"
-      v-on:tbody-select-change="selectChange">
+      v-on:thead-submenu-click-change-city="changeCity"
+      v-on:thead-submenu-click-change-color="changeColor"
+      v-on:thead-submenu-click-change-value="changeValue"
+      v-on:thead-td-sort="sortProduct">
     </vue-table>
   </div>
 </template>
@@ -30,6 +36,12 @@ export default {
     VueTable,
   },
   methods: {
+    sortProduct(event, entry, colIndex) {
+      // console.log('sort product');
+    },
+    deleteCell(event, actualElement, actualCol, rowIndex, colIndex) {
+      // console.log(event, actualElement, actualCol, rowIndex, colIndex);
+    },
     inputChange(event, entry, rowIndex, colIndex) {
       // console.log('InputChange', event, entry, rowIndex, colIndex);
     },
@@ -73,30 +85,12 @@ export default {
 </script>
 
 <style lang="scss">
-body {
-  color: #2c3e50;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  background: #fff;
-  display: flex;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font: 400 11px system-ui;
-}
-::-moz-selection { /* Code for Firefox */
+::-moz-selection {
   color: #2c3e50;
   background: transparent;
 }
 ::selection {
   color: #2c3e50;
   background: transparent;
-}
-.row,
-.thead {
-  display: flex;
-}
-.wrap {
-  margin: 10px auto;
 }
 </style>
