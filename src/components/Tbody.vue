@@ -89,7 +89,7 @@
                   :ref="'dropdown-' + colIndex + '-' + rowIndex">
                   <template v-if="!row[col].typing">
                     <li v-for="(option, index) in row[col].selectOptions"
-                      @click.stop="validSearch($event, col, row[col], rowIndex, colIndex, option.value)"
+                      @click.stop="validSearch($event, col, row[col], option, rowIndex, colIndex)"
                       :value="option.value"
                       :key="index + 'option'">
                         {{option.label}}
@@ -97,7 +97,7 @@
                   </template>
                   <template v-if="row[col].typing">
                     <li v-for="(option, index) in filteredList"
-                      @click.stop="validSearch($event, col, row[col], rowIndex, colIndex, option.value)"
+                      @click.stop="validSearch($event, col, row[col], option, rowIndex, colIndex)"
                       :value="option.value"
                       :key="index">
                         {{option.label}}
@@ -111,7 +111,7 @@
               <span>{{row[col].value}}</span>
               <select
                 v-model="row[col].value"
-                @change="selectHandleChange($event, col, row[col], rowIndex, colIndex)">
+                @change="selectHandleChange($event, col, row[col], option, rowIndex, colIndex)">
                 <option
                   v-for="(option, index) in row[col].selectOptions"
                   :value="option.value"
@@ -276,8 +276,8 @@ export default {
     inputHandleChange(event, entry, rowIndex, colIndex) {
       this.$emit('tbody-input-change', event, entry, rowIndex, colIndex);
     },
-    selectHandleChange(event, entry, col, rowIndex, colIndex) {
-      this.$emit('tbody-select-change', event, entry, col, rowIndex, colIndex);
+    selectHandleChange(event, entry, col, option, rowIndex, colIndex) {
+      this.$emit('tbody-select-change', event, entry, col, option, rowIndex, colIndex);
     },
     searchHandleChange(col) {
       const column = col;
@@ -289,12 +289,12 @@ export default {
         return option.value.toLowerCase().includes(col.value.toLowerCase());
       });
     },
-    validSearch(event, entry, col, rowIndex, colIndex, val) {
+    validSearch(event, entry, col, option, rowIndex, colIndex) {
       const column = col;
       column.search = false;
       column.show = false;
-      column.value = val;
-      this.$emit('tbody-select-change', event, entry, col, rowIndex, colIndex);
+      column.value = option.value;
+      this.$emit('tbody-select-change', event, entry, col, option, rowIndex, colIndex);
     },
     handleClickSubmenu(event, entry, rowIndex, colIndex, type, submenuFunction) {
       this.$emit('tbody-submenu-click-callback', event, entry, rowIndex, colIndex, type, submenuFunction);
