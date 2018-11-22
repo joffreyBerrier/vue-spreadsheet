@@ -130,7 +130,7 @@ export default {
       this.beforeChangeSize = {
         col: colIndex,
         elementLeft: event.currentTarget.parentElement.offsetLeft,
-        head,
+        header: head,
         width: parseInt(head.style.width, 10),
       };
       head.active = true;

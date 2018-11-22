@@ -39,11 +39,13 @@ props                             | Type       | Description
   :drag-to-fill                   | Boolean    | That activates drag to fill
   :headers                        | Array      | That contains headers
   :new-data                       | Object     | That contains the type of data when you have empty cell in a row
+  :select-position                | Object     | That contains a top and left position you want to add to the select
   :sort-header                    | Boolean    | That activates sort button on header
   :submenu-tbody                  | Array      | That contains the submenu-tbody
   :submenu-thead                  | Array      | That contains the submenu-thead
   :tbody-data                     | Array      | That contains data
   :tbody-index                    | Boolean    | That displays the index of each row on the left of the table
+  :style-wrap-vue-table           | Object     | That contains style of the wrapper tableVue
   v-on-thead-submenu-click-{#}    | Function   | {#} - Name of the function declared on **submenu-thead**
   v-on:tbody-input-change         | Function   | When the **input changes**
   v-on:tbody-nav-backspace        | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
@@ -59,17 +61,24 @@ props                             | Type       | Description
     :drag-to-fill="Boolean"
     :headers="Array"
     :new-data="Object"
+    :select-position="Object"
     :sort-header="Boolean"
     :submenu-tbody="Array"
     :submenu-thead="Array"
     :tbody-data="Array"
     :tbody-index="Boolean"
+    :style-wrap-vue-table="Object"
     v-on:tbody-input-change="Function"
     v-on:tbody-nav-backspace="Function"
     v-on:tbody-select-change="Function"
     v-on:tbody-submenu-click-customize-function="Function"
-    v-on:thead-submenu-click-customize-function="Function">
-    v-on:thead-td-sort="Function"
+    v-on:thead-submenu-click-customize-function="Function"
+    v-on:thead-td-sort="Function">
+
+    // if your want to add an specific header
+    <div slot="header">
+    </div>
+
   </vue-table>
 ```
 
@@ -92,35 +101,40 @@ headers: [
     headerName: 'Image',
     headerKey: 'img',
     style: {
-      color: '#ddd',
+      width: '100px'
+      minWidth: '100px'
     },
   },
   {
     headerName: 'Nom',
     headerKey: 'name',
     style: {
-      color: '#ddd',
+      width: '100px'
+      minWidth: '100px'
     },
   },
   {
     headerName: 'Prénom',
     headerKey: 'surname',
     style: {
-      color: '#ddd',
+      width: '100px'
+      minWidth: '100px'
     },
   },
   {
     headerName: 'Age',
     headerKey: 'age',
     style: {
-      color: '#ddd',
+      width: '100px'
+      minWidth: '100px'
     },
   },
   {
     headerName: 'Born',
     headerKey: 'born',
     style: {
-      color: '#ddd',
+      width: '100px'
+      minWidth: '100px'
     },
   },
 ],
@@ -291,20 +305,27 @@ newData: {
   # Template
 
   <vue-table
-    :tbody-data="products"
-    :headers="headers"
-    :new-data="newData"
     :disable-cells="disableCells"
     :drag-to-fill="dragToFill"
+    :headers="headers"
+    :new-data="newData"
     :sort-header="sortHeader"
     :submenu-tbody="submenuTbody"
     :submenu-thead="submenuThead"
-    v-on:tbody-nav-backspace="deleteCell"
+    :tbody-data="products"
+    :tbody-index="tbodyIndex"
+    :style-wrap-vue-table="styleWrapVueTable"
     v-on:tbody-input-change="InputChange"
+    v-on:tbody-nav-backspace="deleteCell"
     v-on:tbody-select-change="SelectChange">
     v-on:tbody-submenu-click-change-color="changeColorTbody"
-    v-on:thead-td-sort="sortProduct"
-    v-on:thead-submenu-click-change-color="changeColor">
+    v-on:thead-submenu-click-change-color="changeColor"
+    v-on:thead-td-sort="sortProduct">
+
+    // If you want to have a specific header
+    <div slot="header">
+    </div>
+
   </vue-table>
 
   # Data
