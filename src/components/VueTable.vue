@@ -1,7 +1,7 @@
 <template>
   <div
-    :style="styleWrapVueTable"
     ref="vueTable"
+    :style="styleWrapVueTable"
     v-on:scroll="scrollFunction">
 
     <slot name="header">
@@ -9,6 +9,7 @@
 
     <table class="vue_table" oncontextmenu="return false;">
       <vue-thead
+        ref="vueThead"
         :headers="headers"
         :sort-header="sortHeader"
         :submenu-status-thead="submenuStatusThead"
@@ -23,6 +24,7 @@
       </vue-thead>
 
       <vue-tbody
+        ref="vueTbody"
         :disable-cells="disableCells"
         :drag-to-fill="dragToFill"
         :headers="headers"
@@ -169,7 +171,8 @@ export default {
         this.$set(this.tbodyData[rowIndex][entry], 'search', true);
         this.$set(this.tbodyData[rowIndex][entry], 'show', true);
         this.$set(this.tbodyData[rowIndex][entry], 'typing', false);
-        this.$children[1].$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+
+        this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
       } else {
         this.$set(this.tbodyData[rowIndex][entry], 'search', false);
@@ -184,19 +187,19 @@ export default {
       const scrollTop = this.$refs.vueTable.scrollTop;
 
       // stock size / offsetTop / offsetLeft of the element
-      const width = this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetWidth;
+      const width = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetWidth;
 
-      let top = ((this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40);
-      let left = this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
+      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40);
+      let left = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
 
       if (this.selectPosition) {
-        top = ((this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top;
-        left = (this.$children[1].$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.selectPosition.left;
+        top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top;
+        left = (this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.selectPosition.left;
       }
       // set size / top position / left position
-      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.width = `${width}px`;
-      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.top = `${top}px`;
-      this.$children[1].$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.left = `${left}px`;
+      this.$refs.vueTbody.$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.width = `${width}px`;
+      this.$refs.vueTbody.$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.top = `${top}px`;
+      this.$refs.vueTbody.$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.left = `${left}px`;
     },
     handleUpDragSizeHeader(event, headers) {
       this.$emit('handle-up-drag-size-header', event, headers);
