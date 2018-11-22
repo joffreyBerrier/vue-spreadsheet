@@ -13,6 +13,7 @@
       :style-wrap-vue-table="styleWrapVueTable"
       v-on:tbody-input-change="inputChange"
       v-on:tbody-nav-backspace="deleteCell"
+      v-on:tbody-nav-multiple-backspace="deleteMultipleCell"
       v-on:tbody-select-change="selectChange"
       v-on:tbody-up-dragtofill="handleUpDragToFill"
       v-on:tbody-submenu-click-change-color="changeColorTbody"
