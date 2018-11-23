@@ -14,7 +14,8 @@
           <span>{{header.headerName}}</span>
 
           <template
-            v-if="submenuThead && submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
+            v-if="submenuThead &&
+            submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
               <button
                 @click="handleContextMenuTd($event, header.headerKey, colIndex)"
                 v-bind:class="{'active': submenuThead && submenuStatusThead && colIndex === submenuEnableCol}"
@@ -27,7 +28,8 @@
               </button>
           </template>
 
-          <template v-if="sortHeader">
+          <template v-if="sortHeader &&
+          submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
               <button
                 @click="handleSort($event, header.headerKey, colIndex)"
                 v-bind:class="{'active': activeSort === header.headerKey}"
