@@ -105,6 +105,10 @@ export default {
       type: Object,
       required: false,
     },
+    parentElementScroll: {
+      type: Number,
+      required: false,
+    },
   },
   components: {
     VueThead,
@@ -182,6 +186,9 @@ export default {
       }
     },
     calculPosition(event, rowIndex, colIndex, entry) {
+      // stock scrollLeft / scrollTop position of parent element (body / div)
+      const scrollParentTop = this.parentElementScroll;
+
       // stock scrollLeft / scrollTop position of parent
       const scrollLeft = this.$refs.vueTable.scrollLeft;
       const scrollTop = this.$refs.vueTable.scrollTop;
@@ -189,11 +196,11 @@ export default {
       // stock size / offsetTop / offsetLeft of the element
       const width = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetWidth;
 
-      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40);
+      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - scrollParentTop;
       let left = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
 
       if (this.selectPosition) {
-        top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top;
+        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top) - scrollParentTop;
         left = (this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.selectPosition.left;
       }
       // set size / top position / left position
