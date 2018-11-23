@@ -371,6 +371,7 @@ export default {
       if (this.eventDrag === true && this.selectedMultipleCell && this.selectedMultipleCell.rowEnd !== rowIndex) {
         this.selectedMultipleCell.rowEnd = rowIndex;
         this.modifyMultipleCell('selected');
+        this.$emit('tbody-move-dragtofill', this.selectedMultipleCell, entry, col, rowIndex, colIndex);
       }
     },
     handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
