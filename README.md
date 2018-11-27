@@ -39,19 +39,20 @@ props                                  | Type       | Description
   :drag-to-fill                        | Boolean    | That activates drag to fill
   :headers                             | Array      | That contains headers
   :new-data                            | Object     | That contains the type of data when you have empty cell in a row
+  :parent-element-scroll               | Number     | That contains the OffsetTop of the parent
   :select-position                     | Object     | That contains a top and left position you want to add to the select
   :sort-header                         | Boolean    | That activates sort button on header
+  :style-wrap-vue-table                | Object     | That contains style of the wrapper tableVue
   :submenu-tbody                       | Array      | That contains the submenu-tbody
   :submenu-thead                       | Array      | That contains the submenu-thead
   :tbody-data                          | Array      | That contains data
   :tbody-index                         | Boolean    | That displays the index of each row on the left of the table
-  :style-wrap-vue-table                | Object     | That contains style of the wrapper tableVue
-  v-on:thead-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-thead**
   v-on:tbody-input-change              | Function   | When the **input changes**
   v-on:tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
   v-on:tbody-nav-multiple-backspace    | Function   | Fired when the multiple cell are delete
   v-on:tbody-select-change             | Function   | When the **select change**
   v-on:tbody-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-tbody**
+  v-on:thead-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-thead**
   v-on:thead-td-sort                   | Function   | When you press the button 
 
 ### Example
@@ -62,13 +63,14 @@ props                                  | Type       | Description
     :drag-to-fill="Boolean"
     :headers="Array"
     :new-data="Object"
+    :parent-element-scroll="Number"
     :select-position="Object"
     :sort-header="Boolean"
+    :style-wrap-vue-table="Object"
     :submenu-tbody="Array"
     :submenu-thead="Array"
     :tbody-data="Array"
     :tbody-index="Boolean"
-    :style-wrap-vue-table="Object"
     v-on:tbody-input-change="Function"
     v-on:tbody-nav-backspace="Function"
     v-on:tbody-nav-multiple-backspace="Function"
@@ -310,13 +312,15 @@ newData: {
     :disable-cells="disableCells"
     :drag-to-fill="dragToFill"
     :headers="headers"
-    :new-data="newData"
+    :new-data="newData" 
+    :parent-element-scroll="0"
+    :select-position="selectPosition"
     :sort-header="sortHeader"
+    :style-wrap-vue-table="styleWrapVueTable"
     :submenu-tbody="submenuTbody"
     :submenu-thead="submenuThead"
     :tbody-data="products"
     :tbody-index="tbodyIndex"
-    :style-wrap-vue-table="styleWrapVueTable"
     v-on:tbody-input-change="InputChange"
     v-on:tbody-nav-backspace="deleteCell"
     v-on:tbody-select-change="SelectChange">
@@ -429,6 +433,10 @@ newData: {
           disabled: ['img'],
         },
       ],
+      selectPosition: {
+        top: 0,
+        left: 0,
+      },
     };
   },
   methods: {

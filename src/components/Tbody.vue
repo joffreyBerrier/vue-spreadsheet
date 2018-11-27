@@ -83,7 +83,7 @@
                   v-model="row[col].value"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup.esc="escKeyup(row[col], rowIndex, colIndex, row[col].type)"
-                  @keyup="searchHandleChange(row[col])"/>
+                  @keyup="searchHandleChange(row[col], col, rowIndex, colIndex)"/>
                 <ul
                   v-bind:class="{'show': row[col].search}"
                   :ref="'dropdown-' + colIndex + '-' + rowIndex">
@@ -215,8 +215,8 @@ export default {
     },
   },
   methods: {
-    enableSelect(event, entry, col, rowIndex, colIndex) {
-      this.$emit('handle-to-open-select', event, entry, col, rowIndex, colIndex);
+    enableSelect(event, header, col, rowIndex, colIndex) {
+      this.$emit('handle-to-open-select', event, header, col, rowIndex, colIndex);
       this.$forceUpdate();
     },
     escKeyup(col, rowIndex, colIndex, type) {
@@ -239,49 +239,48 @@ export default {
         width: `${100}%`,
       };
     },
-    handleSelectMultipleCell(event, entry, rowIndex, colIndex, type) {
-      this.$emit('tbody-select-multiple-cell', event, entry, rowIndex, colIndex, type);
+    handleSelectMultipleCell(event, header, rowIndex, colIndex, type) {
+      this.$emit('tbody-select-multiple-cell', event, header, rowIndex, colIndex, type);
     },
-    handleDownDragToFill(event, entry, col, rowIndex, colIndex) {
+    handleDownDragToFill(event, header, col, rowIndex, colIndex) {
       this.eventDrag = true;
-      this.$emit('tbody-down-dragtofill', event, entry, col, rowIndex, colIndex);
+      this.$emit('tbody-down-dragtofill', event, header, col, rowIndex, colIndex);
     },
-    handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
+    handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
       if (this.eventDrag) {
-        this.$emit('tbody-move-dragtofill', event, entry, col, rowIndex, colIndex);
+        this.$emit('tbody-move-dragtofill', event, header, col, rowIndex, colIndex);
       }
     },
-    handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
+    handleUpDragToFill(event, header, rowIndex, colIndex, type) {
       if (this.eventDrag) {
         this.eventDrag = false;
-        this.$emit('tbody-up-dragtofill', event, entry, rowIndex, colIndex, type);
+        this.$emit('tbody-up-dragtofill', event, header, rowIndex, colIndex, type);
       }
     },
-    handleClickTd(event, col, entry, rowIndex, colIndex, type) {
-      this.$emit('tbody-td-click', event, entry, rowIndex, colIndex, type);
+    handleClickTd(event, col, header, rowIndex, colIndex, type) {
+      this.$emit('tbody-td-click', event, col, header, rowIndex, colIndex, type);
     },
-    handleDoubleClickTd(event, entry, col, rowIndex, colIndex, type) {
-      if (type === 'input' || (col.type === 'select' && col.search)) {
+    handleDoubleClickTd(event, header, col, rowIndex, colIndex, type) {
+      if (type === 'input') {
         this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
       }
-      this.$emit('tbody-td-double-click', event, entry, col, rowIndex, colIndex, type);
+      this.$emit('tbody-td-double-click', event, header, col, rowIndex, colIndex, type);
     },
-    handleContextMenuTd(event, entry, rowIndex, colIndex, type) {
+    handleContextMenuTd(event, header, rowIndex, colIndex, type) {
       this.submenuEnableCol = colIndex;
       this.submenuEnableRow = rowIndex;
       this.$emit('handle-to-calculate-position', event, rowIndex, colIndex, 'contextMenu');
       this.$emit('submenu-enable', 'tbody');
-      this.$emit('tbody-td-context-menu', event, entry, rowIndex, colIndex, type);
+      this.$emit('tbody-td-context-menu', event, header, rowIndex, colIndex, type);
     },
-    inputHandleChange(event, entry, rowIndex, colIndex) {
-      this.$emit('tbody-input-change', event, entry, rowIndex, colIndex);
+    inputHandleChange(event, header, rowIndex, colIndex) {
+      this.$emit('tbody-input-change', event, header, rowIndex, colIndex);
     },
-    selectHandleChange(event, entry, col, option, rowIndex, colIndex) {
-      this.$emit('tbody-select-change', event, entry, col, option, rowIndex, colIndex);
+    selectHandleChange(event, header, col, option, rowIndex, colIndex) {
+      this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
-    searchHandleChange(col) {
-      const column = col;
-      column.typing = true;
+    searchHandleChange(col, header, rowIndex, colIndex) {
+      this.$emit('tbody-search-handle-change', col, header, rowIndex, colIndex);
       this.filteredList = col.selectOptions.filter((option) => {
         if (typeof option.value === 'number') {
           return option.value.toString().toLowerCase().includes(col.value.toString().toLowerCase());
@@ -289,15 +288,15 @@ export default {
         return option.value.toLowerCase().includes(col.value.toLowerCase());
       });
     },
-    validSearch(event, entry, col, option, rowIndex, colIndex) {
+    validSearch(event, header, col, option, rowIndex, colIndex) {
       const column = col;
       column.search = false;
       column.show = false;
       column.value = option.value;
-      this.$emit('tbody-select-change', event, entry, col, option, rowIndex, colIndex);
+      this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
-    handleClickSubmenu(event, entry, rowIndex, colIndex, type, submenuFunction) {
-      this.$emit('tbody-submenu-click-callback', event, entry, rowIndex, colIndex, type, submenuFunction);
+    handleClickSubmenu(event, header, rowIndex, colIndex, type, submenuFunction) {
+      this.$emit('tbody-submenu-click-callback', event, header, rowIndex, colIndex, type, submenuFunction);
     },
     moveKeydown(event) {
       const actualElement = document.getElementsByClassName('active_td')[0];
