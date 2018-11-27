@@ -207,7 +207,7 @@ export default {
     };
   },
   mounted() {
-    window.addEventListener('keyup', this.moveKeydown);
+    window.addEventListener('keydown', this.moveKeydown);
   },
   computed: {
     headerKeys() {
@@ -299,82 +299,7 @@ export default {
       this.$emit('tbody-submenu-click-callback', event, header, rowIndex, colIndex, type, submenuFunction);
     },
     moveKeydown(event) {
-      const actualElement = document.getElementsByClassName('active_td')[0];
-      if (actualElement &&
-        (event.keyCode === 37 ||
-        event.keyCode === 39 ||
-        event.keyCode === 40 ||
-        event.keyCode === 38 ||
-        event.keyCode === 13 ||
-        event.keyCode === 27 ||
-        event.keyCode === 8)) {
-        const colIndex = Number(actualElement.getAttribute('data-col-index'));
-        const rowIndex = Number(actualElement.getAttribute('data-row-index'));
-        // remove active to before-active cell
-        const actualCol = Object.values(this.headerKeys)[colIndex];
-        this.tbodyData[rowIndex][actualCol].active = false;
-
-        // remove active class / blur
-        actualElement.lastElementChild.blur();
-        actualElement.classList.remove('active_td');
-
-        // set colMax rowMax
-        const colMax = Object.keys(this.tbodyData).length;
-        const rowMax = this.tbodyData.length;
-
-        // right
-        if (event.keyCode === 39) {
-          let col = Object.values(this.headerKeys)[colIndex + 1];
-          if (col) {
-            this.tbodyData[rowIndex][col].active = true;
-          } else {
-            col = Object.keys(this.tbodyData[rowIndex])[colIndex - colMax];
-            this.tbodyData[rowIndex][col].active = true;
-          }
-        }
-        // left
-        if (event.keyCode === 37) {
-          let col = Object.values(this.headerKeys)[colIndex - 1];
-          if (col) {
-            this.tbodyData[rowIndex][col].active = true;
-          } else {
-            col = Object.keys(this.tbodyData[rowIndex])[colIndex + colMax];
-            this.tbodyData[rowIndex][col].active = true;
-          }
-        }
-        // bottom
-        if (event.keyCode === 40) {
-          if (rowIndex + 1 !== rowMax) {
-            this.tbodyData[rowIndex + 1][actualCol].active = true;
-          } else {
-            this.tbodyData[(rowIndex + 1) - rowMax][actualCol].active = true;
-          }
-        }
-        // top
-        if (event.keyCode === 38) {
-          if (rowIndex !== 0) {
-            this.tbodyData[rowIndex - 1][actualCol].active = true;
-          } else {
-            this.tbodyData[(rowIndex + rowMax) - 1][actualCol].active = true;
-          }
-        }
-        // press enter
-        if (event.keyCode === 13) {
-          this.tbodyData[rowIndex][actualCol].show = true;
-          if (this.$refs[`input-${colIndex}-${rowIndex}`]) {
-            this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
-          }
-          this.$emit('tbody-nav-enter', event, event.keyCode, actualElement, rowIndex, colIndex);
-        }
-        // press backspace
-        if (event.keyCode === 8) {
-          this.$emit('tbody-nav-backspace', event, actualElement, actualCol, rowIndex, colIndex);
-        }
-        // press esc
-        if (event.keyCode === 27) {
-          this.tbodyData[rowIndex][actualCol].active = false;
-        }
-      }
+      this.$emit('tbody-move-keydown', event);
     },
   },
 };
