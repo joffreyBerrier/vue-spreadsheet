@@ -33,6 +33,7 @@
         :submenu-status-tbody="submenuStatusTbody"
         :submenu-tbody="submenuTbody"
         :tbody-index="tbodyIndex"
+        v-on:tbody-move-keydown="moveKeydown"
         v-on:tbody-search-handle-change="searchHandleChange"
         v-on:handle-to-calculate-position="calculPosition"
         v-on:handle-to-open-select="enableSelect"
@@ -134,6 +135,9 @@ export default {
       submenuEnableCol: null,
       submenuStatusTbody: false,
       submenuStatusThead: false,
+      keys: {},
+      incrementCol: 0,
+      incrementRow: 0,
     };
   },
   mounted() {
@@ -274,14 +278,16 @@ export default {
     // Copy / Paste
     handleSelectMultipleCell(event, header, rowIndex, colIndex) {
       // console.log('handleSelectMultipleCell', event, header, rowIndex, colIndex);
-      this.selectedCoordCells = {
-        rowStart: this.selectedCell.row,
-        colStart: this.selectedCell.col,
-        keyStart: this.selectedCell.key,
-        rowEnd: rowIndex,
-        colEnd: colIndex,
-        keyEnd: header,
-      };
+      if (this.selectedCell) {
+        this.selectedCoordCells = {
+          rowStart: this.selectedCell.row,
+          colStart: this.selectedCell.col,
+          keyStart: this.selectedCell.key,
+          rowEnd: rowIndex,
+          colEnd: colIndex,
+          keyEnd: header,
+        };
+      }
       // Add active on selectedCoordCells selected
       this.modifyMultipleCell('selected');
     },
@@ -457,13 +463,13 @@ export default {
       // console.log('handleTbodyNavEnter', event, header, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
-    handleTbodyNavBackspace(event, actualElement, actualCol, rowIndex, colIndex) {
+    handleTbodyNavBackspace(event, actualElement, header, rowIndex, colIndex) {
       if (this.selectedCoordCells) {
         this.modifyMultipleCell('removeValue');
       } else {
-        this.tbodyData[rowIndex][actualCol].value = '';
+        this.tbodyData[rowIndex][header].value = '';
       }
-      this.$emit('tbody-nav-backspace', event, actualElement, actualCol, rowIndex, colIndex);
+      this.$emit('tbody-nav-backspace', event, actualElement, header, rowIndex, colIndex);
     },
     handleTbodyInputChange(event, header, rowIndex, colIndex) {
       // remove class show on input when it change
@@ -504,6 +510,111 @@ export default {
     },
     callbackSort(event, header, colIndex) {
       this.$emit('thead-td-sort', event, header, colIndex);
+    },
+    moveKeydown(event) {
+      const actualElement = document.getElementsByClassName('active_td')[0];
+
+      this.keys[event.keyCode] = true;
+
+      if (actualElement &&
+        (event.keyCode === 37 ||
+        event.keyCode === 39 ||
+        event.keyCode === 40 ||
+        event.keyCode === 38 ||
+        event.keyCode === 13 ||
+        event.keyCode === 27 ||
+        event.keyCode === 8)) {
+        const colIndex = Number(actualElement.getAttribute('data-col-index'));
+        const rowIndex = Number(actualElement.getAttribute('data-row-index'));
+
+        // remove active to before-active cell
+        let header = Object.values(this.headerKeys)[colIndex];
+
+        // set colMax rowMax
+        const colMax = Object.keys(this.tbodyData[0]).length;
+        const rowMax = this.tbodyData.length;
+
+        // shift
+        if (this.keys[16]) {
+          this.tbodyData[rowIndex][header].active = false;
+          this.incrementCol = this.incrementCol !== 0 ? this.incrementCol : colIndex;
+
+          // shift / right
+          if (event.keyCode === 39) {
+            this.incrementCol += 1;
+          }
+          // shift / left
+          if (event.keyCode === 37) {
+            this.incrementCol -= 1;
+          }
+          // shift / bottom
+          if (event.keyCode === 40) {
+            this.incrementRow += 1;
+          }
+          // shift / top
+          if (event.keyCode === 38) {
+            this.incrementRow -= 1;
+          }
+
+          this.handleSelectMultipleCell(event, header, this.incrementRow, this.incrementCol);
+          header = Object.values(this.headerKeys)[this.incrementCol];
+          this.tbodyData[this.incrementRow][header].active = true;
+        } else {
+          this.tbodyData[rowIndex][header].active = false;
+          // right
+          if (event.keyCode === 39) {
+            const col = Object.values(this.headerKeys)[colIndex + 1];
+            if (col) {
+              this.tbodyData[rowIndex][col].active = true;
+            } else {
+              header = this.headerKeys[colMax - colIndex - 1];
+              this.tbodyData[rowIndex][header].active = true;
+            }
+          }
+          // left
+          if (event.keyCode === 37) {
+            const col = Object.values(this.headerKeys)[colIndex - 1];
+            if (col) {
+              this.tbodyData[rowIndex][col].active = true;
+            } else {
+              header = this.headerKeys[colMax - 1];
+              this.tbodyData[rowIndex][col].active = true;
+            }
+          }
+          // bottom
+          if (event.keyCode === 40) {
+            if (rowIndex + 1 !== rowMax) {
+              this.tbodyData[rowIndex + 1][header].active = true;
+            } else {
+              this.tbodyData[(rowIndex + 1) - rowMax][header].active = true;
+            }
+          }
+          // top
+          if (event.keyCode === 38) {
+            if (rowIndex !== 0) {
+              this.tbodyData[rowIndex - 1][header].active = true;
+            } else {
+              this.tbodyData[(rowIndex + rowMax) - 1][header].active = true;
+            }
+          }
+        }
+        // press enter
+        if (event.keyCode === 13) {
+          this.tbodyData[rowIndex][header].show = true;
+          if (this.$refs[`input-${colIndex}-${rowIndex}`]) {
+            this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+          }
+          this.$emit('tbody-nav-enter', event, event.keyCode, actualElement, rowIndex, colIndex);
+        }
+        // press backspace
+        if (event.keyCode === 8) {
+          this.$emit('tbody-nav-backspace', event, actualElement, header, rowIndex, colIndex);
+        }
+        // press esc
+        if (event.keyCode === 27) {
+          this.tbodyData[rowIndex][header].active = false;
+        }
+      }
     },
   },
 };
