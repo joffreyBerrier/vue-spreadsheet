@@ -583,11 +583,12 @@ export default {
           }
           // left
           if (event.keyCode === 37) {
-            const col = Object.values(this.headerKeys)[colIndex - 1];
+            let col = Object.values(this.headerKeys)[colIndex - 1];
             if (col) {
               this.tbodyData[rowIndex][col].active = true;
             } else {
               header = this.headerKeys[colMax - 1];
+              col = Object.values(this.headerKeys)[colMax - 1];
               this.tbodyData[rowIndex][col].active = true;
             }
           }
