@@ -33,6 +33,7 @@
         :submenu-status-tbody="submenuStatusTbody"
         :submenu-tbody="submenuTbody"
         :tbody-index="tbodyIndex"
+        v-on:tbody-search-handle-change="searchHandleChange"
         v-on:handle-to-calculate-position="calculPosition"
         v-on:handle-to-open-select="enableSelect"
         v-on:submenu-enable="enableSubmenu"
@@ -117,22 +118,22 @@ export default {
   data() {
     return {
       arrayDragData: [],
-      eventDrag: false,
-      storeCopyDatas: [],
+      selectedCoordCells: null,
       dragStart: {
         name: '',
         row: null,
         data: {},
       },
+      eventDrag: false,
       headerKeys: [],
+      lastSelectOpen: null,
       oldTdActive: null,
       oldTdShow: null,
       selectedCell: null,
-      selectedMultipleCell: null,
-      lastSelectOpen: null,
+      storeCopyDatas: [],
+      submenuEnableCol: null,
       submenuStatusTbody: false,
       submenuStatusThead: false,
-      submenuEnableCol: null,
     };
   },
   mounted() {
@@ -146,7 +147,7 @@ export default {
       if (this.storeCopyDatas.length > 0) {
         this.pasteReplaceData();
         this.cleanActiveOnTd('selected');
-        this.selectedMultipleCell = null;
+        this.selectedCoordCells = null;
       }
     });
   },
@@ -160,32 +161,37 @@ export default {
     scrollFunction() {
       this.enableSubmenu('thead');
       if (this.lastSelectOpen) {
-        this.enableSelect(this.lastSelectOpen.event, this.lastSelectOpen.entry, this.lastSelectOpen.col, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex);
+        this.enableSelect(this.lastSelectOpen.event, this.lastSelectOpen.header, this.lastSelectOpen.col, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex);
       }
     },
-    enableSelect(event, entry, col, rowIndex, colIndex) {
+    searchHandleChange(col, header, rowIndex, colIndex) {
+      this.$set(this.tbodyData[rowIndex][header], 'search', true);
+      this.$set(this.tbodyData[rowIndex][header], 'typing', true);
+      this.$set(this.tbodyData[rowIndex][header], 'show', true);
+    },
+    enableSelect(event, header, col, rowIndex, colIndex) {
       if (!col.search) {
         this.lastSelectOpen = {
           event,
-          entry,
+          header,
           col,
           rowIndex,
           colIndex,
         };
-        this.$set(this.tbodyData[rowIndex][entry], 'search', true);
-        this.$set(this.tbodyData[rowIndex][entry], 'show', true);
-        this.$set(this.tbodyData[rowIndex][entry], 'typing', false);
+        this.$set(this.tbodyData[rowIndex][header], 'search', true);
+        this.$set(this.tbodyData[rowIndex][header], 'show', true);
+        this.$set(this.tbodyData[rowIndex][header], 'typing', false);
 
         this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
       } else {
-        this.$set(this.tbodyData[rowIndex][entry], 'search', false);
-        this.$set(this.tbodyData[rowIndex][entry], 'show', false);
-        this.$set(this.tbodyData[rowIndex][entry], 'typing', true);
+        this.$set(this.tbodyData[rowIndex][header], 'search', false);
+        this.$set(this.tbodyData[rowIndex][header], 'show', false);
+        this.$set(this.tbodyData[rowIndex][header], 'typing', true);
         this.lastSelectOpen = null;
       }
     },
-    calculPosition(event, rowIndex, colIndex, entry) {
+    calculPosition(event, rowIndex, colIndex, header) {
       // stock scrollLeft / scrollTop position of parent element (body / div)
       const scrollParentTop = this.parentElementScroll;
 
@@ -204,17 +210,17 @@ export default {
         left = (this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.selectPosition.left;
       }
       // set size / top position / left position
-      this.$refs.vueTbody.$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.width = `${width}px`;
-      this.$refs.vueTbody.$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.top = `${top}px`;
-      this.$refs.vueTbody.$refs[`${entry}-${colIndex}-${rowIndex}`][0].style.left = `${left}px`;
+      this.$refs.vueTbody.$refs[`${header}-${colIndex}-${rowIndex}`][0].style.width = `${width}px`;
+      this.$refs.vueTbody.$refs[`${header}-${colIndex}-${rowIndex}`][0].style.top = `${top}px`;
+      this.$refs.vueTbody.$refs[`${header}-${colIndex}-${rowIndex}`][0].style.left = `${left}px`;
     },
     handleUpDragSizeHeader(event, headers) {
       this.$emit('handle-up-drag-size-header', event, headers);
     },
-    createCell(rowIndex, entry, type) {
+    createCell(rowIndex, header, type) {
       if (type === 'newCol') {
         const data = JSON.parse(JSON.stringify(this.newData));
-        this.$set(this.tbodyData[rowIndex], entry, data);
+        this.$set(this.tbodyData[rowIndex], header, data);
       }
     },
     enableSubmenu(target) {
@@ -229,13 +235,13 @@ export default {
         this.submenuStatusTbody = false;
       }
     },
-    bindClassActiveOnTd(entry, rowIndex, colIndex) {
+    bindClassActiveOnTd(header, rowIndex, colIndex) {
       this.cleanActiveOnTd('active');
-      this.tbodyData[rowIndex][entry].active = true;
+      this.tbodyData[rowIndex][header].active = true;
       // stock oldTdActive in object
       if (this.oldTdActive) this.tbodyData[this.oldTdActive.row][this.oldTdActive.key].active = false;
       this.oldTdActive = {
-        key: entry,
+        key: header,
         row: rowIndex,
         col: colIndex,
       };
@@ -255,33 +261,39 @@ export default {
               this.tbodyData[index][key].selected = false;
             }
           });
+        } else if (params === 'search') {
+          Object.keys(data).forEach((key) => {
+            if (this.tbodyData[index][key].search === true) {
+              this.tbodyData[index][key].search = false;
+            }
+          });
         }
       });
       this.$forceUpdate();
     },
     // Copy / Paste
-    handleSelectMultipleCell(event, entry, rowIndex, colIndex) {
-      // console.log('handleSelectMultipleCell', event, entry, rowIndex, colIndex);
-      this.selectedMultipleCell = {
+    handleSelectMultipleCell(event, header, rowIndex, colIndex) {
+      // console.log('handleSelectMultipleCell', event, header, rowIndex, colIndex);
+      this.selectedCoordCells = {
         rowStart: this.selectedCell.row,
         colStart: this.selectedCell.col,
         keyStart: this.selectedCell.key,
         rowEnd: rowIndex,
         colEnd: colIndex,
-        keyEnd: entry,
+        keyEnd: header,
       };
-      // Add active on cells selected
+      // Add active on selectedCoordCells selected
       this.modifyMultipleCell('selected');
     },
     copyStoreData() {
       // stock data in new Data
       const newData = JSON.parse(JSON.stringify(this.tbodyData));
 
-      if (this.selectedMultipleCell) {
-        let rowMin = this.selectedMultipleCell.rowStart;
-        let colMin = this.selectedMultipleCell.colStart;
-        const rowMax = this.selectedMultipleCell.rowEnd;
-        const colMax = this.selectedMultipleCell.colEnd;
+      if (this.selectedCoordCells) {
+        let rowMin = this.selectedCoordCells.rowStart;
+        let colMin = this.selectedCoordCells.colStart;
+        const rowMax = this.selectedCoordCells.rowEnd;
+        const colMax = this.selectedCoordCells.colEnd;
         let storeData = {};
 
         while (rowMin <= rowMax) {
@@ -289,7 +301,7 @@ export default {
           colMin += 1;
           if (colMin > colMax) {
             this.storeCopyDatas.push(storeData);
-            colMin = this.selectedMultipleCell.colStart;
+            colMin = this.selectedCoordCells.colStart;
             rowMin += 1;
             storeData = {};
           }
@@ -299,7 +311,7 @@ export default {
       }
     },
     pasteReplaceData() {
-      if (this.selectedMultipleCell) {
+      if (this.selectedCoordCells) {
         this.modifyMultipleCell('replace');
       } else if (this.selectedCell) {
         const store = JSON.parse(JSON.stringify(this.storeCopyDatas[0]));
@@ -307,13 +319,13 @@ export default {
       }
     },
     modifyMultipleCell(params) {
-      const rowMax = this.selectedMultipleCell.rowEnd;
-      const colMax = this.selectedMultipleCell.colEnd;
-      let rowMin = this.selectedMultipleCell.rowStart;
-      let colMin = this.selectedMultipleCell.colStart;
+      const rowMax = this.selectedCoordCells.rowEnd;
+      const colMax = this.selectedCoordCells.colEnd;
+      let rowMin = this.selectedCoordCells.rowStart;
+      let colMin = this.selectedCoordCells.colStart;
 
       while (rowMin <= rowMax) {
-        const key = rowMin - this.selectedMultipleCell.rowStart;
+        const key = rowMin - this.selectedCoordCells.rowStart;
         const keyValue = this.headerKeys[colMin];
 
         if (params === 'removeValue') {
@@ -336,8 +348,8 @@ export default {
           } else if (Object.keys(this.storeCopyDatas[key]).filter(x => x === keyValue).length === 0 && !this.eventDrag) {
             // col to col copyPaste
             const index = colMin - Object.values(this.storeCopyDatas[key]).length - 1;
-            const entry = Object.keys(this.storeCopyDatas[key])[index];
-            this.tbodyData[rowMin][keyValue] = this.storeCopyDatas[key][entry];
+            const header = Object.keys(this.storeCopyDatas[key])[index];
+            this.tbodyData[rowMin][keyValue] = this.storeCopyDatas[key][header];
           } else {
             // multiple rowCells copyPaste
             this.tbodyData[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
@@ -345,62 +357,65 @@ export default {
         }
         colMin += 1;
         if (colMin > colMax) {
-          colMin = this.selectedMultipleCell.colStart;
+          colMin = this.selectedCoordCells.colStart;
           rowMin += 1;
         }
       }
       this.$forceUpdate();
     },
     // drag To Fill
-    handleDownDragToFill(event, entry, data, rowIndex, colIndex) {
-      // console.log('handleDownDragToFill', event, entry, data, rowIndex, colIndex);
-      this.tbodyData[rowIndex][entry].active = true;
+    handleDownDragToFill(event, header, data, rowIndex, colIndex) {
+      // console.log('handleDownDragToFill', event, header, data, rowIndex, colIndex);
+      this.tbodyData[rowIndex][header].active = true;
       this.eventDrag = true;
 
-      if (!this.selectedMultipleCell) {
-        this.selectedMultipleCell = {
+      if (!this.selectedCoordCells) {
+        this.selectedCoordCells = {
           rowStart: this.selectedCell.row,
           colStart: this.selectedCell.col,
           keyStart: this.selectedCell.key,
           rowEnd: rowIndex,
           colEnd: colIndex,
-          keyEnd: entry,
+          keyEnd: header,
         };
         this.copyStoreData();
       } else {
         // if drag col to col in row to row to row
-        this.selectedMultipleCell.rowStart = rowIndex;
+        this.selectedCoordCells.rowStart = rowIndex;
         this.copyStoreData();
       }
     },
-    handleMoveDragToFill(event, entry, col, rowIndex, colIndex) {
-      // console.log('handleMoveDragToFill', event, entry, col, rowIndex, colIndex);
-      if (this.eventDrag === true && this.selectedMultipleCell && this.selectedMultipleCell.rowEnd !== rowIndex) {
-        this.selectedMultipleCell.rowEnd = rowIndex;
+    handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
+      // console.log('handleMoveDragToFill', event, header, col, rowIndex, colIndex);
+      if (this.eventDrag === true && this.selectedCoordCells && this.selectedCoordCells.rowEnd !== rowIndex) {
+        this.selectedCoordCells.rowEnd = rowIndex;
         this.modifyMultipleCell('selected');
-        this.$emit('tbody-move-dragtofill', this.selectedMultipleCell, entry, col, rowIndex, colIndex);
+        this.$emit('tbody-move-dragtofill', this.selectedCoordCells, header, col, rowIndex, colIndex);
       }
     },
-    handleUpDragToFill(event, entry, rowIndex, colIndex, type) {
-      // console.log('handleUpDragToFill', event, entry, rowIndex, colIndex, type);
-      if (this.eventDrag === true && this.selectedMultipleCell) {
-        this.selectedMultipleCell.rowEnd = rowIndex;
+    handleUpDragToFill(event, header, rowIndex, colIndex) {
+      // console.log('handleUpDragToFill', event, header, rowIndex, colIndex, type);
+      if (this.eventDrag === true && this.selectedCoordCells) {
+        this.selectedCoordCells.rowEnd = rowIndex;
         this.modifyMultipleCell('replace');
         this.cleanActiveOnTd('selected');
         this.cleanActiveOnTd('active');
-        this.$emit('tbody-up-dragtofill', this.selectedMultipleCell, entry, rowIndex, colIndex);
+        this.$emit('tbody-up-dragtofill', this.selectedCoordCells, header, rowIndex, colIndex);
         this.eventDrag = false;
         this.storeCopyDatas = [];
-        this.selectedMultipleCell = null;
+        this.selectedCoordCells = null;
       }
     },
     // On click on td
-    handleTbodyTdClick(event, entry, rowIndex, colIndex, type) {
-      this.createCell(rowIndex, entry, type);
-      // console.log('handleTbodyTdClick', event, entry, rowIndex, colIndex, type);
-      this.bindClassActiveOnTd(entry, rowIndex, colIndex);
+    handleTbodyTdClick(event, col, header, rowIndex, colIndex, type) {
+      this.cleanActiveOnTd('search');
+      // Enable select
+      this.createCell(rowIndex, header, type);
+
+      this.bindClassActiveOnTd(header, rowIndex, colIndex);
+
       this.selectedCell = {
-        key: entry,
+        key: header,
         row: rowIndex,
         col: colIndex,
       };
@@ -409,19 +424,25 @@ export default {
       if (this.oldTdShow && this.oldTdShow.col !== colIndex) {
         this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       }
+
+      if (type === 'select' && col.handleSearch) {
+        this.$set(this.tbodyData[rowIndex][header], 'typing', false);
+        this.calculPosition(event, rowIndex, colIndex, 'dropdown');
+        this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+      }
     },
-    handleTbodyTdDoubleClick(event, entry, col, rowIndex, colIndex, type) {
-      // console.log('handleTbodyTdDoubleClick', event, entry, col, rowIndex, colIndex, type);
-      this.createCell(rowIndex, entry, type);
+    handleTbodyTdDoubleClick(event, header, col, rowIndex, colIndex, type) {
+      // console.log('handleTbodyTdDoubleClick', event, header, col, rowIndex, colIndex, type);
+      this.createCell(rowIndex, header, type);
 
       // stock oldTdShow in object
       if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
 
       // add class show on element
-      this.tbodyData[rowIndex][entry].show = true;
+      this.tbodyData[rowIndex][header].show = true;
 
       this.oldTdShow = {
-        key: entry,
+        key: header,
         row: rowIndex,
         col: colIndex,
       };
@@ -432,57 +453,57 @@ export default {
       // console.log('handleTbodyNav', event, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
-    handleTbodyNavEnter(event, entry, keyCode, actualElement, rowIndex, colIndex) {
-      // console.log('handleTbodyNavEnter', event, entry, keyCode, actualElement, rowIndex, colIndex);
+    handleTbodyNavEnter(event, header, keyCode, actualElement, rowIndex, colIndex) {
+      // console.log('handleTbodyNavEnter', event, header, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
     handleTbodyNavBackspace(event, actualElement, actualCol, rowIndex, colIndex) {
-      if (this.selectedMultipleCell) {
+      if (this.selectedCoordCells) {
         this.modifyMultipleCell('removeValue');
       } else {
         this.tbodyData[rowIndex][actualCol].value = '';
       }
       this.$emit('tbody-nav-backspace', event, actualElement, actualCol, rowIndex, colIndex);
     },
-    handleTbodyInputChange(event, entry, rowIndex, colIndex) {
+    handleTbodyInputChange(event, header, rowIndex, colIndex) {
       // remove class show on input when it change
       if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
 
       // callback
-      this.$emit('tbody-input-change', event, entry, rowIndex, colIndex);
+      this.$emit('tbody-input-change', event, header, rowIndex, colIndex);
     },
-    handleTbodySelectChange(event, entry, col, option, rowIndex, colIndex) {
+    handleTbodySelectChange(event, header, col, option, rowIndex, colIndex) {
       // remove class show on select when it change
       if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
 
       // callback
-      this.$emit('tbody-select-change', event, entry, col, option, rowIndex, colIndex);
+      this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
     // Context Menu
-    handleTbodyContextMenu(event, entry, rowIndex, colIndex, type) {
-      this.createCell(rowIndex, entry, type);
-      // console.log('handleTbodyContextMenu', event, entry, rowIndex, colIndex, type);
+    handleTbodyContextMenu(event, header, rowIndex, colIndex, type) {
+      this.createCell(rowIndex, header, type);
+      // console.log('handleTbodyContextMenu', event, header, rowIndex, colIndex, type);
     },
-    callbackSubmenuThead(event, entry, colIndex, submenuFunction, selectOptions) {
+    callbackSubmenuThead(event, header, colIndex, submenuFunction, selectOptions) {
       this.submenuStatusThead = false;
       if (selectOptions) {
-        this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex, selectOptions);
+        this.$emit(`thead-submenu-click-${submenuFunction}`, event, header, colIndex, selectOptions);
       } else {
-        this.$emit(`thead-submenu-click-${submenuFunction}`, event, entry, colIndex);
+        this.$emit(`thead-submenu-click-${submenuFunction}`, event, header, colIndex);
       }
     },
-    callbackSubmenuTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
-      this.$emit(`tbody-submenu-click-${submenuFunction}`, event, entry, rowIndex, colIndex, type, submenuFunction);
+    callbackSubmenuTbody(event, header, rowIndex, colIndex, type, submenuFunction) {
+      this.$emit(`tbody-submenu-click-${submenuFunction}`, event, header, rowIndex, colIndex, type, submenuFunction);
     },
     // thead
-    handleTheadContextMenu(event, entry, colIndex) {
+    handleTheadContextMenu(event, header, colIndex) {
       this.submenuStatusTbody = false;
-      // console.log('handleTheadContextMenu', event, entry, colIndex);
+      // console.log('handleTheadContextMenu', event, header, colIndex);
     },
-    callbackSort(event, entry, colIndex) {
-      this.$emit('thead-td-sort', event, entry, colIndex);
+    callbackSort(event, header, colIndex) {
+      this.$emit('thead-td-sort', event, header, colIndex);
     },
   },
 };

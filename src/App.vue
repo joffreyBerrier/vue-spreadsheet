@@ -11,6 +11,7 @@
       :tbody-data="products"
       :tbody-index="tbodyIndex"
       :style-wrap-vue-table="styleWrapVueTable"
+      :parent-element-scroll="0"
       v-on:tbody-input-change="inputChange"
       v-on:tbody-nav-backspace="deleteCell"
       v-on:tbody-nav-multiple-backspace="deleteMultipleCell"
@@ -59,6 +60,9 @@ export default {
     selectChange(event, entry, col, option, rowIndex, colIndex) {
       // console.log('selectChange', event, entry, rowIndex, colIndex);
       this.changeValueSelect(rowIndex, colIndex);
+    },
+    deleteMultipleCell(rowMin, colMin, keyValue) {
+      // console.log(rowMin, colMin, keyValue);
     },
     // callback
     changeCity(event, entry, colIndex, selectOptions) {

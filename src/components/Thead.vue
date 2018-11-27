@@ -158,28 +158,28 @@ export default {
         this.$emit('handle-up-drag-size-header', event, this.headers);
       }
     },
-    handleSort(event, entry, colIndex) {
+    handleSort(event, header, colIndex) {
       if (!this.activeSort) {
-        this.activeSort = entry;
+        this.activeSort = header;
       } else {
         this.activeSort = null;
       }
-      this.$emit('thead-td-sort', event, entry, colIndex);
+      this.$emit('thead-td-sort', event, header, colIndex);
     },
-    handleContextMenuTd(event, entry, colIndex) {
+    handleContextMenuTd(event, header, colIndex) {
       this.submenuEnableCol = colIndex;
       if (this.submenuStatusThead === true) {
         this.$emit('submenu-enable', 'tbody');
       } else {
         this.$emit('submenu-enable', 'thead');
       }
-      this.$emit('thead-td-context-menu', event, entry, colIndex);
+      this.$emit('thead-td-context-menu', event, header, colIndex);
     },
-    handleClickSubmenu(event, entry, colIndex, submenuFunction, selectOptions) {
+    handleClickSubmenu(event, header, colIndex, submenuFunction, selectOptions) {
       if (selectOptions) {
-        this.$emit('thead-submenu-click-callback', event, entry, colIndex, submenuFunction, selectOptions);
+        this.$emit('thead-submenu-click-callback', event, header, colIndex, submenuFunction, selectOptions);
       } else {
-        this.$emit('thead-submenu-click-callback', event, entry, colIndex, submenuFunction);
+        this.$emit('thead-submenu-click-callback', event, header, colIndex, submenuFunction);
       }
     },
   },
