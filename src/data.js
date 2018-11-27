@@ -1,6 +1,6 @@
 export default {
   dragToFill: true,
-  disableCells: ['img'],
+  disableCells: [],
   sortHeader: true,
   tbodyIndex: true,
   styleWrapVueTable: {
@@ -86,7 +86,6 @@ export default {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
         active: false,
-        disabled: false,
       },
       name: {
         type: 'input',
@@ -182,7 +181,6 @@ export default {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
         active: false,
-        disabled: false,
       },
       name: {
         type: 'input',

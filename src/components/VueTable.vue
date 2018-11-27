@@ -34,6 +34,7 @@
         :submenu-tbody="submenuTbody"
         :tbody-index="tbodyIndex"
         v-on:tbody-move-keydown="moveKeydown"
+        v-on:tbody-move-keyup="moveKeyup"
         v-on:tbody-search-handle-change="searchHandleChange"
         v-on:handle-to-calculate-position="calculPosition"
         v-on:handle-to-open-select="enableSelect"
@@ -511,10 +512,19 @@ export default {
     callbackSort(event, header, colIndex) {
       this.$emit('thead-td-sort', event, header, colIndex);
     },
+    moveKeyup(event) {
+      if (event.keyCode === 16) {
+        this.keys[event.keyCode] = false;
+        this.incrementCol = 0;
+        this.incrementRow = 0;
+        this.cleanActiveOnTd('selected');
+      }
+    },
     moveKeydown(event) {
       const actualElement = document.getElementsByClassName('active_td')[0];
-
-      this.keys[event.keyCode] = true;
+      if (event.keyCode === 16) {
+        this.keys[event.keyCode] = true;
+      }
 
       if (actualElement &&
         (event.keyCode === 37 ||
@@ -573,11 +583,12 @@ export default {
           }
           // left
           if (event.keyCode === 37) {
-            const col = Object.values(this.headerKeys)[colIndex - 1];
+            let col = Object.values(this.headerKeys)[colIndex - 1];
             if (col) {
               this.tbodyData[rowIndex][col].active = true;
             } else {
               header = this.headerKeys[colMax - 1];
+              col = Object.values(this.headerKeys)[colMax - 1];
               this.tbodyData[rowIndex][col].active = true;
             }
           }

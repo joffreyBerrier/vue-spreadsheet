@@ -208,6 +208,7 @@ export default {
   },
   mounted() {
     window.addEventListener('keydown', this.moveKeydown);
+    window.addEventListener('keyup', this.moveKeyup);
   },
   computed: {
     headerKeys() {
@@ -300,6 +301,9 @@ export default {
     },
     moveKeydown(event) {
       this.$emit('tbody-move-keydown', event);
+    },
+    moveKeyup(event) {
+      this.$emit('tbody-move-keyup', event);
     },
   },
 };
