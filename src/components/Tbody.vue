@@ -281,13 +281,20 @@ export default {
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
     searchHandleChange(col, header, rowIndex, colIndex) {
-      this.$emit('tbody-search-handle-change', col, header, rowIndex, colIndex);
-      this.filteredList = col.selectOptions.filter((option) => {
-        if (typeof option.value === 'number') {
-          return option.value.toString().toLowerCase().includes(col.value.toString().toLowerCase());
-        }
-        return option.value.toLowerCase().includes(col.value.toLowerCase());
-      });
+      if (event.keyCode !== 91 &&
+        event.keyCode !== 16 &&
+        event.keyCode !== 39 &&
+        event.keyCode !== 37 &&
+        event.keyCode !== 38 &&
+        event.keyCode !== 40) {
+        this.$emit('tbody-search-handle-change', col, header, rowIndex, colIndex);
+        this.filteredList = col.selectOptions.filter((option) => {
+          if (typeof option.value === 'number') {
+            return option.value.toString().toLowerCase().includes(col.value.toString().toLowerCase());
+          }
+          return option.value.toLowerCase().includes(col.value.toLowerCase());
+        });
+      }
     },
     validSearch(event, header, col, option, rowIndex, colIndex) {
       const column = col;

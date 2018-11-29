@@ -144,11 +144,13 @@ export default {
   mounted() {
     this.headerKeys = this.headers.map(x => x.headerKey);
     document.addEventListener('copy', () => {
+      event.preventDefault();
       this.storeCopyDatas = [];
       this.copyStoreData();
       this.cleanActiveOnTd('selected');
     });
     document.addEventListener('paste', () => {
+      event.preventDefault();
       if (this.storeCopyDatas.length > 0) {
         this.pasteReplaceData();
         this.cleanActiveOnTd('selected');
@@ -320,9 +322,11 @@ export default {
     pasteReplaceData() {
       if (this.selectedCoordCells) {
         this.modifyMultipleCell('replace');
+        this.$emit('tbody-paste-data', this.selectedCoordCells);
       } else if (this.selectedCell) {
         const store = JSON.parse(JSON.stringify(this.storeCopyDatas[0]));
         this.tbodyData[this.selectedCell.row][this.selectedCell.key] = store;
+        this.$emit('tbody-paste-data', this.selectedCell);
       }
     },
     modifyMultipleCell(params) {
@@ -435,7 +439,7 @@ export default {
         this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       }
 
-      if (type === 'select' && col.handleSearch && !this.keys[16]) {
+      if (type === 'select' && col.handleSearch) {
         this.$set(this.tbodyData[rowIndex][header], 'typing', false);
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
         this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
@@ -514,7 +518,7 @@ export default {
     callbackSort(event, header, colIndex) {
       this.$emit('thead-td-sort', event, header, colIndex);
     },
-    moveKeyup(event) {
+    moveKeyup(event) {     
       if (event.keyCode === 16) {
         this.keys[event.keyCode] = false;
         this.incrementCol = 0;
