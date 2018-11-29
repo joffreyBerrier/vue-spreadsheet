@@ -144,12 +144,12 @@ export default {
   },
   mounted() {
     this.headerKeys = this.headers.map(x => x.headerKey);
-    document.addEventListener('copy', () => {
+    document.addEventListener('copy', (event) => {
       event.preventDefault();
       this.storeCopyDatas = [];
       this.copyStoreData();
     });
-    document.addEventListener('paste', () => {
+    document.addEventListener('paste', (event) => {
       event.preventDefault();
       if (this.storeCopyDatas.length > 0) {
         this.pasteReplaceData();
@@ -369,9 +369,9 @@ export default {
           } else if (Object.keys(this.storeCopyDatas[key]).filter(x => x === header).length === 0 && !this.eventDrag) {
             // col to col copyPaste
             const index = colMin - Object.values(this.storeCopyDatas[key]).length - 1;
-            const header = Object.keys(this.storeCopyDatas[key])[index];
-            this.tbodyData[rowMin][header] = this.storeCopyDatas[key][header];
-            this.$emit('tbody-replace-data', rowMin, header);
+            const headerR = Object.keys(this.storeCopyDatas[key])[index];
+            this.tbodyData[rowMin][headerR] = this.storeCopyDatas[key][headerR];
+            this.$emit('tbody-replace-data', rowMin, headerR);
           } else {
             // multiple rowCells copyPaste
             this.tbodyData[rowMin][header] = this.storeCopyDatas[key][header];
@@ -436,7 +436,7 @@ export default {
       } else {
         this.selectedMultipleCell = false;
       }
-      
+
       this.cleanActiveOnTd('search');
 
       this.createCell(rowIndex, header, type);
@@ -533,7 +533,7 @@ export default {
     callbackSort(event, header, colIndex) {
       this.$emit('thead-td-sort', event, header, colIndex);
     },
-    moveKeyup(event) {     
+    moveKeyup(event) {
       if (event.keyCode === 16) {
         this.keys[event.keyCode] = false;
         this.incrementCol = 0;
