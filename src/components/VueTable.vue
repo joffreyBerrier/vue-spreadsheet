@@ -419,7 +419,7 @@ export default {
     // On click on td
     handleTbodyTdClick(event, col, header, rowIndex, colIndex, type) {
       this.cleanActiveOnTd('search');
-      // Enable select
+
       this.createCell(rowIndex, header, type);
 
       this.bindClassActiveOnTd(header, rowIndex, colIndex);
@@ -435,7 +435,7 @@ export default {
         this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       }
 
-      if (type === 'select' && col.handleSearch) {
+      if (type === 'select' && col.handleSearch && !this.keys[16]) {
         this.$set(this.tbodyData[rowIndex][header], 'typing', false);
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
         this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
