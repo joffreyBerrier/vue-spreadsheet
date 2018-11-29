@@ -120,7 +120,6 @@ export default {
   data() {
     return {
       arrayDragData: [],
-      selectedCoordCells: null,
       dragStart: {
         name: '',
         row: null,
@@ -128,17 +127,18 @@ export default {
       },
       eventDrag: false,
       headerKeys: [],
+      incrementCol: 0,
+      incrementRow: 0,
+      keys: {},
       lastSelectOpen: null,
       oldTdActive: null,
       oldTdShow: null,
       selectedCell: null,
+      selectedCoordCells: null,
       storeCopyDatas: [],
       submenuEnableCol: null,
       submenuStatusTbody: false,
       submenuStatusThead: false,
-      keys: {},
-      incrementCol: 0,
-      incrementRow: 0,
     };
   },
   mounted() {
@@ -334,7 +334,6 @@ export default {
       while (rowMin <= rowMax) {
         const key = rowMin - this.selectedCoordCells.rowStart;
         const keyValue = this.headerKeys[colMin];
-
         if (params === 'removeValue') {
           this.$emit('tbody-nav-multiple-backspace', rowMin, colMin, keyValue);
           this.$set(this.tbodyData[rowMin][keyValue], 'value', '');
@@ -352,6 +351,10 @@ export default {
             // 0 => 1
             // 0 => 1
             this.tbodyData[rowMin][keyValue] = Object.values(this.storeCopyDatas[key])[0];
+          } else if (this.storeCopyDatas.length === (this.selectedCoordCells.rowStart + this.selectedCoordCells.rowEnd)) {
+            // copy one cell to multiple cells at once
+            const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas[0]));
+            this.tbodyData[rowMin][keyValue] = newCopyData;
           } else if (Object.keys(this.storeCopyDatas[key]).filter(x => x === keyValue).length === 0 && !this.eventDrag) {
             // col to col copyPaste
             const index = colMin - Object.values(this.storeCopyDatas[key]).length - 1;
