@@ -57,7 +57,7 @@ props                                  | Type       | Description
 
 ### Example
 
-```
+``` javascript
   <vue-table
     :disable-cells="disableCells"
     :drag-to-fill="Boolean"
@@ -99,7 +99,7 @@ props                                  | Type       | Description
 
 #### Example
 
-```
+``` javascript
 headers: [
   {
     headerName: 'Image',
@@ -160,7 +160,7 @@ headers: [
 
 #### Example
 
-```
+``` javascript
 products: [
   {
     img: {
@@ -251,17 +251,14 @@ newData: {
   disabled         | Array  | Each object which you want to hide on the submenu
   subtitle         | String | Of the select
   selectOptions    | Array  | That contains objects {value: ~, label: ~}
--------------------|--------|----------------------------------------------------------------------------------------
   buttonOption     | Object | Description
--------------------|--------|----------------------------------------------------------------------------------------
-    value          | String | The value of the button
-    function       | String | The name of the function called when you click on the button - *Written in Slugify*
-    style          | Object | The style of the button
--------------------|--------|----------------------------------------------------------------------------------------
+    - value        | String | The value of the button
+    - function     | String | The name of the function called when you click on the button - *Written in Slugify*
+    - style        | Object | The style of the button
 
 #### Example
 
-```
+``` javascript
   submenuTbody: [
     {
       type: 'button',
@@ -305,7 +302,7 @@ newData: {
 
 ## Example :mortar_board: :tiger:
 
-````
+``` javascript
   # Template
 
   <vue-table
