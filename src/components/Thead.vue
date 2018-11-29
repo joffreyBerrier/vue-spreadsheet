@@ -1,8 +1,8 @@
 <template>
-  <thead class="thead">
-    <tr
-      @mousemove="handleMoveChangeSize($event)"
-      @mouseup="handleUpDragToFill($event)">
+  <thead class="thead"
+    @mousemove="handleMoveChangeSize($event)"
+    @mouseup="handleUpDragToFill($event)">
+    <tr>
       <th v-if="tbodyIndex" class="index" key="th-index"></th>
       <template v-for="(header, colIndex) in headers">
         <th
@@ -145,6 +145,7 @@ export default {
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
         this.newSize = `${newWidth}px`;
         element.style.left = `${event.clientX}px`;
+        element.style.top = `${26}px`;
       }
     },
     handleUpDragToFill(event) {
@@ -152,6 +153,7 @@ export default {
         this.eventDrag = false;
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
         element.style.left = 'auto';
+        element.style.top = '0';
         this.headers[this.beforeChangeSize.col].style.width = this.newSize;
         this.headers[this.beforeChangeSize.col].style.minWidth = this.newSize;
         this.beforeChangeSize.header.active = false;
@@ -228,7 +230,7 @@ export default {
   box-shadow: none;
   outline: none;
   opacity: 0;
-  transition: all ease .5s;
+  transition: opacity ease .5s;
   &:hover {
     opacity: 1;
   }

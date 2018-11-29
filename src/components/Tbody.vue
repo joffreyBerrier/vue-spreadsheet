@@ -541,6 +541,7 @@ export default {
   padding: 10px;
   text-align: center;
   border-bottom: 1px solid #e6ecf6;
+  border-right: 1px solid #e6ecf6;
   border-left: 1px solid #e6ecf6;
   box-sizing: border-box;
 }
