@@ -135,28 +135,38 @@ export default {
         header: head,
         width: parseInt(head.style.width, 10),
       };
+
       head.active = true;
       head.style.left = event.clientX;
+
+      const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
+      element.style.opacity = 1;
+      element.style.top = `${element.parentElement.offsetTop}px`;
+
       this.$forceUpdate();
     },
     handleMoveChangeSize(event) {
       if (this.eventDrag) {
-        const newWidth = (event.clientX - this.beforeChangeSize.elementLeft) + 5;
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
-        this.newSize = `${newWidth}px`;
         element.style.left = `${event.clientX}px`;
-        element.style.top = `${26}px`;
       }
     },
     handleUpDragToFill(event) {
       if (this.eventDrag) {
         this.eventDrag = false;
+        // get new size
+        const newWidth = (event.clientX - this.beforeChangeSize.elementLeft) + 5;
+        this.newSize = `${newWidth}px`;
+        // set initial style on button resize
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
         element.style.left = 'auto';
         element.style.top = '0';
+        element.style.opacity = '';
+        // set new size on header
         this.headers[this.beforeChangeSize.col].style.width = this.newSize;
         this.headers[this.beforeChangeSize.col].style.minWidth = this.newSize;
         this.beforeChangeSize.header.active = false;
+
         this.$emit('handle-up-drag-size-header', event, this.headers);
       }
     },

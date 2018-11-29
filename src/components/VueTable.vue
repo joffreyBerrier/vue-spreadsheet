@@ -169,7 +169,7 @@ export default {
         this.enableSelect(this.lastSelectOpen.event, this.lastSelectOpen.header, this.lastSelectOpen.col, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex);
       }
     },
-    searchHandleChange(col, header, rowIndex, colIndex) {
+    searchHandleChange(col, header, rowIndex) {
       this.$set(this.tbodyData[rowIndex][header], 'search', true);
       this.$set(this.tbodyData[rowIndex][header], 'typing', true);
       this.$set(this.tbodyData[rowIndex][header], 'show', true);
@@ -459,11 +459,11 @@ export default {
 
       this.enableSubmenu();
     },
-    handleTbodyNav(event, keyCode, actualElement, rowIndex, colIndex) {
+    handleTbodyNav() {
       // console.log('handleTbodyNav', event, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
-    handleTbodyNavEnter(event, header, keyCode, actualElement, rowIndex, colIndex) {
+    handleTbodyNavEnter() {
       // console.log('handleTbodyNavEnter', event, header, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
@@ -508,9 +508,8 @@ export default {
       this.$emit(`tbody-submenu-click-${submenuFunction}`, event, header, rowIndex, colIndex, type, submenuFunction);
     },
     // thead
-    handleTheadContextMenu(event, header, colIndex) {
+    handleTheadContextMenu() {
       this.submenuStatusTbody = false;
-      // console.log('handleTheadContextMenu', event, header, colIndex);
     },
     callbackSort(event, header, colIndex) {
       this.$emit('thead-td-sort', event, header, colIndex);
