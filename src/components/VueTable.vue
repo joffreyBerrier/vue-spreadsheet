@@ -15,10 +15,10 @@
         :submenu-status-thead="submenuStatusThead"
         :submenu-thead="submenuThead"
         :tbody-index="tbodyIndex"
+        v-on:handle-up-drag-size-header="handleUpDragSizeHeader"
         v-on:handle-up-drag-to-fill="handleUpDragToFill"
         v-on:submenu-enable="enableSubmenu"
         v-on:thead-submenu-click-callback="callbackSubmenuThead"
-        v-on:handle-up-drag-size-header="handleUpDragSizeHeader"
         v-on:thead-td-context-menu="handleTheadContextMenu"
         v-on:thead-td-sort="callbackSort">
       </vue-thead>
@@ -29,22 +29,22 @@
         :drag-to-fill="dragToFill"
         :headers="headers"
         :newData="newData"
-        :tbody-data="tbodyData"
         :submenu-status-tbody="submenuStatusTbody"
         :submenu-tbody="submenuTbody"
+        :tbody-data="tbodyData"
         :tbody-index="tbodyIndex"
-        v-on:tbody-move-keydown="moveKeydown"
-        v-on:tbody-move-keyup="moveKeyup"
-        v-on:tbody-search-handle-change="searchHandleChange"
         v-on:handle-to-calculate-position="calculPosition"
         v-on:handle-to-open-select="enableSelect"
         v-on:submenu-enable="enableSubmenu"
         v-on:tbody-down-dragtofill="handleDownDragToFill"
         v-on:tbody-input-change="handleTbodyInputChange"
         v-on:tbody-move-dragtofill="handleMoveDragToFill"
+        v-on:tbody-move-keydown="moveKeydown"
+        v-on:tbody-move-keyup="moveKeyup"
         v-on:tbody-nav-backspace="handleTbodyNavBackspace"
         v-on:tbody-nav-enter="handleTbodyNavEnter"
         v-on:tbody-nav="handleTbodyNav"
+        v-on:tbody-search-handle-change="searchHandleChange"
         v-on:tbody-select-change="handleTbodySelectChange"
         v-on:tbody-select-multiple-cell="handleSelectMultipleCell"
         v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
@@ -147,13 +147,11 @@ export default {
       event.preventDefault();
       this.storeCopyDatas = [];
       this.copyStoreData();
-      this.cleanActiveOnTd('selected');
     });
     document.addEventListener('paste', () => {
       event.preventDefault();
       if (this.storeCopyDatas.length > 0) {
         this.pasteReplaceData();
-        this.cleanActiveOnTd('selected');
         this.selectedCoordCells = null;
       }
     });
@@ -351,9 +349,13 @@ export default {
             // multiple colCells dragToFill
             const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
             this.tbodyData[rowMin][keyValue] = newCopyData[0][keyValue];
+          } else if (!this.selectedMultipleCell && this.storeCopyDatas.length > 1) {
+            // copy multiple cells at once at pasting them
+            if (this.tbodyData.length >= (rowMin + this.selectedCell.row) + 1) {
+              this.tbodyData[rowMin + this.selectedCell.row][this.selectedCell.key] = Object.values(this.storeCopyDatas[key])[0];
+            }
           } else if (Object.keys(this.storeCopyDatas[0]).length === 1) {
-            // 0 => 1
-            // 0 => 1
+            // copy x col to x
             this.tbodyData[rowMin][keyValue] = Object.values(this.storeCopyDatas[key])[0];
           } else if (this.storeCopyDatas.length === 1 && (this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd)) {
             // copy one cell to multiple cells at once
@@ -422,6 +424,12 @@ export default {
     },
     // On click on td
     handleTbodyTdClick(event, col, header, rowIndex, colIndex, type) {
+      if (this.keys[16]) {
+        this.selectedMultipleCell = true;
+      } else {
+        this.selectedMultipleCell = false;
+      }
+      
       this.cleanActiveOnTd('search');
 
       this.createCell(rowIndex, header, type);
