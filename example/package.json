@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "spreadsheet-vuejs": "^0.7.3",
+    "spreadsheet-vuejs": "^0.8.5",
     "vue": "^2.5.17"
   },
   "devDependencies": {
