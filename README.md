@@ -252,9 +252,9 @@ newData: {
   subtitle         | String | Of the select
   selectOptions    | Array  | That contains objects {value: ~, label: ~}
   buttonOption     | Object | Description
-    - value        | String | The value of the button
-    - function     | String | The name of the function called when you click on the button - *Written in Slugify*
-    - style        | Object | The style of the button
+  . value          | String | The value of the button
+  . function       | String | The name of the function called when you click on the button - *Written in Slugify*
+  . style          | Object | The style of the button
 
 #### Example
 
