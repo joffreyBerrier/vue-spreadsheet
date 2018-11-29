@@ -321,11 +321,10 @@ export default {
     pasteReplaceData() {
       if (this.selectedCoordCells) {
         this.modifyMultipleCell('replace');
-        this.$emit('tbody-paste-data', this.selectedCoordCells);
       } else if (this.selectedCell) {
         const store = JSON.parse(JSON.stringify(this.storeCopyDatas[0]));
         this.tbodyData[this.selectedCell.row][this.selectedCell.key] = store;
-        this.$emit('tbody-paste-data', this.selectedCell);
+        this.$emit('tbody-replace-data', this.selectedCell);
       }
     },
     modifyMultipleCell(params) {
@@ -336,40 +335,47 @@ export default {
 
       while (rowMin <= rowMax) {
         const key = rowMin - this.selectedCoordCells.rowStart;
-        const keyValue = this.headerKeys[colMin];
+        const header = this.headerKeys[colMin];
         if (params === 'removeValue') {
-          this.$emit('tbody-nav-multiple-backspace', rowMin, colMin, keyValue);
-          this.$set(this.tbodyData[rowMin][keyValue], 'value', '');
-          this.$set(this.tbodyData[rowMin][keyValue], 'selected', false);
+          this.$emit('tbody-nav-multiple-backspace', rowMin, colMin, header);
+          this.$set(this.tbodyData[rowMin][header], 'value', '');
+          this.$set(this.tbodyData[rowMin][header], 'selected', false);
         }
         if (params === 'selected') {
-          this.$set(this.tbodyData[rowMin][keyValue], 'selected', true);
+          this.$set(this.tbodyData[rowMin][header], 'selected', true);
         } else if (params === 'replace') {
-          this.$set(this.tbodyData[rowMin][keyValue], 'selected', false);
+          this.$set(this.tbodyData[rowMin][header], 'selected', false);
           if (this.dragToFill && this.eventDrag) {
             // multiple colCells dragToFill
             const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
-            this.tbodyData[rowMin][keyValue] = newCopyData[0][keyValue];
+            this.tbodyData[rowMin][header] = newCopyData[0][header];
+            this.$emit('tbody-replace-data', rowMin, header);
           } else if (!this.selectedMultipleCell && this.storeCopyDatas.length > 1) {
             // copy multiple cells at once at pasting them
-            if (this.tbodyData.length >= (rowMin + this.selectedCell.row) + 1) {
-              this.tbodyData[rowMin + this.selectedCell.row][this.selectedCell.key] = Object.values(this.storeCopyDatas[key])[0];
+            const index = rowMin + this.selectedCell.row;
+            if (this.tbodyData.length >= index + 1) {
+              this.tbodyData[index][this.selectedCell.key] = Object.values(this.storeCopyDatas[key])[0];
+              this.$emit('tbody-replace-data', index, header);
             }
           } else if (Object.keys(this.storeCopyDatas[0]).length === 1) {
             // copy x col to x
-            this.tbodyData[rowMin][keyValue] = Object.values(this.storeCopyDatas[key])[0];
+            this.tbodyData[rowMin][header] = Object.values(this.storeCopyDatas[key])[0];
+            this.$emit('tbody-replace-data', rowMin, header);
           } else if (this.storeCopyDatas.length === 1 && (this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd)) {
             // copy one cell to multiple cells at once
             const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas[0]));
-            this.tbodyData[rowMin][keyValue] = newCopyData;
-          } else if (Object.keys(this.storeCopyDatas[key]).filter(x => x === keyValue).length === 0 && !this.eventDrag) {
+            this.tbodyData[rowMin][header] = newCopyData;
+            this.$emit('tbody-replace-data', rowMin, header);
+          } else if (Object.keys(this.storeCopyDatas[key]).filter(x => x === header).length === 0 && !this.eventDrag) {
             // col to col copyPaste
             const index = colMin - Object.values(this.storeCopyDatas[key]).length - 1;
             const header = Object.keys(this.storeCopyDatas[key])[index];
-            this.tbodyData[rowMin][keyValue] = this.storeCopyDatas[key][header];
+            this.tbodyData[rowMin][header] = this.storeCopyDatas[key][header];
+            this.$emit('tbody-replace-data', rowMin, header);
           } else {
             // multiple rowCells copyPaste
-            this.tbodyData[rowMin][keyValue] = this.storeCopyDatas[key][keyValue];
+            this.tbodyData[rowMin][header] = this.storeCopyDatas[key][header];
+            this.$emit('tbody-replace-data', rowMin, header);
           }
         }
         colMin += 1;

@@ -47,6 +47,7 @@ props                                  | Type       | Description
   :submenu-thead                       | Array      | That contains the submenu-thead
   :tbody-data                          | Array      | That contains data
   :tbody-index                         | Boolean    | That displays the index of each row on the left of the table
+  v-on:tbody-replace-data              | Function   | When you copy/paste - dragToFill
   v-on:tbody-input-change              | Function   | When the **input changes**
   v-on:tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
   v-on:tbody-nav-multiple-backspace    | Function   | Fired when the multiple cell are delete
@@ -71,6 +72,7 @@ props                                  | Type       | Description
     :submenu-thead="Array"
     :tbody-data="Array"
     :tbody-index="Boolean"
+    v-on:tbody-replace-data="Function"
     v-on:tbody-input-change="Function"
     v-on:tbody-nav-backspace="Function"
     v-on:tbody-nav-multiple-backspace="Function"
@@ -318,6 +320,7 @@ newData: {
     :submenu-thead="submenuThead"
     :tbody-data="products"
     :tbody-index="tbodyIndex"
+    v-on:tbody-replace-data="replaceData"
     v-on:tbody-input-change="InputChange"
     v-on:tbody-nav-backspace="deleteCell"
     v-on:tbody-select-change="SelectChange">
@@ -437,26 +440,29 @@ newData: {
     };
   },
   methods: {
-    sortProduct(event, entry, colIndex) {
+    replaceData(row, header) {
+      // console.log(row, header)
+    },
+    sortProduct(event, header, colIndex) {
       // console.log('sort product');
     },
     deleteCell(event, actualElement, actualCol, rowIndex, colIndex) {
       // console.log(event, actualElement, actualCol, rowIndex, colIndex);
     },
-    inputChange(event, entry, rowIndex, colIndex) {
+    inputChange(event, header, rowIndex, colIndex) {
       // Called when <input /> change
     },
-    selectChange(event, entry, rowIndex, colIndex) {
+    selectChange(event, header, rowIndex, colIndex) {
       // Called when <select></select> change
     },
-    changeColor(event, entry, rowIndex, colIndex, type, submenuFunction) {
+    changeColor(event, header, rowIndex, colIndex, type, submenuFunction) {
       if (type === 'input') {
         this.headers[colIndex].style.color = '#e40000';
       }
     },
-    changeColorTbody(event, entry, rowIndex, colIndex, type, submenuFunction) {
+    changeColorTbody(event, header, rowIndex, colIndex, type, submenuFunction) {
       if (type === 'input') {
-        this.products[rowIndex][entry].value = 'T-shirt';
+        this.products[rowIndex][header].value = 'T-shirt';
       }
     },
   },
