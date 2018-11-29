@@ -135,6 +135,7 @@ export default {
       oldTdShow: null,
       selectedCell: null,
       selectedCoordCells: null,
+      selectedMultipleCell: false,
       storeCopyDatas: [],
       submenuEnableCol: null,
       submenuStatusTbody: false,
