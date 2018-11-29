@@ -31,9 +31,10 @@
           <template v-if="sortHeader &&
           submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
               <button
-                @click="handleSort($event, header.headerKey, colIndex)"
-                v-bind:class="{'active': activeSort === header.headerKey}"
+                @click="handleSort($event, header, colIndex)"
+                v-bind:class="{'sort_A': header.activeSort === 'A', 'sort_Z' : header.activeSort === 'Z'}"
                 class="button_submenu">
+                <i class="icon sort"></i>
                 <i class="icon sort"></i>
               </button>
           </template>
@@ -118,7 +119,6 @@ export default {
   data() {
     return {
       eventDrag: false,
-      activeSort: null,
       submenuEnableCol: null,
       beforeChangeSize: {},
       newSize: '',
@@ -171,11 +171,12 @@ export default {
       }
     },
     handleSort(event, header, colIndex) {
-      if (!this.activeSort) {
-        this.activeSort = header;
+      if (!header.activeSort || header.activeSort === 'Z') {
+        header.activeSort = 'A';
       } else {
-        this.activeSort = null;
+        header.activeSort = 'Z';
       }
+      this.$forceUpdate();
       this.$emit('thead-td-sort', event, header, colIndex);
     },
     handleContextMenuTd(event, header, colIndex) {
@@ -336,26 +337,50 @@ export default {
   .sort{
     display: block;
     position: absolute;
-    top: 50%;
+    top: 20px;
     right: 2px;
-    transform: translateY(-50%) rotate(180deg);
+    transform: rotate(0deg);
     font-size: 16px;
+    opacity: .4;
     transition: all ease .5s;
     &:before,
     &:after {
       content: '';
       display: block;
-      height: 1px;
+      height: 2px;
       width: 5px;
       background: #555;
-      transform: rotate(45deg) translate(1px, -2px);
+      transform: rotate(45deg) translate(0px, -1px);
     }
     &:after {
-      transform: rotate(135deg) translate(0px, 2px);
+      transform: rotate(135deg) translate(0px, 3px);
+    }
+    &+.sort {
+      top: 25px;
+      transform: rotate(180deg);
+      right: 3px;
     }
   }
-  &.active .sort{
-    transform: translateY(-50%) rotate(0deg);
+  &.sort_Z .sort{
+    opacity: 1;
+    &:after,
+    &:before {
+      background: #000;
+    }
+    &+.sort {
+      opacity: .4;
+      &:before,
+      &:after {
+        background: #555;
+      }
+    }
+  }
+  &.sort_A .sort + .sort {
+    opacity: 1;
+    &:after,
+    &:before {
+      background: #000;
+    }
   }
   .icon_menu {
     width: 10px;
