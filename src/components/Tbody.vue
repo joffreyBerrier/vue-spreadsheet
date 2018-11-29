@@ -83,7 +83,7 @@
                   v-model="row[col].value"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup.esc="escKeyup(row[col], rowIndex, colIndex, row[col].type)"
-                  @keyup="searchHandleChange(row[col], col, rowIndex, colIndex)"/>
+                  @keyup="searchHandleChange($event, row[col], col, rowIndex, colIndex)"/>
                 <ul
                   v-bind:class="{'show': row[col].search}"
                   :ref="'dropdown-' + colIndex + '-' + rowIndex">
@@ -280,7 +280,7 @@ export default {
     selectHandleChange(event, header, col, option, rowIndex, colIndex) {
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
-    searchHandleChange(col, header, rowIndex, colIndex) {
+    searchHandleChange(event, col, header, rowIndex, colIndex) {
       if (event.keyCode !== 91 &&
         event.keyCode !== 16 &&
         event.keyCode !== 39 &&
