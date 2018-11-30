@@ -600,7 +600,6 @@ export default {
             if (col) {
               this.tbodyData[rowIndex][col].active = true;
             } else {
-              header = this.headerKeys[colMax - colIndex - 1];
               this.tbodyData[rowIndex][header].active = true;
             }
           }
@@ -610,9 +609,7 @@ export default {
             if (col) {
               this.tbodyData[rowIndex][col].active = true;
             } else {
-              header = this.headerKeys[colMax - 1];
-              col = Object.values(this.headerKeys)[colMax - 1];
-              this.tbodyData[rowIndex][col].active = true;
+              this.tbodyData[rowIndex][header].active = true;
             }
           }
           // bottom
@@ -621,7 +618,7 @@ export default {
             if (rowIndex + 1 !== rowMax) {
               this.tbodyData[rowIndex + 1][header].active = true;
             } else {
-              this.tbodyData[(rowIndex + 1) - rowMax][header].active = true;
+              this.tbodyData[rowIndex][header].active = true;
             }
           }
           // top
@@ -629,7 +626,7 @@ export default {
             if (rowIndex !== 0) {
               this.tbodyData[rowIndex - 1][header].active = true;
             } else {
-              this.tbodyData[(rowIndex + rowMax) - 1][header].active = true;
+              this.tbodyData[rowIndex][header].active = true;
             }
           }
         }
