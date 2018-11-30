@@ -128,7 +128,7 @@ export default {
       eventDrag: false,
       headerKeys: [],
       incrementCol: 0,
-      incrementRow: 0,
+      incrementRow: null,
       keys: {},
       lastSelectOpen: null,
       oldTdActive: null,
@@ -538,8 +538,8 @@ export default {
     moveKeyup(event) {
       if (event.keyCode === 16) {
         this.keys[event.keyCode] = false;
-        this.incrementCol = 0;
-        this.incrementRow = 0;
+        this.incrementCol = null;
+        this.incrementRow = null;
       }
     },
     moveKeydown(event) {
@@ -564,24 +564,33 @@ export default {
 
         // set colMax rowMax
         const rowMax = this.tbodyData.length;
+        const colMax = this.headers.length;
 
         // shift
         if (this.keys[16]) {
           this.tbodyData[rowIndex][header].active = false;
-          this.incrementCol = this.incrementCol !== 0 ? this.incrementCol : colIndex;
-
+          this.incrementCol = this.incrementCol ? this.incrementCol : colIndex;
+          this.incrementRow = this.incrementRow ? this.incrementRow : rowIndex;
           // shift / right
           if (event.keyCode === 39) {
-            this.incrementCol += 1;
+            if (colMax >= this.incrementCol + 2) {
+              this.incrementCol += 1;
+            } else {
+              this.tbodyData[rowIndex][header].active = true;
+            }
+          }
+          // shift / bottom
+          if (event.keyCode === 40) {
+            if (rowMax >= this.incrementRow + 2) {
+              this.incrementRow += 1;
+            } else {
+              this.tbodyData[rowIndex][header].active = true;
+            }
           }
           // shift / left
           if (event.keyCode === 37) {
             this.incrementCol -= 1;
             this.cleanActiveOnTd('selected');
-          }
-          // shift / bottom
-          if (event.keyCode === 40) {
-            this.incrementRow += 1;
           }
           // shift / top
           if (event.keyCode === 38) {
