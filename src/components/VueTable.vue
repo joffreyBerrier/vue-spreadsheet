@@ -279,7 +279,6 @@ export default {
     },
     // Copy / Paste
     handleSelectMultipleCell(event, header, rowIndex, colIndex) {
-      // console.log('handleSelectMultipleCell', event, header, rowIndex, colIndex);
       if (this.selectedCell) {
         this.selectedCoordCells = {
           rowStart: this.selectedCell.row,
@@ -579,6 +578,7 @@ export default {
           // shift / left
           if (event.keyCode === 37) {
             this.incrementCol -= 1;
+            this.cleanActiveOnTd('selected');
           }
           // shift / bottom
           if (event.keyCode === 40) {
@@ -587,11 +587,12 @@ export default {
           // shift / top
           if (event.keyCode === 38) {
             this.incrementRow -= 1;
+            this.cleanActiveOnTd('selected');
           }
-
           this.handleSelectMultipleCell(event, header, this.incrementRow, this.incrementCol);
           header = Object.values(this.headerKeys)[this.incrementCol];
           this.tbodyData[this.incrementRow][header].active = true;
+
         } else {
           this.tbodyData[rowIndex][header].active = false;
           // right
