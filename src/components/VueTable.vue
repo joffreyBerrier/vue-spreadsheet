@@ -563,7 +563,6 @@ export default {
         let header = Object.values(this.headerKeys)[colIndex];
 
         // set colMax rowMax
-        const colMax = Object.keys(this.tbodyData[0]).length;
         const rowMax = this.tbodyData.length;
 
         // shift
@@ -605,7 +604,7 @@ export default {
           }
           // left
           if (event.keyCode === 37) {
-            let col = Object.values(this.headerKeys)[colIndex - 1];
+            const col = Object.values(this.headerKeys)[colIndex - 1];
             if (col) {
               this.tbodyData[rowIndex][col].active = true;
             } else {
