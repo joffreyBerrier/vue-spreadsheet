@@ -4,7 +4,7 @@ export default {
   sortHeader: true,
   tbodyIndex: true,
   styleWrapVueTable: {
-    width: '100%',
+    width: '900px',
     overflow: 'scroll',
   },
   newData: {
@@ -20,8 +20,8 @@ export default {
       headerName: 'Image',
       headerKey: 'img',
       style: {
-        width: '120px',
-        minWidth: '120px',
+        width: '200px',
+        minWidth: '200px',
         color: '#000',
       },
     },
@@ -29,8 +29,8 @@ export default {
       headerName: 'country',
       headerKey: 'country',
       style: {
-        width: '120px',
-        minWidth: '120px',
+        width: '200px',
+        minWidth: '200px',
         color: '#000',
       },
     },
@@ -38,8 +38,8 @@ export default {
       headerName: 'city',
       headerKey: 'city',
       style: {
-        width: '120px',
-        minWidth: '120px',
+        width: '200px',
+        minWidth: '200px',
         color: '#000',
       },
     },
@@ -47,8 +47,8 @@ export default {
       headerName: 'Nom',
       headerKey: 'name',
       style: {
-        width: '120px',
-        minWidth: '120px',
+        width: '200px',
+        minWidth: '200px',
         color: '#000',
       },
     },
@@ -56,8 +56,8 @@ export default {
       headerName: 'Prénom',
       headerKey: 'surname',
       style: {
-        width: '120px',
-        minWidth: '120px',
+        width: '200px',
+        minWidth: '200px',
         color: '#000',
       },
     },
@@ -65,8 +65,8 @@ export default {
       headerName: 'Age',
       headerKey: 'age',
       style: {
-        width: '120px',
-        minWidth: '120px',
+        width: '200px',
+        minWidth: '200px',
         color: '#000',
       },
     },
@@ -74,8 +74,8 @@ export default {
       headerName: 'Born',
       headerKey: 'born',
       style: {
-        width: '120px',
-        minWidth: '120px',
+        width: '200px',
+        minWidth: '200px',
         color: '#000',
       },
     },
