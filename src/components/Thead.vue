@@ -140,8 +140,9 @@ export default {
       head.style.left = event.clientX;
 
       const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
-      element.style.opacity = 1;
+      element.style.opacity = 0;
       element.style.top = `${element.parentElement.offsetTop}px`;
+      element.style.opacity = 1;
 
       this.$forceUpdate();
     },
@@ -155,7 +156,7 @@ export default {
       if (this.eventDrag) {
         this.eventDrag = false;
         // get new size
-        const newWidth = (event.clientX - this.beforeChangeSize.elementLeft) + 5;
+        const newWidth = ((event.clientX - this.beforeChangeSize.elementLeft) + this.$parent.$refs.vueTable.scrollLeft) + 5;
         this.newSize = `${newWidth}px`;
         // set initial style on button resize
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
@@ -233,7 +234,7 @@ export default {
   top: 0;
   right: 0;
   height: 43px;
-  background: #c7d6f3;
+  background: #7d8ba5;
   width: 5px;
   padding: 0;
   border: 0;
@@ -252,7 +253,7 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
-    border: 1px dashed #c7d6f3;
+    border: 1px dashed #7d8ba5;
     opacity: 0;
     visibility: hidden;
   }

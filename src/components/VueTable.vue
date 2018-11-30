@@ -592,7 +592,6 @@ export default {
           this.handleSelectMultipleCell(event, header, this.incrementRow, this.incrementCol);
           header = Object.values(this.headerKeys)[this.incrementCol];
           this.tbodyData[this.incrementRow][header].active = true;
-
         } else {
           this.tbodyData[rowIndex][header].active = false;
           // right
