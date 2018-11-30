@@ -317,6 +317,7 @@ export default {
       } else if (this.selectedCell) {
         this.storeCopyDatas.push(newData[this.selectedCell.row][this.selectedCell.key]);
       }
+      this.cleanActiveOnTd('selected');
     },
     pasteReplaceData() {
       if (this.selectedCoordCells) {
@@ -345,6 +346,7 @@ export default {
           this.$set(this.tbodyData[rowMin][header], 'selected', true);
         } else if (params === 'replace') {
           this.$set(this.tbodyData[rowMin][header], 'selected', false);
+          this.cleanActiveOnTd('selected');
           if (this.dragToFill && this.eventDrag) {
             // multiple colCells dragToFill
             const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
@@ -434,6 +436,7 @@ export default {
       if (this.keys[16]) {
         this.selectedMultipleCell = true;
       } else {
+        this.cleanActiveOnTd('selected');
         this.selectedMultipleCell = false;
       }
 
@@ -538,7 +541,6 @@ export default {
         this.keys[event.keyCode] = false;
         this.incrementCol = 0;
         this.incrementRow = 0;
-        this.cleanActiveOnTd('selected');
       }
     },
     moveKeydown(event) {
