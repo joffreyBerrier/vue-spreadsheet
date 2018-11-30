@@ -171,7 +171,8 @@ export default {
         this.$emit('handle-up-drag-size-header', event, this.headers);
       }
     },
-    handleSort(event, header, colIndex) {
+    handleSort(event, h, colIndex) {
+      const header = h;
       if (!header.activeSort || header.activeSort === 'Z') {
         header.activeSort = 'A';
       } else {

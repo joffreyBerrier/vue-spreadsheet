@@ -69,7 +69,7 @@
               <textarea
                 v-model="row[col].value"
                 @change="inputHandleChange($event, col, rowIndex, colIndex)"
-                @keyup.esc="escKeyup(row[col], rowIndex, colIndex, row[col].type)"
+                @keyup.esc="escKeyup(row[col], rowIndex, col, colIndex, row[col].type)"
                 :ref="'input-' + colIndex + '-' + rowIndex"
                 :style="textareaStyle(row[col].value)"></textarea>
             </template>
@@ -82,7 +82,7 @@
                 <input
                   v-model="row[col].value"
                   :ref="'input-' + colIndex + '-' + rowIndex"
-                  @keyup.esc="escKeyup(row[col], rowIndex, colIndex, row[col].type)"
+                  @keyup.esc="escKeyup(row[col], rowIndex, col, colIndex, row[col].type)"
                   @keyup="searchHandleChange($event, row[col], col, rowIndex, colIndex)"/>
                 <ul
                   v-bind:class="{'show': row[col].search}"
@@ -198,6 +198,7 @@ export default {
   },
   data() {
     return {
+      beforeTypingValue: null,
       emptyCell: '',
       eventDrag: false,
       filteredList: [],
@@ -220,9 +221,12 @@ export default {
       this.$emit('handle-to-open-select', event, header, col, rowIndex, colIndex);
       this.$forceUpdate();
     },
-    escKeyup(col, rowIndex, colIndex, type) {
+    escKeyup(col, rowIndex, header, colIndex, type) {
       const column = col;
       column.show = false;
+      if (this.beforeTypingValue) {
+        this.tbodyData[rowIndex][header].value = this.beforeTypingValue;
+      }
       if (type === 'select') {
         column.search = false;
       }
@@ -285,8 +289,14 @@ export default {
         event.keyCode !== 16 &&
         event.keyCode !== 39 &&
         event.keyCode !== 37 &&
+        event.keyCode !== 27 &&
         event.keyCode !== 38 &&
         event.keyCode !== 40) {
+        if (!this.beforeTypingValue) {
+          const value = this.tbodyData[rowIndex][header].value;
+          this.beforeTypingValue = value.substring(0, (value.length - 1));
+          this.tbodyData[rowIndex][header].value = '';
+        }
         this.$emit('tbody-search-handle-change', col, header, rowIndex, colIndex);
         this.filteredList = col.selectOptions.filter((option) => {
           if (typeof option.value === 'number') {
