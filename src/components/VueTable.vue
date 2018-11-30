@@ -618,6 +618,7 @@ export default {
           }
           // bottom
           if (event.keyCode === 40) {
+            event.preventDefault();
             if (rowIndex + 1 !== rowMax) {
               this.tbodyData[rowIndex + 1][header].active = true;
             } else {
