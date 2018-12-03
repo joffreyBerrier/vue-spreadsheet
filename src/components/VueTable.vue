@@ -164,8 +164,8 @@ export default {
       this.selectedCell = {
         header,
         row,
-        col
-      }
+        col,
+      };
     },
     activeSelectSearch(event, rowIndex, colIndex, header) {
       this.$set(this.tbodyData[rowIndex][header], 'typing', false);
@@ -526,7 +526,8 @@ export default {
       this.$emit(`tbody-submenu-click-${submenuFunction}`, event, header, rowIndex, colIndex, type, submenuFunction);
     },
     handleSearchInputSelect(event, searchValue, col, header, rowIndex) {
-      if (event.keyCode !== 8 &&
+      if ((!this.keys[91] || !this.keys[17]) &&
+        event.keyCode !== 8 &&
         event.keyCode !== 16 &&
         event.keyCode !== 17 &&
         event.keyCode !== 27 &&
@@ -570,12 +571,24 @@ export default {
         this.incrementCol = null;
         this.incrementRow = null;
       }
+
+      if (event.keyCode === 91 || event.keyCode === 17) {
+        setTimeout(() => {
+          this.keys[91] = false;
+          this.keys[17] = false;
+        }, 400);
+      }
     },
     moveKeydown(event) {
       this.actualElement = document.getElementsByClassName('active_td')[0];
 
       if (event.keyCode === 16) {
         this.keys[event.keyCode] = true;
+      }
+
+      if (event.keyCode === 91 || event.keyCode === 17) {
+        this.keys[91] = true;
+        this.keys[17] = true;
       }
 
       if (this.actualElement &&
