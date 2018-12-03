@@ -12,6 +12,7 @@
             :id="col"
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
+            :data-type="row[col].type"
             @click.shift.exact="handleSelectMultipleCell($event, col, rowIndex, colIndex, row[col].type)"
             @contextmenu="handleContextMenuTd($event, col, rowIndex, colIndex, row[col].type)"
             @click="handleClickTd($event, row[col], col, rowIndex, colIndex, row[col].type)"
@@ -80,10 +81,10 @@
               <button @click.stop="enableSelect($event, col, row[col], rowIndex, colIndex)" v-bind:class="{'active': row[col].search === true}" class="enable_select"><i></i></button>
               <div class="dropdown">
                 <input
-                  v-model="row[col].value"
+                  v-model="searchInput"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup.esc="escKeyup(row[col], rowIndex, col, colIndex, row[col].type)"
-                  @keyup="handleSearchInputSelect($event, row[col], col, rowIndex, colIndex)"/>
+                  @keyup="handleSearchInputSelect($event, searchInput, row[col], col, rowIndex)"/>
                 <ul
                   v-bind:class="{'show': row[col].search}"
                   :ref="'dropdown-' + colIndex + '-' + rowIndex">
@@ -163,6 +164,10 @@
 export default {
   name: 'vue-tbody',
   props: {
+    filteredList: {
+      type: Array,
+      required: true,
+    },
     headers: {
       type: Array,
       required: true,
@@ -200,8 +205,8 @@ export default {
     return {
       emptyCell: '',
       eventDrag: false,
-      filteredList: [],
       oldValue: null,
+      searchInput: '',
       submenuEnableCol: null,
       submenuEnableRow: null,
     };
@@ -254,6 +259,7 @@ export default {
       }
     },
     handleClickTd(event, col, header, rowIndex, colIndex, type) {
+      this.searchInput = '';
       this.$emit('tbody-td-click', event, col, header, rowIndex, colIndex, type);
     },
     handleDoubleClickTd(event, header, col, rowIndex, colIndex, type) {
@@ -275,8 +281,8 @@ export default {
     selectHandleChange(event, header, col, option, rowIndex, colIndex) {
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
-    handleSearchInputSelect(event, col, header, rowIndex, colIndex) {
-      this.$emit('tbody-handle-search-input-select', event, col, header, rowIndex, colIndex);
+    handleSearchInputSelect(event, searchValue, col, header, rowIndex) {
+      this.$emit('tbody-handle-search-input-select', event, searchValue, col, header, rowIndex);
     },
     validSearch(event, header, col, option, rowIndex, colIndex) {
       const column = col;
