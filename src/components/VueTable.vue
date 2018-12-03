@@ -702,7 +702,7 @@ export default {
         }
         // press backspace
         if (event.keyCode === 8) {
-          this.$emit('tbody-nav-backspace', event, this.actualElement, header, rowIndex, colIndex);
+          this.handleTbodyNavBackspace(event, this.actualElement, header, rowIndex, colIndex);
         }
         // press enter
         if (event.keyCode === 13) {
