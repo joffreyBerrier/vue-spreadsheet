@@ -12,6 +12,7 @@
             :id="col"
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
+            :data-type="row[col].type"
             @click.shift.exact="handleSelectMultipleCell($event, col, rowIndex, colIndex, row[col].type)"
             @contextmenu="handleContextMenuTd($event, col, rowIndex, colIndex, row[col].type)"
             @click="handleClickTd($event, row[col], col, rowIndex, colIndex, row[col].type)"
@@ -80,10 +81,10 @@
               <button @click.stop="enableSelect($event, col, row[col], rowIndex, colIndex)" v-bind:class="{'active': row[col].search === true}" class="enable_select"><i></i></button>
               <div class="dropdown">
                 <input
-                  v-model="row[col].value"
+                  v-model="searchInput"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup.esc="escKeyup(row[col], rowIndex, col, colIndex, row[col].type)"
-                  @keyup="searchHandleChange($event, row[col], col, rowIndex, colIndex)"/>
+                  @keyup="handleSearchInputSelect($event, searchInput, row[col], col, rowIndex)"/>
                 <ul
                   v-bind:class="{'show': row[col].search}"
                   :ref="'dropdown-' + colIndex + '-' + rowIndex">
@@ -163,6 +164,10 @@
 export default {
   name: 'vue-tbody',
   props: {
+    filteredList: {
+      type: Array,
+      required: true,
+    },
     headers: {
       type: Array,
       required: true,
@@ -198,11 +203,10 @@ export default {
   },
   data() {
     return {
-      beforeTypingValue: null,
       emptyCell: '',
       eventDrag: false,
-      filteredList: [],
       oldValue: null,
+      searchInput: '',
       submenuEnableCol: null,
       submenuEnableRow: null,
     };
@@ -222,15 +226,7 @@ export default {
       this.$forceUpdate();
     },
     escKeyup(col, rowIndex, header, colIndex, type) {
-      const column = col;
-      column.show = false;
-      if (this.beforeTypingValue) {
-        this.tbodyData[rowIndex][header].value = this.beforeTypingValue;
-      }
-      if (type === 'select') {
-        column.search = false;
-      }
-      this.$forceUpdate();
+      this.$emit('tbody-handle-set-oldvalue', col, rowIndex, header, colIndex, type);
     },
     textareaStyle(value) {
       if (value.length > 100) {
@@ -263,6 +259,7 @@ export default {
       }
     },
     handleClickTd(event, col, header, rowIndex, colIndex, type) {
+      this.searchInput = '';
       this.$emit('tbody-td-click', event, col, header, rowIndex, colIndex, type);
     },
     handleDoubleClickTd(event, header, col, rowIndex, colIndex, type) {
@@ -284,27 +281,8 @@ export default {
     selectHandleChange(event, header, col, option, rowIndex, colIndex) {
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
-    searchHandleChange(event, col, header, rowIndex, colIndex) {
-      if (event.keyCode !== 91 &&
-        event.keyCode !== 16 &&
-        event.keyCode !== 39 &&
-        event.keyCode !== 37 &&
-        event.keyCode !== 27 &&
-        event.keyCode !== 38 &&
-        event.keyCode !== 40) {
-        if (!this.beforeTypingValue) {
-          const value = this.tbodyData[rowIndex][header].value;
-          this.beforeTypingValue = value.substring(0, (value.length - 1));
-          this.tbodyData[rowIndex][header].value = '';
-        }
-        this.$emit('tbody-search-handle-change', col, header, rowIndex, colIndex);
-        this.filteredList = col.selectOptions.filter((option) => {
-          if (typeof option.value === 'number') {
-            return option.value.toString().toLowerCase().includes(col.value.toString().toLowerCase());
-          }
-          return option.value.toLowerCase().includes(col.value.toLowerCase());
-        });
-      }
+    handleSearchInputSelect(event, searchValue, col, header, rowIndex) {
+      this.$emit('tbody-handle-search-input-select', event, searchValue, col, header, rowIndex);
     },
     validSearch(event, header, col, option, rowIndex, colIndex) {
       const column = col;
