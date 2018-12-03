@@ -33,6 +33,8 @@
         :submenu-tbody="submenuTbody"
         :tbody-data="tbodyData"
         :tbody-index="tbodyIndex"
+        v-on:tbody-handle-set-oldvalue="setOldValueOnInputSelect"
+        v-on:tbody-handle-search-input-select="handleSearchInputSelect"
         v-on:handle-to-calculate-position="calculPosition"
         v-on:handle-to-open-select="enableSelect"
         v-on:submenu-enable="enableSubmenu"
@@ -44,7 +46,6 @@
         v-on:tbody-nav-backspace="handleTbodyNavBackspace"
         v-on:tbody-nav-enter="handleTbodyNavEnter"
         v-on:tbody-nav="handleTbodyNav"
-        v-on:tbody-search-handle-change="searchHandleChange"
         v-on:tbody-select-change="handleTbodySelectChange"
         v-on:tbody-select-multiple-cell="handleSelectMultipleCell"
         v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
@@ -120,6 +121,7 @@ export default {
   data() {
     return {
       arrayDragData: [],
+      beforeTypingValue: null,
       dragStart: {
         name: '',
         row: null,
@@ -137,6 +139,7 @@ export default {
       selectedCoordCells: null,
       selectedMultipleCell: false,
       storeCopyDatas: [],
+      typingKey: [],
       submenuEnableCol: null,
       submenuStatusTbody: false,
       submenuStatusThead: false,
@@ -169,11 +172,6 @@ export default {
       if (this.lastSelectOpen) {
         this.enableSelect(this.lastSelectOpen.event, this.lastSelectOpen.header, this.lastSelectOpen.col, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex);
       }
-    },
-    searchHandleChange(col, header, rowIndex) {
-      this.$set(this.tbodyData[rowIndex][header], 'search', true);
-      this.$set(this.tbodyData[rowIndex][header], 'typing', true);
-      this.$set(this.tbodyData[rowIndex][header], 'show', true);
     },
     enableSelect(event, header, col, rowIndex, colIndex) {
       if (!col.search) {
@@ -439,6 +437,10 @@ export default {
         this.selectedMultipleCell = false;
       }
 
+      // set old value
+      this.beforeTypingValue = col.value;
+      this.typingKey = [];
+
       this.cleanActiveOnTd('search');
 
       this.createCell(rowIndex, header, type);
@@ -528,6 +530,46 @@ export default {
     callbackSubmenuTbody(event, header, rowIndex, colIndex, type, submenuFunction) {
       this.$emit(`tbody-submenu-click-${submenuFunction}`, event, header, rowIndex, colIndex, type, submenuFunction);
     },
+    handleSearchInputSelect(event, col, header, rowIndex) {
+      if (event.keyCode !== 8 &&
+        event.keyCode !== 16 &&
+        event.keyCode !== 17 &&
+        event.keyCode !== 27 &&
+        event.keyCode !== 37 &&
+        event.keyCode !== 38 &&
+        event.keyCode !== 39 &&
+        event.keyCode !== 40 &&
+        event.keyCode !== 91 &&
+        event.keyCode !== 8) {
+        this.typingKey.push(event.key);
+
+        if (this.typingKey.length === 1) {
+          this.$set(this.tbodyData[rowIndex][header], 'value', event.key);
+        }
+
+        // active class
+        this.$set(this.tbodyData[rowIndex][header], 'search', true);
+        this.$set(this.tbodyData[rowIndex][header], 'typing', true);
+        this.$set(this.tbodyData[rowIndex][header], 'show', true);
+
+        this.filteredList = col.selectOptions.filter((option) => {
+          if (typeof option.value === 'number') {
+            return option.value.toString().toLowerCase().includes(col.value.toString().toLowerCase());
+          }
+          return option.value.toLowerCase().includes(col.value.toLowerCase());
+        });
+      }
+    },
+    setOldValueOnInputSelect(col, rowIndex, header, colIndex, type) {
+      const column = col;
+      column.show = false;
+      if (this.beforeTypingValue) {
+        this.$set(this.tbodyData[rowIndex][header], 'value', this.beforeTypingValue);
+      }
+      if (type === 'select') {
+        column.search = false;
+      }
+    },
     // thead
     handleTheadContextMenu() {
       this.submenuStatusTbody = false;
@@ -568,7 +610,7 @@ export default {
 
         // shift
         if (this.keys[16]) {
-          this.tbodyData[rowIndex][header].active = false;
+          this.$set(this.tbodyData[rowIndex][header], 'active', false);
           this.incrementCol = this.incrementCol ? this.incrementCol : colIndex;
           this.incrementRow = this.incrementRow ? this.incrementRow : rowIndex;
           // shift / right
@@ -576,7 +618,7 @@ export default {
             if (colMax >= this.incrementCol + 2) {
               this.incrementCol += 1;
             } else {
-              this.tbodyData[rowIndex][header].active = true;
+              this.$set(this.tbodyData[rowIndex][header], 'active', true);
             }
           }
           // shift / bottom
@@ -584,7 +626,7 @@ export default {
             if (rowMax >= this.incrementRow + 2) {
               this.incrementRow += 1;
             } else {
-              this.tbodyData[rowIndex][header].active = true;
+              this.$set(this.tbodyData[rowIndex][header], 'active', true);
             }
           }
           // shift / left
@@ -599,42 +641,42 @@ export default {
           }
           this.handleSelectMultipleCell(event, header, this.incrementRow, this.incrementCol);
           header = Object.values(this.headerKeys)[this.incrementCol];
-          this.tbodyData[this.incrementRow][header].active = true;
+          this.$set(this.tbodyData[rowIndex][header], 'active', true);
         } else {
-          this.tbodyData[rowIndex][header].active = false;
+          this.$set(this.tbodyData[rowIndex][header], 'active', false);
           // right
           if (event.keyCode === 39) {
-            const col = Object.values(this.headerKeys)[colIndex + 1];
-            if (col) {
-              this.tbodyData[rowIndex][col].active = true;
+            const incrementHeader = Object.values(this.headerKeys)[colIndex + 1];
+            if (incrementHeader) {
+              this.$set(this.tbodyData[rowIndex][incrementHeader], 'active', true);
             } else {
-              this.tbodyData[rowIndex][header].active = true;
+              this.$set(this.tbodyData[rowIndex][header], 'active', true);
             }
           }
           // left
           if (event.keyCode === 37) {
-            const col = Object.values(this.headerKeys)[colIndex - 1];
-            if (col) {
-              this.tbodyData[rowIndex][col].active = true;
+            const decrementHeader = Object.values(this.headerKeys)[colIndex - 1];
+            if (decrementHeader) {
+              this.$set(this.tbodyData[rowIndex][decrementHeader], 'active', true);
             } else {
-              this.tbodyData[rowIndex][header].active = true;
+              this.$set(this.tbodyData[rowIndex][header], 'active', true);
             }
           }
           // bottom
           if (event.keyCode === 40) {
             event.preventDefault();
             if (rowIndex + 1 !== rowMax) {
-              this.tbodyData[rowIndex + 1][header].active = true;
+              this.$set(this.tbodyData[rowIndex + 1][header], 'active', true);
             } else {
-              this.tbodyData[rowIndex][header].active = true;
+              this.$set(this.tbodyData[rowIndex][header], 'active', true);
             }
           }
           // top
           if (event.keyCode === 38) {
             if (rowIndex !== 0) {
-              this.tbodyData[rowIndex - 1][header].active = true;
+              this.$set(this.tbodyData[rowIndex - 1][header], 'active', true);
             } else {
-              this.tbodyData[rowIndex][header].active = true;
+              this.$set(this.tbodyData[rowIndex][header], 'active', true);
             }
           }
         }
