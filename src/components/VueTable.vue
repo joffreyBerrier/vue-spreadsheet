@@ -314,7 +314,7 @@ export default {
       let colMin;
 
       // copy / paste one cell
-      if (this.storeCopyDatas[0].value && !this.copyMultipleCell && !this.selectedMultipleCell) {
+      if (this.storeCopyDatas[0].value && !this.copyMultipleCell && !this.selectedMultipleCell && !this.eventDrag) {
         const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
         this.tbodyData[this.selectedCell.row][this.selectedCell.header] = newCopyData[0];
         this.$emit('tbody-replace-data', this.selectedCell);
