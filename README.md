@@ -72,6 +72,8 @@ props                                  | Type       | Description
     :submenu-thead="Array"
     :tbody-data="Array"
     :tbody-index="Boolean"
+    :parent-element-scroll="Number"
+    v-on:tbody-up-dragtofill="Function"
     v-on:tbody-replace-data="Function"
     v-on:tbody-input-change="Function"
     v-on:tbody-nav-backspace="Function"
@@ -311,25 +313,25 @@ newData: {
     :disable-cells="disableCells"
     :drag-to-fill="dragToFill"
     :headers="headers"
-    :new-data="newData" 
+    :new-data="newData"
     :parent-element-scroll="0"
-    :select-position="selectPosition"
     :sort-header="sortHeader"
     :style-wrap-vue-table="styleWrapVueTable"
     :submenu-tbody="submenuTbody"
     :submenu-thead="submenuThead"
     :tbody-data="products"
     :tbody-index="tbodyIndex"
-    v-on:tbody-replace-data="replaceData"
-    v-on:tbody-input-change="InputChange"
+    v-on:tbody-input-change="inputChange"
     v-on:tbody-nav-backspace="deleteCell"
-    v-on:tbody-select-change="SelectChange">
+    v-on:tbody-nav-multiple-backspace="deleteMultipleCell"
+    v-on:tbody-select-change="selectChange"
     v-on:tbody-submenu-click-change-color="changeColorTbody"
-    v-on:thead-submenu-click-change-color="changeColor"
+    v-on:tbody-up-dragtofill="handleUpDragToFill"
+    v-on:thead-submenu-click-change-value="changeValue"
     v-on:thead-td-sort="sortProduct">
 
-    // If you want to have a specific header
     <div slot="header">
+      Specific Header
     </div>
 
   </vue-table>
@@ -338,73 +340,99 @@ newData: {
 
   data() {
     return {
-      disableCells: ['img'],
       dragToFill: true,
+      disableCells: [],
       sortHeader: true,
+      tbodyIndex: true,
+      styleWrapVueTable: {
+        width: '1200px',
+      },
       headers: [
         {
-          headerName: 'Image',
-          headerKey: 'img',
+          headerName: 'A',
+          headerKey: 'a',
           style: {
+            width: '120px',
+            minWidth: '120px',
+            color: '#000',
+          },
+        },
+        {
+          headerName: 'B',
+          headerKey: 'b',
+          style: {
+            width: '120px',
+            minWidth: '120px',
+            color: '#000',
+          },
+        },
+        {
+          headerName: 'C',
+          headerKey: 'c',
+          style: {
+            width: '120px',
+            minWidth: '120px',
+            color: '#000',
+          },
+        },
+        {
+          headerName: 'D',
+          headerKey: 'd',
+          style: {
+            width: '120px',
+            minWidth: '120px',
+            color: '#000',
+          },
+        },
+        {
+          headerName: 'E',
+          headerKey: 'e',
+          style: {
+            width: '120px',
+            minWidth: '120px',
             color: '#000',
           },
         },
       ],
       products: [
         {
-          img: {
+          a: {
             type: 'img',
             value: 'https://via.placeholder.com/350x150',
             active: false,
-            disabled: true,
+            disabled: false,
           },
-          name: {
+          b: {
             type: 'input',
-            value: 'John',
+            value: 'Jane',
             active: false,
             style: {
               color: '#000',
             },
           },
-          surname: {
+          c: {
             type: 'input',
-            value: 'Doe',
+            value: 'Paris',
             active: false,
             style: {
               color: '#000',
             },
           },
-          age: {
-            type: 'select',
-            handleSearch: true,
-            selectOptions: [
-              {
-                value: 'paris',
-                label: 'Paris',
-              },
-              {
-                value: 'new-york',
-                label: 'New York',
-              },
-            ],
-            value: 'paris',
+          d: {
+            type: 'input',
+            value: 'France',
             active: false,
+            style: {
+              color: '#000',
+            },
           },
-          born: {
-            type: 'select',
-            handleSearch: true,
-            selectOptions: [
-              {
-                value: 'france',
-                label: 'France',
-              },
-              {
-                value: 'usa',
-                label: 'United States of America',
-              },
-            ],
-            value: 'france',
+          e: {
+            type: 'input',
+            value: 'Boe',
             active: false,
+            style: {
+              color: '#000',
+            },
           },
         },
       ],
@@ -422,7 +450,7 @@ newData: {
           type: 'button',
           value: 'change color',
           function: 'change-color',
-          disabled: ['img', 'name'],
+          disabled: ['a', 'b'],
         },
       ],
       submenuTbody: [
@@ -430,7 +458,7 @@ newData: {
           type: 'button',
           value: 'change color',
           function: 'change-color',
-          disabled: ['img'],
+          disabled: ['a'],
         },
       ],
       selectPosition: {
@@ -440,6 +468,12 @@ newData: {
     };
   },
   methods: {
+    handleUpDragToFill(selectedMultipleCell, entry, rowIndex, colIndex) {
+      console.log(selectedMultipleCell, entry, rowIndex, colIndex);
+    },
+    deleteMultipleCell(rowMin, colMin, keyValue) {
+      console.log(rowMin, colMin, keyValue);
+    },
     replaceData(row, header) {
       // console.log(row, header)
     },
