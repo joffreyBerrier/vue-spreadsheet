@@ -47,17 +47,19 @@ props                                  | Type       | Description
   :submenu-thead                       | Array      | That contains the submenu-thead
   :tbody-data                          | Array      | That contains data
   :tbody-index                         | Boolean    | That displays the index of each row on the left of the table
-  v-on:tbody-replace-data              | Function   | When you copy/paste - dragToFill
+  v-on:handle-up-drag-size-header      | Function   | Fired when the header size changed
   v-on:tbody-input-change              | Function   | When the **input changes**
+  v-on:tbody-move-dragtofill           | Function   | Fired when moved on dragToFill
   v-on:tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
   v-on:tbody-nav-multiple-backspace    | Function   | Fired when the multiple cell are delete
+  v-on:tbody-replace-data              | Function   | When you copy/paste - dragToFill
   v-on:tbody-select-change             | Function   | When the **select change**
   v-on:tbody-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-tbody**
+  v-on:tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
   v-on:thead-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-thead**
-  v-on:thead-td-sort                   | Function   | When you press the button 
+  v-on:thead-td-sort                   | Function   | When you press the button
 
 ### Example
-
 ``` javascript
   <vue-table
     :disable-cells="disableCells"
@@ -72,14 +74,15 @@ props                                  | Type       | Description
     :submenu-thead="Array"
     :tbody-data="Array"
     :tbody-index="Boolean"
-    :parent-element-scroll="Number"
-    v-on:tbody-up-dragtofill="Function"
-    v-on:tbody-replace-data="Function"
+    v-on:handle-up-drag-size-header="Function"
     v-on:tbody-input-change="Function"
+    v-on:tbody-move-dragtofill="Function"
     v-on:tbody-nav-backspace="Function"
     v-on:tbody-nav-multiple-backspace="Function"
+    v-on:tbody-replace-data="Function"
     v-on:tbody-select-change="Function"
     v-on:tbody-submenu-click-customize-function="Function"
+    v-on:tbody-up-dragtofill="Function"
     v-on:thead-submenu-click-customize-function="Function"
     v-on:thead-td-sort="Function">
 
