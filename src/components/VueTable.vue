@@ -284,7 +284,7 @@ export default {
       // stock data in new Data
       const newData = JSON.parse(JSON.stringify(this.tbodyData));
 
-      if (this.selectedMultipleCell) {
+      if (this.selectedMultipleCell && this.selectedCoordCells) {
         let rowMin = this.selectedCoordCells.rowStart;
         let colMin = this.selectedCoordCells.colStart;
         const rowMax = this.selectedCoordCells.rowEnd;
@@ -369,9 +369,7 @@ export default {
               col = colMin - this.selectedCell.col;
             }
 
-            if (newCopyData.length === 1 && !newCopyData[0][header] && Object.values(newCopyData[row])[col]) {
-              this.tbodyData[rowMin][header] = Object.values(newCopyData[row])[col];
-            } else if (Object.values(newCopyData[row])[col]) {
+            if (Object.values(newCopyData[row])[col]) {
               this.tbodyData[rowMin][header] = Object.values(newCopyData[row])[col];
             }
             this.$emit('tbody-replace-data', rowMin, header);
