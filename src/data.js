@@ -4,8 +4,8 @@ export default {
   sortHeader: true,
   tbodyIndex: true,
   styleWrapVueTable: {
-    width: '900px',
-    overflow: 'scroll',
+  //   width: '900px',
+  //   overflow: 'scroll',
   },
   newData: {
     type: 'input',
