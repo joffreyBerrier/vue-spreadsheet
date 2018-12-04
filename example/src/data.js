@@ -1,8 +1,13 @@
 export default {
   dragToFill: true,
-  disableCells: ['img'],
+  disableCells: [],
   sortHeader: true,
   tbodyIndex: true,
+  styleWrapVueTable: {
+    width: '900px',
+    height: '400px',
+    overflow: 'scroll',
+  },
   newData: {
     type: 'input',
     value: '',
@@ -13,8 +18,8 @@ export default {
   },
   headers: [
     {
-      headerName: 'Image',
-      headerKey: 'img',
+      headerName: 'A',
+      headerKey: 'a',
       style: {
         width: '120px',
         minWidth: '120px',
@@ -22,8 +27,8 @@ export default {
       },
     },
     {
-      headerName: 'country',
-      headerKey: 'country',
+      headerName: 'B',
+      headerKey: 'b',
       style: {
         width: '120px',
         minWidth: '120px',
@@ -31,8 +36,8 @@ export default {
       },
     },
     {
-      headerName: 'city',
-      headerKey: 'city',
+      headerName: 'C',
+      headerKey: 'c',
       style: {
         width: '120px',
         minWidth: '120px',
@@ -40,8 +45,8 @@ export default {
       },
     },
     {
-      headerName: 'Nom',
-      headerKey: 'name',
+      headerName: 'D',
+      headerKey: 'd',
       style: {
         width: '120px',
         minWidth: '120px',
@@ -49,8 +54,8 @@ export default {
       },
     },
     {
-      headerName: 'Prénom',
-      headerKey: 'surname',
+      headerName: 'E',
+      headerKey: 'e',
       style: {
         width: '120px',
         minWidth: '120px',
@@ -58,8 +63,8 @@ export default {
       },
     },
     {
-      headerName: 'Age',
-      headerKey: 'age',
+      headerName: 'F',
+      headerKey: 'f',
       style: {
         width: '120px',
         minWidth: '120px',
@@ -67,8 +72,8 @@ export default {
       },
     },
     {
-      headerName: 'Born',
-      headerKey: 'born',
+      headerName: 'G',
+      headerKey: 'g',
       style: {
         width: '120px',
         minWidth: '120px',
@@ -78,13 +83,13 @@ export default {
   ],
   products: [
     {
-      img: {
+      a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
         active: false,
         disabled: false,
       },
-      name: {
+      b: {
         type: 'input',
         value: 'Jane',
         active: false,
@@ -92,7 +97,7 @@ export default {
           color: '#000',
         },
       },
-      country: {
+      c: {
         type: 'input',
         value: 'Paris',
         active: false,
@@ -100,7 +105,7 @@ export default {
           color: '#000',
         },
       },
-      city: {
+      d: {
         type: 'input',
         value: 'France',
         active: false,
@@ -108,7 +113,7 @@ export default {
           color: '#000',
         },
       },
-      surname: {
+      e: {
         type: 'input',
         value: 'Boe',
         active: false,
@@ -116,7 +121,7 @@ export default {
           color: '#000',
         },
       },
-      age: {
+      f: {
         type: 'select',
         handleSearch: true,
         selectOptions: [
@@ -144,7 +149,7 @@ export default {
         value: 26,
         active: false,
       },
-      born: {
+      g: {
         type: 'select',
         handleSearch: true,
         selectOptions: [
@@ -174,13 +179,13 @@ export default {
       },
     },
     {
-      img: {
+      a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
         active: false,
         disabled: false,
       },
-      name: {
+      b: {
         type: 'input',
         value: 'Jane',
         active: false,
@@ -188,7 +193,7 @@ export default {
           color: '#000',
         },
       },
-      country: {
+      c: {
         type: 'input',
         value: 'Paris',
         active: false,
@@ -196,7 +201,7 @@ export default {
           color: '#000',
         },
       },
-      city: {
+      d: {
         type: 'input',
         value: 'France',
         active: false,
@@ -204,7 +209,7 @@ export default {
           color: '#000',
         },
       },
-      surname: {
+      e: {
         type: 'input',
         value: 'Boe',
         active: false,
@@ -212,7 +217,7 @@ export default {
           color: '#000',
         },
       },
-      age: {
+      f: {
         type: 'select',
         handleSearch: true,
         selectOptions: [
@@ -240,7 +245,7 @@ export default {
         value: 26,
         active: false,
       },
-      born: {
+      g: {
         type: 'select',
         handleSearch: true,
         selectOptions: [
@@ -275,11 +280,11 @@ export default {
       type: 'button',
       value: 'change color',
       function: 'change-color',
-      disabled: ['img'],
+      disabled: ['a'],
     },
     {
       type: 'select',
-      disabled: ['img'],
+      disabled: ['a'],
       subtitle: 'Select state:',
       selectOptions: [
         {
@@ -304,7 +309,7 @@ export default {
       type: 'button',
       value: 'change value',
       function: 'change-value',
-      disabled: ['img', 'name'],
+      disabled: ['a', 'b'],
     },
   ],
   submenuTbody: [
@@ -312,13 +317,13 @@ export default {
       type: 'button',
       value: 'change color',
       function: 'change-color',
-      disabled: ['img'],
+      disabled: ['a'],
     },
     {
       type: 'button',
       value: 'change value',
       function: 'change-value',
-      disabled: ['img', 'name'],
+      disabled: ['a', 'b'],
     },
   ],
 };
