@@ -652,11 +652,17 @@ export default {
           // shift / left
           if (event.keyCode === 37) {
             this.incrementCol -= 1;
+            if (this.incrementCol < 0) {
+              this.incrementCol = 0;
+            }
             this.cleanActiveOnTd('selected');
           }
           // shift / top
           if (event.keyCode === 38) {
             this.incrementRow -= 1;
+            if (this.incrementRow < 0) {
+              this.incrementRow = 0;
+            }
             this.cleanActiveOnTd('selected');
           }
           // shift / right
