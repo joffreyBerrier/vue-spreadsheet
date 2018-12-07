@@ -384,10 +384,10 @@ export default {
       this.$forceUpdate();
     },
     modifyMultipleCell(params) {
-      const rowMax = this.selectedCoordCells.rowEnd;
-      const colMax = this.selectedCoordCells.colEnd;
-      let rowMin = this.selectedCoordCells.rowStart;
-      let colMin = this.selectedCoordCells.colStart;
+      let rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
+      const rowMax = Math.max(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
+      let colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+      const colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
 
       while (rowMin <= rowMax) {
         const header = this.headerKeys[colMin];
@@ -401,7 +401,7 @@ export default {
         }
         colMin += 1;
         if (colMin > colMax) {
-          colMin = this.selectedCoordCells.colStart;
+          colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
           rowMin += 1;
         }
       }
