@@ -136,6 +136,7 @@ export default {
       storeCopyDatas: [],
       submenuStatusTbody: false,
       submenuStatusThead: false,
+      setFirstCell: false,
     };
   },
   mounted() {
@@ -159,7 +160,20 @@ export default {
   },
   methods: {
     // global
+    debounce(fn, delay) {
+      let timeout;
+
+      return function () {
+        const functionCall = () => fn.apply(this, arguments);
+        clearTimeout(timeout);
+        timeout = setTimeout(functionCall, delay);
+      };
+    },
     updateSelectedCell(header, row, col) {
+      if (!this.setFirstCell) {
+        this.$set(this.tbodyData[row][header], 'first', true);
+        this.setFirstCell = true;
+      }
       this.selectedCell = {
         header,
         row,
@@ -247,7 +261,6 @@ export default {
       this.cleanActiveOnTd('active');
       this.tbodyData[rowIndex][header].active = true;
       // stock oldTdActive in object
-      if (this.oldTdActive) this.tbodyData[this.oldTdActive.row][this.oldTdActive.key].active = false;
       this.oldTdActive = {
         key: header,
         row: rowIndex,
@@ -269,6 +282,12 @@ export default {
               this.tbodyData[index][key].selected = false;
             }
           });
+          Object.keys(data).forEach((key) => {
+            if (this.tbodyData[index][key].first === true) {
+              this.tbodyData[index][key].first = false;
+            }
+          });
+          this.setFirstCell = false;
         } else if (params === 'search') {
           Object.keys(data).forEach((key) => {
             if (this.tbodyData[index][key].search === true) {
@@ -306,7 +325,7 @@ export default {
         this.storeCopyDatas.push(newData[this.selectedCell.row][this.selectedCell.header]);
         this.copyMultipleCell = false;
       }
-      this.cleanActiveOnTd('selected');
+      // this.cleanActiveOnTd('selected');
     },
     pasteReplaceData() {
       let rowMin;
@@ -398,6 +417,30 @@ export default {
         }
         if (params === 'selected') {
           this.$set(this.tbodyData[rowMin][header], 'selected', true);
+          let width = 100;
+          let height = 40;
+
+          // Defined width of rectangle
+          if (colMin === 0 || (colMin === 1 && this.selectedCell.col === 1) || (colMin === this.selectedCell.col)) {
+            width = 100;
+          } else if (this.selectedCell.col === 0) {
+            width = 100 * (colMin + 1);
+          } else {
+            width = 100 * ((colMin - this.selectedCell.col) + 1);
+          }
+
+          // Defined height of rectangle
+          if (rowMin === 0 || (rowMin === 1 && this.selectedCell.row === 1) || (rowMin === this.selectedCell.row)) {
+            height = 40;
+          } else if (this.selectedCell.row === 0) {
+            height = 40 * (rowMin + 1);
+          } else {
+            height = 40 * ((rowMin - this.selectedCell.row) + 1);
+          }
+
+          // Set height / width of rectangle
+          this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--width', `${width}%`);
+          this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--height', `${height}px`);
         }
         colMin += 1;
         if (colMin > colMax) {
@@ -455,15 +498,17 @@ export default {
       if (this.selectedMultipleCell) {
         this.selectedMultipleCell = false;
       }
-      if (!this.keys[16]) {
-        this.cleanActiveOnTd('selected');
+
+      if (!col.active) {
+        if (!this.keys[16]) {
+          this.cleanActiveOnTd('selected', col);
+        }
+        this.cleanActiveOnTd('search', col);
       }
 
-      this.cleanActiveOnTd('search');
+      this.bindClassActiveOnTd(header, rowIndex, colIndex);
 
       this.createCell(rowIndex, header, type);
-
-      this.bindClassActiveOnTd(header, rowIndex, colIndex);
 
       this.updateSelectedCell(header, rowIndex, colIndex);
 
