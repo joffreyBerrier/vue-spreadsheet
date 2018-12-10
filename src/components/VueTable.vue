@@ -442,33 +442,34 @@ export default {
       } else {
         height = 40 * ((this.selectedCoordCells.rowStart - this.selectedCoordCells.rowEnd) + 1);
       }
+
       // Set height / width of rectangle
       this.debounce(this.setRectangleSelection(width, height), 600);
       this.$forceUpdate();
     },
     setRectangleSelection(width, height) {
-      this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--width', `${width}%`);
-      this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--height', `${height}px`);
+      const rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`][0];
+      rectangleSelectedCell.style.setProperty('--width', `${width}%`);
+      rectangleSelectedCell.style.setProperty('--height', `${height}px`);
 
       // Position bottom/top of rectangle if rowStart >= rowEnd
       if (this.selectedCoordCells.rowStart >= this.selectedCoordCells.rowEnd) {
-        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--top', 'auto');
-        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--bottom', 0);
+        rectangleSelectedCell.style.setProperty('--top', 'auto');
+        rectangleSelectedCell.style.setProperty('--bottom', 0);
       } else {
-        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--top', 0);
-        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--bottom', 'auto');
+        rectangleSelectedCell.style.setProperty('--top', 0);
+        rectangleSelectedCell.style.setProperty('--bottom', 'auto');
       }
       // Position left/right of rectangle if colStart >= colEnd
       if (this.selectedCoordCells.colStart >= this.selectedCoordCells.colEnd) {
-        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--left', 'auto');
-        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--right', 0);
+        rectangleSelectedCell.style.setProperty('--left', 'auto');
+        rectangleSelectedCell.style.setProperty('--right', 0);
       } else {
-        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--left', 0);
+        rectangleSelectedCell.style.setProperty('--left', 0);
       }
     },
     // drag To Fill
     handleDownDragToFill(event, header, data, rowIndex, colIndex) {
-      // console.log('handleDownDragToFill', event, header, data, rowIndex, colIndex);
       this.tbodyData[rowIndex][header].active = true;
       this.eventDrag = true;
 
@@ -489,7 +490,6 @@ export default {
       }
     },
     handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
-      // console.log('handleMoveDragToFill', event, header, col, rowIndex, colIndex);
       if (this.eventDrag === true && this.selectedCoordCells && this.selectedCoordCells.rowEnd !== rowIndex) {
         this.selectedCoordCells.rowEnd = rowIndex;
         this.modifyMultipleCell('selected');
@@ -497,7 +497,6 @@ export default {
       }
     },
     handleUpDragToFill(event, header, rowIndex, colIndex) {
-      // console.log('handleUpDragToFill', event, header, rowIndex, colIndex, type);
       if (this.eventDrag === true && this.selectedCoordCells) {
         this.selectedCoordCells.rowEnd = rowIndex;
         this.pasteReplaceData();
@@ -553,7 +552,6 @@ export default {
       this.modifyMultipleCell('selected');
     },
     handleTbodyTdDoubleClick(event, header, col, rowIndex, colIndex, type) {
-      // console.log('handleTbodyTdDoubleClick', event, header, col, rowIndex, colIndex, type);
       this.createCell(rowIndex, header, type);
 
       // stock oldTdShow in object
@@ -571,11 +569,9 @@ export default {
       this.enableSubmenu();
     },
     handleTbodyNav() {
-      // console.log('handleTbodyNav', event, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
     handleTbodyNavEnter() {
-      // console.log('handleTbodyNavEnter', event, header, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
     handleTbodyNavBackspace(event, actualElement, header, rowIndex, colIndex) {
@@ -605,7 +601,6 @@ export default {
     // Context Menu
     handleTbodyContextMenu(event, header, rowIndex, colIndex, type) {
       this.createCell(rowIndex, header, type);
-      // console.log('handleTbodyContextMenu', event, header, rowIndex, colIndex, type);
     },
     callbackSubmenuThead(event, header, colIndex, submenuFunction, selectOptions) {
       this.submenuStatusThead = false;
@@ -677,6 +672,11 @@ export default {
 
       if (event.keyCode === 16) {
         this.keys[event.keyCode] = true;
+
+        if (!this.setFirstCell) {
+          this.$set(this.tbodyData[rowIndex][header], 'first', true);
+          this.setFirstCell = true;
+        }
       }
 
       if (event.keyCode === 91 || event.keyCode === 17) {
@@ -697,8 +697,6 @@ export default {
         const colIndex = Number(this.actualElement.getAttribute('data-col-index'));
         const rowIndex = Number(this.actualElement.getAttribute('data-row-index'));
         const dataType = this.actualElement.getAttribute('data-type');
-
-        // remove active to before-active cell
         let header = Object.values(this.headerKeys)[colIndex];
 
         // set colMax rowMax
@@ -708,6 +706,7 @@ export default {
         // shift
         if (this.keys[16]) {
           this.$set(this.tbodyData[rowIndex][header], 'active', false);
+
           this.incrementCol = this.incrementCol ? this.incrementCol : colIndex;
           this.incrementRow = this.incrementRow ? this.incrementRow : rowIndex;
           // shift / left
