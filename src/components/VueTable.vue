@@ -282,6 +282,7 @@ export default {
               this.tbodyData[index][key].selected = false;
             }
           });
+        } else if (params === 'first') {
           Object.keys(data).forEach((key) => {
             if (this.tbodyData[index][key].first === true) {
               this.tbodyData[index][key].first = false;
@@ -355,6 +356,7 @@ export default {
 
           this.$set(this.tbodyData[rowMin][header], 'selected', false);
           this.cleanActiveOnTd('selected');
+          this.cleanActiveOnTd('first');
           if (this.dragToFill && this.eventDrag) {
             // Drag To Fill
             if (newCopyData[0][header]) {
@@ -501,6 +503,7 @@ export default {
         this.selectedCoordCells.rowEnd = rowIndex;
         this.pasteReplaceData();
         this.cleanActiveOnTd('selected');
+        this.cleanActiveOnTd('first');
         this.cleanActiveOnTd('active');
         this.$emit('tbody-up-dragtofill', this.selectedCoordCells, header, rowIndex, colIndex);
         this.eventDrag = false;
@@ -516,9 +519,10 @@ export default {
 
       if (!col.active) {
         if (!this.keys[16]) {
-          this.cleanActiveOnTd('selected', col);
+          this.cleanActiveOnTd('selected');
+          this.cleanActiveOnTd('first');
         }
-        this.cleanActiveOnTd('search', col);
+        this.cleanActiveOnTd('search');
       }
 
       this.bindClassActiveOnTd(header, rowIndex, colIndex);
@@ -672,11 +676,6 @@ export default {
 
       if (event.keyCode === 16) {
         this.keys[event.keyCode] = true;
-
-        if (!this.setFirstCell) {
-          this.$set(this.tbodyData[rowIndex][header], 'first', true);
-          this.setFirstCell = true;
-        }
       }
 
       if (event.keyCode === 91 || event.keyCode === 17) {
@@ -698,6 +697,11 @@ export default {
         const rowIndex = Number(this.actualElement.getAttribute('data-row-index'));
         const dataType = this.actualElement.getAttribute('data-type');
         let header = Object.values(this.headerKeys)[colIndex];
+
+        if (!this.setFirstCell) {
+          this.$set(this.tbodyData[rowIndex][header], 'first', true);
+          this.setFirstCell = true;
+        }
 
         // set colMax rowMax
         const rowMax = this.tbodyData.length;
