@@ -307,9 +307,12 @@ export default {
 
 <style lang="scss" scoped>
 :root {
-  /* :root is a clever way of saying "the outer-most element" */ 
-  --width: 100%; /* the default */
-  --height: 40px; /* the default */
+  --width: 100%;
+  --height: 40px;
+  --top: 0;
+  --left: 0;
+  --right: 0;
+  --bottom: auto;
 }
 
 .td {
@@ -341,9 +344,10 @@ export default {
       content: '';
       display: block;
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: var(--top);
+      bottom: var(--bottom);
+      right: var(--right);
+      left: var(--left);
       width: var(--width);
       height: var(--height);
       z-index: 3;

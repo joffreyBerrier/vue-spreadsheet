@@ -325,7 +325,6 @@ export default {
         this.storeCopyDatas.push(newData[this.selectedCell.row][this.selectedCell.header]);
         this.copyMultipleCell = false;
       }
-      // this.cleanActiveOnTd('selected');
     },
     pasteReplaceData() {
       let rowMin;
@@ -407,6 +406,8 @@ export default {
       const rowMax = Math.max(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
       let colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
       const colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+      let width = 100;
+      let height = 40;
 
       while (rowMin <= rowMax) {
         const header = this.headerKeys[colMin];
@@ -417,30 +418,6 @@ export default {
         }
         if (params === 'selected') {
           this.$set(this.tbodyData[rowMin][header], 'selected', true);
-          let width = 100;
-          let height = 40;
-
-          // Defined width of rectangle
-          if (colMin === 0 || (colMin === 1 && this.selectedCell.col === 1) || (colMin === this.selectedCell.col)) {
-            width = 100;
-          } else if (this.selectedCell.col === 0) {
-            width = 100 * (colMin + 1);
-          } else {
-            width = 100 * ((colMin - this.selectedCell.col) + 1);
-          }
-
-          // Defined height of rectangle
-          if (rowMin === 0 || (rowMin === 1 && this.selectedCell.row === 1) || (rowMin === this.selectedCell.row)) {
-            height = 40;
-          } else if (this.selectedCell.row === 0) {
-            height = 40 * (rowMin + 1);
-          } else {
-            height = 40 * ((rowMin - this.selectedCell.row) + 1);
-          }
-
-          // Set height / width of rectangle
-          this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--width', `${width}%`);
-          this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--height', `${height}px`);
         }
         colMin += 1;
         if (colMin > colMax) {
@@ -448,7 +425,46 @@ export default {
           rowMin += 1;
         }
       }
+      // Defined width of rectangle
+      if (colMin === 0 && colMax === 0) {
+        width = 100 * (colMin + 1);
+      } else if (colMin === 0 && colMax > 0) {
+        width = 100 * (colMax + 1);
+      } else {
+        width = 100 * ((colMax - colMin) + 1);
+      }
+
+      // Defined height of rectangle
+      if ((rowMin === 0 && rowMax === 0) || (rowMin === 0 && rowMax > 0)) {
+        height = 40 * (rowMin + 1);
+      } else if (this.selectedCoordCells.rowEnd > this.selectedCoordCells.rowStart) {
+        height = 40 * ((this.selectedCoordCells.rowEnd - this.selectedCoordCells.rowStart) + 1);
+      } else {
+        height = 40 * ((this.selectedCoordCells.rowStart - this.selectedCoordCells.rowEnd) + 1);
+      }
+      // Set height / width of rectangle
+      this.debounce(this.setRectangleSelection(width, height), 600);
       this.$forceUpdate();
+    },
+    setRectangleSelection(width, height) {
+      this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--width', `${width}%`);
+      this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--height', `${height}px`);
+
+      // Position bottom/top of rectangle if rowStart >= rowEnd
+      if (this.selectedCoordCells.rowStart >= this.selectedCoordCells.rowEnd) {
+        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--top', 'auto');
+        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--bottom', 0);
+      } else {
+        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--top', 0);
+        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--bottom', 'auto');
+      }
+      // Position left/right of rectangle if colStart >= colEnd
+      if (this.selectedCoordCells.colStart >= this.selectedCoordCells.colEnd) {
+        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--left', 'auto');
+        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--right', 0);
+      } else {
+        this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0].style.setProperty('--left', 0);
+      }
     },
     // drag To Fill
     handleDownDragToFill(event, header, data, rowIndex, colIndex) {
