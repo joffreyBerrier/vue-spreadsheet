@@ -136,6 +136,7 @@ export default {
       storeCopyDatas: [],
       submenuStatusTbody: false,
       submenuStatusThead: false,
+      setFirstCell: false,
     };
   },
   mounted() {
@@ -159,7 +160,20 @@ export default {
   },
   methods: {
     // global
+    debounce(fn, delay) {
+      let timeout;
+
+      return function () {
+        const functionCall = () => fn.apply(this, arguments);
+        clearTimeout(timeout);
+        timeout = setTimeout(functionCall, delay);
+      };
+    },
     updateSelectedCell(header, row, col) {
+      if (!this.setFirstCell) {
+        this.$set(this.tbodyData[row][header], 'first', true);
+        this.setFirstCell = true;
+      }
       this.selectedCell = {
         header,
         row,
@@ -247,7 +261,6 @@ export default {
       this.cleanActiveOnTd('active');
       this.tbodyData[rowIndex][header].active = true;
       // stock oldTdActive in object
-      if (this.oldTdActive) this.tbodyData[this.oldTdActive.row][this.oldTdActive.key].active = false;
       this.oldTdActive = {
         key: header,
         row: rowIndex,
@@ -269,6 +282,13 @@ export default {
               this.tbodyData[index][key].selected = false;
             }
           });
+        } else if (params === 'first') {
+          Object.keys(data).forEach((key) => {
+            if (this.tbodyData[index][key].first === true) {
+              this.tbodyData[index][key].first = false;
+            }
+          });
+          this.setFirstCell = false;
         } else if (params === 'search') {
           Object.keys(data).forEach((key) => {
             if (this.tbodyData[index][key].search === true) {
@@ -306,7 +326,6 @@ export default {
         this.storeCopyDatas.push(newData[this.selectedCell.row][this.selectedCell.header]);
         this.copyMultipleCell = false;
       }
-      this.cleanActiveOnTd('selected');
     },
     pasteReplaceData() {
       let rowMin;
@@ -337,6 +356,7 @@ export default {
 
           this.$set(this.tbodyData[rowMin][header], 'selected', false);
           this.cleanActiveOnTd('selected');
+          this.cleanActiveOnTd('first');
           if (this.dragToFill && this.eventDrag) {
             // Drag To Fill
             if (newCopyData[0][header]) {
@@ -388,6 +408,8 @@ export default {
       const rowMax = Math.max(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
       let colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
       const colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+      let width = 100;
+      let height = 40;
 
       while (rowMin <= rowMax) {
         const header = this.headerKeys[colMin];
@@ -405,11 +427,51 @@ export default {
           rowMin += 1;
         }
       }
+      // Defined width of rectangle
+      if (colMin === 0 && colMax === 0) {
+        width = 100 * (colMin + 1);
+      } else if (colMin === 0 && colMax > 0) {
+        width = 100 * (colMax + 1);
+      } else {
+        width = 100 * ((colMax - colMin) + 1);
+      }
+
+      // Defined height of rectangle
+      if ((rowMin === 0 && rowMax === 0) || (rowMin === 0 && rowMax > 0)) {
+        height = 40 * (rowMin + 1);
+      } else if (this.selectedCoordCells.rowEnd > this.selectedCoordCells.rowStart) {
+        height = 40 * ((this.selectedCoordCells.rowEnd - this.selectedCoordCells.rowStart) + 1);
+      } else {
+        height = 40 * ((this.selectedCoordCells.rowStart - this.selectedCoordCells.rowEnd) + 1);
+      }
+
+      // Set height / width of rectangle
+      this.debounce(this.setRectangleSelection(width, height), 600);
       this.$forceUpdate();
+    },
+    setRectangleSelection(width, height) {
+      const rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`][0];
+      rectangleSelectedCell.style.setProperty('--width', `${width}%`);
+      rectangleSelectedCell.style.setProperty('--height', `${height}px`);
+
+      // Position bottom/top of rectangle if rowStart >= rowEnd
+      if (this.selectedCoordCells.rowStart >= this.selectedCoordCells.rowEnd) {
+        rectangleSelectedCell.style.setProperty('--top', 'auto');
+        rectangleSelectedCell.style.setProperty('--bottom', 0);
+      } else {
+        rectangleSelectedCell.style.setProperty('--top', 0);
+        rectangleSelectedCell.style.setProperty('--bottom', 'auto');
+      }
+      // Position left/right of rectangle if colStart >= colEnd
+      if (this.selectedCoordCells.colStart >= this.selectedCoordCells.colEnd) {
+        rectangleSelectedCell.style.setProperty('--left', 'auto');
+        rectangleSelectedCell.style.setProperty('--right', 0);
+      } else {
+        rectangleSelectedCell.style.setProperty('--left', 0);
+      }
     },
     // drag To Fill
     handleDownDragToFill(event, header, data, rowIndex, colIndex) {
-      // console.log('handleDownDragToFill', event, header, data, rowIndex, colIndex);
       this.tbodyData[rowIndex][header].active = true;
       this.eventDrag = true;
 
@@ -430,7 +492,6 @@ export default {
       }
     },
     handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
-      // console.log('handleMoveDragToFill', event, header, col, rowIndex, colIndex);
       if (this.eventDrag === true && this.selectedCoordCells && this.selectedCoordCells.rowEnd !== rowIndex) {
         this.selectedCoordCells.rowEnd = rowIndex;
         this.modifyMultipleCell('selected');
@@ -438,11 +499,11 @@ export default {
       }
     },
     handleUpDragToFill(event, header, rowIndex, colIndex) {
-      // console.log('handleUpDragToFill', event, header, rowIndex, colIndex, type);
       if (this.eventDrag === true && this.selectedCoordCells) {
         this.selectedCoordCells.rowEnd = rowIndex;
         this.pasteReplaceData();
         this.cleanActiveOnTd('selected');
+        this.cleanActiveOnTd('first');
         this.cleanActiveOnTd('active');
         this.$emit('tbody-up-dragtofill', this.selectedCoordCells, header, rowIndex, colIndex);
         this.eventDrag = false;
@@ -455,15 +516,18 @@ export default {
       if (this.selectedMultipleCell) {
         this.selectedMultipleCell = false;
       }
-      if (!this.keys[16]) {
-        this.cleanActiveOnTd('selected');
+
+      if (!col.active) {
+        if (!this.keys[16]) {
+          this.cleanActiveOnTd('selected');
+          this.cleanActiveOnTd('first');
+        }
+        this.cleanActiveOnTd('search');
       }
 
-      this.cleanActiveOnTd('search');
+      this.bindClassActiveOnTd(header, rowIndex, colIndex);
 
       this.createCell(rowIndex, header, type);
-
-      this.bindClassActiveOnTd(header, rowIndex, colIndex);
 
       this.updateSelectedCell(header, rowIndex, colIndex);
 
@@ -492,7 +556,6 @@ export default {
       this.modifyMultipleCell('selected');
     },
     handleTbodyTdDoubleClick(event, header, col, rowIndex, colIndex, type) {
-      // console.log('handleTbodyTdDoubleClick', event, header, col, rowIndex, colIndex, type);
       this.createCell(rowIndex, header, type);
 
       // stock oldTdShow in object
@@ -510,11 +573,9 @@ export default {
       this.enableSubmenu();
     },
     handleTbodyNav() {
-      // console.log('handleTbodyNav', event, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
     handleTbodyNavEnter() {
-      // console.log('handleTbodyNavEnter', event, header, keyCode, actualElement, rowIndex, colIndex);
       this.enableSubmenu();
     },
     handleTbodyNavBackspace(event, actualElement, header, rowIndex, colIndex) {
@@ -544,7 +605,6 @@ export default {
     // Context Menu
     handleTbodyContextMenu(event, header, rowIndex, colIndex, type) {
       this.createCell(rowIndex, header, type);
-      // console.log('handleTbodyContextMenu', event, header, rowIndex, colIndex, type);
     },
     callbackSubmenuThead(event, header, colIndex, submenuFunction, selectOptions) {
       this.submenuStatusThead = false;
@@ -636,9 +696,12 @@ export default {
         const colIndex = Number(this.actualElement.getAttribute('data-col-index'));
         const rowIndex = Number(this.actualElement.getAttribute('data-row-index'));
         const dataType = this.actualElement.getAttribute('data-type');
-
-        // remove active to before-active cell
         let header = Object.values(this.headerKeys)[colIndex];
+
+        if (!this.setFirstCell) {
+          this.$set(this.tbodyData[rowIndex][header], 'first', true);
+          this.setFirstCell = true;
+        }
 
         // set colMax rowMax
         const rowMax = this.tbodyData.length;
@@ -647,6 +710,7 @@ export default {
         // shift
         if (this.keys[16]) {
           this.$set(this.tbodyData[rowIndex][header], 'active', false);
+
           this.incrementCol = this.incrementCol ? this.incrementCol : colIndex;
           this.incrementRow = this.incrementRow ? this.incrementRow : rowIndex;
           // shift / left

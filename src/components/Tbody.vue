@@ -24,6 +24,7 @@
               'show': row[col].show,
               'selected': row[col].selected,
               'disabled': row[col].disabled || disableCells.find(x => x === col),
+              'first': row[col].first,
             }"
             :ref="'td-' + colIndex + '-' + rowIndex"
             :key="col"
@@ -305,6 +306,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:root {
+  --width: 100%;
+  --height: 40px;
+  --top: 0;
+  --left: 0;
+  --right: 0;
+  --bottom: auto;
+}
+
 .td {
   height: 40px;
   line-height: 40px;
@@ -328,6 +338,22 @@ export default {
   &.active_td,
   &.selected {
     background: aliceblue;
+  }
+  &.selected {
+    &.first:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: var(--top);
+      bottom: var(--bottom);
+      right: var(--right);
+      left: var(--left);
+      width: var(--width);
+      height: var(--height);
+      z-index: 3;
+      border: 2px solid #0760fe;
+      box-sizing: border-box;
+    }
   }
   &.disabled {
     pointer-events: none;
