@@ -132,6 +132,7 @@ export default {
       oldTdShow: null,
       selectedCell: null,
       selectedCoordCells: null,
+      selectedCoordCopyCells: null,
       selectedMultipleCell: false,
       storeCopyDatas: [],
       submenuStatusTbody: false,
@@ -301,14 +302,14 @@ export default {
     },
     // Copy / Paste
     copyStoreData() {
-      // stock data in new Data
       const newData = JSON.parse(JSON.stringify(this.tbodyData));
+      this.selectedCoordCopyCells = this.selectedCoordCells;
 
       if (this.selectedMultipleCell && this.selectedCoordCells) {
-        let rowMin = this.selectedCoordCells.rowStart;
-        let colMin = this.selectedCoordCells.colStart;
-        const rowMax = this.selectedCoordCells.rowEnd;
-        const colMax = this.selectedCoordCells.colEnd;
+        let rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
+        const rowMax = Math.max(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
+        let colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+        const colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
         let storeData = {};
 
         while (rowMin <= rowMax) {
@@ -316,7 +317,7 @@ export default {
           colMin += 1;
           if (colMin > colMax) {
             this.storeCopyDatas.push(storeData);
-            colMin = this.selectedCoordCells.colStart;
+            colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
             rowMin += 1;
             storeData = {};
           }
@@ -328,10 +329,6 @@ export default {
       }
     },
     pasteReplaceData() {
-      let rowMin;
-      let rowMax;
-      let colMin;
-
       // copy / paste one cell
       if (this.storeCopyDatas[0].value && !this.copyMultipleCell && !this.selectedMultipleCell && !this.eventDrag) {
         const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
@@ -339,68 +336,87 @@ export default {
         this.$emit('tbody-replace-data', this.selectedCell);
       } else {
         // copy / paste multiple cell | drag to fill one / multiple cell
-        if (this.storeCopyDatas[0].value) {
-          rowMin = this.selectedCoordCells.rowStart;
-          rowMax = this.selectedCoordCells.rowEnd;
-          colMin = this.selectedCoordCells.colStart;
-        } else {
-          rowMin = this.selectedCell.row;
-          rowMax = (this.selectedCoordCells.rowEnd - this.selectedCoordCells.rowStart) + rowMin;
-          colMin = this.selectedCell.col;
+        let rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
+        let rowMax = Math.max(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
+        let colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+        let colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+
+        if (this.selectedCoordCells !== this.selectedCoordCopyCells) {
+          rowMin = Math.min(this.selectedCoordCopyCells.rowStart, this.selectedCoordCopyCells.rowEnd);
+          rowMax = Math.max(this.selectedCoordCopyCells.rowStart, this.selectedCoordCopyCells.rowEnd);
+          colMin = Math.min(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
+          colMax = Math.max(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
         }
-        const colMax = this.selectedCoordCells.colEnd;
+
+        let row = 0;
+        let col = 0;
 
         while (rowMin <= rowMax) {
           let header = this.headerKeys[colMin];
+
           const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
 
           this.$set(this.tbodyData[rowMin][header], 'selected', false);
-          this.cleanActiveOnTd('selected');
-          this.cleanActiveOnTd('first');
-          if (this.dragToFill && this.eventDrag) {
-            // Drag To Fill
+
+          if (this.dragToFill && this.eventDrag) { // Drag To Fill
             if (newCopyData[0][header]) {
-              // multiple cell
-              this.tbodyData[rowMin][header] = newCopyData[0][header];
+              this.tbodyData[rowMin][header] = newCopyData[0][header]; // multiple cell
             } else {
-              // one cell
-              this.tbodyData[rowMin][header] = newCopyData[0];
+              this.tbodyData[rowMin][header] = newCopyData[0]; // one cell
             }
             this.$emit('tbody-replace-data', rowMin, header);
-          } else if (this.storeCopyDatas[0].value && this.selectedMultipleCell) {
-            // multiple cell by one cell
-            this.tbodyData[rowMin][header] = newCopyData[0];
-            this.$emit('tbody-replace-data', rowMin, header);
-          } else if ((this.selectedCoordCells.rowStart !== this.selectedCoordCells.rowEnd ||
-            this.selectedCoordCells.colStart !== this.selectedCoordCells.colEnd) &&
-            newCopyData.length >= 1 &&
-            Object.keys(newCopyData[0]).length >= 1) {
-            // copy / paste multiple cell
-            let row = 0;
-            let col = 0;
+          } else {
+            let incrementRow = this.selectedCell.row + row;
+            let incrementCol = this.selectedCell.col + col;
 
-            if (this.selectedCoordCells.rowStart !== this.selectedCoordCells.rowEnd) {
-              row = rowMin - this.selectedCell.row;
+            if (this.selectedCoordCells !== this.selectedCoordCopyCells) {
+              incrementRow = this.selectedCoordCells.rowStart + row;
+              incrementCol = this.selectedCoordCells.colStart + col;
             }
 
-            if (this.selectedCoordCells.colStart === this.selectedCoordCells.colEnd) {
-              header = this.selectedCell.header;
-            } else {
-              col = colMin - this.selectedCell.col;
+            let currentHeader = this.headerKeys[incrementCol];
+
+            // multiple col to multiple col
+            if (Object.values(newCopyData[0]).length === 1) {
+              currentHeader = this.headerKeys[this.selectedCell.col];
+              this.tbodyData[incrementRow][currentHeader] = newCopyData[col][header];
+              col += 1;
             }
 
-            if (Object.values(newCopyData[row])[col]) {
-              this.tbodyData[rowMin][header] = Object.values(newCopyData[row])[col];
+            // 1 row to 1 row
+            if (newCopyData.length === 1) {
+              if (this.selectedCoordCells !== this.selectedCoordCopyCells) {
+                this.tbodyData[this.selectedCoordCells.rowStart][currentHeader] = newCopyData[0][header];
+              } else {
+                this.tbodyData[this.selectedCell.row][currentHeader] = newCopyData[0][header];
+              }
+              col += 1;
             }
-            this.$emit('tbody-replace-data', rowMin, header);
+
+            // multiple col / row to multiple col / row
+            if (newCopyData.length > 1 && Object.values(newCopyData[0]).length > 1) {
+              this.tbodyData[incrementRow][currentHeader] = newCopyData[row][header];
+              if (colMin < colMax) {
+                col += 1;
+              } else {
+                col = 0;
+              }
+            }
           }
           colMin += 1;
           if (colMin > colMax) {
-            colMin = this.selectedCoordCells.colStart;
+            if (this.selectedCoordCells !== this.selectedCoordCopyCells) {
+              colMin = Math.min(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
+            } else {
+              colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+            }
             rowMin += 1;
+            row += 1;
           }
         }
       }
+      this.cleanActiveOnTd('selected');
+      this.cleanActiveOnTd('first');
       this.$forceUpdate();
     },
     modifyMultipleCell(params) {
