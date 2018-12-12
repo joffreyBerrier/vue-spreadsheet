@@ -40,6 +40,7 @@ props                                  | Type       | Description
   :headers                             | Array      | That contains headers
   :new-data                            | Object     | That contains the type of data when you have empty cell in a row
   :parent-element-scroll               | Number     | That contains the OffsetTop of the parent
+  :parent-scroll-element               | String     | That contains the HTML attribute which overflow-y: scroll (by-default is 'html')
   :select-position                     | Object     | That contains a top and left position you want to add to the select
   :sort-header                         | Boolean    | That activates sort button on header
   :style-wrap-vue-table                | Object     | That contains style of the wrapper tableVue

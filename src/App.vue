@@ -6,6 +6,7 @@
       :headers="headers"
       :new-data="newData"
       :parent-element-scroll="0"
+      :parent-scroll-element="'html'"
       :sort-header="sortHeader"
       :style-wrap-vue-table="styleWrapVueTable"
       :submenu-tbody="submenuTbody"

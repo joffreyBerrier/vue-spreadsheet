@@ -307,12 +307,18 @@ export default {
 
 <style lang="scss" scoped>
 :root {
-  --width: 100%;
-  --height: 40px;
-  --top: 0;
-  --left: 0;
-  --right: 0;
-  --bottom: auto;
+  // select style
+  --selectLeft: 0;
+  --selectTop: 0;
+  --selectWidth: 0;
+
+  // rectangle style
+  --rectangleBottom: 0;
+  --rectangleHeight: 40;
+  --rectangleLeft: 0;
+  --rectangleRight: 0;
+  --rectangleTop: 0;
+  --rectangleWidth: 100%;
 }
 
 .td {
@@ -344,12 +350,12 @@ export default {
       content: '';
       display: block;
       position: absolute;
-      top: var(--top);
-      bottom: var(--bottom);
-      right: var(--right);
-      left: var(--left);
-      width: var(--width);
-      height: var(--height);
+      bottom: var(--rectangleBottom);
+      height: var(--rectangleHeight);
+      left: var(--rectangleLeft);
+      right: var(--rectangleRight);
+      top: var(--rectangleTop);
+      width: var(--rectangleWidth);
       z-index: 3;
       border: 2px solid #0760fe;
       box-sizing: border-box;
@@ -467,6 +473,10 @@ export default {
       margin: 0;
       max-height: 140px;
       overflow-y: auto;
+      // select style
+      left: var(--selectLeft);
+      top: var(--selectTop);
+      width: var(--selectWidth);
       li {
         list-style: none;
         font-size: 11px;
