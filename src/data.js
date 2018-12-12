@@ -3,6 +3,10 @@ export default {
   disableCells: [],
   sortHeader: true,
   tbodyIndex: true,
+  selectPosition: {
+    top: 0,
+    left: 0,
+  },
   styleWrapVueTable: {
   },
   newData: {

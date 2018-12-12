@@ -114,6 +114,10 @@ export default {
       type: Number,
       required: false,
     },
+    parentScrollElement: {
+      type: String,
+      required: true,
+    },
   },
   components: {
     VueThead,
@@ -138,6 +142,7 @@ export default {
       submenuStatusTbody: false,
       submenuStatusThead: false,
       setFirstCell: false,
+      scrollDocument: null,
     };
   },
   mounted() {
@@ -153,6 +158,9 @@ export default {
         this.pasteReplaceData();
       }
     });
+    document.addEventListener('scroll', () => {
+      this.debounce(this.scrollTopDocument(), 600);
+    });
   },
   computed: {
     colHeaderWidths() {
@@ -160,7 +168,7 @@ export default {
     },
   },
   methods: {
-    // global
+    // global 
     debounce(fn, delay) {
       let timeout;
 
@@ -169,6 +177,12 @@ export default {
         clearTimeout(timeout);
         timeout = setTimeout(functionCall, delay);
       };
+    },
+    scrollTopDocument(event) {
+      this.scrollDocument = document.querySelector(`${this.parentScrollElement}`).scrollTop;
+      if (this.lastSelectOpen) {
+        this.calculPosition(event, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex, 'dropdown');
+      }
     },
     updateSelectedCell(header, row, col) {
       if (!this.setFirstCell) {
@@ -187,7 +201,6 @@ export default {
       this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
     },
     scrollFunction() {
-      this.enableSubmenu('thead');
       if (this.lastSelectOpen) {
         this.enableSelect(this.lastSelectOpen.event, this.lastSelectOpen.header, this.lastSelectOpen.col, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex);
       }
@@ -201,6 +214,10 @@ export default {
           rowIndex,
           colIndex,
         };
+        this.cleanActiveOnTd('search');
+        this.cleanActiveOnTd('show');
+        this.cleanActiveOnTd('typing');
+
         this.$set(this.tbodyData[rowIndex][header], 'search', true);
         this.$set(this.tbodyData[rowIndex][header], 'show', true);
         this.$set(this.tbodyData[rowIndex][header], 'typing', false);
@@ -215,9 +232,6 @@ export default {
       }
     },
     calculPosition(event, rowIndex, colIndex, header) {
-      // stock scrollLeft / scrollTop position of parent element (body / div)
-      const scrollParentTop = this.parentElementScroll;
-
       // stock scrollLeft / scrollTop position of parent
       const scrollLeft = this.$refs.vueTable.scrollLeft;
       const scrollTop = this.$refs.vueTable.scrollTop;
@@ -225,17 +239,25 @@ export default {
       // stock size / offsetTop / offsetLeft of the element
       const width = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetWidth;
 
-      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - scrollParentTop;
+      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentElementScroll;
       let left = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
 
       if (this.selectPosition) {
-        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top) - scrollParentTop;
+        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top) - this.parentElementScroll;
         left = (this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.selectPosition.left;
       }
+      // subtracted top of scroll top document
+      if (this.scrollDocument) {
+        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentElementScroll) - this.scrollDocument;
+      }
+
       // set size / top position / left position
-      this.$refs.vueTbody.$refs[`${header}-${colIndex}-${rowIndex}`][0].style.width = `${width}px`;
-      this.$refs.vueTbody.$refs[`${header}-${colIndex}-${rowIndex}`][0].style.top = `${top}px`;
-      this.$refs.vueTbody.$refs[`${header}-${colIndex}-${rowIndex}`][0].style.left = `${left}px`;
+      const currentSelect = this.$refs.vueTbody.$refs[`${header}-${colIndex}-${rowIndex}`];
+      if (currentSelect) {
+        currentSelect[0].style.setProperty('--selectWidth', `${width}px`);
+        currentSelect[0].style.setProperty('--selectTop', `${top}px`);
+        currentSelect[0].style.setProperty('--selectLeft', `${left}px`);
+      }
     },
     handleUpDragSizeHeader(event, headers) {
       this.$emit('handle-up-drag-size-header', event, headers);
@@ -296,6 +318,18 @@ export default {
               this.tbodyData[index][key].search = false;
             }
           });
+        } else if (params === 'show') {
+          Object.keys(data).forEach((key) => {
+            if (this.tbodyData[index][key].show === true) {
+              this.tbodyData[index][key].show = false;
+            }
+          });
+        } else if (params === 'typing') {
+          Object.keys(data).forEach((key) => {
+            if (this.tbodyData[index][key].typing === true) {
+              this.tbodyData[index][key].typing = false;
+            }
+          });
         }
       });
       this.$forceUpdate();
@@ -352,7 +386,7 @@ export default {
         let col = 0;
 
         while (rowMin <= rowMax) {
-          let header = this.headerKeys[colMin];
+          const header = this.headerKeys[colMin];
 
           const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
 
@@ -467,23 +501,23 @@ export default {
     },
     setRectangleSelection(width, height) {
       const rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`][0];
-      rectangleSelectedCell.style.setProperty('--width', `${width}%`);
-      rectangleSelectedCell.style.setProperty('--height', `${height}px`);
+      rectangleSelectedCell.style.setProperty('--rectangleWidth', `${width}%`);
+      rectangleSelectedCell.style.setProperty('--rectangleHeight', `${height}px`);
 
       // Position bottom/top of rectangle if rowStart >= rowEnd
       if (this.selectedCoordCells.rowStart >= this.selectedCoordCells.rowEnd) {
-        rectangleSelectedCell.style.setProperty('--top', 'auto');
-        rectangleSelectedCell.style.setProperty('--bottom', 0);
+        rectangleSelectedCell.style.setProperty('--rectangleTop', 'auto');
+        rectangleSelectedCell.style.setProperty('--rectangleBottom', 0);
       } else {
-        rectangleSelectedCell.style.setProperty('--top', 0);
-        rectangleSelectedCell.style.setProperty('--bottom', 'auto');
+        rectangleSelectedCell.style.setProperty('--rectangleTop', 0);
+        rectangleSelectedCell.style.setProperty('--rectangleBottom', 'auto');
       }
       // Position left/right of rectangle if colStart >= colEnd
       if (this.selectedCoordCells.colStart >= this.selectedCoordCells.colEnd) {
-        rectangleSelectedCell.style.setProperty('--left', 'auto');
-        rectangleSelectedCell.style.setProperty('--right', 0);
+        rectangleSelectedCell.style.setProperty('--rectangleLeft', 'auto');
+        rectangleSelectedCell.style.setProperty('--rectangleRight', 0);
       } else {
-        rectangleSelectedCell.style.setProperty('--left', 0);
+        rectangleSelectedCell.style.setProperty('--rectangleLeft', 0);
       }
     },
     // drag To Fill
