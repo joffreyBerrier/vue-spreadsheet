@@ -146,7 +146,7 @@ export default {
             label: 30,
           },
         ],
-        value: 26,
+        value: 30,
         active: false,
       },
       g: {
@@ -174,7 +174,7 @@ export default {
             label: 1984,
           },
         ],
-        value: 1990,
+        value: 1983,
         active: false,
       },
     },{
@@ -268,7 +268,7 @@ export default {
             label: 1984,
           },
         ],
-        value: 1990,
+        value: 1983,
         active: false,
       },
     },{
@@ -362,7 +362,7 @@ export default {
             label: 1984,
           },
         ],
-        value: 1990,
+        value: 1983,
         active: false,
       },
     },{
@@ -456,7 +456,7 @@ export default {
             label: 1984,
           },
         ],
-        value: 1990,
+        value: 1983,
         active: false,
       },
     },{
@@ -550,7 +550,7 @@ export default {
             label: 1984,
           },
         ],
-        value: 1990,
+        value: 1983,
         active: false,
       },
     },{
@@ -644,7 +644,7 @@ export default {
             label: 1984,
           },
         ],
-        value: 1990,
+        value: 1983,
         active: false,
       },
     },{
@@ -738,7 +738,7 @@ export default {
             label: 1984,
           },
         ],
-        value: 1990,
+        value: 1983,
         active: false,
       },
     },{
@@ -832,7 +832,7 @@ export default {
             label: 1984,
           },
         ],
-        value: 1990,
+        value: 1983,
         active: false,
       },
     },{
@@ -926,7 +926,7 @@ export default {
             label: 1984,
           },
         ],
-        value: 1990,
+        value: 1983,
         active: false,
       },
     },{
@@ -1020,7 +1020,7 @@ export default {
             label: 1984,
           },
         ],
-        value: 1990,
+        value: 1983,
         active: false,
       },
     },{
@@ -1114,7 +1114,7 @@ export default {
             label: 1984,
           },
         ],
-        value: 1990,
+        value: 1983,
         active: false,
       },
     },

@@ -92,6 +92,7 @@
                   <template v-if="!row[col].typing">
                     <li v-for="(option, index) in row[col].selectOptions"
                       @click.stop="validSearch($event, col, row[col], option, rowIndex, colIndex)"
+                      v-bind:class="{'active': option.active}"
                       :value="option.value"
                       :key="index + 'option'">
                         {{option.label}}
@@ -100,6 +101,7 @@
                   <template v-if="row[col].typing">
                     <li v-for="(option, index) in filteredList"
                       @click.stop="validSearch($event, col, row[col], option, rowIndex, colIndex)"
+                      v-bind:class="{'active': option.active}"
                       :value="option.value"
                       :key="index">
                         {{option.label}}
@@ -224,7 +226,6 @@ export default {
   methods: {
     enableSelect(event, header, col, rowIndex, colIndex) {
       this.$emit('handle-to-open-select', event, header, col, rowIndex, colIndex);
-      this.$forceUpdate();
     },
     escKeyup(col, rowIndex, header, colIndex, type) {
       this.$emit('tbody-handle-set-oldvalue', col, rowIndex, header, colIndex, type);
@@ -286,10 +287,6 @@ export default {
       this.$emit('tbody-handle-search-input-select', event, searchValue, col, header, rowIndex);
     },
     validSearch(event, header, col, option, rowIndex, colIndex) {
-      const column = col;
-      column.search = false;
-      column.show = false;
-      column.value = option.value;
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
     handleClickSubmenu(event, header, rowIndex, colIndex, type, submenuFunction) {
@@ -487,6 +484,9 @@ export default {
         cursor: pointer;
         transition: all ease .5s;
         &:hover {
+          background: #e7ecf5;
+        }
+        &.active {
           background: #e7ecf5;
         }
       }

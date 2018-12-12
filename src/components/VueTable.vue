@@ -125,24 +125,28 @@ export default {
   },
   data() {
     return {
+      disableKeyTimeout: null,
       eventDrag: false,
       filteredList: [],
       headerKeys: [],
       incrementCol: 0,
+      incrementOption: null,
       incrementRow: null,
       keys: {},
       lastSelectOpen: null,
       oldTdActive: null,
       oldTdShow: null,
+      scrollDocument: null,
+      scrollToSelectTimeout: null,
       selectedCell: null,
       selectedCoordCells: null,
       selectedCoordCopyCells: null,
       selectedMultipleCell: false,
+      setFirstCell: false,
       storeCopyDatas: [],
       submenuStatusTbody: false,
       submenuStatusThead: false,
-      setFirstCell: false,
-      scrollDocument: null,
+      submitOptionTimeout: null,
     };
   },
   mounted() {
@@ -206,6 +210,7 @@ export default {
       }
     },
     enableSelect(event, header, col, rowIndex, colIndex) {
+      const currentData = this.tbodyData[rowIndex][header];
       if (!col.search) {
         this.lastSelectOpen = {
           event,
@@ -214,20 +219,39 @@ export default {
           rowIndex,
           colIndex,
         };
+
         this.cleanActiveOnTd('search');
         this.cleanActiveOnTd('show');
         this.cleanActiveOnTd('typing');
 
-        this.$set(this.tbodyData[rowIndex][header], 'search', true);
-        this.$set(this.tbodyData[rowIndex][header], 'show', true);
-        this.$set(this.tbodyData[rowIndex][header], 'typing', false);
+        this.$set(currentData, 'search', true);
+        this.$set(currentData, 'show', true);
+        this.$set(currentData, 'typing', false);
 
         this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
+
+        if (currentData.value !== '') {
+          currentData.selectOptions.find(x => x.value === currentData.value).active = true;
+          const index = currentData.selectOptions.map(x => x.value).indexOf(currentData.value);
+          this.incrementOption = index;
+          const dropdown = this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`][0];
+          // clear timeout
+          if (!this.scrollToSelectTimeout === null) {
+            clearTimeout(this.scrollToSelectTimeout);
+          }
+          // set scrollTop on select
+          this.scrollToSelectTimeout = setTimeout(() => {
+            dropdown.scrollTop = 45 * this.incrementOption;
+            this.scrollToSelectTimeout = null;
+          }, 100);
+        } else {
+          this.incrementOption = 0;
+        }
       } else {
-        this.$set(this.tbodyData[rowIndex][header], 'search', false);
-        this.$set(this.tbodyData[rowIndex][header], 'show', false);
-        this.$set(this.tbodyData[rowIndex][header], 'typing', true);
+        this.$set(currentData, 'search', false);
+        this.$set(currentData, 'show', false);
+        this.$set(currentData, 'typing', true);
         this.lastSelectOpen = null;
       }
     },
@@ -645,6 +669,10 @@ export default {
       this.$emit('tbody-input-change', event, header, rowIndex, colIndex);
     },
     handleTbodySelectChange(event, header, col, option, rowIndex, colIndex) {
+      this.$set(this.tbodyData[rowIndex][header], 'search', false);
+      this.$set(this.tbodyData[rowIndex][header], 'show', false);
+      this.$set(this.tbodyData[rowIndex][header], 'value', option.value);
+
       // remove class show on select when it change
       if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
@@ -715,9 +743,13 @@ export default {
         this.selectedMultipleCell = true;
       }
       if (event.keyCode === 91 || event.keyCode === 17) {
-        setTimeout(() => {
+        if (!this.disableKeyTimeout === null) {
+          clearTimeout(this.disableKeyTimeout);
+        }
+        this.disableKeyTimeout = setTimeout(() => {
           this.keys.cmd = false;
           this.keys.ctrl = false;
+          this.disableKeyTimeout = null;
         }, 400);
       }
     },
@@ -731,6 +763,60 @@ export default {
       if (event.keyCode === 91 || event.keyCode === 17) {
         this.keys.cmd = true;
         this.keys.ctrl = true;
+      }
+
+      if (this.lastSelectOpen) {
+        const currentSelect = this.tbodyData[this.lastSelectOpen.rowIndex][this.lastSelectOpen.header];
+        if (this.incrementOption <= currentSelect.selectOptions.length) {
+          // top
+          const dropdown = this.$refs.vueTbody.$refs[`dropdown-${this.lastSelectOpen.colIndex}-${this.lastSelectOpen.rowIndex}`][0];
+          if (event.keyCode === 38) {
+            if (this.incrementOption <= currentSelect.selectOptions.length && this.incrementOption > 0) {
+              if (currentSelect.selectOptions[this.incrementOption]) {
+                this.$set(currentSelect.selectOptions[this.incrementOption], 'active', false);
+                this.incrementOption -= 1;
+                this.$set(currentSelect.selectOptions[this.incrementOption], 'active', true);
+              } else {
+                this.incrementOption -= 1;
+                this.$set(currentSelect.selectOptions[this.incrementOption], 'active', false);
+                this.incrementOption -= 1;
+                this.$set(currentSelect.selectOptions[this.incrementOption], 'active', true);
+              }
+              if (this.incrementOption % 3 === 0) {
+                dropdown.scrollTop -= (45 / this.incrementOption);
+              }
+            }
+          }
+          // bottom
+          if (event.keyCode === 40) {
+            if (this.incrementOption < currentSelect.selectOptions.length - 1) {
+              if (this.incrementOption === 0 || this.incrementOption === 1) {
+                this.$set(currentSelect.selectOptions[this.incrementOption], 'active', true);
+                this.incrementOption += 1;
+                this.$set(currentSelect.selectOptions[this.incrementOption], 'active', true);
+                this.$set(currentSelect.selectOptions[this.incrementOption - 1], 'active', false);
+              } else if (this.incrementOption > 1) {
+                this.$set(currentSelect.selectOptions[this.incrementOption], 'active', false);
+                this.incrementOption += 1;
+                this.$set(currentSelect.selectOptions[this.incrementOption], 'active', true);
+              }
+            }
+            if (this.incrementOption % 3 === 0) {
+              dropdown.scrollTop = 45 * this.incrementOption;
+            }
+          }
+        }
+        // enter
+        if (event.keyCode === 13) {
+          const oldSelect = this.lastSelectOpen;
+          if (!this.submitOptionTimeout === null) {
+            clearTimeout(this.submitOptionTimeout);
+          }
+          this.submitOptionTimeout = setTimeout(() => {
+            this.handleTbodySelectChange(event, oldSelect.header, currentSelect, currentSelect.selectOptions[this.incrementOption], oldSelect.rowIndex, oldSelect.colIndex);
+            this.submitOptionTimeout = null;
+          }, 100);
+        }
       }
 
       if (this.actualElement &&
@@ -841,14 +927,16 @@ export default {
           // bottom
           if (event.keyCode === 40) {
             event.preventDefault();
-            if (rowIndex + 1 !== rowMax) {
-              this.$set(this.tbodyData[rowIndex + 1][header], 'active', true);
-              if (dataType === 'select') { this.activeSelectSearch(event, rowIndex + 1, colIndex, header); }
-              this.updateSelectedCell(header, rowIndex + 1, colIndex);
-            } else {
-              this.$set(this.tbodyData[rowIndex][header], 'active', true);
-              if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, header); }
-              this.updateSelectedCell(header, rowIndex, colIndex);
+            if (!this.lastSelectOpen) {
+              if (rowIndex + 1 !== rowMax) {
+                this.$set(this.tbodyData[rowIndex + 1][header], 'active', true);
+                if (dataType === 'select') { this.activeSelectSearch(event, rowIndex + 1, colIndex, header); }
+                this.updateSelectedCell(header, rowIndex + 1, colIndex);
+              } else {
+                this.$set(this.tbodyData[rowIndex][header], 'active', true);
+                if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, header); }
+                this.updateSelectedCell(header, rowIndex, colIndex);
+              }
             }
           }
         }
