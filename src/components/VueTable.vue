@@ -317,7 +317,7 @@ export default {
         this.setFirstCell = false;
       }
 
-      params.forEach(param => {
+      params.forEach((param) => {
         this.tbodyData.forEach((data, index) => {
           Object.keys(data).forEach((key) => {
             if (this.tbodyData[index][key][param] === true) {
