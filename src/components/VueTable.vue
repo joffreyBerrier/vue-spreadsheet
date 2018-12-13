@@ -886,6 +886,7 @@ export default {
           this.handleSelectMultipleCell(event, header, this.incrementRow, this.incrementCol);
         } else {
           this.$set(this.tbodyData[rowIndex][header], 'active', false);
+          this.cleanActiveOnTd('first');
           // left
           if (event.keyCode === 37) {
             const decrementHeader = Object.values(this.headerKeys)[colIndex - 1];

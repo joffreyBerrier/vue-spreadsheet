@@ -342,6 +342,20 @@ export default {
   &.selected {
     background: aliceblue;
   }
+  &.active_td:after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 3;
+    border: 2px solid #0760fe;
+    box-sizing: border-box;
+  }
   &.selected {
     &.first:after {
       content: '';
@@ -356,6 +370,9 @@ export default {
       z-index: 3;
       border: 2px solid #0760fe;
       box-sizing: border-box;
+    }
+    &.active_td:after {
+      display: none;
     }
   }
   &.disabled {
