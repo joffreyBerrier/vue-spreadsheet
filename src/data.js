@@ -9,6 +9,7 @@ export default {
   },
   styleWrapVueTable: {
     height: '400px',
+    width: '700px',
     overflow: 'scroll',
   },
   newData: {

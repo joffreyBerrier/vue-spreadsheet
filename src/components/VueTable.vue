@@ -3,7 +3,7 @@
     ref="vueTable"
     :style="styleWrapVueTable"
     v-on:scroll="scrollFunction">
-    
+
     <slot name="header">
     </slot>
 
@@ -132,7 +132,6 @@ export default {
       incrementCol: 0,
       incrementOption: null,
       incrementRow: null,
-      incrementScrollTop: 0,
       keys: {},
       lastSelectOpen: null,
       oldTdActive: null,
@@ -173,7 +172,7 @@ export default {
     },
   },
   methods: {
-    // global 
+    // global
     debounce(fn, delay) {
       let timeout;
 
@@ -792,6 +791,7 @@ export default {
         event.keyCode === 13 ||
         event.keyCode === 27 ||
         event.keyCode === 8)) {
+        event.preventDefault();
         this.removeClass(['selected']);
 
         const colIndex = Number(this.actualElement.getAttribute('data-col-index'));
@@ -808,31 +808,36 @@ export default {
         const rowMax = this.tbodyData.length;
         const colMax = this.headers.length;
 
+        // set
         const vueTable = this.$refs.vueTable;
-        const heightVueTable = parseInt(vueTable.offsetHeight, 10) / 40;
-        const index = (rowIndex + 2) * 40;
-        const heightSlotHeader = vueTable.firstElementChild.clientHeight;
-        const heightHeader = this.$refs.vueThead.$el.clientHeight;
-        const heightTable = vueTable.clientHeight - heightSlotHeader - heightHeader;
-
+        const maxCol = Math.max(...this.colHeaderWidths);
+        // get the correct height of visible table
+        const heightTable = vueTable.clientHeight - vueTable.firstElementChild.clientHeight - this.$refs.vueThead.$el.clientHeight;
+        const widthTable = vueTable.clientWidth - 40;
+        const borderBottomCell = Math.round(heightTable / 40);
+        const borderRightCell = Math.round(widthTable / maxCol);
         // top
         if (event.keyCode === 38) {
-          event.preventDefault();
-          if (heightTable > index) {
-            if (this.incrementScrollTop > 0) {
-              this.incrementScrollTop -= 1;
-            }
+          if (borderBottomCell >= rowIndex) {
             vueTable.scrollTop -= 40;
           }
         }
         // bottom
         if (event.keyCode === 40) {
-          event.preventDefault();
-          if (heightTable <= index) {
-            if (heightVueTable > rowIndex) {
-              this.incrementScrollTop += 1;
-            }
-            vueTable.scrollTop = 40 * this.incrementScrollTop;
+          if ((borderBottomCell - 1) <= rowIndex) {
+            vueTable.scrollTop += 40;
+          }
+        }
+        // left
+        if (event.keyCode === 37) {
+          if ((borderRightCell + 1) >= colIndex) {
+            vueTable.scrollLeft -= maxCol;
+          }
+        }
+        // right
+        if (event.keyCode === 39) {
+          if ((borderRightCell - 1) <= colIndex) {
+            vueTable.scrollLeft += maxCol;
           }
         }
 
