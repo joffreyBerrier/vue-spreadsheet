@@ -220,9 +220,7 @@ export default {
           colIndex,
         };
 
-        this.cleanActiveOnTd('search');
-        this.cleanActiveOnTd('show');
-        this.cleanActiveOnTd('typing');
+        this.removeClass(['search', 'show', 'typing']);
 
         this.$set(currentData, 'search', true);
         this.$set(currentData, 'show', true);
@@ -305,7 +303,7 @@ export default {
       }
     },
     bindClassActiveOnTd(header, rowIndex, colIndex) {
-      this.cleanActiveOnTd('active');
+      this.removeClass(['active', 'show']);
       this.tbodyData[rowIndex][header].active = true;
       // stock oldTdActive in object
       this.oldTdActive = {
@@ -314,49 +312,20 @@ export default {
         col: colIndex,
       };
     },
-    cleanActiveOnTd(params) {
-      this.tbodyData.forEach((data, index) => {
-        if (params === 'active') {
+    removeClass(params) {
+      if (params.indexOf('first') !== 0) {
+        this.setFirstCell = false;
+      }
+
+      params.forEach((param) => {
+        this.tbodyData.forEach((data, index) => {
           Object.keys(data).forEach((key) => {
-            if (this.tbodyData[index][key].active === true) {
-              this.tbodyData[index][key].active = false;
-              this.tbodyData[index][key].show = false;
+            if (this.tbodyData[index][key][param] === true) {
+              this.$set(this.tbodyData[index][key], param, false);
             }
           });
-        } else if (params === 'selected') {
-          Object.keys(data).forEach((key) => {
-            if (this.tbodyData[index][key].selected === true) {
-              this.tbodyData[index][key].selected = false;
-            }
-          });
-        } else if (params === 'first') {
-          Object.keys(data).forEach((key) => {
-            if (this.tbodyData[index][key].first === true) {
-              this.tbodyData[index][key].first = false;
-            }
-          });
-          this.setFirstCell = false;
-        } else if (params === 'search') {
-          Object.keys(data).forEach((key) => {
-            if (this.tbodyData[index][key].search === true) {
-              this.tbodyData[index][key].search = false;
-            }
-          });
-        } else if (params === 'show') {
-          Object.keys(data).forEach((key) => {
-            if (this.tbodyData[index][key].show === true) {
-              this.tbodyData[index][key].show = false;
-            }
-          });
-        } else if (params === 'typing') {
-          Object.keys(data).forEach((key) => {
-            if (this.tbodyData[index][key].typing === true) {
-              this.tbodyData[index][key].typing = false;
-            }
-          });
-        }
+        });
       });
-      this.$forceUpdate();
     },
     // Copy / Paste
     copyStoreData() {
@@ -473,9 +442,7 @@ export default {
           }
         }
       }
-      this.cleanActiveOnTd('selected');
-      this.cleanActiveOnTd('first');
-      this.$forceUpdate();
+      this.removeClass(['selected', 'first']);
     },
     modifyMultipleCell(params) {
       let rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
@@ -576,9 +543,7 @@ export default {
       if (this.eventDrag === true && this.selectedCoordCells) {
         this.selectedCoordCells.rowEnd = rowIndex;
         this.pasteReplaceData();
-        this.cleanActiveOnTd('selected');
-        this.cleanActiveOnTd('first');
-        this.cleanActiveOnTd('active');
+        this.removeClass(['selected', 'first', 'active', 'show']);
         this.$emit('tbody-up-dragtofill', this.selectedCoordCells, header, rowIndex, colIndex);
         this.eventDrag = false;
         this.storeCopyDatas = [];
@@ -593,10 +558,9 @@ export default {
 
       if (!col.active) {
         if (!this.keys[16]) {
-          this.cleanActiveOnTd('selected');
-          this.cleanActiveOnTd('first');
+          this.removeClass(['selected', 'first']);
         }
-        this.cleanActiveOnTd('search');
+        this.removeClass(['search']);
       }
 
       this.bindClassActiveOnTd(header, rowIndex, colIndex);
@@ -827,7 +791,7 @@ export default {
         event.keyCode === 13 ||
         event.keyCode === 27 ||
         event.keyCode === 8)) {
-        this.cleanActiveOnTd('selected');
+        this.removeClass(['selected']);
 
         const colIndex = Number(this.actualElement.getAttribute('data-col-index'));
         const rowIndex = Number(this.actualElement.getAttribute('data-row-index'));
@@ -855,7 +819,7 @@ export default {
             if (this.incrementCol < 0) {
               this.incrementCol = 0;
             }
-            this.cleanActiveOnTd('selected');
+            this.removeClass(['selected']);
           }
           // shift / top
           if (event.keyCode === 38) {
@@ -863,7 +827,7 @@ export default {
             if (this.incrementRow < 0) {
               this.incrementRow = 0;
             }
-            this.cleanActiveOnTd('selected');
+            this.removeClass(['selected']);
           }
           // shift / right
           if (event.keyCode === 39) {
@@ -886,7 +850,7 @@ export default {
           this.handleSelectMultipleCell(event, header, this.incrementRow, this.incrementCol);
         } else {
           this.$set(this.tbodyData[rowIndex][header], 'active', false);
-          this.cleanActiveOnTd('first');
+          this.removeClass(['first']);
           // left
           if (event.keyCode === 37) {
             const decrementHeader = Object.values(this.headerKeys)[colIndex - 1];

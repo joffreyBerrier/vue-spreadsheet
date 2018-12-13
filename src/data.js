@@ -177,7 +177,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -271,7 +272,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -365,7 +367,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -459,7 +462,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -553,7 +557,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -647,7 +652,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -741,7 +747,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -835,7 +842,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -929,7 +937,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -1023,7 +1032,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
