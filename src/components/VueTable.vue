@@ -313,17 +313,16 @@ export default {
       };
     },
     removeClass(params) {
-      if (params.indexOf('first') !== 0) {
-        this.setFirstCell = false;
-      }
-
       params.forEach((param) => {
         this.tbodyData.forEach((data, index) => {
           Object.keys(data).forEach((key) => {
             if (this.tbodyData[index][key][param] === true) {
-              this.$set(this.tbodyData[index][key], param, false);
+              this.tbodyData[index][key][param] = false;
             }
           });
+          if (param === 'first') {
+            this.setFirstCell = false;
+          }
         });
       });
     },

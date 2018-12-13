@@ -374,6 +374,9 @@ export default {
     &.active_td:after {
       display: none;
     }
+    &.active_td.first:after {
+      display: block;
+    }
   }
   &.disabled {
     pointer-events: none;
