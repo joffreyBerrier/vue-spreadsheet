@@ -85,7 +85,7 @@
                   v-model="searchInput"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup.esc="escKeyup(row[col], rowIndex, col, colIndex, row[col].type)"
-                  @keyup="handleSearchInputSelect($event, searchInput, row[col], col, rowIndex)"/>
+                  @keyup="handleSearchInputSelect($event, searchInput, row[col], col, rowIndex, colIndex)"/>
                 <ul
                   v-bind:class="{'show': row[col].search}"
                   :ref="'dropdown-' + colIndex + '-' + rowIndex">
@@ -225,6 +225,7 @@ export default {
   },
   methods: {
     enableSelect(event, header, col, rowIndex, colIndex) {
+      this.searchInput = '';
       this.$emit('handle-to-open-select', event, header, col, rowIndex, colIndex);
     },
     escKeyup(col, rowIndex, header, colIndex, type) {
@@ -283,8 +284,8 @@ export default {
     selectHandleChange(event, header, col, option, rowIndex, colIndex) {
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
-    handleSearchInputSelect(event, searchValue, col, header, rowIndex) {
-      this.$emit('tbody-handle-search-input-select', event, searchValue, col, header, rowIndex);
+    handleSearchInputSelect(event, searchValue, col, header, rowIndex, colIndex) {
+      this.$emit('tbody-handle-search-input-select', event, searchValue, col, header, rowIndex, colIndex);
     },
     validSearch(event, header, col, option, rowIndex, colIndex) {
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
