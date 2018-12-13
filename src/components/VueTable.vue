@@ -658,18 +658,23 @@ export default {
     callbackSubmenuTbody(event, header, rowIndex, colIndex, type, submenuFunction) {
       this.$emit(`tbody-submenu-click-${submenuFunction}`, event, header, rowIndex, colIndex, type, submenuFunction);
     },
-    handleSearchInputSelect(event, searchValue, col, header, rowIndex) {
+    handleSearchInputSelect(event, searchValue, col, header, rowIndex, colIndex) {
       if ((!this.keys.cmd || !this.keys.ctrl) &&
         event.keyCode !== 8 &&
         event.keyCode !== 16 &&
         event.keyCode !== 17 &&
         event.keyCode !== 27 &&
         event.keyCode !== 37 &&
-        event.keyCode !== 38 &&
         event.keyCode !== 39 &&
-        event.keyCode !== 40 &&
         event.keyCode !== 91 &&
         event.keyCode !== 8) {
+        this.lastSelectOpen = {
+          event,
+          header,
+          col,
+          rowIndex,
+          colIndex,
+        };
         // active class
         this.$set(this.tbodyData[rowIndex][header], 'search', true);
         this.$set(this.tbodyData[rowIndex][header], 'typing', true);
@@ -730,11 +735,11 @@ export default {
 
       if (this.lastSelectOpen) {
         const currentSelect = this.tbodyData[this.lastSelectOpen.rowIndex][this.lastSelectOpen.header];
-        if (this.incrementOption <= currentSelect.selectOptions.length) {
+        if (this.incrementOption <= this.filteredList.length) {
           // top
           const dropdown = this.$refs.vueTbody.$refs[`dropdown-${this.lastSelectOpen.colIndex}-${this.lastSelectOpen.rowIndex}`][0];
           if (event.keyCode === 38) {
-            if (this.incrementOption <= currentSelect.selectOptions.length && this.incrementOption > 0) {
+            if (this.incrementOption <= this.filteredList.length && this.incrementOption > 0) {
               if (currentSelect.selectOptions[this.incrementOption]) {
                 this.$set(currentSelect.selectOptions[this.incrementOption], 'active', false);
                 this.incrementOption -= 1;
@@ -752,7 +757,7 @@ export default {
           }
           // bottom
           if (event.keyCode === 40) {
-            if (this.incrementOption < currentSelect.selectOptions.length - 1) {
+            if (this.incrementOption < this.filteredList.length - 1) {
               if (this.incrementOption === 0 || this.incrementOption === 1) {
                 this.$set(currentSelect.selectOptions[this.incrementOption], 'active', true);
                 this.incrementOption += 1;
