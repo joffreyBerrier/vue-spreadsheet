@@ -8,6 +8,8 @@ export default {
     left: 0,
   },
   styleWrapVueTable: {
+    height: '400px',
+    overflow: 'scroll',
   },
   newData: {
     type: 'input',

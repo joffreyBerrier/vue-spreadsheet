@@ -3,7 +3,7 @@
     ref="vueTable"
     :style="styleWrapVueTable"
     v-on:scroll="scrollFunction">
-
+    
     <slot name="header">
     </slot>
 
@@ -132,6 +132,7 @@ export default {
       incrementCol: 0,
       incrementOption: null,
       incrementRow: null,
+      incrementScrollTop: 0,
       keys: {},
       lastSelectOpen: null,
       oldTdActive: null,
@@ -807,6 +808,34 @@ export default {
         const rowMax = this.tbodyData.length;
         const colMax = this.headers.length;
 
+        const vueTable = this.$refs.vueTable;
+        const heightVueTable = parseInt(vueTable.offsetHeight, 10) / 40;
+        const index = (rowIndex + 2) * 40;
+        const heightSlotHeader = vueTable.firstElementChild.clientHeight;
+        const heightHeader = this.$refs.vueThead.$el.clientHeight;
+        const heightTable = vueTable.clientHeight - heightSlotHeader - heightHeader;
+
+        // top
+        if (event.keyCode === 38) {
+          event.preventDefault();
+          if (heightTable > index) {
+            if (this.incrementScrollTop > 0) {
+              this.incrementScrollTop -= 1;
+            }
+            vueTable.scrollTop -= 40;
+          }
+        }
+        // bottom
+        if (event.keyCode === 40) {
+          event.preventDefault();
+          if (heightTable <= index) {
+            if (heightVueTable > rowIndex) {
+              this.incrementScrollTop += 1;
+            }
+            vueTable.scrollTop = 40 * this.incrementScrollTop;
+          }
+        }
+
         // shift
         if (this.keys[16]) {
           this.$set(this.tbodyData[rowIndex][header], 'active', false);
@@ -891,7 +920,6 @@ export default {
           }
           // bottom
           if (event.keyCode === 40) {
-            event.preventDefault();
             if (!this.lastSelectOpen) {
               if (rowIndex + 1 !== rowMax) {
                 this.$set(this.tbodyData[rowIndex + 1][header], 'active', true);
