@@ -8,9 +8,9 @@ export default {
     left: 0,
   },
   styleWrapVueTable: {
-    height: '400px',
-    width: '700px',
-    overflow: 'scroll',
+    // height: '400px',
+    // width: '700px',
+    // overflow: 'scroll',
   },
   newData: {
     type: 'input',
@@ -147,6 +147,7 @@ export default {
           {
             value: 30,
             label: 30,
+            active: true,
           },
         ],
         value: 30,
@@ -171,6 +172,7 @@ export default {
           {
             value: 1983,
             label: 1983,
+            active: true,
           },
           {
             value: 1984,
@@ -180,8 +182,7 @@ export default {
         value: 1983,
         active: false,
       },
-    },
-    {
+    },{
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -242,9 +243,10 @@ export default {
           {
             value: 30,
             label: 30,
+            active: true,
           },
         ],
-        value: 26,
+        value: 30,
         active: false,
       },
       g: {
@@ -266,6 +268,7 @@ export default {
           {
             value: 1983,
             label: 1983,
+            active: true,
           },
           {
             value: 1984,
@@ -275,8 +278,7 @@ export default {
         value: 1983,
         active: false,
       },
-    },
-    {
+    },{
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -337,9 +339,10 @@ export default {
           {
             value: 30,
             label: 30,
+            active: true,
           },
         ],
-        value: 26,
+        value: 30,
         active: false,
       },
       g: {
@@ -361,6 +364,7 @@ export default {
           {
             value: 1983,
             label: 1983,
+            active: true,
           },
           {
             value: 1984,
@@ -370,8 +374,7 @@ export default {
         value: 1983,
         active: false,
       },
-    },
-    {
+    },{
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -432,9 +435,10 @@ export default {
           {
             value: 30,
             label: 30,
+            active: true,
           },
         ],
-        value: 26,
+        value: 30,
         active: false,
       },
       g: {
@@ -456,6 +460,7 @@ export default {
           {
             value: 1983,
             label: 1983,
+            active: true,
           },
           {
             value: 1984,
@@ -465,8 +470,7 @@ export default {
         value: 1983,
         active: false,
       },
-    },
-    {
+    },{
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -527,9 +531,10 @@ export default {
           {
             value: 30,
             label: 30,
+            active: true,
           },
         ],
-        value: 26,
+        value: 30,
         active: false,
       },
       g: {
@@ -551,6 +556,7 @@ export default {
           {
             value: 1983,
             label: 1983,
+            active: true,
           },
           {
             value: 1984,
@@ -560,8 +566,7 @@ export default {
         value: 1983,
         active: false,
       },
-    },
-    {
+    },{
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -622,9 +627,10 @@ export default {
           {
             value: 30,
             label: 30,
+            active: true,
           },
         ],
-        value: 26,
+        value: 30,
         active: false,
       },
       g: {
@@ -646,6 +652,7 @@ export default {
           {
             value: 1983,
             label: 1983,
+            active: true,
           },
           {
             value: 1984,
@@ -655,8 +662,7 @@ export default {
         value: 1983,
         active: false,
       },
-    },
-    {
+    },{
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -717,9 +723,10 @@ export default {
           {
             value: 30,
             label: 30,
+            active: true,
           },
         ],
-        value: 26,
+        value: 30,
         active: false,
       },
       g: {
@@ -741,6 +748,7 @@ export default {
           {
             value: 1983,
             label: 1983,
+            active: true,
           },
           {
             value: 1984,
@@ -750,8 +758,7 @@ export default {
         value: 1983,
         active: false,
       },
-    },
-    {
+    },{
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -812,9 +819,10 @@ export default {
           {
             value: 30,
             label: 30,
+            active: true,
           },
         ],
-        value: 26,
+        value: 30,
         active: false,
       },
       g: {
@@ -836,6 +844,7 @@ export default {
           {
             value: 1983,
             label: 1983,
+            active: true,
           },
           {
             value: 1984,
@@ -845,8 +854,7 @@ export default {
         value: 1983,
         active: false,
       },
-    },
-    {
+    },{
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -907,9 +915,10 @@ export default {
           {
             value: 30,
             label: 30,
+            active: true,
           },
         ],
-        value: 26,
+        value: 30,
         active: false,
       },
       g: {
@@ -931,6 +940,7 @@ export default {
           {
             value: 1983,
             label: 1983,
+            active: true,
           },
           {
             value: 1984,
@@ -940,8 +950,7 @@ export default {
         value: 1983,
         active: false,
       },
-    },
-    {
+    },{
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -1002,9 +1011,10 @@ export default {
           {
             value: 30,
             label: 30,
+            active: true,
           },
         ],
-        value: 26,
+        value: 30,
         active: false,
       },
       g: {
@@ -1026,6 +1036,7 @@ export default {
           {
             value: 1983,
             label: 1983,
+            active: true,
           },
           {
             value: 1984,
@@ -1035,8 +1046,7 @@ export default {
         value: 1983,
         active: false,
       },
-    },
-    {
+    },{
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -1097,9 +1107,10 @@ export default {
           {
             value: 30,
             label: 30,
+            active: true,
           },
         ],
-        value: 26,
+        value: 30,
         active: false,
       },
       g: {
@@ -1121,6 +1132,7 @@ export default {
           {
             value: 1983,
             label: 1983,
+            active: true,
           },
           {
             value: 1984,
