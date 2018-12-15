@@ -85,7 +85,7 @@
                   v-model="searchInput"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup.esc="escKeyup(row[col], rowIndex, col, colIndex, row[col].type)"
-                  @keyup="handleSearchInputSelect($event, searchInput, row[col], col, rowIndex, colIndex)"/>
+                  @keyup="handleSearchInputSelect($event, row[col], col, rowIndex, colIndex)"/>
                 <ul
                   v-bind:class="{'show': row[col].search}"
                   :ref="'dropdown-' + colIndex + '-' + rowIndex">
@@ -281,14 +281,14 @@ export default {
     inputHandleChange(event, header, rowIndex, colIndex) {
       this.$emit('tbody-input-change', event, header, rowIndex, colIndex);
     },
+    validSearch(event, header, col, option, rowIndex, colIndex) {
+      this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
+    },
     selectHandleChange(event, header, col, option, rowIndex, colIndex) {
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
-    handleSearchInputSelect(event, searchValue, col, header, rowIndex, colIndex) {
-      this.$emit('tbody-handle-search-input-select', event, searchValue, col, header, rowIndex, colIndex);
-    },
-    validSearch(event, header, col, option, rowIndex, colIndex) {
-      this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
+    handleSearchInputSelect(event, col, header, rowIndex, colIndex) {
+      this.$emit('tbody-handle-search-input-select', event, this.searchInput, col, header, rowIndex, colIndex);
     },
     handleClickSubmenu(event, header, rowIndex, colIndex, type, submenuFunction) {
       this.$emit('tbody-submenu-click-callback', event, header, rowIndex, colIndex, type, submenuFunction);
