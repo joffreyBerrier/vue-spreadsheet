@@ -247,12 +247,11 @@ export default {
 
         this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
-
+        this.filteredList = currentData.selectOptions;
         if (currentData.value !== '') {
           this.showDropdown(currentData, colIndex, rowIndex);
           const index = currentData.selectOptions.map(x => x.value).indexOf(currentData.value);
           this.incrementOption = index;
-          this.filteredList = currentData.selectOptions;
         } else {
           this.incrementOption = 0;
         }
