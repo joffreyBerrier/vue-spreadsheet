@@ -5,37 +5,37 @@
         <td class="index" v-if="tbodyIndex" :key="'td-index-' + rowIndex">
           {{rowIndex}}
         </td>
-        <template v-for="(col, colIndex) in headerKeys">
+        <template v-for="(header, colIndex) in headerKeys">
           <td
-            v-if="row[col]"
+            v-if="row[header]"
             class="td"
-            :id="col"
+            :data-header="header"
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
-            :data-type="row[col].type"
-            @click.shift.exact="handleSelectMultipleCell($event, col, rowIndex, colIndex, row[col].type)"
-            @contextmenu="handleContextMenuTd($event, col, rowIndex, colIndex, row[col].type)"
-            @click="handleClickTd($event, row[col], col, rowIndex, colIndex, row[col].type)"
-            @dblclick="handleDoubleClickTd($event, col, row[col], rowIndex, colIndex, row[col].type)"
-            @mousemove="handleMoveDragToFill($event, col, row[col], rowIndex, colIndex)"
-            @mouseup="handleUpDragToFill($event, col, rowIndex, colIndex, row[col].type)"
+            :data-type="row[header].type"
+            @click.shift.exact="handleSelectMultipleCell($event, header, rowIndex, colIndex, row[header].type)"
+            @contextmenu="handleContextMenuTd($event, header, rowIndex, colIndex, row[header].type)"
+            @click="handleClickTd($event, row[header], header, rowIndex, colIndex, row[header].type)"
+            @dblclick="handleDoubleClickTd($event, header, row[header], rowIndex, colIndex, row[header].type)"
+            @mousemove="handleMoveDragToFill($event, header, row[header], rowIndex, colIndex)"
+            @mouseup="handleUpDragToFill($event, header, row[header], rowIndex, colIndex, row[header].type)"
             v-bind:class="{
-              'active_td': row[col].active,
-              'show': row[col].show,
-              'selected': row[col].selected,
-              'disabled': row[col].disabled || disableCells.find(x => x === col),
-              'first': row[col].first,
+              'active_td': row[header].active,
+              'show': row[header].show,
+              'selected': row[header].selected,
+              'disabled': row[header].disabled || disableCells.find(x => x === header),
+              'first': row[header].first,
             }"
             :ref="'td-' + colIndex + '-' + rowIndex"
-            :key="col"
-            :style="row[col].style">
+            :key="header"
+            :style="row[header].style">
 
             <template
               v-if="dragToFill">
               <button
                 class="drag_to_fill"
-                @mousedown="handleDownDragToFill($event, col, row[col], rowIndex, colIndex)"
-                @mouseup="handleUpDragToFill($event, col, rowIndex, colIndex, row[col].type)">
+                @mousedown="handleDownDragToFill($event, header, row[header], rowIndex, colIndex)"
+                @mouseup="handleUpDragToFill($event, header, row[header], rowIndex, colIndex, row[header].type)">
               </button>
             </template>
 
@@ -46,13 +46,13 @@
                 submenuStatusTbody &&
                 rowIndex === submenuEnableRow &&
                 colIndex === submenuEnableCol &&
-                submenuTbody.find(sub => sub.disabled.includes(col) == 0)">
+                submenuTbody.find(sub => sub.disabled.includes(header) == 0)">
                 <template v-for="(submenu, index) in submenuTbody">
                   <template v-if="submenu.type === 'button'">
                     <button
-                      v-if="submenu.disabled.includes(col) == 0"
+                      v-if="submenu.disabled.includes(header) == 0"
                       :key="index"
-                      @click.stop="handleClickSubmenu($event, col, rowIndex, colIndex, row[col].type, submenu.function)">
+                      @click.stop="handleClickSubmenu($event, header, rowIndex, colIndex, row[header].type, submenu.function)">
                       {{submenu.value}}
                     </button>
                   </template>
@@ -61,46 +61,46 @@
             </div>
 
             <!-- If Img -->
-            <template v-if="row[col].type === 'img'">
-              <span><img :src="row[col].value" :title="row[col].value" /></span>
+            <template v-if="row[header].type === 'img'">
+              <span><img :src="row[header].value" :title="row[header].value" /></span>
             </template>
 
             <!-- If Input -->
-            <template v-if="row[col].type === 'input'">
-              <span>{{row[col].value}}</span>
+            <template v-if="row[header].type === 'input'">
+              <span>{{row[header].value}}</span>
               <textarea
-                v-model="row[col].value"
-                @change="inputHandleChange($event, col, rowIndex, colIndex)"
-                @keyup.esc="escKeyup(row[col], rowIndex, col, colIndex, row[col].type)"
+                v-model="row[header].value"
+                @change="inputHandleChange($event, header, rowIndex, colIndex)"
+                @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
                 :ref="'input-' + colIndex + '-' + rowIndex"
-                :style="textareaStyle(row[col].value)"></textarea>
+                :style="textareaStyle(row[header].value)"></textarea>
             </template>
 
             <!-- If Select -->
-            <template v-if="row[col].type === 'select' && row[col].handleSearch">
-              <span>{{row[col].value}}</span>
-              <button @click.stop="enableSelect($event, col, row[col], rowIndex, colIndex)" v-bind:class="{'active': row[col].search === true}" class="enable_select"><i></i></button>
+            <template v-if="row[header].type === 'select' && row[header].handleSearch">
+              <span>{{row[header].value}}</span>
+              <button @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)" v-bind:class="{'active': row[header].search === true}" class="enable_select"><i></i></button>
               <div class="dropdown">
                 <input
                   v-model="searchInput"
                   :ref="'input-' + colIndex + '-' + rowIndex"
-                  @keyup.esc="escKeyup(row[col], rowIndex, col, colIndex, row[col].type)"
-                  @keyup="handleSearchInputSelect($event, row[col], col, rowIndex, colIndex)"/>
+                  @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
+                  @keyup="handleSearchInputSelect($event, row[header], header, rowIndex, colIndex)"/>
                 <ul
-                  v-bind:class="{'show': row[col].search}"
+                  v-bind:class="{'show': row[header].search}"
                   :ref="'dropdown-' + colIndex + '-' + rowIndex">
-                  <template v-if="!row[col].typing">
-                    <li v-for="(option, index) in row[col].selectOptions"
-                      @click.stop="validSearch($event, col, row[col], option, rowIndex, colIndex)"
+                  <template v-if="!row[header].typing">
+                    <li v-for="(option, index) in row[header].selectOptions"
+                      @click.stop="validSearch($event, header, row[header], option, rowIndex, colIndex)"
                       v-bind:class="{'active': option.active}"
                       :value="option.value"
                       :key="index + 'option'">
                         {{option.label}}
                     </li>
                   </template>
-                  <template v-if="row[col].typing">
+                  <template v-if="row[header].typing">
                     <li v-for="(option, index) in filteredList"
-                      @click.stop="validSearch($event, col, row[col], option, rowIndex, colIndex)"
+                      @click.stop="validSearch($event, header, row[header], option, rowIndex, colIndex)"
                       v-bind:class="{'active': option.active}"
                       :value="option.value"
                       :key="index">
@@ -111,50 +111,18 @@
               </div>
             </template>
 
-            <template v-else-if="row[col].type === 'select'">
-              <span>{{row[col].value}}</span>
+            <template v-else-if="row[header].type === 'select'">
+              <span>{{row[header].value}}</span>
               <select
-                v-model="row[col].value"
-                @change="selectHandleChange($event, col, row[col], option, rowIndex, colIndex)">
+                v-model="row[header].value"
+                @change="selectHandleChange($event, header, row[header], option, rowIndex, colIndex)">
                 <option
-                  v-for="(option, index) in row[col].selectOptions"
+                  v-for="(option, index) in row[header].selectOptions"
                   :value="option.value"
                   :key="index">
                     {{option.label}}
                 </option>
               </select>
-            </template>
-          </td>
-
-          <!-- If Empty Cell -->
-          <td v-else
-            class="td"
-            :id="col"
-            :data-col-index="colIndex"
-            :data-row-index="rowIndex"
-            @contextmenu="handleContextMenuTd($event, col, rowIndex, colIndex, 'newCol')"
-            @click="handleClickTd($event, row[col], col, rowIndex, colIndex, 'newCol')"
-            @dblclick="handleDoubleClickTd($event, col, col, rowIndex, colIndex, 'newCol')"
-            v-bind:class="{
-              'active_td': newData.active,
-              'show': newData.show,
-              'disabled': newData.disabled,
-              'selected': newData.selected,
-              'disabled': disableCells.find(x => x === col),
-            }"
-            :ref="'td-' + colIndex + '-' + rowIndex"
-            :key="col"
-            :style="newData.style">
-
-            <!-- If Input -->
-            <template v-if="newData.type === 'input'">
-              <span>{{newData.value}}</span>
-              <textarea
-              v-model="newData.value"
-              @change="inputHandleChange($event, col, rowIndex, colIndex)"
-              @keyup.esc="escKeyup(newData, rowIndex, colIndex, newData.type)"
-              :ref="'input-' + colIndex + '-' + rowIndex"
-              :style="textareaStyle(newData.value)"></textarea>
             </template>
           </td>
         </template>
@@ -224,12 +192,24 @@ export default {
     },
   },
   methods: {
+    disabledEvent(col, header) {
+      if (col.disabled === undefined) {
+        return !this.disableCells.find(x => x === header)
+      } else if (col.disabled) {
+        return !col.disabled
+      }
+      return true;
+    },
     enableSelect(event, header, col, rowIndex, colIndex) {
-      this.searchInput = '';
-      this.$emit('handle-to-open-select', event, header, col, rowIndex, colIndex);
+      if (this.disabledEvent(col, header)) {
+        this.searchInput = '';
+        this.$emit('handle-to-open-select', event, header, col, rowIndex, colIndex);
+      }
     },
     escKeyup(col, rowIndex, header, colIndex, type) {
-      this.$emit('tbody-handle-set-oldvalue', col, rowIndex, header, colIndex, type);
+      if (this.disabledEvent(col, header)) {
+        this.$emit('tbody-handle-set-oldvalue', col, rowIndex, header, colIndex, type);
+      }
     },
     textareaStyle(value) {
       if (value.length > 100) {
@@ -247,16 +227,18 @@ export default {
       this.$emit('tbody-select-multiple-cell', event, header, rowIndex, colIndex, type);
     },
     handleDownDragToFill(event, header, col, rowIndex, colIndex) {
-      this.eventDrag = true;
-      this.$emit('tbody-down-dragtofill', event, header, col, rowIndex, colIndex);
+      if (this.disabledEvent(col, header)) {
+        this.eventDrag = true;
+        this.$emit('tbody-down-dragtofill', event, header, col, rowIndex, colIndex);
+      }
     },
     handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
-      if (this.eventDrag) {
+      if (this.eventDrag && this.disabledEvent(col, header)) {
         this.$emit('tbody-move-dragtofill', event, header, col, rowIndex, colIndex);
       }
     },
-    handleUpDragToFill(event, header, rowIndex, colIndex, type) {
-      if (this.eventDrag) {
+    handleUpDragToFill(event, header, col, rowIndex, colIndex, type) {
+      if (this.eventDrag && this.disabledEvent(col, header)) {
         this.eventDrag = false;
         this.$emit('tbody-up-dragtofill', event, header, rowIndex, colIndex, type);
       }
@@ -266,10 +248,12 @@ export default {
       this.$emit('tbody-td-click', event, col, header, rowIndex, colIndex, type);
     },
     handleDoubleClickTd(event, header, col, rowIndex, colIndex, type) {
-      if (type === 'input') {
-        this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+      if (this.disabledEvent(col, header)) {
+        if (type === 'input') {
+          this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+        }
+        this.$emit('tbody-td-double-click', event, header, col, rowIndex, colIndex);
       }
-      this.$emit('tbody-td-double-click', event, header, col, rowIndex, colIndex, type);
     },
     handleContextMenuTd(event, header, rowIndex, colIndex, type) {
       this.submenuEnableCol = colIndex;
@@ -288,7 +272,9 @@ export default {
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
     handleSearchInputSelect(event, col, header, rowIndex, colIndex) {
-      this.$emit('tbody-handle-search-input-select', event, this.searchInput, col, header, rowIndex, colIndex);
+      if (this.disabledEvent(col, header)) {
+        this.$emit('tbody-handle-search-input-select', event, this.searchInput, col, header, rowIndex, colIndex);
+      }
     },
     handleClickSubmenu(event, header, rowIndex, colIndex, type, submenuFunction) {
       this.$emit('tbody-submenu-click-callback', event, header, rowIndex, colIndex, type, submenuFunction);
@@ -380,7 +366,7 @@ export default {
     }
   }
   &.disabled {
-    pointer-events: none;
+    // pointer-events: none;
     background: #cccccc;
     span {
       opacity: .5;

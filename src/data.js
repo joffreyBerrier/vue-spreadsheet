@@ -1,6 +1,6 @@
 export default {
   dragToFill: true,
-  disableCells: [],
+  disableCells: ['a', 'f'],
   sortHeader: true,
   tbodyIndex: true,
   selectPosition: {
@@ -92,14 +92,6 @@ export default {
         value: 'https://via.placeholder.com/350x150',
         active: false,
       },
-      b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
-        style: {
-          color: '#000',
-        },
-      },
       c: {
         type: 'input',
         value: 'Paris',
@@ -182,7 +174,97 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
+      a: {
+        type: 'img',
+        value: 'https://via.placeholder.com/350x150',
+        active: false,
+      },
+      b: {
+        type: 'input',
+        value: 'Jane',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      d: {
+        type: 'input',
+        value: 'France',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      e: {
+        type: 'input',
+        value: 'Boe',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
+      f: {
+        type: 'select',
+        handleSearch: true,
+        selectOptions: [
+          {
+            value: 26,
+            label: 26,
+          },
+          {
+            value: 27,
+            label: 27,
+          },
+          {
+            value: 28,
+            label: 28,
+          },
+          {
+            value: 29,
+            label: 29,
+          },
+          {
+            value: 30,
+            label: 30,
+            active: true,
+          },
+        ],
+        value: 30,
+        active: false,
+      },
+      g: {
+        type: 'select',
+        handleSearch: true,
+        selectOptions: [
+          {
+            value: 1980,
+            label: 1980,
+          },
+          {
+            value: 1981,
+            label: 1981,
+          },
+          {
+            value: 1982,
+            label: 1982,
+          },
+          {
+            value: 1983,
+            label: 1983,
+            active: true,
+          },
+          {
+            value: 1984,
+            label: 1984,
+          },
+        ],
+        value: 1983,
+        active: false,
+      },
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -278,7 +360,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -374,7 +457,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -470,7 +554,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -566,7 +651,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -662,7 +748,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -758,7 +845,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -854,7 +942,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -950,103 +1039,8 @@ export default {
         value: 1983,
         active: false,
       },
-    },{
-      a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
-      },
-      b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
-        style: {
-          color: '#000',
-        },
-      },
-      c: {
-        type: 'input',
-        value: 'Paris',
-        active: false,
-        style: {
-          color: '#000',
-        },
-      },
-      d: {
-        type: 'input',
-        value: 'France',
-        active: false,
-        style: {
-          color: '#000',
-        },
-      },
-      e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
-        style: {
-          color: '#000',
-        },
-      },
-      f: {
-        type: 'select',
-        handleSearch: true,
-        selectOptions: [
-          {
-            value: 26,
-            label: 26,
-          },
-          {
-            value: 27,
-            label: 27,
-          },
-          {
-            value: 28,
-            label: 28,
-          },
-          {
-            value: 29,
-            label: 29,
-          },
-          {
-            value: 30,
-            label: 30,
-            active: true,
-          },
-        ],
-        value: 30,
-        active: false,
-      },
-      g: {
-        type: 'select',
-        handleSearch: true,
-        selectOptions: [
-          {
-            value: 1980,
-            label: 1980,
-          },
-          {
-            value: 1981,
-            label: 1981,
-          },
-          {
-            value: 1982,
-            label: 1982,
-          },
-          {
-            value: 1983,
-            label: 1983,
-            active: true,
-          },
-          {
-            value: 1984,
-            label: 1984,
-          },
-        ],
-        value: 1983,
-        active: false,
-      },
-    },{
+    },
+    {
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
