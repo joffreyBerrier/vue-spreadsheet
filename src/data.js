@@ -1,6 +1,6 @@
 export default {
   dragToFill: true,
-  disableCells: ['a', 'f'],
+  disableCells: [],
   sortHeader: true,
   tbodyIndex: true,
   selectPosition: {
@@ -142,7 +142,7 @@ export default {
             active: true,
           },
         ],
-        value: 30,
+        value: '',
         active: false,
       },
       g: {
