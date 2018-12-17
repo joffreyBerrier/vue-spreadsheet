@@ -447,7 +447,7 @@ export default {
         let colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
         let colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
 
-        if (this.selectedCoordCells !== this.selectedCoordCopyCells) {
+        if (this.selectedCoordCopyCells !== null && this.selectedCoordCells !== this.selectedCoordCopyCells) {
           rowMin = Math.min(this.selectedCoordCopyCells.rowStart, this.selectedCoordCopyCells.rowEnd);
           rowMax = Math.max(this.selectedCoordCopyCells.rowStart, this.selectedCoordCopyCells.rowEnd);
           colMin = Math.min(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
@@ -489,8 +489,14 @@ export default {
               col += 1;
             }
 
+            // // one cell to multipleCell
+            if (newCopyData.length === 1 && Object.values(newCopyData).length === 1 && newCopyData[0].type) {
+              currentHeader = this.headerKeys[colMin];
+              this.tbodyData[rowMin][currentHeader] = newCopyData[0];
+            }
+
             // 1 row to 1 row
-            if (newCopyData.length === 1) {
+            if (newCopyData.length === 1 && Object.values(newCopyData[0]).length > 1 && !newCopyData[0].type) {
               if (this.selectedCoordCells !== this.selectedCoordCopyCells) {
                 this.tbodyData[this.selectedCoordCells.rowStart][currentHeader] = newCopyData[0][header];
               } else {
@@ -511,7 +517,7 @@ export default {
           }
           colMin += 1;
           if (colMin > colMax) {
-            if (this.selectedCoordCells !== this.selectedCoordCopyCells) {
+            if (this.selectedCoordCopyCells !== null && this.selectedCoordCells !== this.selectedCoordCopyCells) {
               colMin = Math.min(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
             } else {
               colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
