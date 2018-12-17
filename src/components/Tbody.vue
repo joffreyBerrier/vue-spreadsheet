@@ -182,10 +182,6 @@ export default {
       submenuEnableRow: null,
     };
   },
-  mounted() {
-    window.addEventListener('keydown', this.moveKeydown);
-    window.addEventListener('keyup', this.moveKeyup);
-  },
   computed: {
     headerKeys() {
       return this.headers.map(x => x.headerKey);
@@ -278,12 +274,6 @@ export default {
     },
     handleClickSubmenu(event, header, rowIndex, colIndex, type, submenuFunction) {
       this.$emit('tbody-submenu-click-callback', event, header, rowIndex, colIndex, type, submenuFunction);
-    },
-    moveKeydown(event) {
-      this.$emit('tbody-move-keydown', event);
-    },
-    moveKeyup(event) {
-      this.$emit('tbody-move-keyup', event);
     },
   },
 };

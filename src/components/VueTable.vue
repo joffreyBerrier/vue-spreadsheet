@@ -42,8 +42,6 @@
         v-on:tbody-down-dragtofill="handleDownDragToFill"
         v-on:tbody-input-change="handleTbodyInputChange"
         v-on:tbody-move-dragtofill="handleMoveDragToFill"
-        v-on:tbody-move-keydown="moveKeydown"
-        v-on:tbody-move-keyup="moveKeyup"
         v-on:tbody-nav-backspace="handleTbodyNavBackspace"
         v-on:tbody-nav-enter="handleTbodyNavEnter"
         v-on:tbody-nav="handleTbodyNav"
@@ -151,7 +149,8 @@ export default {
   mounted() {
     this.headerKeys = this.headers.map(header => header.headerKey);
     this.createdCell();
-
+    window.addEventListener('keydown', this.moveKeydown);
+    window.addEventListener('keyup', this.moveKeyup);
     document.addEventListener('copy', (event) => {
       event.preventDefault();
       this.storeCopyDatas = [];
@@ -225,7 +224,7 @@ export default {
     },
     scrollFunction() {
       if (this.lastSelectOpen) {
-        this.enableSelect(this.lastSelectOpen.event, this.lastSelectOpen.header, this.lastSelectOpen.col, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex);
+        this.calculPosition(this.lastSelectOpen.event, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex, 'dropdown');
       }
     },
     enableSelect(event, header, col, rowIndex, colIndex) {
@@ -733,24 +732,23 @@ export default {
       this.$emit('thead-td-sort', event, header, colIndex);
     },
     moveOnSelect(event) {
-      const currentSelect = this.tbodyData[this.lastSelectOpen.rowIndex][this.lastSelectOpen.header];
       if (this.incrementOption <= this.filteredList.length) {
         // top
         const dropdown = this.$refs.vueTbody.$refs[`dropdown-${this.lastSelectOpen.colIndex}-${this.lastSelectOpen.rowIndex}`][0];
         if (event.keyCode === 38) {
           if (this.incrementOption <= this.filteredList.length && this.incrementOption > 0) {
-            if (currentSelect.selectOptions[this.incrementOption]) {
-              this.$set(currentSelect.selectOptions[this.incrementOption], 'active', false);
+            if (this.filteredList[this.incrementOption]) {
+              this.$set(this.filteredList[this.incrementOption], 'active', false);
               this.incrementOption -= 1;
-              this.$set(currentSelect.selectOptions[this.incrementOption], 'active', true);
+              this.$set(this.filteredList[this.incrementOption], 'active', true);
             } else {
               this.incrementOption -= 1;
-              this.$set(currentSelect.selectOptions[this.incrementOption], 'active', false);
+              this.$set(this.filteredList[this.incrementOption], 'active', false);
               this.incrementOption -= 1;
-              this.$set(currentSelect.selectOptions[this.incrementOption], 'active', true);
+              this.$set(this.filteredList[this.incrementOption], 'active', true);
             }
             if (this.incrementOption % 3 === 0) {
-              dropdown.scrollTop -= (45 / this.incrementOption);
+              dropdown.scrollTop -= (45 * 3);
             }
           }
         }
@@ -758,14 +756,14 @@ export default {
         if (event.keyCode === 40) {
           if (this.incrementOption < this.filteredList.length - 1) {
             if (this.incrementOption === 0 || this.incrementOption === 1) {
-              this.$set(currentSelect.selectOptions[this.incrementOption], 'active', true);
+              this.$set(this.filteredList[this.incrementOption], 'active', true);
               this.incrementOption += 1;
-              this.$set(currentSelect.selectOptions[this.incrementOption], 'active', true);
-              this.$set(currentSelect.selectOptions[this.incrementOption - 1], 'active', false);
+              this.$set(this.filteredList[this.incrementOption], 'active', true);
+              this.$set(this.filteredList[this.incrementOption - 1], 'active', false);
             } else if (this.incrementOption > 1) {
-              this.$set(currentSelect.selectOptions[this.incrementOption], 'active', false);
+              this.$set(this.filteredList[this.incrementOption], 'active', false);
               this.incrementOption += 1;
-              this.$set(currentSelect.selectOptions[this.incrementOption], 'active', true);
+              this.$set(this.filteredList[this.incrementOption], 'active', true);
             }
           }
           if (this.incrementOption % 3 === 0) {
@@ -776,7 +774,8 @@ export default {
       // enter
       if (event.keyCode === 13) {
         const oldSelect = this.lastSelectOpen;
-        this.handleTbodySelectChange(event, oldSelect.header, currentSelect, currentSelect.selectOptions[this.incrementOption], oldSelect.rowIndex, oldSelect.colIndex);
+        const currentSelect = this.tbodyData[oldSelect.rowIndex][oldSelect.header];
+        this.handleTbodySelectChange(event, oldSelect.header, currentSelect, this.filteredList[this.incrementOption], oldSelect.rowIndex, oldSelect.colIndex);
         this.lastSelectOpen = null;
       }
     },
