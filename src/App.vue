@@ -13,6 +13,7 @@
       :submenu-thead="submenuThead"
       :tbody-data="products"
       :tbody-index="tbodyIndex"
+      v-on:tbody-replace-data="replaceData"
       v-on:tbody-input-change="inputChange"
       v-on:tbody-nav-backspace="deleteCell"
       v-on:tbody-nav-multiple-backspace="deleteMultipleCell"
@@ -46,6 +47,9 @@ export default {
     VueTable,
   },
   methods: {
+    replaceData(row, header) {
+      // console.log(row, header);
+    },
     handleUpDragToFill(selectedMultipleCell, entry, rowIndex, colIndex) {
       // console.log(selectedMultipleCell, entry, rowIndex, colIndex);
     },
