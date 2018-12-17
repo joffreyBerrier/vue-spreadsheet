@@ -514,6 +514,7 @@ export default {
                 col = 0;
               }
             }
+            this.$emit('tbody-replace-data', rowMin, header);
           }
           colMin += 1;
           if (colMin > colMax) {
