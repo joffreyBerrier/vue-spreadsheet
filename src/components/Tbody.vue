@@ -23,8 +23,9 @@
               'active_td': row[header].active,
               'show': row[header].show,
               'selected': row[header].selected,
+              'copy': row[header].stateCopy,
               'disabled': row[header].disabled || disableCells.find(x => x === header),
-              'first': row[header].first,
+              'rectangleSelection': row[header].rectangleSelection,
             }"
             :ref="'td-' + colIndex + '-' + rowIndex"
             :key="header"
@@ -190,9 +191,9 @@ export default {
   methods: {
     disabledEvent(col, header) {
       if (col.disabled === undefined) {
-        return !this.disableCells.find(x => x === header)
+        return !this.disableCells.find(x => x === header);
       } else if (col.disabled) {
-        return !col.disabled
+        return !col.disabled;
       }
       return true;
     },
@@ -317,7 +318,7 @@ export default {
   }
   &.active_td,
   &.selected {
-    background: aliceblue;
+    background: #a0c3ff99;
   }
   &.active_td:after {
     content: '';
@@ -330,11 +331,11 @@ export default {
     top: 0;
     width: 100%;
     z-index: 3;
-    border: 2px solid #0760fe;
+    border: 2px solid #3183fc;
     box-sizing: border-box;
   }
   &.selected {
-    &.first:after {
+    &.rectangleSelection:after {
       content: '';
       display: block;
       position: absolute;
@@ -345,15 +346,29 @@ export default {
       top: var(--rectangleTop);
       width: var(--rectangleWidth);
       z-index: 3;
-      border: 2px solid #0760fe;
+      border: 2px solid #3183fc;
       box-sizing: border-box;
     }
     &.active_td:after {
       display: none;
     }
-    &.active_td.first:after {
+    &.active_td.rectangleSelection:after {
       display: block;
     }
+  }
+  &.copy:after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: var(--rectangleBottom);
+    height: var(--rectangleHeight);
+    left: var(--rectangleLeft);
+    right: var(--rectangleRight);
+    top: var(--rectangleTop);
+    width: var(--rectangleWidth);
+    z-index: 3;
+    border: 2px dashed #3183fc;
+    box-sizing: border-box;
   }
   &.disabled {
     // pointer-events: none;
