@@ -152,7 +152,9 @@ export default {
     window.addEventListener('keydown', this.moveKeydown);
     window.addEventListener('keyup', this.moveKeyup);
     document.addEventListener('copy', (event) => {
-      event.preventDefault();
+      if (this.actualElement) {
+        event.preventDefault();
+      }
       this.storeCopyDatas = [];
       this.copyStoreData();
     });
@@ -208,7 +210,7 @@ export default {
     },
     updateSelectedCell(header, row, col) {
       if (!this.setFirstCell) {
-        this.$set(this.tbodyData[row][header], 'first', true);
+        this.$set(this.tbodyData[row][header], 'rectangleSelection', true);
         this.setFirstCell = true;
       }
       this.selectedCell = {
@@ -399,7 +401,7 @@ export default {
               this.tbodyData[index][key][param] = false;
             }
           });
-          if (param === 'first') {
+          if (param === 'rectangleSelection') {
             this.setFirstCell = false;
           }
         });
@@ -408,6 +410,8 @@ export default {
     // Copy / Paste
     copyStoreData() {
       const tbodyData = JSON.parse(JSON.stringify(this.tbodyData));
+      this.removeClass(['stateCopy']);
+
       if (this.selectedCoordCells && this.selectedCell.col === this.selectedCoordCells.colEnd && this.selectedCell.row === this.selectedCoordCells.rowEnd) {
         this.selectedCoordCopyCells = this.selectedCoordCells;
       }
@@ -417,7 +421,11 @@ export default {
         const rowMax = Math.max(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
         let colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
         const colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+        const header = this.headerKeys[colMin];
         let storeData = {};
+
+        this.$set(this.tbodyData[rowMin][header], 'stateCopy', true);
+        this.removeClass(['rectangleSelection']);
 
         while (rowMin <= rowMax) {
           storeData[this.headerKeys[colMin]] = tbodyData[rowMin][this.headerKeys[colMin]];
@@ -431,6 +439,7 @@ export default {
         }
         this.copyMultipleCell = true;
       } else {
+        this.$set(this.tbodyData[this.selectedCell.row][this.selectedCell.header], 'stateCopy', true);
         this.storeCopyDatas.push(tbodyData[this.selectedCell.row][this.selectedCell.header]);
         this.copyMultipleCell = false;
       }
@@ -455,14 +464,12 @@ export default {
           colMin = Math.min(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
           colMax = Math.max(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
         }
-
         let row = 0;
         let col = 0;
-        
         while (rowMin <= rowMax) {
           const header = this.headerKeys[colMin];
           const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
-          this.$set(this.tbodyData[rowMin][header], 'selected', false);
+          // this.$set(this.tbodyData[rowMin][header], 'selected', false);
 
           if (this.dragToFill && this.eventDrag) { // Drag To Fill
             if (newCopyData[0][header]) {
@@ -492,7 +499,7 @@ export default {
 
             // one cell to multipleCell
             if (newCopyData.length === 1 && Object.values(newCopyData).length === 1 && newCopyData[0].type) {
-              currentHeader = this.selectedCell.header
+              currentHeader = this.selectedCell.header;
               newCopyData[0].active = false;
               if (rowMin === this.selectedCell.row) {
                 newCopyData[0].active = true;
@@ -536,7 +543,7 @@ export default {
           }
         }
       }
-      this.removeClass(['selected', 'first']);
+      this.modifyMultipleCell();
     },
     modifyMultipleCell(params) {
       let rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
@@ -564,6 +571,7 @@ export default {
           rowMin += 1;
         }
       }
+
       // Defined width of rectangle
       if (colMin === 0 && colMax === 0) {
         width = 100 * (colMin + 1);
@@ -581,13 +589,17 @@ export default {
       } else {
         height = 40 * ((this.selectedCoordCells.rowStart - this.selectedCoordCells.rowEnd) + 1);
       }
-
       // Set height / width of rectangle
       this.debounce(this.setRectangleSelection(width, height), 600);
       this.$forceUpdate();
     },
     setRectangleSelection(width, height) {
-      const rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`][0];
+      let rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`][0];
+
+      if (!this.selectedMultipleCellActive) {
+        rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0];
+      }
+
       rectangleSelectedCell.style.setProperty('--rectangleWidth', `${width}%`);
       rectangleSelectedCell.style.setProperty('--rectangleHeight', `${height}px`);
 
@@ -640,7 +652,7 @@ export default {
       if (this.eventDrag === true && this.selectedCoordCells) {
         this.selectedCoordCells.rowEnd = rowIndex;
         this.pasteReplaceData();
-        this.removeClass(['selected', 'first', 'active', 'show']);
+        this.removeClass(['selected', 'rectangleSelection', 'active', 'show']);
         this.$emit('tbody-up-dragtofill', this.selectedCoordCells, header, rowIndex, colIndex);
         this.eventDrag = false;
         this.storeCopyDatas = [];
@@ -657,7 +669,7 @@ export default {
 
       if (!column.active) {
         if (!this.keys[16]) {
-          this.removeClass(['selected', 'first']);
+          this.removeClass(['selected', 'rectangleSelection']);
         }
         this.removeClass(['search']);
       }
@@ -923,7 +935,7 @@ export default {
         const header = this.actualElement.getAttribute('data-header');
 
         if (!this.setFirstCell) {
-          this.$set(this.tbodyData[rowIndex][header], 'first', true);
+          this.$set(this.tbodyData[rowIndex][header], 'rectangleSelection', true);
           this.setFirstCell = true;
         }
 
@@ -941,7 +953,7 @@ export default {
             this.selectedMultipleCell = false;
           }
           this.$set(this.tbodyData[rowIndex][header], 'active', false);
-          this.removeClass(['first']);
+          this.removeClass(['rectangleSelection']);
           // left
           if (event.keyCode === 37) {
             const decrementHeader = Object.values(this.headerKeys)[colIndex - 1];
