@@ -408,7 +408,9 @@ export default {
     // Copy / Paste
     copyStoreData() {
       const tbodyData = JSON.parse(JSON.stringify(this.tbodyData));
-      this.selectedCoordCopyCells = this.selectedCoordCells;
+      if (this.selectedCoordCells && this.selectedCell.col === this.selectedCoordCells.colEnd && this.selectedCell.row === this.selectedCoordCells.rowEnd) {
+        this.selectedCoordCopyCells = this.selectedCoordCells;
+      }
 
       if (this.selectedMultipleCell && this.selectedCoordCells) {
         let rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
@@ -456,7 +458,7 @@ export default {
 
         let row = 0;
         let col = 0;
-
+        
         while (rowMin <= rowMax) {
           const header = this.headerKeys[colMin];
           const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
@@ -488,9 +490,13 @@ export default {
               col += 1;
             }
 
-            // // one cell to multipleCell
+            // one cell to multipleCell
             if (newCopyData.length === 1 && Object.values(newCopyData).length === 1 && newCopyData[0].type) {
-              currentHeader = this.headerKeys[colMin];
+              currentHeader = this.selectedCell.header
+              newCopyData[0].active = false;
+              if (rowMin === this.selectedCell.row) {
+                newCopyData[0].active = true;
+              }
               this.tbodyData[rowMin][currentHeader] = newCopyData[0];
               this.$emit('tbody-replace-data', rowMin, currentHeader);
             }
