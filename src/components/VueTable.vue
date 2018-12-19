@@ -14,6 +14,7 @@
         :sort-header="sortHeader"
         :submenu-status-thead="submenuStatusThead"
         :submenu-thead="submenuThead"
+        :disable-sort-thead="disableSortThead"
         :tbody-index="tbodyIndex"
         v-on:handle-up-drag-size-header="handleUpDragSizeHeader"
         v-on:handle-up-drag-to-fill="handleUpDragToFill"
@@ -42,9 +43,6 @@
         v-on:tbody-down-dragtofill="handleDownDragToFill"
         v-on:tbody-input-change="handleTbodyInputChange"
         v-on:tbody-move-dragtofill="handleMoveDragToFill"
-        v-on:tbody-nav-backspace="handleTbodyNavBackspace"
-        v-on:tbody-nav-enter="handleTbodyNavEnter"
-        v-on:tbody-nav="handleTbodyNav"
         v-on:tbody-select-change="handleTbodySelectChange"
         v-on:tbody-select-multiple-cell="handleSelectMultipleCell"
         v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
@@ -93,7 +91,11 @@ export default {
     },
     submenuThead: {
       type: Array,
-      required: false,
+      required: true,
+    },
+    disableSortThead: {
+      type: Array,
+      required: true,
     },
     tbodyIndex: {
       type: Boolean,
@@ -133,6 +135,7 @@ export default {
       lastSelectOpen: null,
       oldTdActive: null,
       oldTdShow: null,
+      pressedShift: 0,
       scrollDocument: null,
       scrollToSelectTimeout: null,
       selectedCell: null,
@@ -351,7 +354,7 @@ export default {
 
       // set size / top position / left position
       const currentSelect = this.$refs.vueTbody.$refs[`${header}-${colIndex}-${rowIndex}`];
-      if (currentSelect) {
+      if (currentSelect.length > 0) {
         currentSelect[0].style.setProperty('--selectWidth', `${width}px`);
         currentSelect[0].style.setProperty('--selectTop', `${top}px`);
         currentSelect[0].style.setProperty('--selectLeft', `${left}px`);
@@ -412,7 +415,16 @@ export default {
       const tbodyData = JSON.parse(JSON.stringify(this.tbodyData));
       this.removeClass(['stateCopy']);
 
-      if (this.selectedCoordCells && this.selectedCell.col === this.selectedCoordCells.colEnd && this.selectedCell.row === this.selectedCoordCells.rowEnd) {
+      if (this.selectedCoordCells && this.selectedMultipleCell) {
+        if (this.selectedCell.row !== this.selectedCoordCells.rowEnd || this.selectedCell.col !== this.selectedCoordCells.colEnd) {
+          this.selectedCell.row = this.selectedCoordCells.rowEnd;
+          this.selectedCell.col = this.selectedCoordCells.colEnd;
+        }
+      }
+
+      if (this.selectedCoordCells &&
+        this.selectedCell.col === this.selectedCoordCells.colEnd &&
+        this.selectedCell.row === this.selectedCoordCells.rowEnd) {
         this.selectedCoordCopyCells = this.selectedCoordCells;
       }
 
@@ -445,6 +457,7 @@ export default {
       }
     },
     pasteReplaceData() {
+      const maxRow = this.tbodyData.length;
       // copy / paste one cell || disable on disabled cell
       if (this.storeCopyDatas[0].value && !this.copyMultipleCell && !this.selectedMultipleCell && !this.eventDrag && this.disabledEvent(this.selectedCell.col, this.selectedCell.header)) {
         const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
@@ -458,18 +471,19 @@ export default {
         let colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
         let colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
 
+        // if paste in multiple selection
         if (this.selectedCoordCopyCells !== null && this.selectedCoordCells !== this.selectedCoordCopyCells) {
           rowMin = Math.min(this.selectedCoordCopyCells.rowStart, this.selectedCoordCopyCells.rowEnd);
           rowMax = Math.max(this.selectedCoordCopyCells.rowStart, this.selectedCoordCopyCells.rowEnd);
           colMin = Math.min(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
           colMax = Math.max(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
         }
+
         let row = 0;
         let col = 0;
         while (rowMin <= rowMax) {
           const header = this.headerKeys[colMin];
           const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
-          // this.$set(this.tbodyData[rowMin][header], 'selected', false);
 
           if (this.dragToFill && this.eventDrag) { // Drag To Fill
             if (newCopyData[0][header]) {
@@ -492,19 +506,27 @@ export default {
             // multiple col to multiple col
             if (Object.values(newCopyData[0]).length === 1) {
               currentHeader = this.headerKeys[this.selectedCell.col];
-              this.tbodyData[incrementRow][currentHeader] = newCopyData[col][header];
-              this.$emit('tbody-replace-data', incrementRow, currentHeader);
-              col += 1;
+              if (incrementRow < maxRow) {
+                this.tbodyData[incrementRow][currentHeader] = newCopyData[col][header];
+                this.$emit('tbody-replace-data', incrementRow, currentHeader);
+                col += 1;
+              }
             }
 
             // one cell to multipleCell
             if (newCopyData.length === 1 && Object.values(newCopyData).length === 1 && newCopyData[0].type) {
               currentHeader = this.selectedCell.header;
               newCopyData[0].active = false;
-              if (rowMin === this.selectedCell.row) {
-                newCopyData[0].active = true;
-              }
               this.tbodyData[rowMin][currentHeader] = newCopyData[0];
+              if (rowMin === this.selectedCell.row) {
+                this.$set(this.tbodyData[rowMin][currentHeader], 'selected', true);
+                this.$set(this.tbodyData[rowMin][currentHeader], 'rectangleSelection', true);
+              }
+              if (rowMin === rowMax) {
+                this.$set(this.tbodyData[rowMin][currentHeader], 'active', true);
+                this.$set(this.tbodyData[rowMin][currentHeader], 'rectangleSelection', false);
+                this.$set(this.tbodyData[rowMin][currentHeader], 'selected', true);
+              }
               this.$emit('tbody-replace-data', rowMin, currentHeader);
             }
 
@@ -542,14 +564,15 @@ export default {
             row += 1;
           }
         }
+        this.modifyMultipleCell();
       }
-      this.modifyMultipleCell();
     },
     modifyMultipleCell(params) {
       let rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
       const rowMax = Math.max(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
       let colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
       const colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+
       let width = 100;
       let height = 40;
 
@@ -557,7 +580,7 @@ export default {
         const header = this.headerKeys[colMin];
         // disable on disabled cell
         if (params === 'removeValue' && this.disabledEvent(this.tbodyData[rowMin][header], header)) {
-          this.$emit('tbody-nav-multiple-backspace', rowMin, colMin, header);
+          this.$emit('tbody-nav-backspace', rowMin, colMin, header);
           this.$set(this.tbodyData[rowMin][header], 'value', '');
           this.$set(this.tbodyData[rowMin][header], 'selected', false);
         }
@@ -600,7 +623,7 @@ export default {
         rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0];
       }
 
-      rectangleSelectedCell.style.setProperty('--rectangleWidth', `${width}%`);
+      rectangleSelectedCell.style.setProperty('--rectangleWidth', `${width + 1}%`);
       rectangleSelectedCell.style.setProperty('--rectangleHeight', `${height}px`);
 
       // Position bottom/top of rectangle if rowStart >= rowEnd
@@ -620,11 +643,10 @@ export default {
       }
     },
     // drag To Fill
-    handleDownDragToFill(event, header, data, rowIndex, colIndex) {
-      this.tbodyData[rowIndex][header].active = true;
+    handleDownDragToFill(event, header, col, rowIndex, colIndex) {
+      this.$set(this.tbodyData[rowIndex][header], 'active', true);
       this.eventDrag = true;
-
-      if (!this.selectedCoordCells) {
+      if (!this.selectedCoordCells && !this.selectedMultipleCell) {
         this.selectedCoordCells = {
           rowStart: this.selectedCell.row,
           colStart: this.selectedCell.col,
@@ -633,12 +655,11 @@ export default {
           colEnd: colIndex,
           keyEnd: header,
         };
-        this.copyStoreData();
       } else {
         // if drag col to col in row to row to row
         this.selectedCoordCells.rowStart = rowIndex;
-        this.copyStoreData();
       }
+      this.copyStoreData();
     },
     handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
       if (this.eventDrag === true && this.selectedCoordCells && this.selectedCoordCells.rowEnd !== rowIndex) {
@@ -725,13 +746,13 @@ export default {
     handleTbodyNavEnter() {
       this.enableSubmenu();
     },
-    handleTbodyNavBackspace(event, actualElement, header, rowIndex, colIndex) {
+    handleTbodyNavBackspace(rowIndex, colIndex, header) {
       if (this.selectedMultipleCell) {
         this.modifyMultipleCell('removeValue');
       } else {
         this.tbodyData[rowIndex][header].value = '';
+        this.$emit('tbody-nav-backspace', rowIndex, colIndex, header);
       }
-      this.$emit('tbody-nav-backspace', event, actualElement, header, rowIndex, colIndex);
     },
     handleTbodyInputChange(event, header, rowIndex, colIndex) {
       // remove class show on input when it change
@@ -849,6 +870,17 @@ export default {
       this.$set(this.tbodyData[rowIndex][header], 'active', false);
       this.incrementCol = this.incrementCol ? this.incrementCol : colIndex;
       this.incrementRow = this.incrementRow ? this.incrementRow : rowIndex;
+      if (this.pressedShift >= 0) {
+        this.pressedShift += 1;
+      }
+      if (this.pressedShift === 0) {
+        this.selectedCell = {
+          header,
+          row: rowIndex,
+          col: colIndex,
+        };
+      }
+
       // shift / left
       if (event.keyCode === 37) {
         this.incrementCol -= 1;
@@ -891,6 +923,7 @@ export default {
         this.incrementCol = null;
         this.incrementRow = null;
         this.selectedMultipleCell = true;
+        this.pressedShift = 0;
       }
       if (event.keyCode === 91 || event.keyCode === 17) {
         if (!this.disableKeyTimeout === null) {
@@ -1007,7 +1040,7 @@ export default {
         }
         // press backspace
         if (event.keyCode === 8 && !this.lastSelectOpen) {
-          this.handleTbodyNavBackspace(event, this.actualElement, header, rowIndex, colIndex);
+          this.handleTbodyNavBackspace(rowIndex, colIndex, header);
         }
         // press enter
         if (event.keyCode === 13) {
@@ -1026,7 +1059,6 @@ export default {
   },
 };
 </script>
-
 
 <style lang="scss">
   table{

@@ -27,9 +27,9 @@
                 </span>
               </button>
           </template>
-
-          <template v-if="sortHeader &&
-          submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
+          <template
+            v-if="sortHeader &&
+            disableSortThead.indexOf(header.headerKey) === -1">
               <button
                 @click="handleSort($event, header, colIndex)"
                 v-bind:class="{'sort_A': header.activeSort === 'A', 'sort_Z' : header.activeSort === 'Z'}"
@@ -113,7 +113,11 @@ export default {
     },
     submenuThead: {
       type: Array,
-      required: false,
+      required: true,
+    },
+    disableSortThead: {
+      type: Array,
+      required: true,
     },
   },
   data() {

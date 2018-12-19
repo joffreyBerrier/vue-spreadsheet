@@ -7,6 +7,7 @@ export default {
     top: 0,
     left: 0,
   },
+  disableSortThead: ['a'],
   styleWrapVueTable: {
     // height: '400px',
     // width: '700px',
@@ -1210,11 +1211,11 @@ export default {
       type: 'button',
       value: 'change color',
       function: 'change-color',
-      disabled: ['img'],
+      disabled: ['a'],
     },
     {
       type: 'select',
-      disabled: ['img'],
+      disabled: ['a'],
       subtitle: 'Select state:',
       selectOptions: [
         {
@@ -1239,7 +1240,7 @@ export default {
       type: 'button',
       value: 'change value',
       function: 'change-value',
-      disabled: ['img', 'name'],
+      disabled: ['a', 'b'],
     },
   ],
   submenuTbody: [
