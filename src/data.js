@@ -1,6 +1,6 @@
 export default {
   dragToFill: true,
-  disableCells: [],
+  disableCells: ['a'],
   sortHeader: true,
   tbodyIndex: true,
   selectPosition: {

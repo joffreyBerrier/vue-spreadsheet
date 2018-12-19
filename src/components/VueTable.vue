@@ -136,6 +136,8 @@ export default {
       oldTdActive: null,
       oldTdShow: null,
       pressedShift: 0,
+      rectangleSelectedCell: null,
+      storeRectangleSelection: [],
       scrollDocument: null,
       scrollToSelectTimeout: null,
       selectedCell: null,
@@ -159,7 +161,7 @@ export default {
         event.preventDefault();
       }
       this.storeCopyDatas = [];
-      this.copyStoreData();
+      this.copyStoreData('copy');
     });
     document.addEventListener('paste', (event) => {
       event.preventDefault();
@@ -177,6 +179,23 @@ export default {
     },
   },
   methods: {
+    cleanPropertyOnCell(action) {
+      if (this.storeRectangleSelection.length > 0) {
+        this.storeRectangleSelection.forEach((cell) => {
+          if (action === 'paste' && !cell.classList.value.includes('rectangleSelection') && !cell.classList.value.includes('copy')) {
+            this.cleanProperty(cell);
+          } else if (action === 'copy' && !cell.classList.value.includes('selected')) {
+            this.cleanProperty(cell);
+          }
+        });
+      }
+    },
+    cleanProperty(element) {
+      element.style.setProperty('--rectangleWidth', '100%');
+      element.style.setProperty('--rectangleHeight', '40px');
+      element.style.setProperty('--rectangleTop', 0);
+      element.style.setProperty('--rectangleBottom', 0);
+    },
     createdCell() {
       // create cell if isn't exist
       this.tbodyData.forEach((tbody, rowIndex) => {
@@ -411,11 +430,11 @@ export default {
       });
     },
     // Copy / Paste
-    copyStoreData() {
+    copyStoreData(params) {
       const tbodyData = JSON.parse(JSON.stringify(this.tbodyData));
       this.removeClass(['stateCopy']);
 
-      if (this.selectedCoordCells && this.selectedMultipleCell) {
+      if (this.selectedCoordCells && this.selectedMultipleCell && params === 'copy') {
         if (this.selectedCell.row !== this.selectedCoordCells.rowEnd || this.selectedCell.col !== this.selectedCoordCells.colEnd) {
           this.selectedCell.row = this.selectedCoordCells.rowEnd;
           this.selectedCell.col = this.selectedCoordCells.colEnd;
@@ -424,7 +443,8 @@ export default {
 
       if (this.selectedCoordCells &&
         this.selectedCell.col === this.selectedCoordCells.colEnd &&
-        this.selectedCell.row === this.selectedCoordCells.rowEnd) {
+        this.selectedCell.row === this.selectedCoordCells.rowEnd &&
+        params === 'copy') {
         this.selectedCoordCopyCells = this.selectedCoordCells;
       }
 
@@ -436,8 +456,11 @@ export default {
         const header = this.headerKeys[colMin];
         let storeData = {};
 
-        this.$set(this.tbodyData[rowMin][header], 'stateCopy', true);
-        this.removeClass(['rectangleSelection']);
+        if (params === 'copy') {
+          this.$set(this.tbodyData[rowMin][header], 'stateCopy', true);
+          this.removeClass(['rectangleSelection']);
+          this.cleanPropertyOnCell('copy');
+        }
 
         while (rowMin <= rowMax) {
           storeData[this.headerKeys[colMin]] = tbodyData[rowMin][this.headerKeys[colMin]];
@@ -451,13 +474,20 @@ export default {
         }
         this.copyMultipleCell = true;
       } else {
-        this.$set(this.tbodyData[this.selectedCell.row][this.selectedCell.header], 'stateCopy', true);
+        if (params === 'copy') {
+          this.cleanPropertyOnCell('copy');
+          this.$set(this.tbodyData[this.selectedCell.row][this.selectedCell.header], 'stateCopy', true);
+        } else {
+          this.storeCopyDatas = [];
+        }
         this.storeCopyDatas.push(tbodyData[this.selectedCell.row][this.selectedCell.header]);
         this.copyMultipleCell = false;
       }
     },
     pasteReplaceData() {
       const maxRow = this.tbodyData.length;
+      this.cleanPropertyOnCell('paste');
+
       // copy / paste one cell || disable on disabled cell
       if (this.storeCopyDatas[0].value && !this.copyMultipleCell && !this.selectedMultipleCell && !this.eventDrag && this.disabledEvent(this.selectedCell.col, this.selectedCell.header)) {
         const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
@@ -617,29 +647,33 @@ export default {
       this.$forceUpdate();
     },
     setRectangleSelection(width, height) {
-      let rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`][0];
+      this.rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`][0];
 
       if (!this.selectedMultipleCellActive) {
-        rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0];
+        this.rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0];
       }
 
-      rectangleSelectedCell.style.setProperty('--rectangleWidth', `${width + 1}%`);
-      rectangleSelectedCell.style.setProperty('--rectangleHeight', `${height}px`);
+      this.rectangleSelectedCell.style.setProperty('--rectangleWidth', `${width + 1}%`);
+      this.rectangleSelectedCell.style.setProperty('--rectangleHeight', `${height}px`);
 
       // Position bottom/top of rectangle if rowStart >= rowEnd
       if (this.selectedCoordCells.rowStart >= this.selectedCoordCells.rowEnd) {
-        rectangleSelectedCell.style.setProperty('--rectangleTop', 'auto');
-        rectangleSelectedCell.style.setProperty('--rectangleBottom', 0);
+        this.rectangleSelectedCell.style.setProperty('--rectangleTop', 'auto');
+        this.rectangleSelectedCell.style.setProperty('--rectangleBottom', 0);
       } else {
-        rectangleSelectedCell.style.setProperty('--rectangleTop', 0);
-        rectangleSelectedCell.style.setProperty('--rectangleBottom', 'auto');
+        this.rectangleSelectedCell.style.setProperty('--rectangleTop', 0);
+        this.rectangleSelectedCell.style.setProperty('--rectangleBottom', 'auto');
       }
       // Position left/right of rectangle if colStart >= colEnd
       if (this.selectedCoordCells.colStart >= this.selectedCoordCells.colEnd) {
-        rectangleSelectedCell.style.setProperty('--rectangleLeft', 'auto');
-        rectangleSelectedCell.style.setProperty('--rectangleRight', 0);
+        this.rectangleSelectedCell.style.setProperty('--rectangleLeft', 'auto');
+        this.rectangleSelectedCell.style.setProperty('--rectangleRight', 0);
       } else {
-        rectangleSelectedCell.style.setProperty('--rectangleLeft', 0);
+        this.rectangleSelectedCell.style.setProperty('--rectangleLeft', 0);
+      }
+
+      if (!this.storeRectangleSelection.includes(this.rectangleSelectedCell)) {
+        this.storeRectangleSelection.push(this.rectangleSelectedCell);
       }
     },
     // drag To Fill
@@ -659,11 +693,15 @@ export default {
         // if drag col to col in row to row to row
         this.selectedCoordCells.rowStart = rowIndex;
       }
-      this.copyStoreData();
+      this.copyStoreData('drag');
     },
     handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
       if (this.eventDrag === true && this.selectedCoordCells && this.selectedCoordCells.rowEnd !== rowIndex) {
         this.selectedCoordCells.rowEnd = rowIndex;
+        if (this.storeCopyDatas.length === 1 && this.storeCopyDatas[0].type && this.eventDrag === true) {
+          this.selectedCoordCells.colStart = colIndex;
+          this.selectedCoordCells.colEnd = colIndex;
+        }
         this.modifyMultipleCell('selected');
         this.$emit('tbody-replace-data', rowIndex, header);
         this.$emit('tbody-move-dragtofill', this.selectedCoordCells, header, col, rowIndex, colIndex);
