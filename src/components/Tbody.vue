@@ -289,7 +289,7 @@ export default {
 
   // rectangle style
   --rectangleBottom: 0;
-  --rectangleHeight: 40;
+  --rectangleHeight: 40px;
   --rectangleLeft: 0;
   --rectangleRight: 0;
   --rectangleTop: 0;
