@@ -36,6 +36,7 @@ npm i spreadsheet-vuejs
 props                                  | Type       | Description
 ---------------------------------------|------------|-------------------
   :disable-cells                       | Array      | That contains the headerKey you want to disable
+  :disable-sort-thead                  | Array      | That contains the disabled th
   :drag-to-fill                        | Boolean    | That activates drag to fill
   :headers                             | Array      | That contains headers
   :new-data                            | Object     | That contains the type of data when you have empty cell in a row
@@ -449,6 +450,7 @@ newData: {
           background: '#cfffcf',
         },
       },
+      disableSortThead: ['a'],
       submenuThead: [
         {
           type: 'button',

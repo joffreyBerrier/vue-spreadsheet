@@ -11,12 +11,12 @@
       :style-wrap-vue-table="styleWrapVueTable"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead"
+      :disable-sort-thead="disableSortThead"
       :tbody-data="products"
       :tbody-index="tbodyIndex"
       v-on:tbody-replace-data="replaceData"
       v-on:tbody-input-change="inputChange"
       v-on:tbody-nav-backspace="deleteCell"
-      v-on:tbody-nav-multiple-backspace="deleteMultipleCell"
       v-on:tbody-select-change="selectChange"
       v-on:tbody-submenu-click-change-color="changeColorTbody"
       v-on:tbody-submenu-click-change-value="changeValueTbody"
@@ -25,7 +25,6 @@
       v-on:thead-submenu-click-change-color="changeColor"
       v-on:thead-submenu-click-change-value="changeValue"
       v-on:thead-td-sort="sortProduct">
-
     <div slot="header">
       Specific Header
     </div>
@@ -56,7 +55,7 @@ export default {
     sortProduct(event, entry, colIndex) {
       // console.log('sort product');
     },
-    deleteCell(event, actualElement, actualCol, rowIndex, colIndex) {
+    deleteCell(rowIndex, colIndex, header) {
       // console.log(event, actualElement, actualCol, rowIndex, colIndex);
     },
     inputChange(event, entry, rowIndex, colIndex) {

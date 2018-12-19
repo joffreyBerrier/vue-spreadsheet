@@ -296,6 +296,12 @@ export default {
   --rectangleWidth: 100%;
 }
 
+$rectangleBorder: 1px solid #3183fc;
+$rectangleBg: #a0c3ff99;
+
+$dragToFillSize: 8px;
+$dragToFillColor:#3183fc;
+
 .td {
   height: 40px;
   line-height: 40px;
@@ -306,7 +312,6 @@ export default {
   padding: 0;
   text-align: left;
   box-sizing: border-box;
-  transition: all ease 0.5s;
   &:first-child {
     border-left: 1px solid #e7ecf5;
   }
@@ -315,10 +320,6 @@ export default {
       opacity: 1;
       visibility: visible;
     }
-  }
-  &.active_td,
-  &.selected {
-    background: #a0c3ff99;
   }
   &.active_td:after {
     content: '';
@@ -331,7 +332,8 @@ export default {
     top: 0;
     width: 100%;
     z-index: 3;
-    border: 2px solid #3183fc;
+    border: $rectangleBorder;
+    background: $rectangleBg;
     box-sizing: border-box;
   }
   &.selected {
@@ -346,7 +348,8 @@ export default {
       top: var(--rectangleTop);
       width: var(--rectangleWidth);
       z-index: 3;
-      border: 2px solid #3183fc;
+      border: $rectangleBorder;
+      background: $rectangleBg;
       box-sizing: border-box;
     }
     &.active_td:after {
@@ -367,11 +370,11 @@ export default {
     top: var(--rectangleTop);
     width: var(--rectangleWidth);
     z-index: 3;
-    border: 2px dashed #3183fc;
+    border: $rectangleBorder;
+    border-style: dashed;
     box-sizing: border-box;
   }
   &.disabled {
-    // pointer-events: none;
     background: #cccccc;
     span {
       opacity: .5;
@@ -445,9 +448,9 @@ export default {
     position: absolute;
     right: 0;
     bottom: 0;
-    width: 10px;
-    height: 10px;
-    background: #0760fe;
+    width: $dragToFillSize;
+    height: $dragToFillSize;
+    background: $dragToFillColor;
     display: block;
     z-index: 11;
     border: 0;
@@ -456,7 +459,6 @@ export default {
     opacity: 0;
     visibility: hidden;
     outline: none;
-    transition: all .3s ease;
   }
   .dropdown {
     input {
