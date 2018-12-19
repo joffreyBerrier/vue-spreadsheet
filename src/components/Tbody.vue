@@ -519,7 +519,7 @@ $dragToFillColor:#3183fc;
   transform: translateY(-50%);
   border: 0;
   box-shadow: none;
-  background: white;
+  background: transparent;
   width: 16px;
   height: 16px;
   padding: 0;
