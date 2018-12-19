@@ -159,7 +159,7 @@ export default {
         event.preventDefault();
       }
       this.storeCopyDatas = [];
-      this.copyStoreData();
+      this.copyStoreData('copy');
     });
     document.addEventListener('paste', (event) => {
       event.preventDefault();
@@ -411,11 +411,11 @@ export default {
       });
     },
     // Copy / Paste
-    copyStoreData() {
+    copyStoreData(params) {
       const tbodyData = JSON.parse(JSON.stringify(this.tbodyData));
       this.removeClass(['stateCopy']);
 
-      if (this.selectedCoordCells && this.selectedMultipleCell) {
+      if (this.selectedCoordCells && this.selectedMultipleCell && params === 'copy') {
         if (this.selectedCell.row !== this.selectedCoordCells.rowEnd || this.selectedCell.col !== this.selectedCoordCells.colEnd) {
           this.selectedCell.row = this.selectedCoordCells.rowEnd;
           this.selectedCell.col = this.selectedCoordCells.colEnd;
@@ -424,7 +424,8 @@ export default {
 
       if (this.selectedCoordCells &&
         this.selectedCell.col === this.selectedCoordCells.colEnd &&
-        this.selectedCell.row === this.selectedCoordCells.rowEnd) {
+        this.selectedCell.row === this.selectedCoordCells.rowEnd &&
+        params === 'copy') {
         this.selectedCoordCopyCells = this.selectedCoordCells;
       }
 
@@ -436,8 +437,10 @@ export default {
         const header = this.headerKeys[colMin];
         let storeData = {};
 
-        this.$set(this.tbodyData[rowMin][header], 'stateCopy', true);
-        this.removeClass(['rectangleSelection']);
+        if (params === 'copy') {
+          this.$set(this.tbodyData[rowMin][header], 'stateCopy', true);
+          this.removeClass(['rectangleSelection']);
+        }
 
         while (rowMin <= rowMax) {
           storeData[this.headerKeys[colMin]] = tbodyData[rowMin][this.headerKeys[colMin]];
@@ -451,7 +454,11 @@ export default {
         }
         this.copyMultipleCell = true;
       } else {
-        this.$set(this.tbodyData[this.selectedCell.row][this.selectedCell.header], 'stateCopy', true);
+        if (params === 'copy') {
+          this.$set(this.tbodyData[this.selectedCell.row][this.selectedCell.header], 'stateCopy', true);
+        } else {
+          this.storeCopyDatas = [];  
+        }
         this.storeCopyDatas.push(tbodyData[this.selectedCell.row][this.selectedCell.header]);
         this.copyMultipleCell = false;
       }
@@ -659,11 +666,15 @@ export default {
         // if drag col to col in row to row to row
         this.selectedCoordCells.rowStart = rowIndex;
       }
-      this.copyStoreData();
+      this.copyStoreData('drag');
     },
     handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
       if (this.eventDrag === true && this.selectedCoordCells && this.selectedCoordCells.rowEnd !== rowIndex) {
         this.selectedCoordCells.rowEnd = rowIndex;
+        if (this.storeCopyDatas.length === 1 && this.storeCopyDatas[0].type && this.eventDrag === true) {
+          this.selectedCoordCells.colStart = colIndex;
+          this.selectedCoordCells.colEnd = colIndex;
+        }
         this.modifyMultipleCell('selected');
         this.$emit('tbody-replace-data', rowIndex, header);
         this.$emit('tbody-move-dragtofill', this.selectedCoordCells, header, col, rowIndex, colIndex);

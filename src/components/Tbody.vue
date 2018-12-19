@@ -299,7 +299,7 @@ export default {
 $rectangleBorder: 1px solid #3183fc;
 $rectangleBg: #a0c3ff99;
 
-$dragToFillSize: 8px;
+$dragToFillSize: 9px;
 $dragToFillColor:#3183fc;
 
 .td {
@@ -446,14 +446,14 @@ $dragToFillColor:#3183fc;
   }
   .drag_to_fill {
     position: absolute;
-    right: 0;
-    bottom: 0;
+    right: -4px;
+    bottom: -4px;
     width: $dragToFillSize;
     height: $dragToFillSize;
     background: $dragToFillColor;
+    border: 1px solid white;
     display: block;
     z-index: 11;
-    border: 0;
     padding: 0;
     cursor: cell;
     opacity: 0;
