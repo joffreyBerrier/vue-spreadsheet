@@ -281,20 +281,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:root {
-  // select style
-  --selectLeft: 0;
-  --selectTop: 0;
-  --selectWidth: 0;
-
-  // rectangle style
-  --rectangleBottom: 0;
-  --rectangleHeight: 40px;
-  --rectangleLeft: 0;
-  --rectangleRight: 0;
-  --rectangleTop: 0;
-  --rectangleWidth: 100%;
-}
 
 $rectangleBorder: 1px solid #3183fc;
 $rectangleBg: #a0c3ff99;
