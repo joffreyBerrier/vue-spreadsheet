@@ -129,6 +129,13 @@ export default {
     };
   },
   methods: {
+    removeClass(params, colIndex) {
+      this.headers.forEach((header, index) => {
+        if (index !== colIndex) {
+          this.$set(this.headers[index], 'activeSort', '');
+        }
+      });
+    },
     handleDownChangeSize(event, header, colIndex) {
       this.eventDrag = true;
       const head = header;
@@ -175,14 +182,14 @@ export default {
         this.$emit('handle-up-drag-size-header', event, this.headers);
       }
     },
-    handleSort(event, h, colIndex) {
+    handleSort(event, h, colIndex) { 
       const header = h;
       if (!header.activeSort || header.activeSort === 'Z') {
-        header.activeSort = 'A';
+        this.$set(this.headers[colIndex], 'activeSort', 'A');
       } else {
-        header.activeSort = 'Z';
+        this.$set(this.headers[colIndex], 'activeSort', 'Z');
       }
-      this.$forceUpdate();
+      this.removeClass('activeSort', colIndex);
       this.$emit('thead-td-sort', event, header, colIndex);
     },
     handleContextMenuTd(event, header, colIndex) {
