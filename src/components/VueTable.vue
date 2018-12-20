@@ -686,10 +686,10 @@ export default {
           colStart: this.selectedCell.col,
           keyStart: this.selectedCell.header,
           rowEnd: rowIndex,
-          colEnd: colIndex,
-          keyEnd: header,
+          colEnd: this.selectedCell.col,
+          keyEnd: this.selectedCell.header,
         };
-      } else {
+      } else if (this.selectedMultipleCell) {
         // if drag col to col in row to row to row
         this.selectedCoordCells.rowStart = rowIndex;
       }
@@ -698,10 +698,6 @@ export default {
     handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
       if (this.eventDrag === true && this.selectedCoordCells && this.selectedCoordCells.rowEnd !== rowIndex) {
         this.selectedCoordCells.rowEnd = rowIndex;
-        if (this.storeCopyDatas.length === 1 && this.storeCopyDatas[0].type && this.eventDrag === true) {
-          this.selectedCoordCells.colStart = colIndex;
-          this.selectedCoordCells.colEnd = colIndex;
-        }
         this.modifyMultipleCell('selected');
         this.$emit('tbody-replace-data', rowIndex, header);
         this.$emit('tbody-move-dragtofill', this.selectedCoordCells, header, col, rowIndex, colIndex);
