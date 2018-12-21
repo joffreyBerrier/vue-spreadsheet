@@ -127,7 +127,6 @@ export default {
       disableKeyTimeout: null,
       eventDrag: false,
       filteredList: [],
-      headerKeys: [],
       incrementCol: 0,
       incrementOption: null,
       incrementRow: null,
@@ -152,16 +151,15 @@ export default {
     };
   },
   mounted() {
-    this.headerKeys = this.headers.map(header => header.headerKey);
     this.createdCell();
     window.addEventListener('keydown', this.moveKeydown);
     window.addEventListener('keyup', this.moveKeyup);
     document.addEventListener('copy', (event) => {
       if (this.actualElement) {
         event.preventDefault();
+        this.storeCopyDatas = [];
+        this.copyStoreData('copy');
       }
-      this.storeCopyDatas = [];
-      this.copyStoreData('copy');
     });
     document.addEventListener('paste', (event) => {
       event.preventDefault();
@@ -176,6 +174,9 @@ export default {
   computed: {
     colHeaderWidths() {
       return this.headers.map(x => parseInt(x.style.width, 10));
+    },
+    headerKeys() {
+      return this.headers.map(header => header.headerKey);
     },
   },
   methods: {
