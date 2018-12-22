@@ -1,4 +1,4 @@
-# Spreadsheet Vue.js
+# VueJs Spreadsheet
 
 ## Description
 
