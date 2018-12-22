@@ -549,7 +549,7 @@ export default {
               currentHeader = this.selectedCell.header;
               newCopyData[0].active = false;
               this.tbodyData[rowMin][currentHeader] = newCopyData[0];
-              if (rowMin === this.selectedCell.row) {
+              if (rowMin === this.selectedCell.row || rowMin === this.selectedCoordCells.rowStart) {
                 this.$set(this.tbodyData[rowMin][currentHeader], 'selected', true);
                 this.$set(this.tbodyData[rowMin][currentHeader], 'rectangleSelection', true);
               }
@@ -604,9 +604,6 @@ export default {
       let colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
       const colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
 
-      let width = 100;
-      let height = 40;
-
       while (rowMin <= rowMax) {
         const header = this.headerKeys[colMin];
         // disable on disabled cell
@@ -626,6 +623,13 @@ export default {
         }
       }
 
+      // Set height / width of rectangle
+      this.debounce(this.setRectangleSelection(colMin, colMax, rowMin, rowMax), 800);
+    },
+    setRectangleSelection(colMin, colMax, rowMin, rowMax) {
+      let width = 100;
+      let height = 40;
+
       // Defined width of rectangle
       if (colMin === 0 && colMax === 0) {
         width = 100 * (colMin + 1);
@@ -643,11 +647,7 @@ export default {
       } else {
         height = 40 * ((this.selectedCoordCells.rowStart - this.selectedCoordCells.rowEnd) + 1);
       }
-      // Set height / width of rectangle
-      this.debounce(this.setRectangleSelection(width, height), 600);
-      this.$forceUpdate();
-    },
-    setRectangleSelection(width, height) {
+
       this.rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`][0];
 
       if (!this.selectedMultipleCellActive) {
