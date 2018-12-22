@@ -2,8 +2,6 @@
 
 ## Description
 
-** Project in progress **
-
 :facepunch: An easier Spreadsheet in Vue.js :facepunch:
 
 Do not hesitate to :star: my repo
