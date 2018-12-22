@@ -10,9 +10,9 @@ Do not hesitate to :star: my repo
 ## Project setup
 
 ```
-yarn add spreadsheet-vuejs
+yarn add vuejs-spreadsheet
 
-npm i spreadsheet-vuejs
+npm i vuejs-spreadsheet
 ```
 
 ```
