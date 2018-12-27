@@ -353,8 +353,8 @@ export default {
       if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
       // callback
-      this.$emit('tbody-change-data', rowIndex, header);
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
+      this.$emit('tbody-change-data', rowIndex, header);
     },
     calculPosition(event, rowIndex, colIndex, header) {
       // stock scrollLeft / scrollTop position of parent
@@ -799,8 +799,8 @@ export default {
       this.enableSubmenu();
 
       // callback
-      this.$emit('tbody-change-data', rowIndex, header);
       this.$emit('tbody-input-change', event, header, rowIndex, colIndex);
+      this.$emit('tbody-change-data', rowIndex, header);
     },
     callbackSubmenuThead(event, header, colIndex, submenuFunction, selectOptions) {
       this.submenuStatusThead = false;
