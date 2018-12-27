@@ -17,7 +17,7 @@ npm i vuejs-spreadsheet
 
 ```
 <script>
-  import VueTable from 'spreadsheet-vuejs';
+  import VueTable from 'vuejs-spreadsheet';
   export default {
     name: 'app',
     data() {
