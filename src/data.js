@@ -3,6 +3,7 @@ export default {
   disableCells: ['a'],
   sortHeader: true,
   tbodyIndex: true,
+  loader: false,
   selectPosition: {
     top: 0,
     left: 0,

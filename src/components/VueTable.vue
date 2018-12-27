@@ -24,6 +24,9 @@
         v-on:thead-td-sort="callbackSort">
       </vue-thead>
 
+      <slot name="loader">
+      </slot>
+
       <vue-tbody
         ref="vueTbody"
         :disable-cells="disableCells"
@@ -350,6 +353,7 @@ export default {
       if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
       // callback
+      this.$emit('tbody-change-data', rowIndex, header);
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
     calculPosition(event, rowIndex, colIndex, header) {
@@ -493,7 +497,7 @@ export default {
       if (this.storeCopyDatas[0].value && !this.copyMultipleCell && !this.selectedMultipleCell && !this.eventDrag && this.disabledEvent(this.selectedCell.col, this.selectedCell.header)) {
         const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
         this.tbodyData[this.selectedCell.row][this.selectedCell.header] = newCopyData[0];
-        this.$emit('tbody-replace-data', this.selectedCell.row, this.selectedCell.header);
+        this.$emit('tbody-change-data', this.selectedCell.row, this.selectedCell.header);
         // disable on disabled cell
       } else if (this.disabledEvent(this.selectedCell.col, this.selectedCell.header)) {
         // copy / paste multiple cell | drag to fill one / multiple cell
@@ -522,7 +526,7 @@ export default {
             } else {
               this.tbodyData[rowMin][header] = newCopyData[0]; // one cell
             }
-            this.$emit('tbody-replace-data', rowMin, header);
+            this.$emit('tbody-change-data', rowMin, header);
           } else {
             let incrementRow = this.selectedCell.row + row;
             let incrementCol = this.selectedCell.col + col;
@@ -539,7 +543,7 @@ export default {
               currentHeader = this.headerKeys[this.selectedCell.col];
               if (incrementRow < maxRow) {
                 this.tbodyData[incrementRow][currentHeader] = newCopyData[col][header];
-                this.$emit('tbody-replace-data', incrementRow, currentHeader);
+                this.$emit('tbody-change-data', incrementRow, currentHeader);
                 col += 1;
               }
             }
@@ -558,17 +562,17 @@ export default {
                 this.$set(this.tbodyData[rowMin][currentHeader], 'rectangleSelection', false);
                 this.$set(this.tbodyData[rowMin][currentHeader], 'selected', true);
               }
-              this.$emit('tbody-replace-data', rowMin, currentHeader);
+              this.$emit('tbody-change-data', rowMin, currentHeader);
             }
 
             // 1 row to 1 row
             if (newCopyData.length === 1 && Object.values(newCopyData[0]).length > 1 && !newCopyData[0].type) {
               if (this.selectedCoordCells !== this.selectedCoordCopyCells) {
                 this.tbodyData[this.selectedCoordCells.rowStart][currentHeader] = newCopyData[0][header];
-                this.$emit('tbody-replace-data', this.selectedCoordCells.rowStart, currentHeader);
+                this.$emit('tbody-change-data', this.selectedCoordCells.rowStart, currentHeader);
               } else {
                 this.tbodyData[this.selectedCell.row][currentHeader] = newCopyData[0][header];
-                this.$emit('tbody-replace-data', this.selectedCell.row, currentHeader);
+                this.$emit('tbody-change-data', this.selectedCell.row, currentHeader);
               }
               col += 1;
             }
@@ -576,7 +580,7 @@ export default {
             // multiple col / row to multiple col / row
             if (newCopyData.length > 1 && Object.values(newCopyData[0]).length > 1) {
               this.tbodyData[incrementRow][currentHeader] = newCopyData[row][header];
-              this.$emit('tbody-replace-data', incrementRow, currentHeader);
+              this.$emit('tbody-change-data', incrementRow, currentHeader);
               if (colMin < colMax) {
                 col += 1;
               } else {
@@ -609,6 +613,7 @@ export default {
         // disable on disabled cell
         if (params === 'removeValue' && this.disabledEvent(this.tbodyData[rowMin][header], header)) {
           this.$emit('tbody-nav-backspace', rowMin, colMin, header);
+          this.$emit('tbody-change-data', rowMin, header);
           this.$set(this.tbodyData[rowMin][header], 'value', '');
           this.$set(this.tbodyData[rowMin][header], 'selected', false);
         }
@@ -700,7 +705,6 @@ export default {
       if (this.eventDrag === true && this.selectedCoordCells && this.selectedCoordCells.rowEnd !== rowIndex) {
         this.selectedCoordCells.rowEnd = rowIndex;
         this.modifyMultipleCell('selected');
-        this.$emit('tbody-replace-data', rowIndex, header);
         this.$emit('tbody-move-dragtofill', this.selectedCoordCells, header, col, rowIndex, colIndex);
       }
     },
@@ -795,6 +799,7 @@ export default {
       this.enableSubmenu();
 
       // callback
+      this.$emit('tbody-change-data', rowIndex, header);
       this.$emit('tbody-input-change', event, header, rowIndex, colIndex);
     },
     callbackSubmenuThead(event, header, colIndex, submenuFunction, selectOptions) {

@@ -14,7 +14,7 @@
       :disable-sort-thead="disableSortThead"
       :tbody-data="products"
       :tbody-index="tbodyIndex"
-      v-on:tbody-replace-data="replaceData"
+      v-on:tbody-change-data="changeData"
       v-on:tbody-input-change="inputChange"
       v-on:tbody-nav-backspace="deleteCell"
       v-on:tbody-select-change="selectChange"
@@ -28,7 +28,9 @@
     <div slot="header">
       Specific Header
     </div>
-
+    <div slot="loader" v-if="loader">
+      Loader
+    </div>
     </vue-table>
   </div>
 </template>
@@ -46,8 +48,8 @@ export default {
     VueTable,
   },
   methods: {
-    replaceData(row, header) {
-      // console.log(row, header);
+    changeData(row, header) {
+      console.log(row, header);
     },
     handleUpDragToFill(selectedMultipleCell, entry, rowIndex, colIndex) {
       // console.log(selectedMultipleCell, entry, rowIndex, colIndex);
