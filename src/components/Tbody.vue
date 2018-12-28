@@ -3,7 +3,7 @@
     <template v-for="(row, rowIndex) in tbodyData">
       <tr class="table_row" :key="row + '' + rowIndex">
         <td class="index" v-if="tbodyIndex" :key="'td-index-' + rowIndex">
-          {{rowIndex}}
+          {{rowIndex + 1}}
         </td>
         <template v-for="(header, colIndex) in headerKeys">
           <td
@@ -574,6 +574,7 @@ $dragToFillColor:#3183fc;
   border-bottom: 1px solid #e6ecf6;
   border-right: 1px solid #e6ecf6;
   border-left: 1px solid #e6ecf6;
+  background: transparent;
   box-sizing: border-box;
 }
 </style>
