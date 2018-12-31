@@ -362,7 +362,7 @@ export default {
       display: block;
       height: 2px;
       width: 5px;
-      background: #555;
+      background: #000;
       transform: rotate(45deg) translate(0px, -1px);
     }
     &:after {
@@ -384,7 +384,7 @@ export default {
       opacity: .4;
       &:before,
       &:after {
-        background: #555;
+        background: #000;
       }
     }
   }
