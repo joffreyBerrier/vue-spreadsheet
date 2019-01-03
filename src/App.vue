@@ -2,8 +2,10 @@
   <div id="app">
     <vue-table
       :disable-cells="disableCells"
+      :disable-sort-thead="disableSortThead"
       :drag-to-fill="dragToFill"
       :headers="headers"
+      :loading="loading"
       :new-data="newData"
       :parent-element-scroll="0"
       :parent-scroll-element="'html'"
@@ -11,7 +13,6 @@
       :style-wrap-vue-table="styleWrapVueTable"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead"
-      :disable-sort-thead="disableSortThead"
       :tbody-data="products"
       :tbody-index="tbodyIndex"
       v-on:tbody-change-data="changeData"
@@ -46,6 +47,12 @@ export default {
   },
   components: {
     VueTable,
+  },
+  mounted() {
+    this.loading = true;
+    setTimeout(() => {
+      this.loading = false;
+    }, 300);
   },
   methods: {
     changeData(row, header) {

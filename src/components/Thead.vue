@@ -182,7 +182,7 @@ export default {
         this.$emit('handle-up-drag-size-header', event, this.headers);
       }
     },
-    handleSort(event, h, colIndex) { 
+    handleSort(event, h, colIndex) {
       const header = h;
       if (!header.activeSort || header.activeSort === 'Z') {
         this.$set(this.headers[colIndex], 'activeSort', 'A');
