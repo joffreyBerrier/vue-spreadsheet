@@ -4,6 +4,7 @@ export default {
   sortHeader: true,
   tbodyIndex: true,
   loader: false,
+  loading: false,
   selectPosition: {
     top: 0,
     left: 0,

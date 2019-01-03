@@ -27,7 +27,7 @@
       <slot name="loader">
       </slot>
 
-      <vue-tbody
+      <vue-tbody v-if="!loading"
         ref="vueTbody"
         :disable-cells="disableCells"
         :drag-to-fill="dragToFill"
@@ -38,12 +38,12 @@
         :submenu-tbody="submenuTbody"
         :tbody-data="tbodyData"
         :tbody-index="tbodyIndex"
-        v-on:tbody-handle-set-oldvalue="setOldValueOnInputSelect"
-        v-on:tbody-handle-search-input-select="handleSearchInputSelect"
         v-on:handle-to-calculate-position="calculPosition"
         v-on:handle-to-open-select="enableSelect"
         v-on:submenu-enable="enableSubmenu"
         v-on:tbody-down-dragtofill="handleDownDragToFill"
+        v-on:tbody-handle-search-input-select="handleSearchInputSelect"
+        v-on:tbody-handle-set-oldvalue="setOldValueOnInputSelect"
         v-on:tbody-input-change="handleTbodyInputChange"
         v-on:tbody-move-dragtofill="handleMoveDragToFill"
         v-on:tbody-select-change="handleTbodySelectChange"
@@ -120,6 +120,10 @@ export default {
       type: String,
       required: true,
     },
+    loading: {
+      type: Boolean,
+      required: true,
+    }
   },
   components: {
     VueThead,
