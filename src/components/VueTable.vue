@@ -795,6 +795,7 @@ export default {
       } else {
         this.tbodyData[rowIndex][header].value = '';
         this.$emit('tbody-nav-backspace', rowIndex, colIndex, header);
+        this.$emit('tbody-change-data', rowIndex, header);
       }
     },
     handleTbodyInputChange(event, header, rowIndex, colIndex) {
