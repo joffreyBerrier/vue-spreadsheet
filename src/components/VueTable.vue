@@ -123,7 +123,7 @@ export default {
     loading: {
       type: Boolean,
       required: true,
-    }
+    },
   },
   components: {
     VueThead,
@@ -252,7 +252,9 @@ export default {
     activeSelectSearch(event, rowIndex, colIndex, header) {
       this.$set(this.tbodyData[rowIndex][header], 'typing', false);
       this.calculPosition(event, rowIndex, colIndex, 'dropdown');
-      this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+      if (this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0]) {
+        this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+      }
     },
     scrollFunction() {
       if (this.lastSelectOpen) {
@@ -382,7 +384,7 @@ export default {
 
       // set size / top position / left position
       const currentSelect = this.$refs.vueTbody.$refs[`${header}-${colIndex}-${rowIndex}`];
-      if (currentSelect.length > 0) {
+      if (currentSelect && currentSelect.length > 0) {
         currentSelect[0].style.setProperty('--selectWidth', `${width}px`);
         currentSelect[0].style.setProperty('--selectTop', `${top}px`);
         currentSelect[0].style.setProperty('--selectLeft', `${left}px`);
@@ -455,6 +457,8 @@ export default {
         this.selectedCell.row === this.selectedCoordCells.rowEnd &&
         params === 'copy') {
         this.selectedCoordCopyCells = this.selectedCoordCells;
+      } else {
+        this.selectedCoordCopyCells = null;
       }
 
       if (this.selectedMultipleCell && this.selectedCoordCells) {
@@ -503,7 +507,7 @@ export default {
         this.tbodyData[this.selectedCell.row][this.selectedCell.header] = newCopyData[0];
         this.$emit('tbody-change-data', this.selectedCell.row, this.selectedCell.header);
         // disable on disabled cell
-      } else if (this.disabledEvent(this.selectedCell.col, this.selectedCell.header)) {
+      } else if (this.disabledEvent(this.selectedCell.col, this.selectedCell.header) && this.selectedCoordCells) {
         // copy / paste multiple cell | drag to fill one / multiple cell
         let rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
         let rowMax = Math.max(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
@@ -523,6 +527,9 @@ export default {
         while (rowMin <= rowMax) {
           const header = this.headerKeys[colMin];
           const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
+
+          // remove stateCopy if present of storeData
+          if (newCopyData.copy) { newCopyData.copy = false; }
 
           if (this.dragToFill && this.eventDrag) { // Drag To Fill
             if (newCopyData[0][header]) {
@@ -687,7 +694,7 @@ export default {
       }
     },
     // drag To Fill
-    handleDownDragToFill(event, header, col, rowIndex, colIndex) {
+    handleDownDragToFill(event, header, col, rowIndex) {
       this.$set(this.tbodyData[rowIndex][header], 'active', true);
       this.eventDrag = true;
       if (!this.selectedCoordCells && !this.selectedMultipleCell) {

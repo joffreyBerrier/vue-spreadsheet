@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     changeData(row, header) {
-      console.log(row, header);
+      // console.log(row, header);
     },
     handleUpDragToFill(selectedMultipleCell, entry, rowIndex, colIndex) {
       // console.log(selectedMultipleCell, entry, rowIndex, colIndex);
