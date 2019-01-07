@@ -41,6 +41,7 @@
         v-on:handle-to-calculate-position="calculPosition"
         v-on:handle-to-open-select="enableSelect"
         v-on:submenu-enable="enableSubmenu"
+        v-on:tbody-td-context-menu="handleTBodyContextMenu"
         v-on:tbody-down-dragtofill="handleDownDragToFill"
         v-on:tbody-handle-search-input-select="handleSearchInputSelect"
         v-on:tbody-handle-set-oldvalue="setOldValueOnInputSelect"
@@ -139,6 +140,7 @@ export default {
       incrementRow: null,
       keys: {},
       lastSelectOpen: null,
+      lastSubmenuOpen: null,
       oldTdActive: null,
       oldTdShow: null,
       pressedShift: 0,
@@ -236,6 +238,8 @@ export default {
       this.scrollDocument = document.querySelector(`${this.parentScrollElement}`).scrollTop;
       if (this.lastSelectOpen) {
         this.calculPosition(event, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex, 'dropdown');
+      } else if (this.lastSubmenuOpen) {
+        this.calculPosition(event, this.lastSubmenuOpen.rowIndex, this.lastSubmenuOpen.colIndex, 'contextMenu');
       }
     },
     updateSelectedCell(header, row, col) {
@@ -259,6 +263,8 @@ export default {
     scrollFunction() {
       if (this.lastSelectOpen) {
         this.calculPosition(this.lastSelectOpen.event, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex, 'dropdown');
+      } else if (this.lastSubmenuOpen) {
+        this.calculPosition(this.lastSubmenuOpen.event, this.lastSubmenuOpen.rowIndex, this.lastSubmenuOpen.colIndex, 'contextMenu');
       }
     },
     enableSelect(event, header, col, rowIndex, colIndex) {
@@ -823,7 +829,16 @@ export default {
       }
     },
     callbackSubmenuTbody(event, header, rowIndex, colIndex, type, submenuFunction) {
+      this.calculPosition(event, rowIndex, colIndex, 'submenu');
       this.$emit(`tbody-submenu-click-${submenuFunction}`, event, header, rowIndex, colIndex, type, submenuFunction);
+    },
+    handleTBodyContextMenu(event, header, rowIndex, colIndex, type) {
+      this.lastSubmenuOpen = {
+          event,
+          header,
+          rowIndex,
+          colIndex,
+        };
     },
     // thead
     handleTheadContextMenu() {

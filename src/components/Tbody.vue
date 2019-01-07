@@ -547,6 +547,8 @@ $dragToFillColor:#3183fc;
   position: fixed;
   z-index: 20;
   background: white;
+  left: var(--selectLeft);
+  top: var(--selectTop);
 }
 .submenu_wrap {
   margin: 0 auto;
