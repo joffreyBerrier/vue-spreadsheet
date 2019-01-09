@@ -11,11 +11,11 @@
       <vue-thead
         ref="vueThead"
         :headers="headers"
-        :sort-header="options.sortHeader"
+        :sort-header="customOptions.sortHeader"
         :submenu-status-thead="submenuStatusThead"
-        :submenu-thead="options.submenuThead"
-        :disable-sort-thead="options.disableSortThead"
-        :tbody-index="options.tbodyIndex"
+        :submenu-thead="customOptions.submenuThead"
+        :disable-sort-thead="customOptions.disableSortThead"
+        :tbody-index="customOptions.tbodyIndex"
         v-on:handle-up-drag-size-header="handleUpDragSizeHeader"
         v-on:handle-up-drag-to-fill="handleUpDragToFill"
         v-on:submenu-enable="enableSubmenu"
@@ -27,17 +27,17 @@
       <slot name="loader">
       </slot>
 
-      <vue-tbody v-if="!options.loading"
+      <vue-tbody v-if="!customOptions.loading"
         ref="vueTbody"
-        :disable-cells="options.disableCells"
-        :drag-to-fill="options.dragToFill"
+        :disable-cells="customOptions.disableCells"
+        :drag-to-fill="customOptions.dragToFill"
         :filtered-list="filteredList"
         :headers="headers"
-        :newData="options.newData"
+        :newData="customOptions.newData"
         :submenu-status-tbody="submenuStatusTbody"
-        :submenu-tbody="options.submenuTbody"
+        :submenu-tbody="customOptions.submenuTbody"
         :tbody-data="tbodyData"
-        :tbody-index="options.tbodyIndex"
+        :tbody-index="customOptions.tbodyIndex"
         v-on:handle-to-calculate-position="calculPosition"
         v-on:handle-to-open-select="enableSelect"
         v-on:submenu-enable="enableSubmenu"
@@ -135,8 +135,6 @@ export default {
   },
   mounted() {
     // copy object user to default
-    this.copyOptions(this.customOptions, this.options);
-
     this.createdCell();
     window.addEventListener('keydown', this.moveKeydown);
     window.addEventListener('keyup', this.moveKeyup);
@@ -188,17 +186,6 @@ export default {
     },
   },
   methods: {
-    copyOptions(src, dst) {
-      for (const key in src) {
-        if (!dst[key]) {
-          dst[key] = src[key];
-        } else if (typeof (src[key]) === 'object') {
-          this.copyOptions(src[key], dst[key]);
-        } else {
-          dst[key] = src[key];
-        }
-      }
-    },
     cleanPropertyOnCell(action) {
       if (this.storeRectangleSelection.length > 0) {
         this.storeRectangleSelection.forEach((cell) => {
@@ -221,7 +208,7 @@ export default {
       this.tbodyData.forEach((tbody, rowIndex) => {
         this.headerKeys.forEach((header) => {
           if (!tbody[header]) {
-            const data = JSON.parse(JSON.stringify(this.options.newData));
+            const data = JSON.parse(JSON.stringify(this.customOptions.newData));
             this.$set(this.tbodyData[rowIndex], header, data);
           }
         });
@@ -229,7 +216,7 @@ export default {
     },
     disabledEvent(col, header) {
       if (col.disabled === undefined) {
-        return !this.options.disableCells.find(x => x === header);
+        return !this.customOptions.disableCells.find(x => x === header);
       } else if (col.disabled) {
         return !col.disabled;
       }
@@ -245,7 +232,7 @@ export default {
       };
     },
     scrollTopDocument(event) {
-      this.scrollDocument = document.querySelector(`${this.options.parentScrollElement}`).scrollTop;
+      this.scrollDocument = document.querySelector(`${this.customOptions.parentScrollElement}`).scrollTop;
       if (this.lastSelectOpen) {
         this.calculPosition(event, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex, 'dropdown');
       } else if (this.lastSubmenuOpen) {
@@ -322,7 +309,6 @@ export default {
         event.keyCode !== 39 &&
         event.keyCode !== 40 &&
         event.keyCode !== 91) {
-
         this.lastSelectOpen = {
           event,
           header,
@@ -385,16 +371,16 @@ export default {
       // stock size / offsetTop / offsetLeft of the element
       const width = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetWidth;
 
-      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.options.parentElementScroll;
+      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.customOptions.parentElementScroll;
       let left = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
 
-      if (this.options.selectPosition) {
-        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.options.selectPosition.top) - this.options.parentElementScroll;
-        left = (this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.options.selectPosition.left;
+      if (this.customOptions.selectPosition) {
+        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.customOptions.selectPosition.top) - this.customOptions.parentElementScroll;
+        left = (this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.customOptions.selectPosition.left;
       }
       // subtracted top of scroll top document
       if (this.scrollDocument) {
-        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.options.parentElementScroll) - this.scrollDocument;
+        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.customOptions.parentElementScroll) - this.scrollDocument;
       }
 
       // set size / top position / left position
@@ -547,7 +533,7 @@ export default {
           // remove stateCopy if present of storeData
           if (newCopyData.copy) { newCopyData.copy = false; }
 
-          if (this.options.dragToFill && this.eventDrag) { // Drag To Fill
+          if (this.customOptions.dragToFill && this.eventDrag) { // Drag To Fill
             if (newCopyData[0][header]) {
               this.tbodyData[rowMin][header] = newCopyData[0][header]; // multiple cell
             } else {
