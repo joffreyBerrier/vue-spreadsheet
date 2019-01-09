@@ -75,7 +75,6 @@ export default {
   loader: false,
   customStyle: {
     height: '400px',
-    width: '700px',
     overflow: 'scroll',
   },
   headers: [

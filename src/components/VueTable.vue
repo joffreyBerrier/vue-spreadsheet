@@ -280,15 +280,14 @@ export default {
     enableSelect(event, header, col, rowIndex, colIndex) {
       const currentElement = this.tbodyData[rowIndex][header];
       if (!col.search) {
+        this.removeClass(['search', 'show', 'typing']);
         this.lastSelectOpen = {
+          col,
+          colIndex,
           event,
           header,
-          col,
           rowIndex,
-          colIndex,
         };
-
-        this.removeClass(['search', 'show', 'typing']);
 
         this.$set(currentElement, 'search', true);
         this.$set(currentElement, 'show', true);
@@ -313,6 +312,7 @@ export default {
     },
     handleSearchInputSelect(event, searchValue, col, header, rowIndex, colIndex) {
       if ((!this.keys.cmd || !this.keys.ctrl) &&
+        event.keyCode !== 8 &&
         event.keyCode !== 13 &&
         event.keyCode !== 16 &&
         event.keyCode !== 17 &&
@@ -322,6 +322,7 @@ export default {
         event.keyCode !== 39 &&
         event.keyCode !== 40 &&
         event.keyCode !== 91) {
+
         this.lastSelectOpen = {
           event,
           header,
@@ -330,6 +331,7 @@ export default {
           colIndex,
           searchValue,
         };
+
         // active class
         if (event.keyCode !== 8) {
           const currentData = this.tbodyData[rowIndex][header];
@@ -360,6 +362,7 @@ export default {
         const sOption = selectOption;
         sOption.active = false;
       });
+
       currentData.selectOptions.find(x => x.value === option.value).active = true;
 
       this.$set(currentData, 'search', false);
@@ -439,9 +442,7 @@ export default {
       if (params.includes('selected')) {
         this.selectedMultipleCellActive = false;
       }
-      if (params.includes('search')) {
-        this.lastSelectOpen = null;
-      }
+
       params.forEach((param) => {
         this.tbodyData.forEach((data, index) => {
           Object.keys(data).forEach((key) => {
@@ -758,9 +759,9 @@ export default {
           this.removeClass(['selected', 'rectangleSelection']);
         }
         this.removeClass(['search']);
+        this.lastSelectOpen = null;
       }
       this.bindClassActiveOnTd(header, rowIndex, colIndex);
-
 
       this.updateSelectedCell(header, rowIndex, colIndex);
 
@@ -901,7 +902,6 @@ export default {
         const oldSelect = this.lastSelectOpen;
         const currentSelect = this.tbodyData[oldSelect.rowIndex][oldSelect.header];
         this.handleTbodySelectChange(event, oldSelect.header, currentSelect, this.filteredList[this.incrementOption], oldSelect.rowIndex, oldSelect.colIndex);
-        this.lastSelectOpen = null;
       }
     },
     moveOnTable(event, colIndex, rowIndex) {
