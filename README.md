@@ -30,41 +30,38 @@ npm i vuejs-spreadsheet
 ```
 
 ## Wiki :mortar_board:
-
-Props                                  | Type       | Description
----------------------------------------|------------|--------------------------------------------------------
-  :custom-options                      | Object     | That contains some options
-  :headers                             | Array      | That contains headers
-  :style-wrap-vue-table                | Object     | That contains style of the wrapper tableVue
-  :tbody-data                          | Array      | That contains data
----------------------------------------|------------|--------------------------------------------------------
-Options                                | Type       | Description
----------------------------------------|------------|--------------------------------------------------------
-  :disable-cells                       | Array      | That contains the headerKey you want to disable
-  :disable-sort-thead                  | Array      | That contains the disabled th
-  :drag-to-fill                        | Boolean    | That activates drag to fill
-  :new-data                            | Object     | That contains the type of data when you have empty cell in a row
-  :parent-element-scroll               | Number     | That contains the OffsetTop of the parent
-  :parent-scroll-element               | String     | That contains the HTML attribute which overflow-y: scroll (by-default is 'html')
-  :select-position                     | Object     | That contains a top and left position you want to add to the select
-  :sort-header                         | Boolean    | That activates sort button on header
-  :submenu-tbody                       | Array      | That contains the submenu-tbody
-  :submenu-thead                       | Array      | That contains the submenu-thead
-  :tbody-index                         | Boolean    | That displays the index of each row on the left of the table
----------------------------------------|------------|--------------------------------------------------------
-Function                               | Type       | Description
----------------------------------------|------------|--------------------------------------------------------
-  v-on:handle-up-drag-size-header      | Function   | Fired when the header size changed
-  v-on:tbody-input-change              | Function   | When the **input changes**
-  v-on:tbody-move-dragtofill           | Function   | Fired when moved on dragToFill
-  v-on:tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
-  v-on:tbody-nav-multiple-backspace    | Function   | Fired when the multiple cell are delete
-  v-on:tbody-replace-data              | Function   | When you copy/paste - dragToFill
-  v-on:tbody-select-change             | Function   | When the **select change**
-  v-on:tbody-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-tbody**
-  v-on:tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
-  v-on:thead-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-thead**
-  v-on:thead-td-sort                   | Function   | When you press the button
+| Props                             | Type     | Description                                                                            |
+|-----------------------------------|----------|----------------------------------------------------------------------------------------|
+| :custom-options                   | Object   | That contains some options                                                             |
+| :headers                          | Array    | That contains headers                                                                  |
+| :style-wrap-vue-table             | Object   | That contains style of the wrapper tableVue                                            |
+| :tbody-data                       | Array    | That contains data                                                                     |
+|                                   |          |                                                                                        |
+| Options                           | Type     | Description                                                                            |
+| :disable-cells                    | Array    | That contains the headerKey you want to disable                                        |
+| :disable-sort-thead               | Array    | That contains the disabled th                                                          |
+| :drag-to-fill                     | Boolean  | That activates drag to fill                                                            |
+| :new-data                         | Object   | That contains the type of data when you have empty cell in a row                       |
+| :parent-element-scroll            | Number   | That contains the OffsetTop of the parent                                              |
+| :parent-scroll-element            | String   | That contains the HTML attribute which overflow-y: scroll (by-default is 'html')       |
+| :select-position                  | Object   | That contains a top and left position you want to add to the select                    |
+| :sort-header                      | Boolean  | That activates sort button on header                                                   |
+| :submenu-tbody                    | Array    | That contains the submenu-tbody                                                        |
+| :submenu-thead                    | Array    | That contains the submenu-thead                                                        |
+| :tbody-index                      | Boolean  | That displays the index of each row on the left of the table                           |
+|                                   |          |                                                                                        |
+| Function                          | Type     | Description                                                                            |
+| v-on:handle-up-drag-size-header   | Function | Fired when the header size changed                                                     |
+| v-on:tbody-input-change           | Function | When the **input changes**                                                             |
+| v-on:tbody-move-dragtofill        | Function | Fired when moved on dragToFill                                                         |
+| v-on:tbody-nav-backspace          | Function | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex) |
+| v-on:tbody-nav-multiple-backspace | Function | Fired when the multiple cell are delete                                                |
+| v-on:tbody-replace-data           | Function | When you copy/paste - dragToFill                                                       |
+| v-on:tbody-select-change          | Function | When the **select change**                                                             |
+| v-on:tbody-submenu-click-{#}      | Function | {#} - Name of the function declared on **submenu-tbody**                               |
+| v-on:tbody-up-dragtofill          | Function | Fired when pressed up on dragToFill                                                    |
+| v-on:thead-submenu-click-{#}      | Function | {#} - Name of the function declared on **submenu-thead**                               |
+| v-on:thead-td-sort                | Function | When you press the button                                                              |
 
 ### Example
 ``` javascript
