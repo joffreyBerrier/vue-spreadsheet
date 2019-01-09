@@ -1,20 +1,10 @@
 <template>
   <div id="app">
     <vue-table
-      :disable-cells="disableCells"
-      :disable-sort-thead="disableSortThead"
-      :drag-to-fill="dragToFill"
       :headers="headers"
-      :loading="loading"
-      :new-data="newData"
-      :parent-element-scroll="0"
-      :parent-scroll-element="'html'"
-      :sort-header="sortHeader"
-      :style-wrap-vue-table="styleWrapVueTable"
-      :submenu-tbody="submenuTbody"
-      :submenu-thead="submenuThead"
+      :custom-options="customOptions"
+      :style-wrap-vue-table="customStyle"
       :tbody-data="products"
-      :tbody-index="tbodyIndex"
       v-on:tbody-change-data="changeData"
       v-on:tbody-input-change="inputChange"
       v-on:tbody-nav-backspace="deleteCell"

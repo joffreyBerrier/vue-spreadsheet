@@ -1,27 +1,82 @@
 export default {
-  dragToFill: true,
-  disableCells: ['a'],
-  sortHeader: true,
-  tbodyIndex: true,
-  loader: false,
-  loading: false,
-  selectPosition: {
-    top: 0,
-    left: 0,
+  customOptions: {
+    disableCells: ['a'],
+    disableSortThead: ['a'],
+    dragToFill: true,
+    loading: false,
+    newData: {
+      type: 'input',
+      value: '',
+      active: false,
+      style: {
+        color: '#000',
+      },
+    },
+    parentElementScroll: 0,
+    parentScrollElement: 'html',
+    sortHeader: true,
+    selectPosition: {
+      top: 0,
+      left: 0,
+    },
+    submenuThead: [
+      {
+        type: 'button',
+        value: 'change color',
+        function: 'change-color',
+        disabled: ['a'],
+      },
+      {
+        type: 'select',
+        disabled: ['a'],
+        subtitle: 'Select state:',
+        selectOptions: [
+          {
+            value: 'new-york',
+            label: 'new-york',
+          },
+          {
+            value: 'france',
+            label: 'france',
+          },
+        ],
+        value: 'new-york',
+        buttonOption: {
+          value: 'change city',
+          function: 'change-city',
+          style: {
+            display: 'block',
+          },
+        },
+      },
+      {
+        type: 'button',
+        value: 'change value',
+        function: 'change-value',
+        disabled: ['a', 'b'],
+      },
+    ],
+    submenuTbody: [
+      {
+        type: 'button',
+        value: 'change color',
+        function: 'change-color',
+        disabled: ['img'],
+      },
+      {
+        type: 'button',
+        value: 'change value',
+        function: 'change-value',
+        disabled: ['img', 'name'],
+      },
+    ],
+    tbodyIndex: true,
   },
-  disableSortThead: ['a'],
-  styleWrapVueTable: {
+  loader: false,
+  customStyle: {
     height: '400px',
     width: '700px',
     overflow: 'scroll',
-  },
-  newData: {
-    type: 'input',
-    value: '',
-    active: false,
-    style: {
-      color: '#000',
-    },
   },
   headers: [
     {
@@ -1206,57 +1261,6 @@ export default {
         value: 1983,
         active: false,
       },
-    },
-  ],
-  submenuThead: [
-    {
-      type: 'button',
-      value: 'change color',
-      function: 'change-color',
-      disabled: ['a'],
-    },
-    {
-      type: 'select',
-      disabled: ['a'],
-      subtitle: 'Select state:',
-      selectOptions: [
-        {
-          value: 'new-york',
-          label: 'new-york',
-        },
-        {
-          value: 'france',
-          label: 'france',
-        },
-      ],
-      value: 'new-york',
-      buttonOption: {
-        value: 'change city',
-        function: 'change-city',
-        style: {
-          display: 'block',
-        },
-      },
-    },
-    {
-      type: 'button',
-      value: 'change value',
-      function: 'change-value',
-      disabled: ['a', 'b'],
-    },
-  ],
-  submenuTbody: [
-    {
-      type: 'button',
-      value: 'change color',
-      function: 'change-color',
-      disabled: ['img'],
-    },
-    {
-      type: 'button',
-      value: 'change value',
-      function: 'change-value',
-      disabled: ['img', 'name'],
     },
   ],
 };

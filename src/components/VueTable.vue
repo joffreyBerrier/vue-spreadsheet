@@ -11,11 +11,11 @@
       <vue-thead
         ref="vueThead"
         :headers="headers"
-        :sort-header="sortHeader"
+        :sort-header="options.sortHeader"
         :submenu-status-thead="submenuStatusThead"
-        :submenu-thead="submenuThead"
-        :disable-sort-thead="disableSortThead"
-        :tbody-index="tbodyIndex"
+        :submenu-thead="options.submenuThead"
+        :disable-sort-thead="options.disableSortThead"
+        :tbody-index="options.tbodyIndex"
         v-on:handle-up-drag-size-header="handleUpDragSizeHeader"
         v-on:handle-up-drag-to-fill="handleUpDragToFill"
         v-on:submenu-enable="enableSubmenu"
@@ -27,17 +27,17 @@
       <slot name="loader">
       </slot>
 
-      <vue-tbody v-if="!loading"
+      <vue-tbody v-if="!options.loading"
         ref="vueTbody"
-        :disable-cells="disableCells"
-        :drag-to-fill="dragToFill"
+        :disable-cells="options.disableCells"
+        :drag-to-fill="options.dragToFill"
         :filtered-list="filteredList"
         :headers="headers"
-        :newData="newData"
+        :newData="options.newData"
         :submenu-status-tbody="submenuStatusTbody"
-        :submenu-tbody="submenuTbody"
+        :submenu-tbody="options.submenuTbody"
         :tbody-data="tbodyData"
-        :tbody-index="tbodyIndex"
+        :tbody-index="options.tbodyIndex"
         v-on:handle-to-calculate-position="calculPosition"
         v-on:handle-to-open-select="enableSelect"
         v-on:submenu-enable="enableSubmenu"
@@ -61,11 +61,16 @@
 <script type="text/javascript">
 import VueThead from './Thead.vue';
 import VueTbody from './Tbody.vue';
+
 const Fuse = require('fuse.js');
 
 export default {
   name: 'VueTable',
   props: {
+    customOptions: {
+      type: Object,
+      required: true,
+    },
     headers: {
       type: Array,
       required: true,
@@ -74,57 +79,9 @@ export default {
       type: Array,
       required: true,
     },
-    disableCells: {
-      type: Array,
-      required: false,
-    },
-    dragToFill: {
-      type: Boolean,
-      required: false,
-    },
-    newData: {
-      type: Object,
-      required: false,
-    },
-    sortHeader: {
-      type: Boolean,
-      required: false,
-    },
-    submenuTbody: {
-      type: Array,
-      required: false,
-    },
-    submenuThead: {
-      type: Array,
-      required: true,
-    },
-    disableSortThead: {
-      type: Array,
-      required: true,
-    },
-    tbodyIndex: {
-      type: Boolean,
-      required: false,
-    },
-    selectPosition: {
-      type: Object,
-      required: false,
-    },
     styleWrapVueTable: {
       type: Object,
       required: false,
-    },
-    parentElementScroll: {
-      type: Number,
-      required: false,
-    },
-    parentScrollElement: {
-      type: String,
-      required: true,
-    },
-    loading: {
-      type: Boolean,
-      required: true,
     },
   },
   components: {
@@ -145,7 +102,6 @@ export default {
       oldTdShow: null,
       pressedShift: 0,
       rectangleSelectedCell: null,
-      storeRectangleSelection: [],
       scrollDocument: null,
       scrollToSelectTimeout: null,
       selectedCell: null,
@@ -155,11 +111,32 @@ export default {
       selectedMultipleCellActive: false,
       setFirstCell: false,
       storeCopyDatas: [],
+      storeRectangleSelection: [],
       submenuStatusTbody: false,
       submenuStatusThead: false,
+      options: {
+        disableCells: [],
+        disableSortThead: [],
+        dragToFill: true,
+        loading: false,
+        newData: {},
+        parentElementScroll: 0,
+        parentScrollElement: 'html',
+        selectPosition: {
+          top: 0,
+          left: 0,
+        },
+        sortHeader: true,
+        submenuTbody: [],
+        submenuThead: [],
+        tbodyIndex: true,
+      },
     };
   },
   mounted() {
+    // copy object user to default
+    this.copyOptions(this.customOptions, this.options);
+
     this.createdCell();
     window.addEventListener('keydown', this.moveKeydown);
     window.addEventListener('keyup', this.moveKeyup);
@@ -199,7 +176,7 @@ export default {
           minMatchCharLength: 1,
           keys: [
             'value',
-          ]
+          ],
         };
         const fuseSearch = new Fuse(selectOptions, fuseOptions);
         return fuseSearch.search(searchValue);
@@ -211,6 +188,17 @@ export default {
     },
   },
   methods: {
+    copyOptions(src, dst) {
+      for (const key in src) {
+        if (!dst[key]) {
+          dst[key] = src[key];
+        } else if (typeof (src[key]) === 'object') {
+          this.copyOptions(src[key], dst[key]);
+        } else {
+          dst[key] = src[key];
+        }
+      }
+    },
     cleanPropertyOnCell(action) {
       if (this.storeRectangleSelection.length > 0) {
         this.storeRectangleSelection.forEach((cell) => {
@@ -233,7 +221,7 @@ export default {
       this.tbodyData.forEach((tbody, rowIndex) => {
         this.headerKeys.forEach((header) => {
           if (!tbody[header]) {
-            const data = JSON.parse(JSON.stringify(this.newData));
+            const data = JSON.parse(JSON.stringify(this.options.newData));
             this.$set(this.tbodyData[rowIndex], header, data);
           }
         });
@@ -241,7 +229,7 @@ export default {
     },
     disabledEvent(col, header) {
       if (col.disabled === undefined) {
-        return !this.disableCells.find(x => x === header);
+        return !this.options.disableCells.find(x => x === header);
       } else if (col.disabled) {
         return !col.disabled;
       }
@@ -257,7 +245,7 @@ export default {
       };
     },
     scrollTopDocument(event) {
-      this.scrollDocument = document.querySelector(`${this.parentScrollElement}`).scrollTop;
+      this.scrollDocument = document.querySelector(`${this.options.parentScrollElement}`).scrollTop;
       if (this.lastSelectOpen) {
         this.calculPosition(event, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex, 'dropdown');
       } else if (this.lastSubmenuOpen) {
@@ -394,16 +382,16 @@ export default {
       // stock size / offsetTop / offsetLeft of the element
       const width = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetWidth;
 
-      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentElementScroll;
+      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.options.parentElementScroll;
       let left = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
 
-      if (this.selectPosition) {
-        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top) - this.parentElementScroll;
-        left = (this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.selectPosition.left;
+      if (this.options.selectPosition) {
+        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.options.selectPosition.top) - this.options.parentElementScroll;
+        left = (this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.options.selectPosition.left;
       }
       // subtracted top of scroll top document
       if (this.scrollDocument) {
-        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentElementScroll) - this.scrollDocument;
+        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.options.parentElementScroll) - this.scrollDocument;
       }
 
       // set size / top position / left position
@@ -558,7 +546,7 @@ export default {
           // remove stateCopy if present of storeData
           if (newCopyData.copy) { newCopyData.copy = false; }
 
-          if (this.dragToFill && this.eventDrag) { // Drag To Fill
+          if (this.options.dragToFill && this.eventDrag) { // Drag To Fill
             if (newCopyData[0][header]) {
               this.tbodyData[rowMin][header] = newCopyData[0][header]; // multiple cell
             } else {
