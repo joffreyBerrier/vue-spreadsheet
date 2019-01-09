@@ -134,7 +134,6 @@ export default {
     return {
       disableKeyTimeout: null,
       eventDrag: false,
-      filteredList: [],
       incrementCol: 0,
       incrementOption: null,
       incrementRow: null,
@@ -183,6 +182,37 @@ export default {
   computed: {
     colHeaderWidths() {
       return this.headers.map(x => parseInt(x.style.width, 10));
+    },
+    filteredList() {
+      if (this.lastSelectOpen) {
+        const selectOptions = this.lastSelectOpen.col.selectOptions;
+        const searchValue = this.lastSelectOpen.searchValue;
+
+        var options = {
+          caseSensitive: true,
+          shouldSort: true,
+          includeScore: true,
+          includeMatches: true,
+          threshold: 0.6,
+          location: 0,
+          distance: 100,
+          maxPatternLength: 32,
+          minMatchCharLength: 1,
+          keys: [
+            "value",
+          ]
+        };
+        var fuse = new Fuse(list, options); // "list" is the item array
+        return fuse.search("");
+
+        // return selectOptions.filter((option) => {
+        //   if (typeof option.value === 'number') {
+        //     return option.value.toString().toLowerCase().includes(searchValue.toString().toLowerCase());
+        //   }
+        //   return option.value.toLowerCase().includes(searchValue.toLowerCase());
+        // });
+      }
+      return [];
     },
     headerKeys() {
       return this.headers.map(header => header.headerKey);
@@ -268,7 +298,7 @@ export default {
       }
     },
     enableSelect(event, header, col, rowIndex, colIndex) {
-      const currentData = this.tbodyData[rowIndex][header];
+      const currentElement = this.tbodyData[rowIndex][header];
       if (!col.search) {
         this.lastSelectOpen = {
           event,
@@ -280,31 +310,30 @@ export default {
 
         this.removeClass(['search', 'show', 'typing']);
 
-        this.$set(currentData, 'search', true);
-        this.$set(currentData, 'show', true);
-        this.$set(currentData, 'typing', false);
+        this.$set(currentElement, 'search', true);
+        this.$set(currentElement, 'show', true);
+        this.$set(currentElement, 'typing', false);
 
         this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
-        this.filteredList = currentData.selectOptions;
-        if (currentData.value !== '') {
-          this.showDropdown(currentData, colIndex, rowIndex);
-          const index = currentData.selectOptions.map(x => x.value).indexOf(currentData.value);
+
+        if (currentElement.value !== '') {
+          this.showDropdown(currentElement, colIndex, rowIndex);
+          const index = currentElement.selectOptions.map(x => x.value).indexOf(currentElement.value);
           this.incrementOption = index;
         } else {
           this.incrementOption = 0;
         }
       } else {
-        this.$set(currentData, 'search', false);
-        this.$set(currentData, 'show', false);
-        this.$set(currentData, 'typing', true);
+        this.$set(currentElement, 'search', false);
+        this.$set(currentElement, 'show', false);
+        this.$set(currentElement, 'typing', true);
         this.lastSelectOpen = null;
       }
     },
     handleSearchInputSelect(event, searchValue, col, header, rowIndex, colIndex) {
       if ((!this.keys.cmd || !this.keys.ctrl) &&
         event.keyCode !== 13 &&
-        event.keyCode !== 8 &&
         event.keyCode !== 16 &&
         event.keyCode !== 17 &&
         event.keyCode !== 27 &&
@@ -319,22 +348,18 @@ export default {
           col,
           rowIndex,
           colIndex,
+          searchValue,
         };
         // active class
-        const currentData = this.tbodyData[rowIndex][header];
-        this.$set(currentData, 'search', true);
-        this.$set(currentData, 'typing', true);
-        this.$set(currentData, 'show', true);
+        if (event.keyCode !== 8) {
+          const currentData = this.tbodyData[rowIndex][header];
+          this.$set(currentData, 'search', true);
+          this.$set(currentData, 'typing', true);
+          this.$set(currentData, 'show', true);
 
-        this.showDropdown(currentData, colIndex, rowIndex);
+          this.showDropdown(currentData, colIndex, rowIndex);
+        }
         this.incrementOption = 0;
-
-        this.filteredList = col.selectOptions.filter((option) => {
-          if (typeof option.value === 'number') {
-            return option.value.toString().toLowerCase().includes(searchValue.toString().toLowerCase());
-          }
-          return option.value.toLowerCase().includes(searchValue.toLowerCase());
-        });
       }
     },
     showDropdown(currentData, colIndex, rowIndex) {
@@ -352,7 +377,8 @@ export default {
     handleTbodySelectChange(event, header, col, option, rowIndex, colIndex) {
       const currentData = this.tbodyData[rowIndex][header];
       currentData.selectOptions.forEach((selectOption) => {
-        selectOption.active = false;
+        const sOption = selectOption;
+        sOption.active = false;
       });
       currentData.selectOptions.find(x => x.value === option.value).active = true;
 
@@ -432,6 +458,9 @@ export default {
     removeClass(params) {
       if (params.includes('selected')) {
         this.selectedMultipleCellActive = false;
+      }
+      if (params.includes('search')) {
+        this.lastSelectOpen = null;
       }
       params.forEach((param) => {
         this.tbodyData.forEach((data, index) => {
@@ -834,11 +863,11 @@ export default {
     },
     handleTBodyContextMenu(event, header, rowIndex, colIndex, type) {
       this.lastSubmenuOpen = {
-          event,
-          header,
-          rowIndex,
-          colIndex,
-        };
+        event,
+        header,
+        rowIndex,
+        colIndex,
+      };
     },
     // thead
     handleTheadContextMenu() {

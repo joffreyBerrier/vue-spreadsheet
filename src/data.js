@@ -124,24 +124,24 @@ export default {
         handleSearch: true,
         selectOptions: [
           {
-            value: 'pet',
-            label: 'pet',
+            value: 'pantalon de sport',
+            label: 'pantalon de sport',
           },
           {
-            value: 'pet country',
-            label: 'pet country',
+            value: 'pantalon de gym',
+            label: 'pantalon de gym',
           },
           {
-            value: 'pet cat',
-            label: 'pet cat',
+            value: 'pantalon de ville',
+            label: 'pantalon de ville',
           },
           {
-            value: 'pet doggy dog',
-            label: 'pet doggy dog',
+            value: 'pantaloone',
+            label: 'pantaloone',
           },
           {
-            value: 'pet horse',
-            label: 'pet horse',
+            value: 'pantalon',
+            label: 'pantalon',
           },
           {
             value: 'pet dolphin',
