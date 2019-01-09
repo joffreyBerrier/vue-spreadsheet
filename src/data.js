@@ -72,7 +72,6 @@ export default {
     ],
     tbodyIndex: true,
   },
-  loader: false,
   customStyle: {
     height: '400px',
     overflow: 'scroll',
