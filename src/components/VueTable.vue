@@ -61,6 +61,7 @@
 <script type="text/javascript">
 import VueThead from './Thead.vue';
 import VueTbody from './Tbody.vue';
+const Fuse = require('fuse.js');
 
 export default {
   name: 'VueTable',
@@ -188,29 +189,20 @@ export default {
         const selectOptions = this.lastSelectOpen.col.selectOptions;
         const searchValue = this.lastSelectOpen.searchValue;
 
-        var options = {
+        const fuseOptions = {
           caseSensitive: true,
           shouldSort: true,
-          includeScore: true,
-          includeMatches: true,
           threshold: 0.6,
           location: 0,
           distance: 100,
           maxPatternLength: 32,
           minMatchCharLength: 1,
           keys: [
-            "value",
+            'value',
           ]
         };
-        var fuse = new Fuse(list, options); // "list" is the item array
-        return fuse.search("");
-
-        // return selectOptions.filter((option) => {
-        //   if (typeof option.value === 'number') {
-        //     return option.value.toString().toLowerCase().includes(searchValue.toString().toLowerCase());
-        //   }
-        //   return option.value.toLowerCase().includes(searchValue.toLowerCase());
-        // });
+        const fuseSearch = new Fuse(selectOptions, fuseOptions);
+        return fuseSearch.search(searchValue);
       }
       return [];
     },
