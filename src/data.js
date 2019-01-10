@@ -1,80 +1,27 @@
 export default {
-  customOptions: {
-    disableCells: ['a'],
-    disableSortThead: ['a'],
-    dragToFill: true,
-    loading: false,
-    newData: {
-      type: 'input',
-      value: '',
-      active: false,
-      style: {
-        color: '#000',
-      },
-    },
-    parentElementScroll: 0,
-    parentScrollElement: 'html',
-    sortHeader: true,
-    selectPosition: {
-      top: 0,
-      left: 0,
-    },
-    submenuThead: [
-      {
-        type: 'button',
-        value: 'change color',
-        function: 'change-color',
-        disabled: ['a'],
-      },
-      {
-        type: 'select',
-        disabled: ['a'],
-        subtitle: 'Select state:',
-        selectOptions: [
-          {
-            value: 'new-york',
-            label: 'new-york',
-          },
-          {
-            value: 'france',
-            label: 'france',
-          },
-        ],
-        value: 'new-york',
-        buttonOption: {
-          value: 'change city',
-          function: 'change-city',
-          style: {
-            display: 'block',
-          },
-        },
-      },
-      {
-        type: 'button',
-        value: 'change value',
-        function: 'change-value',
-        disabled: ['a', 'b'],
-      },
-    ],
-    submenuTbody: [
-      {
-        type: 'button',
-        value: 'change color',
-        function: 'change-color',
-        disabled: ['img'],
-      },
-      {
-        type: 'button',
-        value: 'change value',
-        function: 'change-value',
-        disabled: ['img', 'name'],
-      },
-    ],
-    tbodyIndex: true,
+  dragToFill: true,
+  disableCells: ['a'],
+  sortHeader: true,
+  tbodyIndex: true,
+  loader: false,
+  loading: false,
+  selectPosition: {
+    top: 0,
+    left: 0,
   },
-  customStyle: {
-    height: '400px',
-    overflow: 'scroll',
+  disableSortThead: ['a'],
+  styleWrapVueTable: {
+    // height: '400px',
+    // width: '700px',
+    // overflow: 'scroll',
+  },
+  newData: {
+    type: 'input',
+    value: '',
+    active: false,
+    style: {
+      color: '#000',
+    },
   },
   headers: [
     {
@@ -177,24 +124,24 @@ export default {
         handleSearch: true,
         selectOptions: [
           {
-            value: 'pantalon de sport',
-            label: 'pantalon de sport',
+            value: 'pet',
+            label: 'pet',
           },
           {
-            value: 'pantalon de gym',
-            label: 'pantalon de gym',
+            value: 'pet country',
+            label: 'pet country',
           },
           {
-            value: 'pantalon de ville',
-            label: 'pantalon de ville',
+            value: 'pet cat',
+            label: 'pet cat',
           },
           {
-            value: 'pantaloone',
-            label: 'pantaloone',
+            value: 'pet doggy dog',
+            label: 'pet doggy dog',
           },
           {
-            value: 'pantalon',
-            label: 'pantalon',
+            value: 'pet horse',
+            label: 'pet horse',
           },
           {
             value: 'pet dolphin',
@@ -1259,6 +1206,57 @@ export default {
         value: 1983,
         active: false,
       },
+    },
+  ],
+  submenuThead: [
+    {
+      type: 'button',
+      value: 'change color',
+      function: 'change-color',
+      disabled: ['a'],
+    },
+    {
+      type: 'select',
+      disabled: ['a'],
+      subtitle: 'Select state:',
+      selectOptions: [
+        {
+          value: 'new-york',
+          label: 'new-york',
+        },
+        {
+          value: 'france',
+          label: 'france',
+        },
+      ],
+      value: 'new-york',
+      buttonOption: {
+        value: 'change city',
+        function: 'change-city',
+        style: {
+          display: 'block',
+        },
+      },
+    },
+    {
+      type: 'button',
+      value: 'change value',
+      function: 'change-value',
+      disabled: ['a', 'b'],
+    },
+  ],
+  submenuTbody: [
+    {
+      type: 'button',
+      value: 'change color',
+      function: 'change-color',
+      disabled: ['img'],
+    },
+    {
+      type: 'button',
+      value: 'change value',
+      function: 'change-value',
+      disabled: ['img', 'name'],
     },
   ],
 };
