@@ -124,10 +124,6 @@ export default {
         handleSearch: true,
         selectOptions: [
           {
-            value: 'pet',
-            label: 'pet',
-          },
-          {
             value: 'pet country',
             label: 'pet country',
           },
@@ -154,6 +150,10 @@ export default {
           {
             value: 'pet bib',
             label: 'pet bib',
+          },
+          {
+            value: 'pet',
+            label: 'pet',
           },
           {
             value: 'pet bob',

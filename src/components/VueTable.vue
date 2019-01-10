@@ -190,17 +190,19 @@ export default {
         const searchValue = this.lastSelectOpen.searchValue;
 
         const fuseOptions = {
-          caseSensitive: true,
           shouldSort: true,
-          threshold: 0.6,
+          threshold: 0.2,
           location: 0,
-          distance: 100,
-          maxPatternLength: 32,
+          distance: 30,
+          maxPatternLength: 64,
           minMatchCharLength: 1,
+          findAllMatches: false,
+          tokenize: false,
           keys: [
             'value',
           ],
         };
+
         const fuseSearch = new Fuse(selectOptions, fuseOptions);
         return fuseSearch.search(searchValue);
       }
