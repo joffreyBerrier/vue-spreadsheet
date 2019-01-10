@@ -653,7 +653,7 @@ export default {
         const header = this.headerKeys[colMin];
         // disable on disabled cell
         if (params === 'removeValue' && this.disabledEvent(this.tbodyData[rowMin][header], header)) {
-          this.$emit('tbody-nav-backspace', rowMin, colMin, header);
+          this.$emit('tbody-nav-backspace', rowMin, colMin, header, this.tbodyData[rowMin][header]);
           this.$emit('tbody-change-data', rowMin, header);
           this.$set(this.tbodyData[rowMin][header], 'value', '');
           this.$set(this.tbodyData[rowMin][header], 'selected', false);
@@ -830,9 +830,9 @@ export default {
       if (this.selectedMultipleCell) {
         this.modifyMultipleCell('removeValue');
       } else {
-        this.tbodyData[rowIndex][header].value = '';
-        this.$emit('tbody-nav-backspace', rowIndex, colIndex, header);
+        this.$emit('tbody-nav-backspace', rowIndex, colIndex, header, this.tbodyData[rowIndex][header]);
         this.$emit('tbody-change-data', rowIndex, header);
+        this.tbodyData[rowIndex][header].value = '';
       }
     },
     handleTbodyInputChange(event, header, rowIndex, colIndex) {
