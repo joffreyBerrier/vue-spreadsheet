@@ -325,8 +325,10 @@ export default {
       }
     },
     handleSearchInputSelect(event, searchValue, col, header, rowIndex, colIndex) {
+      let disableSearch = !(searchValue === "" && event.keyCode === 8);
+
       if ((!this.keys.cmd || !this.keys.ctrl) &&
-        event.keyCode !== 8 &&
+        disableSearch &&
         event.keyCode !== 13 &&
         event.keyCode !== 16 &&
         event.keyCode !== 17 &&
@@ -336,6 +338,7 @@ export default {
         event.keyCode !== 39 &&
         event.keyCode !== 40 &&
         event.keyCode !== 91) {
+
         this.lastSelectOpen = {
           event,
           header,
