@@ -1,10 +1,20 @@
 <template>
   <div id="app">
     <vue-table
+      :disable-cells="disableCells"
+      :disable-sort-thead="disableSortThead"
+      :drag-to-fill="dragToFill"
       :headers="headers"
-      :custom-options="customOptions"
-      :style-wrap-vue-table="customStyle"
+      :loading="loading"
+      :new-data="newData"
+      :parent-element-scroll="0"
+      :parent-scroll-element="'html'"
+      :sort-header="sortHeader"
+      :style-wrap-vue-table="styleWrapVueTable"
+      :submenu-tbody="submenuTbody"
+      :submenu-thead="submenuThead"
       :tbody-data="products"
+      :tbody-index="tbodyIndex"
       v-on:tbody-change-data="changeData"
       v-on:tbody-input-change="inputChange"
       v-on:tbody-nav-backspace="deleteCell"
@@ -19,7 +29,7 @@
     <div slot="header">
       Specific Header
     </div>
-    <div slot="loader">
+    <div slot="loader" v-if="loader">
       Loader
     </div>
     </vue-table>
