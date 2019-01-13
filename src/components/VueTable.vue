@@ -489,7 +489,13 @@ export default {
         }
 
         while (rowMin <= rowMax) {
-          storeData[this.headerKeys[colMin]] = tbodyData[rowMin][this.headerKeys[colMin]];
+          // remove stateCopy if present of storeData
+          const copyData = tbodyData[rowMin][this.headerKeys[colMin]];
+          copyData.active = false;
+          copyData.selected = false;
+          copyData.copy = false;
+
+          storeData[this.headerKeys[colMin]] = copyData;
           colMin += 1;
           if (colMin > colMax) {
             this.storeCopyDatas.push(storeData);
@@ -506,7 +512,12 @@ export default {
         } else {
           this.storeCopyDatas = [];
         }
-        this.storeCopyDatas.push(tbodyData[this.selectedCell.row][this.selectedCell.header]);
+        // remove stateCopy if present of storeData
+        const copyData = tbodyData[this.selectedCell.row][this.selectedCell.header];
+        copyData.active = false;
+        copyData.selected = false;
+        copyData.copy = false;
+        this.storeCopyDatas.push(copyData);
         this.copyMultipleCell = false;
       }
     },
@@ -535,14 +546,19 @@ export default {
           colMax = Math.max(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
         }
 
+        // new paste data
+        if (this.storeCopyDatas.length === 1 && Object.values(this.storeCopyDatas[0]).length > 1 && this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd) {
+          rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
+          rowMax = Math.max(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
+          colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+          colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+        }
+
         let row = 0;
         let col = 0;
         while (rowMin <= rowMax) {
           const header = this.headerKeys[colMin];
           const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
-
-          // remove stateCopy if present of storeData
-          if (newCopyData.copy) { newCopyData.copy = false; }
 
           if (this.customOptions.dragToFill && this.eventDrag) { // Drag To Fill
             if (newCopyData[0][header]) {
@@ -577,7 +593,7 @@ export default {
             const cellToCells = newCopyData.length === 1 && Object.values(newCopyData).length === 1 && newCopyData[0].type;
             if (cellToCells) {
               currentHeader = this.selectedCell.header;
-              newCopyData[0].active = false;
+              // newCopyData[0].active = false;
               [this.tbodyData[rowMin][currentHeader]] = newCopyData;
               if (rowMin === this.selectedCell.row || rowMin === this.selectedCoordCells.rowStart) {
                 this.$set(this.tbodyData[rowMin][currentHeader], 'selected', true);
@@ -600,9 +616,17 @@ export default {
             }
 
             // 1 row & multiple cols => to multiple row & cols
-            const rowColsToRowsCols = newCopyData.length === 1 && Object.values(newCopyData[0]).length > 1 && this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd;
+            const rowColsToRowsCols = newCopyData.length === 1 &&
+              Object.values(newCopyData[0]).length > 1 &&
+              this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd &&
+              this.selectedCoordCells.colStart !== this.selectedCoordCells.colEnd;
             if (rowColsToRowsCols) {
-              console.log('this paste is disable for now');
+              this.tbodyData[incrementRow][currentHeader] = newCopyData[0][currentHeader];
+              if (colMin < colMax) {
+                col += 1;
+              } else {
+                col = 0;
+              }
             }
 
             // multiple col / row to multiple col / row
@@ -616,6 +640,7 @@ export default {
                 col = 0;
               }
             }
+            this.tbodyData[this.selectedCell.row][this.selectedCell.header].selected = true;
           }
           colMin += 1;
           if (colMin > colMax) {

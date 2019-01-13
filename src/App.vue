@@ -55,11 +55,9 @@ export default {
     },
     // callback
     changeColorThead(event, header, colIndex) {
-      // console.log('changeColor', event, header, colIndex);
       this.headers[colIndex].style.color = '#e40000';
     },
     changeValueThead(event, header, colIndex) {
-      // console.log('changeValue', event, header, colIndex);
       this.headers[colIndex].headerName = 'T-shirt';
     },
     changeColorTbody(event, header, rowIndex, colIndex) {
@@ -67,7 +65,6 @@ export default {
       this.products[rowIndex][header].style.color = '#e40000';
     },
     changeValueTbody(event, header, rowIndex, colIndex) {
-      // console.log('changeValueTbody', event, header, rowIndex, colIndex, type);
       this.products[rowIndex][header].value = 'T-shirt';
     },
   },
