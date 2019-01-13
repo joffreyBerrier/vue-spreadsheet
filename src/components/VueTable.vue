@@ -11,11 +11,11 @@
       <vue-thead
         ref="vueThead"
         :headers="headers"
-        :sort-header="sortHeader"
+        :sort-header="customOptions.sortHeader"
+        :tbody-index="customOptions.tbodyIndex"
         :submenu-status-thead="submenuStatusThead"
         :submenu-thead="submenuThead"
         :disable-sort-thead="disableSortThead"
-        :tbody-index="tbodyIndex"
         v-on:handle-up-drag-size-header="handleUpDragSizeHeader"
         v-on:handle-up-drag-to-fill="handleUpDragToFill"
         v-on:submenu-enable="enableSubmenu"
@@ -29,15 +29,15 @@
 
       <vue-tbody v-if="!loading"
         ref="vueTbody"
-        :disable-cells="disableCells"
-        :drag-to-fill="dragToFill"
-        :filtered-list="filteredList"
-        :headers="headers"
-        :submenu-status-tbody="submenuStatusTbody"
-        :submenu-tbody="submenuTbody"
         :tbody-data="tbodyData"
-        :tbody-index="tbodyIndex"
-        :trad="trad"
+        :headers="headers"
+        :drag-to-fill="customOptions.dragToFill"
+        :tbody-index="customOptions.tbodyIndex"
+        :trad="customOptions.trad"
+        :disable-cells="disableCells"
+        :submenu-tbody="submenuTbody"
+        :filtered-list="filteredList"
+        :submenu-status-tbody="submenuStatusTbody"
         v-on:handle-to-calculate-position="calculPosition"
         v-on:handle-to-open-select="enableSelect"
         v-on:submenu-enable="enableSubmenu"
@@ -75,6 +75,14 @@ export default {
       type: Array,
       required: true,
     },
+    customOptions: {
+      type: Object,
+      required: true,
+    },
+    styleWrapVueTable: {
+      type: Object,
+      required: true,
+    },
     submenuThead: {
       type: Array,
       required: true,
@@ -85,18 +93,6 @@ export default {
     },
     loading: {
       type: Boolean,
-      required: true,
-    },
-    fuseOptions: {
-      type: Object,
-      required: true,
-    },
-    trad: {
-      type: Object,
-      required: true,
-    },
-    newData: {
-      type: Object,
       required: true,
     },
     selectPosition: {
@@ -111,24 +107,8 @@ export default {
       type: Array,
       required: false,
     },
-    dragToFill: {
-      type: Boolean,
-      required: false,
-    },
-    sortHeader: {
-      type: Boolean,
-      required: false,
-    },
     submenuTbody: {
       type: Array,
-      required: false,
-    },
-    tbodyIndex: {
-      type: Boolean,
-      required: false,
-    },
-    styleWrapVueTable: {
-      type: Object,
       required: false,
     },
   },
@@ -176,8 +156,8 @@ export default {
       }
     });
     document.addEventListener('paste', (event) => {
-      event.preventDefault();
       if (this.storeCopyDatas.length > 0) {
+        event.preventDefault();
         this.pasteReplaceData();
       }
     });
@@ -193,7 +173,7 @@ export default {
       if (this.lastSelectOpen) {
         const { selectOptions } = this.lastSelectOpen.col;
         const { searchValue } = this.lastSelectOpen;
-        const fuseSearch = new Fuse(selectOptions, this.fuseOptions);
+        const fuseSearch = new Fuse(selectOptions, this.customOptions.fuseOptions);
         if (searchValue && searchValue.length > 1) {
           return fuseSearch.search(searchValue);
         }
@@ -239,7 +219,7 @@ export default {
       this.tbodyData.forEach((tbody, rowIndex) => {
         this.headerKeys.forEach((header) => {
           if (!tbody[header]) {
-            const data = JSON.parse(JSON.stringify(this.newData));
+            const data = JSON.parse(JSON.stringify(this.customOptions.newData));
             this.$set(this.tbodyData[rowIndex], header, data);
           }
         });
@@ -564,7 +544,7 @@ export default {
           // remove stateCopy if present of storeData
           if (newCopyData.copy) { newCopyData.copy = false; }
 
-          if (this.dragToFill && this.eventDrag) { // Drag To Fill
+          if (this.customOptions.dragToFill && this.eventDrag) { // Drag To Fill
             if (newCopyData[0][header]) {
               this.tbodyData[rowMin][header] = newCopyData[0][header]; // multiple cell
             } else {
@@ -1147,6 +1127,8 @@ export default {
         // press esc
         if (event.keyCode === 27) {
           this.tbodyData[rowIndex][header].active = false;
+          this.storeCopyDatas = [];
+          this.removeClass(['stateCopy']);
         }
       }
     },

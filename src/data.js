@@ -1,39 +1,49 @@
 export default {
-  dragToFill: true,
+  customOptions: {
+    dragToFill: true,
+    tbodyIndex: true,
+    sortHeader: true,
+    trad: {
+      lang: 'fr',
+      en: {
+        select: {
+          placeholder: 'Search by typing',
+        },
+      },
+      fr: {
+        select: {
+          placeholder: 'Taper pour chercher',
+        },
+      },
+    },
+    newData: {
+      type: 'input',
+      value: '',
+      active: false,
+      style: {
+        color: '#000',
+      },
+    },
+    fuseOptions: {
+      shouldSort: true,
+      threshold: 0.2,
+      location: 0,
+      distance: 30,
+      maxPatternLength: 64,
+      minMatchCharLength: 1,
+      findAllMatches: false,
+      tokenize: false,
+      keys: [
+        'value',
+      ],
+    },
+  },
   disableCells: ['a'],
-  sortHeader: true,
-  tbodyIndex: true,
   loader: false,
   loading: false,
   parentScrollElement: {
     attribute: 'html',
     positionTop: 0,
-  },
-  trad: {
-    lang: 'fr',
-    en: {
-      select: {
-        placeholder: 'Search by typing',
-      },
-    },
-    fr: {
-      select: {
-        placeholder: 'Taper pour chercher',
-      },
-    },
-  },
-  fuseOptions: {
-    shouldSort: true,
-    threshold: 0.2,
-    location: 0,
-    distance: 30,
-    maxPatternLength: 64,
-    minMatchCharLength: 1,
-    findAllMatches: false,
-    tokenize: false,
-    keys: [
-      'value',
-    ],
   },
   selectPosition: {
     top: 0,
@@ -42,16 +52,8 @@ export default {
   disableSortThead: ['a'],
   styleWrapVueTable: {
     height: '400px',
-    width: '700px',
+    // width: '700px',
     overflow: 'scroll',
-  },
-  newData: {
-    type: 'input',
-    value: '',
-    active: false,
-    style: {
-      color: '#000',
-    },
   },
   headers: [
     {

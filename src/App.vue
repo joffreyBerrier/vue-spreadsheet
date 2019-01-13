@@ -1,27 +1,22 @@
 <template>
   <div id="app">
     <vue-table
-      :headers="headers"
       :tbody-data="products"
-      :submenu-tbody="submenuTbody"
-      :submenu-thead="submenuThead"
+      :headers="headers"
+      :custom-options="customOptions"
+      :style-wrap-vue-table="styleWrapVueTable"
       :disable-cells="disableCells"
       :disable-sort-thead="disableSortThead"
-      :drag-to-fill="dragToFill"
-      :fuse-options="fuseOptions"
       :loading="loading"
-      :new-data="newData"
       :parent-scroll-element="parentScrollElement"
-      :sort-header="sortHeader"
-      :style-wrap-vue-table="styleWrapVueTable"
-      :tbody-index="tbodyIndex"
       :select-position="selectPosition"
-      :trad="trad"
+      :submenu-tbody="submenuTbody"
+      :submenu-thead="submenuThead"
       v-on:tbody-change-data="changeData"
       v-on:tbody-submenu-click-change-color="changeColorTbody"
       v-on:tbody-submenu-click-change-value="changeValueTbody"
-      v-on:thead-submenu-click-change-color="changeColor"
-      v-on:thead-submenu-click-change-value="changeValue"
+      v-on:thead-submenu-click-change-color="changeColorThead"
+      v-on:thead-submenu-click-change-value="changeValueThead"
       v-on:thead-td-sort="sortProduct">
     <div slot="header">
       Specific Header
@@ -53,31 +48,27 @@ export default {
   },
   methods: {
     changeData(row, header) {
-      console.log(row, header);
+      // console.log(row, header);
     },
-    sortProduct(event, entry, colIndex) {
+    sortProduct(event, header, colIndex) {
       // console.log('sort product');
     },
     // callback
-    changeColor(event, entry, colIndex) {
-      // console.log('changeColor', event, entry, colIndex);
+    changeColorThead(event, header, colIndex) {
+      // console.log('changeColor', event, header, colIndex);
       this.headers[colIndex].style.color = '#e40000';
     },
-    changeValue(event, entry, colIndex) {
-      // console.log('changeValue', event, entry, colIndex);
+    changeValueThead(event, header, colIndex) {
+      // console.log('changeValue', event, header, colIndex);
       this.headers[colIndex].headerName = 'T-shirt';
     },
-    changeColorTbody(event, entry, rowIndex, colIndex, type) {
-      // console.log('changeColorTbody', event, entry, rowIndex, colIndex, type);
-      if (type === 'input') {
-        this.products[rowIndex][entry].style.color = '#e40000';
-      }
+    changeColorTbody(event, header, rowIndex, colIndex) {
+      this.products[rowIndex][header].style = {};
+      this.products[rowIndex][header].style.color = '#e40000';
     },
-    changeValueTbody(event, entry, rowIndex, colIndex, type) {
-      // console.log('changeValueTbody', event, entry, rowIndex, colIndex, type);
-      if (type === 'input') {
-        this.products[rowIndex][entry].value = 'T-shirt';
-      }
+    changeValueTbody(event, header, rowIndex, colIndex) {
+      // console.log('changeValueTbody', event, header, rowIndex, colIndex, type);
+      this.products[rowIndex][header].value = 'T-shirt';
     },
   },
 };

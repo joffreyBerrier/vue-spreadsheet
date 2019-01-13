@@ -80,14 +80,21 @@
             <!-- If Select -->
             <template v-if="row[header].type === 'select' && row[header].handleSearch">
               <span>{{row[header].value}}</span>
-              <button @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)" v-bind:class="{'active': row[header].search === true}" class="enable_select"><i></i></button>
+              <i class="icon_glass"
+                v-bind:class="{'show': row[header].search}">
+              </i>
+              <button
+                @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)"
+                v-bind:class="{'active': row[header].search === true}"
+                class="enable_select"><i></i>
+              </button>
               <div class="dropdown">
                 <input
                   v-model="searchInput"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
-                  :placeholder="trad[trad.lang].select.placeholder"
-                  @keyup="handleSearchInputSelect($event, row[header], header, rowIndex, colIndex)"/>
+                  @keyup.exact="handleSearchInputSelect($event, row[header], header, rowIndex, colIndex)"
+                  :placeholder="trad[trad.lang].select.placeholder" />
                 <ul
                   v-bind:class="{'show': row[header].search}"
                   :ref="'dropdown-' + colIndex + '-' + rowIndex">
@@ -334,6 +341,9 @@ $dragToFillColor:#3183fc;
     &.active_td.rectangleSelection:after {
       display: block;
     }
+    &.active_td.copy:after {
+      display: block;
+    }
   }
   &.copy:after {
     content: '';
@@ -485,6 +495,35 @@ $dragToFillColor:#3183fc;
         z-index: 14;
       }
     }
+  }
+}
+.icon_glass {
+  position: absolute;
+  top: 50%;
+  right: 25px;
+  z-index: 13;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50px;
+  border: 1px solid #000000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all ease .2s;
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    transform: rotate(45deg);
+    bottom: 0;
+    right: -4px;
+    height: 1px;
+    width: 5px;
+    background: #000000;
+  }
+  &.show {
+    opacity: 1;
+    visibility: visible;
   }
 }
 .enable_select {
