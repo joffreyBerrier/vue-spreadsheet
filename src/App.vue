@@ -21,7 +21,7 @@
     <div slot="header">
       Specific Header
     </div>
-    <div slot="loader" v-if="loader">
+    <div slot="loader">
       Loader
     </div>
     </vue-table>

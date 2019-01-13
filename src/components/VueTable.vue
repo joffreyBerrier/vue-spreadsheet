@@ -24,7 +24,7 @@
         v-on:thead-td-sort="callbackSort">
       </vue-thead>
 
-      <slot name="loader">
+      <slot name="loader" v-if="loading">
       </slot>
 
       <vue-tbody v-if="!loading"
