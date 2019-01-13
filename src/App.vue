@@ -1,28 +1,25 @@
 <template>
   <div id="app">
     <vue-table
+      :headers="headers"
+      :tbody-data="products"
+      :submenu-tbody="submenuTbody"
+      :submenu-thead="submenuThead"
       :disable-cells="disableCells"
       :disable-sort-thead="disableSortThead"
       :drag-to-fill="dragToFill"
-      :headers="headers"
+      :fuse-options="fuseOptions"
       :loading="loading"
       :new-data="newData"
-      :parent-element-scroll="0"
-      :parent-scroll-element="'html'"
+      :parent-scroll-element="parentScrollElement"
       :sort-header="sortHeader"
       :style-wrap-vue-table="styleWrapVueTable"
-      :submenu-tbody="submenuTbody"
-      :submenu-thead="submenuThead"
-      :tbody-data="products"
       :tbody-index="tbodyIndex"
+      :select-position="selectPosition"
+      :trad="trad"
       v-on:tbody-change-data="changeData"
-      v-on:tbody-input-change="inputChange"
-      v-on:tbody-nav-backspace="deleteCell"
-      v-on:tbody-select-change="selectChange"
       v-on:tbody-submenu-click-change-color="changeColorTbody"
       v-on:tbody-submenu-click-change-value="changeValueTbody"
-      v-on:tbody-up-dragtofill="handleUpDragToFill"
-      v-on:thead-submenu-click-change-city="changeCity"
       v-on:thead-submenu-click-change-color="changeColor"
       v-on:thead-submenu-click-change-value="changeValue"
       v-on:thead-td-sort="sortProduct">
@@ -56,38 +53,12 @@ export default {
   },
   methods: {
     changeData(row, header) {
-      // console.log(row, header);
-    },
-    handleUpDragToFill(selectedMultipleCell, entry, rowIndex, colIndex) {
-      // console.log(selectedMultipleCell, entry, rowIndex, colIndex);
+      console.log(row, header);
     },
     sortProduct(event, entry, colIndex) {
       // console.log('sort product');
     },
-    deleteCell(rowIndex, colIndex, header) {
-      // console.log(event, actualElement, actualCol, rowIndex, colIndex);
-    },
-    inputChange(event, entry, rowIndex, colIndex) {
-      // console.log('InputChange', event, entry, rowIndex, colIndex);
-    },
-    selectChange(event, entry, col, option, rowIndex, colIndex) {
-      // console.log('selectChange', event, entry, rowIndex, colIndex);
-      this.changeValueSelect(rowIndex, colIndex);
-    },
-    deleteMultipleCell(rowMin, colMin, keyValue) {
-      // console.log(rowMin, colMin, keyValue);
-    },
     // callback
-    changeCity(event, entry, colIndex, selectOptions) {
-      this.products.forEach((elm) => {
-        const product = elm;
-        product[entry].value = selectOptions;
-      });
-    },
-    changeValueSelect(rowIndex, colIndex) {
-      // console.log('changeValueSelect', rowIndex, colIndex);
-      // to get our element => Object.values(this.products[rowIndex])[colIndex];
-    },
     changeColor(event, entry, colIndex) {
       // console.log('changeColor', event, entry, colIndex);
       this.headers[colIndex].style.color = '#e40000';

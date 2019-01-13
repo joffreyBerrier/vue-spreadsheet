@@ -33,15 +33,14 @@
         :drag-to-fill="dragToFill"
         :filtered-list="filteredList"
         :headers="headers"
-        :newData="newData"
         :submenu-status-tbody="submenuStatusTbody"
         :submenu-tbody="submenuTbody"
         :tbody-data="tbodyData"
         :tbody-index="tbodyIndex"
+        :trad="trad"
         v-on:handle-to-calculate-position="calculPosition"
         v-on:handle-to-open-select="enableSelect"
         v-on:submenu-enable="enableSubmenu"
-        v-on:tbody-td-context-menu="handleTBodyContextMenu"
         v-on:tbody-down-dragtofill="handleDownDragToFill"
         v-on:tbody-handle-search-input-select="handleSearchInputSelect"
         v-on:tbody-handle-set-oldvalue="setOldValueOnInputSelect"
@@ -51,6 +50,7 @@
         v-on:tbody-select-multiple-cell="handleSelectMultipleCell"
         v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
         v-on:tbody-td-click="handleTbodyTdClick"
+        v-on:tbody-td-context-menu="handleTBodyContextMenu"
         v-on:tbody-td-double-click="handleTbodyTdDoubleClick"
         v-on:tbody-up-dragtofill="handleUpDragToFill">
       </vue-tbody>
@@ -63,6 +63,7 @@ import VueThead from './Thead.vue';
 import VueTbody from './Tbody.vue';
 
 const Fuse = require('fuse.js');
+
 export default {
   name: 'VueTable',
   props: {
@@ -74,16 +75,44 @@ export default {
       type: Array,
       required: true,
     },
+    submenuThead: {
+      type: Array,
+      required: true,
+    },
+    disableSortThead: {
+      type: Array,
+      required: true,
+    },
+    loading: {
+      type: Boolean,
+      required: true,
+    },
+    fuseOptions: {
+      type: Object,
+      required: true,
+    },
+    trad: {
+      type: Object,
+      required: true,
+    },
+    newData: {
+      type: Object,
+      required: true,
+    },
+    selectPosition: {
+      type: Object,
+      required: true,
+    },
+    parentScrollElement: {
+      type: Object,
+      required: true,
+    },
     disableCells: {
       type: Array,
       required: false,
     },
     dragToFill: {
       type: Boolean,
-      required: false,
-    },
-    newData: {
-      type: Object,
       required: false,
     },
     sortHeader: {
@@ -94,37 +123,13 @@ export default {
       type: Array,
       required: false,
     },
-    submenuThead: {
-      type: Array,
-      required: true,
-    },
-    disableSortThead: {
-      type: Array,
-      required: true,
-    },
     tbodyIndex: {
       type: Boolean,
-      required: false,
-    },
-    selectPosition: {
-      type: Object,
       required: false,
     },
     styleWrapVueTable: {
       type: Object,
       required: false,
-    },
-    parentElementScroll: {
-      type: Number,
-      required: false,
-    },
-    parentScrollElement: {
-      type: String,
-      required: true,
-    },
-    loading: {
-      type: Boolean,
-      required: true,
     },
   },
   components: {
@@ -186,25 +191,13 @@ export default {
     },
     filteredList() {
       if (this.lastSelectOpen) {
-        const selectOptions = this.lastSelectOpen.col.selectOptions;
-        const searchValue = this.lastSelectOpen.searchValue;
-
-        const fuseOptions = {
-          shouldSort: true,
-          threshold: 0.2,
-          location: 0,
-          distance: 30,
-          maxPatternLength: 64,
-          minMatchCharLength: 1,
-          findAllMatches: false,
-          tokenize: false,
-          keys: [
-            'value',
-          ],
-        };
-
-        const fuseSearch = new Fuse(selectOptions, fuseOptions);
-        return fuseSearch.search(searchValue);
+        const { selectOptions } = this.lastSelectOpen.col;
+        const { searchValue } = this.lastSelectOpen;
+        const fuseSearch = new Fuse(selectOptions, this.fuseOptions);
+        if (searchValue && searchValue.length > 1) {
+          return fuseSearch.search(searchValue);
+        }
+        return this.sorter(selectOptions);
       }
       return [];
     },
@@ -213,6 +206,17 @@ export default {
     },
   },
   methods: {
+    sorter(options) {
+      return options.sort((a, b) => {
+        const productA = a.value;
+        const productB = b.value;
+        if (productA === undefined && productB) return 1;
+        if (productA && productB === undefined) return -1;
+        if (productA < productB) return -1;
+        if (productA > productB) return 1;
+        return 0;
+      });
+    },
     cleanPropertyOnCell(action) {
       if (this.storeRectangleSelection.length > 0) {
         this.storeRectangleSelection.forEach((cell) => {
@@ -252,14 +256,14 @@ export default {
     debounce(fn, delay) {
       let timeout;
 
-      return function () {
+      return () => {
         const functionCall = () => fn.apply(this, arguments);
         clearTimeout(timeout);
         timeout = setTimeout(functionCall, delay);
       };
     },
     scrollTopDocument(event) {
-      this.scrollDocument = document.querySelector(`${this.parentScrollElement}`).scrollTop;
+      this.scrollDocument = document.querySelector(`${this.parentScrollElement.attribute}`).scrollTop;
       if (this.lastSelectOpen) {
         this.calculPosition(event, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex, 'dropdown');
       } else if (this.lastSubmenuOpen) {
@@ -277,8 +281,7 @@ export default {
         col,
       };
     },
-    activeSelectSearch(event, rowIndex, colIndex, header) {
-      this.$set(this.tbodyData[rowIndex][header], 'typing', false);
+    activeSelectSearch(event, rowIndex, colIndex) {
       this.calculPosition(event, rowIndex, colIndex, 'dropdown');
       if (this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0]) {
         this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
@@ -294,7 +297,7 @@ export default {
     enableSelect(event, header, col, rowIndex, colIndex) {
       const currentElement = this.tbodyData[rowIndex][header];
       if (!col.search) {
-        this.removeClass(['search', 'show', 'typing']);
+        this.removeClass(['search', 'show']);
         this.lastSelectOpen = {
           col,
           colIndex,
@@ -305,7 +308,6 @@ export default {
 
         this.$set(currentElement, 'search', true);
         this.$set(currentElement, 'show', true);
-        this.$set(currentElement, 'typing', false);
 
         this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
@@ -320,12 +322,11 @@ export default {
       } else {
         this.$set(currentElement, 'search', false);
         this.$set(currentElement, 'show', false);
-        this.$set(currentElement, 'typing', true);
         this.lastSelectOpen = null;
       }
     },
     handleSearchInputSelect(event, searchValue, col, header, rowIndex, colIndex) {
-      let disableSearch = !(searchValue === "" && event.keyCode === 8);
+      const disableSearch = !(searchValue === '' && event.keyCode === 8);
 
       if ((!this.keys.cmd || !this.keys.ctrl) &&
         disableSearch &&
@@ -338,21 +339,23 @@ export default {
         event.keyCode !== 39 &&
         event.keyCode !== 40 &&
         event.keyCode !== 91) {
-
-        this.lastSelectOpen = {
-          event,
-          header,
-          col,
-          rowIndex,
-          colIndex,
-          searchValue,
-        };
+        if (this.lastSelectOpen) {
+          this.$set(this.lastSelectOpen, 'searchValue', searchValue);
+        } else {
+          this.lastSelectOpen = {
+            event,
+            header,
+            col,
+            rowIndex,
+            colIndex,
+            searchValue,
+          };
+        }
 
         // active class
         if (event.keyCode !== 8) {
           const currentData = this.tbodyData[rowIndex][header];
           this.$set(currentData, 'search', true);
-          this.$set(currentData, 'typing', true);
           this.$set(currentData, 'show', true);
 
           this.showDropdown(currentData, colIndex, rowIndex);
@@ -394,22 +397,22 @@ export default {
     },
     calculPosition(event, rowIndex, colIndex, header) {
       // stock scrollLeft / scrollTop position of parent
-      const scrollLeft = this.$refs.vueTable.scrollLeft;
-      const scrollTop = this.$refs.vueTable.scrollTop;
+      const { scrollLeft } = this.$refs.vueTable;
+      const { scrollTop } = this.$refs.vueTable;
 
       // stock size / offsetTop / offsetLeft of the element
       const width = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetWidth;
 
-      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentElementScroll;
+      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentScrollElement.positionTop;
       let left = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
 
       if (this.selectPosition) {
-        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top) - this.parentElementScroll;
+        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top) - this.parentScrollElement.positionTop;
         left = (this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.selectPosition.left;
       }
       // subtracted top of scroll top document
       if (this.scrollDocument) {
-        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentElementScroll) - this.scrollDocument;
+        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentScrollElement.positionTop) - this.scrollDocument;
       }
 
       // set size / top position / left position
@@ -534,7 +537,7 @@ export default {
       // copy / paste one cell || disable on disabled cell
       if (this.storeCopyDatas[0].value && !this.copyMultipleCell && !this.selectedMultipleCell && !this.eventDrag && this.disabledEvent(this.selectedCell.col, this.selectedCell.header)) {
         const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
-        this.tbodyData[this.selectedCell.row][this.selectedCell.header] = newCopyData[0];
+        [this.tbodyData[this.selectedCell.row][this.selectedCell.header]] = newCopyData;
         this.$emit('tbody-change-data', this.selectedCell.row, this.selectedCell.header);
         // disable on disabled cell
       } else if (this.disabledEvent(this.selectedCell.col, this.selectedCell.header) && this.selectedCoordCells) {
@@ -565,7 +568,7 @@ export default {
             if (newCopyData[0][header]) {
               this.tbodyData[rowMin][header] = newCopyData[0][header]; // multiple cell
             } else {
-              this.tbodyData[rowMin][header] = newCopyData[0]; // one cell
+              [this.tbodyData[rowMin][header]] = newCopyData; // one cell
             }
             this.$emit('tbody-change-data', rowMin, header);
           } else {
@@ -593,7 +596,7 @@ export default {
             if (newCopyData.length === 1 && Object.values(newCopyData).length === 1 && newCopyData[0].type) {
               currentHeader = this.selectedCell.header;
               newCopyData[0].active = false;
-              this.tbodyData[rowMin][currentHeader] = newCopyData[0];
+              [this.tbodyData[rowMin][currentHeader]] = newCopyData;
               if (rowMin === this.selectedCell.row || rowMin === this.selectedCoordCells.rowStart) {
                 this.$set(this.tbodyData[rowMin][currentHeader], 'selected', true);
                 this.$set(this.tbodyData[rowMin][currentHeader], 'rectangleSelection', true);
@@ -694,10 +697,10 @@ export default {
         height = 40 * ((this.selectedCoordCells.rowStart - this.selectedCoordCells.rowEnd) + 1);
       }
 
-      this.rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`][0];
+      [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`];
 
       if (!this.selectedMultipleCellActive) {
-        this.rectangleSelectedCell = this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`][0];
+        [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`];
       }
 
       this.rectangleSelectedCell.style.setProperty('--rectangleWidth', `${width + 1}%`);
@@ -856,14 +859,14 @@ export default {
       this.calculPosition(event, rowIndex, colIndex, 'submenu');
       this.$emit(`tbody-submenu-click-${submenuFunction}`, event, header, rowIndex, colIndex, type, submenuFunction);
     },
-    handleTBodyContextMenu(event, header, rowIndex, colIndex, type) {
+    handleTBodyContextMenu(event, header, rowIndex, colIndex) {
       this.lastSubmenuOpen = {
         event,
         header,
         rowIndex,
         colIndex,
       };
-    },  
+    },
     // thead
     handleTheadContextMenu() {
       this.submenuStatusTbody = false;
@@ -919,7 +922,7 @@ export default {
       }
     },
     moveOnTable(event, colIndex, rowIndex) {
-      const vueTable = this.$refs.vueTable;
+      const { vueTable } = this.$refs;
       const maxCol = Math.max(...this.colHeaderWidths);
       // get the correct height of visible table
       const heightTable = vueTable.clientHeight - vueTable.firstElementChild.clientHeight - this.$refs.vueThead.$el.clientHeight;
@@ -955,8 +958,9 @@ export default {
         }
       }
     },
-    pressShiftMultipleCell(event, header, rowMax, rowIndex, colMax, colIndex) {
+    pressShiftMultipleCell(event, h, rowMax, rowIndex, colMax, colIndex) {
       event.preventDefault();
+      let header = h;
       this.$set(this.tbodyData[rowIndex][header], 'active', false);
       this.incrementCol = this.incrementCol ? this.incrementCol : colIndex;
       this.incrementRow = this.incrementRow ? this.incrementRow : rowIndex;
@@ -1027,7 +1031,7 @@ export default {
       }
     },
     moveKeydown(event) {
-      this.actualElement = document.getElementsByClassName('active_td')[0];
+      [this.actualElement] = document.getElementsByClassName('active_td');
 
       if (event.keyCode === 16) {
         this.keys[event.keyCode] = true;

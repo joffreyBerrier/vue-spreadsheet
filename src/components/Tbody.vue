@@ -15,7 +15,7 @@
             :data-type="row[header].type"
             @click.shift.exact="handleSelectMultipleCell($event, header, rowIndex, colIndex, row[header].type)"
             @contextmenu="handleContextMenuTd($event, header, rowIndex, colIndex, row[header].type)"
-            @click="handleClickTd($event, row[header], header, rowIndex, colIndex, row[header].type)"
+            @click.exact="handleClickTd($event, row[header], header, rowIndex, colIndex, row[header].type)"
             @dblclick="handleDoubleClickTd($event, header, row[header], rowIndex, colIndex, row[header].type)"
             @mousemove="handleMoveDragToFill($event, header, row[header], rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, header, row[header], rowIndex, colIndex, row[header].type)"
@@ -86,28 +86,18 @@
                   v-model="searchInput"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
+                  :placeholder="trad[trad.lang].select.placeholder"
                   @keyup="handleSearchInputSelect($event, row[header], header, rowIndex, colIndex)"/>
                 <ul
                   v-bind:class="{'show': row[header].search}"
                   :ref="'dropdown-' + colIndex + '-' + rowIndex">
-                  <template v-if="!row[header].typing">
-                    <li v-for="(option, index) in row[header].selectOptions"
-                      @click.stop="validSearch($event, header, row[header], option, rowIndex, colIndex)"
-                      v-bind:class="{'active': option.active}"
-                      :value="option.value"
-                      :key="index + 'option'">
-                        {{option.label}}
-                    </li>
-                  </template>
-                  <template v-if="row[header].typing">
-                    <li v-for="(option, index) in filteredList"
-                      @click.stop="validSearch($event, header, row[header], option, rowIndex, colIndex)"
-                      v-bind:class="{'active': option.active}"
-                      :value="option.value"
-                      :key="index">
-                        {{option.label}}
-                    </li>
-                  </template>
+                  <li v-for="(option, index) in filteredList"
+                    @click.stop="validSearch($event, header, row[header], option, rowIndex, colIndex)"
+                    v-bind:class="{'active': option.active}"
+                    :value="option.value"
+                    :key="index">
+                      {{option.label}}
+                  </li>
                 </ul>
               </div>
             </template>
@@ -148,16 +138,16 @@ export default {
       type: Array,
       required: true,
     },
+    trad: {
+      type: Object,
+      required: true,
+    },
     disableCells: {
       type: Array,
       required: false,
     },
     dragToFill: {
       type: Boolean,
-      required: false,
-    },
-    newData: {
-      type: Object,
       required: false,
     },
     tbodyIndex: {

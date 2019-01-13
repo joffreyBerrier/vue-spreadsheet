@@ -99,6 +99,14 @@ export default {
       type: Array,
       required: true,
     },
+    submenuThead: {
+      type: Array,
+      required: true,
+    },
+    disableSortThead: {
+      type: Array,
+      required: true,
+    },
     sortHeader: {
       type: Boolean,
       required: false,
@@ -110,14 +118,6 @@ export default {
     submenuStatusThead: {
       type: Boolean,
       required: false,
-    },
-    submenuThead: {
-      type: Array,
-      required: true,
-    },
-    disableSortThead: {
-      type: Array,
-      required: true,
     },
   },
   data() {

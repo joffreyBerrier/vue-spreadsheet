@@ -379,17 +379,23 @@ newData: {
   <div id="app">
     <vue-table
       :headers="headers"
-      :custom-options="customOptions"
-      :style-wrap-vue-table="customStyle"
       :tbody-data="products"
+      :submenu-tbody="submenuTbody"
+      :submenu-thead="submenuThead"
+      :disable-cells="disableCells"
+      :disable-sort-thead="disableSortThead"
+      :drag-to-fill="dragToFill"
+      :fuse-options="fuseOptions"
+      :loading="loading"
+      :new-data="newData"
+      :parent-scroll-element="parentScrollElement"
+      :sort-header="sortHeader"
+      :style-wrap-vue-table="styleWrapVueTable"
+      :tbody-index="tbodyIndex"
+      :trad="trad"
       v-on:tbody-change-data="changeData"
-      v-on:tbody-input-change="inputChange"
-      v-on:tbody-nav-backspace="deleteCell"
-      v-on:tbody-select-change="selectChange"
       v-on:tbody-submenu-click-change-color="changeColorTbody"
       v-on:tbody-submenu-click-change-value="changeValueTbody"
-      v-on:tbody-up-dragtofill="handleUpDragToFill"
-      v-on:thead-submenu-click-change-city="changeCity"
       v-on:thead-submenu-click-change-color="changeColor"
       v-on:thead-submenu-click-change-value="changeValue"
       v-on:thead-td-sort="sortProduct">
@@ -410,192 +416,228 @@ export default {
   name: 'app',
   data() {
     return {
-      customOptions: {
-        disableCells: ['a'],
-        disableSortThead: ['a'],
-        dragToFill: true,
-        loading: false,
-        newData: {
-          type: 'input',
-          value: '',
-          active: false,
-          style: {
-            color: '#000',
-          },
-        },
-        parentElementScroll: 0,
-        parentScrollElement: 'html',
-        sortHeader: true,
-        selectPosition: {
-          top: 0,
-          left: 0,
-        },
-        submenuThead: [
-          {
-            type: 'button',
-            value: 'change color',
-            function: 'change-color',
-            disabled: ['a'],
-          },
-          {
-            type: 'select',
-            disabled: ['a'],
-            subtitle: 'Select state:',
-            selectOptions: [
-              {
-                value: 'new-york',
-                label: 'new-york',
-              },
-              {
-                value: 'france',
-                label: 'france',
-              },
-            ],
-            value: 'new-york',
-            buttonOption: {
-              value: 'change city',
-              function: 'change-city',
-              style: {
-                display: 'block',
-              },
-            },
-          },
-          {
-            type: 'button',
-            value: 'change value',
-            function: 'change-value',
-            disabled: ['a', 'b'],
-          },
-        ],
-        submenuTbody: [
-          {
-            type: 'button',
-            value: 'change color',
-            function: 'change-color',
-            disabled: ['img'],
-          },
-          {
-            type: 'button',
-            value: 'change value',
-            function: 'change-value',
-            disabled: ['img', 'name'],
-          },
-        ],
-        tbodyIndex: true,
-      },
+      dragToFill: true,
+      disableCells: ['a'],
+      sortHeader: true,
+      tbodyIndex: true,
       loader: false,
-      customStyle: {
+      loading: false,
+      parentScrollElement: {
+        attribute: 'html',
+        positionTop: 0,
+      },
+      trad: {
+        lang: 'fr',
+        en: {
+          select: {
+            placeholder: 'Search by typing',
+          },
+        },
+        fr: {
+          select: {
+            placeholder: 'Taper pour chercher',
+          },
+        },
+      },
+      fuseOptions: {
+        shouldSort: true,
+        threshold: 0.2,
+        location: 0,
+        distance: 30,
+        maxPatternLength: 64,
+        minMatchCharLength: 1,
+        findAllMatches: false,
+        tokenize: false,
+        keys: [
+          'value',
+        ],
+      },
+      selectPosition: {
+        top: 0,
+        left: 0,
+      },
+      disableSortThead: ['a'],
+      styleWrapVueTable: {
         height: '400px',
         width: '700px',
         overflow: 'scroll',
       },
+      newData: {
+        type: 'input',
+        value: '',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
       headers: [
-      {
-        headerName: 'A',
-        headerKey: 'a',
-        style: {
-          width: '200px',
-          minWidth: '200px',
-          color: '#000',
+        {
+          headerName: 'A',
+          headerKey: 'a',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
         },
-      },
-      {
-        headerName: 'B',
-        headerKey: 'b',
-        style: {
-          width: '200px',
-          minWidth: '200px',
-          color: '#000',
+        {
+          headerName: 'B',
+          headerKey: 'b',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
         },
-      },
-      {
-        headerName: 'C',
-        headerKey: 'c',
-        style: {
-          width: '200px',
-          minWidth: '200px',
-          color: '#000',
+        {
+          headerName: 'C',
+          headerKey: 'c',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
         },
-      },
-      {
-        headerName: 'D',
-        headerKey: 'd',
-        style: {
-          width: '200px',
-          minWidth: '200px',
-          color: '#000',
+        {
+          headerName: 'D',
+          headerKey: 'd',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
         },
-      },
-      {
-        headerName: 'E',
-        headerKey: 'e',
-        style: {
-          width: '200px',
-          minWidth: '200px',
-          color: '#000',
+        {
+          headerName: 'E',
+          headerKey: 'e',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
         },
-      },
+        {
+          headerName: 'F',
+          headerKey: 'f',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
+        },
+        {
+          headerName: 'G',
+          headerKey: 'g',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
+        },
+      ],
       products: [
-      {
-        a: {
-          type: 'img',
-          value: 'https://via.placeholder.com/350x150',
-          active: false,
-        },
-        c: {
-          type: 'input',
-          value: 'Paris',
-          active: false,
-          style: {
-            color: '#000',
+        {
+          a: {
+            type: 'img',
+            value: 'https://via.placeholder.com/350x150',
+            active: false,
           },
-        },
-        d: {
-          type: 'input',
-          value: 'France',
-          active: false,
-          style: {
-            color: '#000',
+          c: {
+            type: 'input',
+            value: 'Paris',
+            active: false,
+            style: {
+              color: '#000',
+            },
           },
-        },
-        e: {
-          type: 'select',
-          handleSearch: true,
-          selectOptions: [
-            {
-              value: 'pet dolphin',
-              label: 'pet dolphin',
+          d: {
+            type: 'input',
+            value: 'France',
+            active: false,
+            style: {
+              color: '#000',
             },
-            {
-              value: 'pet fish',
-              label: 'pet fish',
+          },
+          e: {
+            type: 'input',
+            value: 'Boe',
+            active: false,
+            style: {
+              color: '#000',
             },
-            {
-              value: 'pet bib',
-              label: 'pet bib',
-            },
-            {
-              value: 'pet bob',
-              label: 'pet bob',
-            },
-            {
-              value: 'pet pet',
-              label: 'pet pet',
-            },
-            {
-              value: 'pet put',
-              label: 'pet put',
-            },
-            {
-              value: 'pet poty',
-              label: 'pet poty',
-            },
-          ],
-          value: '',
-          active: false,
+          },
+          f: {
+            type: 'select',
+            handleSearch: true,
+            selectOptions: [
+              {
+                value: 'Harry Potter',
+                label: 'harry potter',
+              },
+              {
+                value: 'Hermione Granger',
+                label: 'hermione granger',
+              },
+              {
+                value: 'Ron Whisley',
+                label: 'ron whisley',
+              },
+              {
+                value: 'Dobby',
+                label: 'dobby',
+              },
+              {
+                value: 'Hagrid',
+                label: 'hagrid',
+              },
+              {
+                value: 'Professeur Rogue',
+                label: 'professeur rogue',
+              },
+              {
+                value: 'Professeur Mcgonagal',
+                label: 'professeur mcgonagal',
+              },
+              {
+                value: 'Professeur Dumbledor',
+                label: 'professeur dumbledor',
+              },
+            ],
+            value: 'professeur dumbledor',
+            active: false,
+          },
+          g: {
+            type: 'select',
+            handleSearch: true,
+            selectOptions: [
+              {
+                value: 1980,
+                label: 1980,
+              },
+              {
+                value: 1981,
+                label: 1981,
+              },
+              {
+                value: 1982,
+                label: 1982,
+              },
+              {
+                value: 1983,
+                label: 1983,
+                active: true,
+              },
+              {
+                value: 1984,
+                label: 1984,
+              },
+            ],
+            value: 1983,
+            active: false,
+          },
         },
       },
-    };
+    }
   },
   components: {
     VueTable,
@@ -608,38 +650,12 @@ export default {
   },
   methods: {
     changeData(row, header) {
-      // console.log(row, header);
-    },
-    handleUpDragToFill(selectedMultipleCell, entry, rowIndex, colIndex) {
-      // console.log(selectedMultipleCell, entry, rowIndex, colIndex);
+      console.log(row, header);
     },
     sortProduct(event, entry, colIndex) {
       // console.log('sort product');
     },
-    deleteCell(rowIndex, colIndex, header) {
-      // console.log(event, actualElement, actualCol, rowIndex, colIndex);
-    },
-    inputChange(event, entry, rowIndex, colIndex) {
-      // console.log('InputChange', event, entry, rowIndex, colIndex);
-    },
-    selectChange(event, entry, col, option, rowIndex, colIndex) {
-      // console.log('selectChange', event, entry, rowIndex, colIndex);
-      this.changeValueSelect(rowIndex, colIndex);
-    },
-    deleteMultipleCell(rowMin, colMin, keyValue) {
-      // console.log(rowMin, colMin, keyValue);
-    },
     // callback
-    changeCity(event, entry, colIndex, selectOptions) {
-      this.products.forEach((elm) => {
-        const product = elm;
-        product[entry].value = selectOptions;
-      });
-    },
-    changeValueSelect(rowIndex, colIndex) {
-      // console.log('changeValueSelect', rowIndex, colIndex);
-      // to get our element => Object.values(this.products[rowIndex])[colIndex];
-    },
     changeColor(event, entry, colIndex) {
       // console.log('changeColor', event, entry, colIndex);
       this.headers[colIndex].style.color = '#e40000';
@@ -664,4 +680,17 @@ export default {
 };
 </script>
 
+<style lang="scss">
+::-moz-selection {
+  color: #2c3e50;
+  background: transparent;
+}
+::selection {
+  color: #2c3e50;
+  background: transparent;
+}
+</style>
+
+
 ````
+//parentScrollElement object
