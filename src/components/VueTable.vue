@@ -563,7 +563,8 @@ export default {
             let currentHeader = this.headerKeys[incrementCol];
 
             // multiple col to multiple col
-            if (Object.values(newCopyData[0]).length === 1) {
+            const colsToCols = Object.values(newCopyData[0]).length === 1;
+            if (colsToCols) {
               currentHeader = this.headerKeys[this.selectedCell.col];
               if (incrementRow < maxRow) {
                 this.tbodyData[incrementRow][currentHeader] = newCopyData[col][header];
@@ -573,7 +574,8 @@ export default {
             }
 
             // one cell to multipleCell
-            if (newCopyData.length === 1 && Object.values(newCopyData).length === 1 && newCopyData[0].type) {
+            const cellToCells = newCopyData.length === 1 && Object.values(newCopyData).length === 1 && newCopyData[0].type;
+            if (cellToCells) {
               currentHeader = this.selectedCell.header;
               newCopyData[0].active = false;
               [this.tbodyData[rowMin][currentHeader]] = newCopyData;
@@ -590,19 +592,22 @@ export default {
             }
 
             // 1 row to 1 row
-            if (newCopyData.length === 1 && Object.values(newCopyData[0]).length > 1 && !newCopyData[0].type) {
-              if (this.selectedCoordCells !== this.selectedCoordCopyCells) {
-                this.tbodyData[this.selectedCoordCells.rowStart][currentHeader] = newCopyData[0][header];
-                this.$emit('tbody-change-data', this.selectedCoordCells.rowStart, currentHeader);
-              } else {
-                this.tbodyData[this.selectedCell.row][currentHeader] = newCopyData[0][header];
-                this.$emit('tbody-change-data', this.selectedCell.row, currentHeader);
-              }
+            const rowToRow = newCopyData.length === 1 && Object.values(newCopyData[0]).length > 1 && !newCopyData[0].type && this.selectedCoordCells.rowStart === this.selectedCoordCells.rowEnd;
+            if (rowToRow) {
+              this.tbodyData[this.selectedCell.row][currentHeader] = newCopyData[0][header];
+              this.$emit('tbody-change-data', this.selectedCell.row, currentHeader);
               col += 1;
             }
 
+            // 1 row & multiple cols => to multiple row & cols
+            const rowColsToRowsCols = newCopyData.length === 1 && Object.values(newCopyData[0]).length > 1 && this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd;
+            if (rowColsToRowsCols) {
+              console.log('this paste is disable for now');
+            }
+
             // multiple col / row to multiple col / row
-            if (newCopyData.length > 1 && Object.values(newCopyData[0]).length > 1) {
+            const rowsColsToRowsCols = newCopyData.length > 1 && Object.values(newCopyData[0]).length > 1;
+            if (rowsColsToRowsCols) {
               this.tbodyData[incrementRow][currentHeader] = newCopyData[row][header];
               this.$emit('tbody-change-data', incrementRow, currentHeader);
               if (colMin < colMax) {
