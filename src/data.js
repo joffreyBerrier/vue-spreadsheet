@@ -51,7 +51,7 @@ export default {
   disableSortThead: ['a'],
   styleWrapVueTable: {
     height: '400px',
-    width: '700px',
+    // width: '700px',
     overflow: 'scroll',
   },
   headers: [
