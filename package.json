@@ -18,11 +18,18 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "jest"
   },
   "license": "MIT",
   "dependencies": {
+    "@vue/test-utils": "^1.0.0-beta.28",
+    "babel-jest": "^23.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "fuse.js": "^3.3.0",
+    "jest": "^23.6.0",
+    "jest-vue-preprocessor": "^1.4.0",
     "path": "^0.12.7",
     "vue": "^2.5.17",
     "webpack": "^4.25.1"
@@ -39,5 +46,26 @@
   "bugs": {
     "url": "https://github.com/joffreyBerrier/vuejs-dynamic-table/issues"
   },
-  "homepage": "https://github.com/joffreyBerrier/vuejs-dynamic-table#readme"
+  "homepage": "https://github.com/joffreyBerrier/vuejs-dynamic-table#readme",
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "vue"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!vue-awesome)"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ]
+  }
 }
