@@ -97,7 +97,7 @@ export default {
       },
       c: {
         type: 'input',
-        value: 'Paris',
+        value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec aliquam magna. Sed consequat amet..',
         active: false,
         style: {
           color: '#000',
