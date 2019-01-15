@@ -81,9 +81,8 @@ describe('VueTable', () => {
       expect(vueTable.submenuStatusThead).toEqual(false);
     });
   });
-  
-  describe('Computed', () => {
 
+  describe('Computed', () => {
     test('colHeaderWidths', () => {
       const { colHeaderWidths } = wrapper.vm;
       const colHeaderWidthsTest = wrapper.vm.headers.map(x => parseInt(x.style.width, 10));
@@ -127,7 +126,7 @@ describe('VueTable', () => {
       test('Disabled Col : false | with disableCells', () => {
         const fakeData = { disabled: false };
         expect(wrapper.vm.disabledEvent(fakeData, 'a')).toBeTruthy()
-      })
+      });
       test('Disabled Col : true | with disableCells', () => {
         const fakeData = { disabled: true };
         expect(wrapper.vm.disabledEvent(fakeData, 'a')).toBeFalsy();
@@ -192,7 +191,7 @@ describe('VueTable', () => {
       test('Keys to be falsy', () => {
         const fakeParams = ['selected', 'rectangleSelection', 'active', 'show', 'search', 'typing', 'stateCopy'];
         // Add keys to true
-        Object.values(wrapper.vm.tbodyData[0]).forEach(tbodyData => {
+        Object.values(wrapper.vm.tbodyData[0]).forEach((tbodyData) => {
           const data = tbodyData;
           data.selected = true;
           data.rectangleSelection = true;
@@ -206,7 +205,7 @@ describe('VueTable', () => {
         wrapper.vm.removeClass(fakeParams);
 
         // Expect keys are false
-        Object.values(wrapper.vm.tbodyData[0]).forEach(tbodyData => {
+        Object.values(wrapper.vm.tbodyData[0]).forEach((tbodyData) => {
           const data = tbodyData;
           expect(data.selected).toBeFalsy();
           expect(data.rectangleSelection).toBeFalsy();
@@ -249,7 +248,6 @@ describe('VueTable', () => {
         expect(wrapper.vm.setFirstCell).toBeTruthy();
         expect(wrapper.vm.tbodyData[row][header].rectangleSelection).toBeTruthy()
       });
-      
       test('setFirstCell = true', () => {
         wrapper.vm.setFirstCell = true;
         wrapper.vm.updateSelectedCell(header, row, col);
