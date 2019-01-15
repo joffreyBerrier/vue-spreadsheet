@@ -10,12 +10,16 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'on',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'on',
+    'max-len': ["error", { "code": 200 }],
+    "no-console": 0,
+    "globals": {
+      "beforeEach": false, 
+      "describe": false, 
+      "test": false,
+      "expect": false
+    }
   },
   parserOptions: {
     parser: 'babel-eslint',
   },
-  rules: {
-    'max-len': ["error", { "code": 200 }],
-    "no-console": 0,
-  }
 };
