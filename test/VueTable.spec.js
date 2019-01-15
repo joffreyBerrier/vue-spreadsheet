@@ -260,37 +260,28 @@ describe('VueTable', () => {
 
     describe('enableSelect', () => {
       const rowIndex = 0;
-      const colIndex = 0;
-      const header = 'a';
+      const colIndex = 5;
+      const header = 'f';
 
       test('search true', () => {
-        const data = {
+        const col = {
           search: true,
         };
 
-        wrapper.vm.enableSelect('', header, data, rowIndex, colIndex);
+        wrapper.vm.enableSelect('', header, col, rowIndex, colIndex);
         expect(wrapper.vm.tbodyData[rowIndex][header].search).toBeFalsy();
         expect(wrapper.vm.tbodyData[rowIndex][header].show).toBeFalsy();
         expect(wrapper.vm.tbodyData[rowIndex][header].typing).toBeTruthy();
         expect(wrapper.vm.lastSelectOpen).toBeNull();
       });
-
-      // test('search false', () => {
-      //   const data = {
-      //     search: false,
-      //   };
-
-      //   wrapper.vm.tbodyData[rowIndex][header].search = true;
-      //   wrapper.vm.tbodyData[rowIndex][header].show = true;
-      //   wrapper.vm.tbodyData[rowIndex][header].typing = true;
-      //   wrapper.vm.enableSelect('', header, data, rowIndex, colIndex);
-
-      //   // expect(wrapper.vm.tbodyData[rowIndex][header].search).toBeTruthy();
-      //   // expect(wrapper.vm.tbodyData[rowIndex][header].show).toBeTruthy();
-      //   // expect(wrapper.vm.tbodyData[rowIndex][header].typing).toBeFalsy();
-      //   // expect(wrapper.vm.lastSelectOpen).toBeNull();
-      // });
     });
 
+    describe('showDropdown', () => {
+      test('search true', () => {
+        const rowIndex = 0;
+        const colIndex = 5;
+        wrapper.vm.showDropdown(colIndex, rowIndex);
+      });
+    });
   });
 });
