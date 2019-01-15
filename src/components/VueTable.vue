@@ -311,7 +311,7 @@ export default {
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
 
         if (currentElement.value !== '') {
-          this.showDropdown(currentElement, colIndex, rowIndex);
+          this.showDropdown(colIndex, rowIndex);
           const index = currentElement.selectOptions.map(x => x.value).indexOf(currentElement.value);
           this.incrementOption = index;
         } else {
@@ -355,12 +355,12 @@ export default {
           this.$set(currentData, 'typing', true);
           this.$set(currentData, 'show', true);
 
-          this.showDropdown(currentData, colIndex, rowIndex);
+          this.showDropdown(colIndex, rowIndex);
         }
         this.incrementOption = 0;
       }
     },
-    showDropdown(currentData, colIndex, rowIndex) {
+    showDropdown(colIndex, rowIndex) {
       // clear timeout
       const dropdown = this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`][0];
       if (!this.scrollToSelectTimeout === null) {
