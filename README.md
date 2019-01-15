@@ -33,26 +33,20 @@ npm i vuejs-spreadsheet
 
 Props                                  | Type       | Description
 ---------------------------------------|------------|-------------------------
-  :custom-options                      | Object     | That contains Options
-  :headers                             | Array      | That contains headers
-  :style-wrap-vue-table                | Object     | That contains style of the wrapper tableVue
-  :tbody-data                          | Array      | That contains data
-
-
-Options                                | Type       | Description
----------------------------------------|------------|-------------------------
   :disable-cells                       | Array      | That contains the headerKey you want to disable
   :disable-sort-thead                  | Array      | That contains the disabled th
   :drag-to-fill                        | Boolean    | That activates drag to fill
+  :headers                             | Array      | That contains headers
   :new-data                            | Object     | That contains the type of data when you have empty cell in a row
   :parent-element-scroll               | Number     | That contains the OffsetTop of the parent
   :parent-scroll-element               | String     | That contains the HTML attribute which overflow-y: scroll (by-default is 'html')
   :select-position                     | Object     | That contains a top and left position you want to add to the select
   :sort-header                         | Boolean    | That activates sort button on header
+  :style-wrap-vue-table                | Object     | That contains style of the wrapper tableVue
   :submenu-tbody                       | Array      | That contains the submenu-tbody
   :submenu-thead                       | Array      | That contains the submenu-thead
+  :tbody-data                          | Array      | That contains data
   :tbody-index                         | Boolean    | That displays the index of each row on the left of the table
-
 
 Function                               | Type       | Description
 ---------------------------------------|------------|-------------------------
@@ -72,20 +66,24 @@ Function                               | Type       | Description
 ### Example
 ``` javascript
   <vue-table
-    :custom-options="Object"
+    :disable-cells="Array"
+    :disable-sort-thead="Array"
+    :drag-to-fill="Boolean"
     :headers="Array"
+    :loading="Object"
+    :new-data="Number"
+    :parent-element-scroll="String"
+    :parent-scroll-element="'Object'"
+    :sort-header="Boolean"
     :style-wrap-vue-table="Object"
+    :submenu-tbody="Array"
+    :submenu-thead="Array"
     :tbody-data="Array"
-    v-on:handle-up-drag-size-header="Function"
+    :tbody-index="Boolean"
+    v-on:tbody-change-data="Function"
     v-on:tbody-input-change="Function"
-    v-on:tbody-move-dragtofill="Function"
-    v-on:tbody-nav-backspace="Function"
-    v-on:tbody-nav-multiple-backspace="Function"
-    v-on:tbody-replace-data="Function"
     v-on:tbody-select-change="Function"
-    v-on:tbody-submenu-click-customize-function="Function"
     v-on:tbody-up-dragtofill="Function"
-    v-on:thead-submenu-click-customize-function="Function"
     v-on:thead-td-sort="Function">
 
     // if your want to add an specific header
@@ -99,62 +97,6 @@ Function                               | Type       | Description
     </div>
 
   </vue-table>
-```
-
-### Options :honeybee:
-```
-  customOptions: {
-    disableCells: ['name of headerKey you want to disable'],
-    disableSortThead: ['name of headerKey you want to disable'],
-    dragToFill: true,
-    loading: false,
-    newData: {
-      type: 'input',
-      value: '',
-      active: false,
-      style: {
-        color: '#000',
-      },
-    },
-    parentElementScroll: 0,
-    parentScrollElement: 'html',
-    sortHeader: true,
-    selectPosition: {
-      top: 0,
-      left: 0,
-    },
-    submenuThead: [
-      {
-        type: 'button',
-        value: 'value',
-        function: 'name-of-function',
-        disabled: ['name of headerKey you want to disable'],
-      },
-      {
-        type: 'select',
-        disabled: ['name of headerKey you want to disable'],
-        subtitle: 'Subtitle:',
-        selectOptions: [],
-        value: 'value',
-        buttonOption: {
-          value: 'value',
-          function: 'name-of-function',
-          style: {
-            display: 'block',
-          },
-        },
-      },
-    ],
-    submenuTbody: [
-      {
-        type: 'button',
-        value: 'value',
-        function: 'v',
-        disabled: ['name of headerKey you want to disable'],
-      },
-    ],
-    tbodyIndex: true,
-  },
 ```
 
 ### Headers :tiger:
@@ -378,20 +320,27 @@ newData: {
 <template>
   <div id="app">
     <vue-table
+      :disable-cells="disableCells"
+      :disable-sort-thead="disableSortThead"
+      :drag-to-fill="dragToFill"
       :headers="headers"
-      :custom-options="customOptions"
-      :style-wrap-vue-table="customStyle"
+      :loading="loading"
+      :new-data="newData"
+      :parent-element-scroll="0"
+      :parent-scroll-element="'html'"
+      :sort-header="sortHeader"
+      :style-wrap-vue-table="styleWrapVueTable"
+      :submenu-tbody="submenuTbody"
+      :submenu-thead="submenuThead"
       :tbody-data="products"
+      :tbody-index="tbodyIndex"
       v-on:tbody-change-data="changeData"
       v-on:tbody-input-change="inputChange"
-      v-on:tbody-nav-backspace="deleteCell"
       v-on:tbody-select-change="selectChange"
       v-on:tbody-submenu-click-change-color="changeColorTbody"
       v-on:tbody-submenu-click-change-value="changeValueTbody"
-      v-on:tbody-up-dragtofill="handleUpDragToFill"
-      v-on:thead-submenu-click-change-city="changeCity"
-      v-on:thead-submenu-click-change-color="changeColor"
-      v-on:thead-submenu-click-change-value="changeValue"
+      v-on:thead-submenu-click-change-color="changeColorThead"
+      v-on:thead-submenu-click-change-value="changeValueThead"
       v-on:thead-td-sort="sortProduct">
     <div slot="header">
       Specific Header
@@ -404,197 +353,186 @@ newData: {
 </template>
 
 <script>
+
 import VueTable from './components/VueTable.vue';
 
 export default {
   name: 'app',
   data() {
     return {
-      customOptions: {
-        disableCells: ['a'],
-        disableSortThead: ['a'],
-        dragToFill: true,
-        loading: false,
-        newData: {
-          type: 'input',
-          value: '',
-          active: false,
-          style: {
-            color: '#000',
-          },
-        },
-        parentElementScroll: 0,
-        parentScrollElement: 'html',
-        sortHeader: true,
-        selectPosition: {
-          top: 0,
-          left: 0,
-        },
-        submenuThead: [
-          {
-            type: 'button',
-            value: 'change color',
-            function: 'change-color',
-            disabled: ['a'],
-          },
-          {
-            type: 'select',
-            disabled: ['a'],
-            subtitle: 'Select state:',
-            selectOptions: [
-              {
-                value: 'new-york',
-                label: 'new-york',
-              },
-              {
-                value: 'france',
-                label: 'france',
-              },
-            ],
-            value: 'new-york',
-            buttonOption: {
-              value: 'change city',
-              function: 'change-city',
-              style: {
-                display: 'block',
-              },
-            },
-          },
-          {
-            type: 'button',
-            value: 'change value',
-            function: 'change-value',
-            disabled: ['a', 'b'],
-          },
-        ],
-        submenuTbody: [
-          {
-            type: 'button',
-            value: 'change color',
-            function: 'change-color',
-            disabled: ['img'],
-          },
-          {
-            type: 'button',
-            value: 'change value',
-            function: 'change-value',
-            disabled: ['img', 'name'],
-          },
-        ],
-        tbodyIndex: true,
-      },
+      dragToFill: true,
+      disableCells: ['a'],
+      sortHeader: true,
+      tbodyIndex: true,
       loader: false,
-      customStyle: {
-        height: '400px',
-        width: '700px',
+      loading: false,
+      selectPosition: {
+        top: 0,
+        left: 0,
+      },
+      disableSortThead: ['a'],
+      styleWrapVueTable: {
         overflow: 'scroll',
       },
+      newData: {
+        type: 'input',
+        value: '',
+        active: false,
+        style: {
+          color: '#000',
+        },
+      },
       headers: [
-      {
-        headerName: 'A',
-        headerKey: 'a',
-        style: {
-          width: '200px',
-          minWidth: '200px',
-          color: '#000',
+        {
+          headerName: 'A',
+          headerKey: 'a',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
         },
-      },
-      {
-        headerName: 'B',
-        headerKey: 'b',
-        style: {
-          width: '200px',
-          minWidth: '200px',
-          color: '#000',
+        {
+          headerName: 'B',
+          headerKey: 'b',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
         },
-      },
-      {
-        headerName: 'C',
-        headerKey: 'c',
-        style: {
-          width: '200px',
-          minWidth: '200px',
-          color: '#000',
+        {
+          headerName: 'C',
+          headerKey: 'c',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
         },
-      },
-      {
-        headerName: 'D',
-        headerKey: 'd',
-        style: {
-          width: '200px',
-          minWidth: '200px',
-          color: '#000',
+        {
+          headerName: 'D',
+          headerKey: 'd',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
         },
-      },
-      {
-        headerName: 'E',
-        headerKey: 'e',
-        style: {
-          width: '200px',
-          minWidth: '200px',
-          color: '#000',
+        {
+          headerName: 'E',
+          headerKey: 'e',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
         },
-      },
+      ],
       products: [
-      {
-        a: {
-          type: 'img',
-          value: 'https://via.placeholder.com/350x150',
-          active: false,
-        },
-        c: {
-          type: 'input',
-          value: 'Paris',
-          active: false,
-          style: {
-            color: '#000',
+        {
+          a: {
+            type: 'img',
+            value: 'https://via.placeholder.com/350x150',
+            active: false,
+          },
+          c: {
+            type: 'input',
+            value: 'Paris',
+            active: false,
+            style: {
+              color: '#000',
+            },
+          },
+          d: {
+            type: 'input',
+            value: 'France',
+            active: false,
+            style: {
+              color: '#000',
+            },
+          },
+          e: {
+            type: 'select',
+            handleSearch: true,
+            selectOptions: [
+              {
+                value: 'pet dolphin',
+                label: 'pet dolphin',
+              },
+              {
+                value: 'pet fish',
+                label: 'pet fish',
+              },
+              {
+                value: 'pet bib',
+                label: 'pet bib',
+              },
+              {
+                value: 'pet bob',
+                label: 'pet bob',
+              },
+              {
+                value: 'pet poty',
+                label: 'pet poty',
+              },
+            ],
+            value: '',
+            active: false,
           },
         },
-        d: {
-          type: 'input',
-          value: 'France',
-          active: false,
-          style: {
-            color: '#000',
-          },
+      ],
+      submenuThead: [
+        {
+          type: 'button',
+          value: 'change color',
+          function: 'change-color',
+          disabled: ['a'],
         },
-        e: {
+        {
           type: 'select',
-          handleSearch: true,
+          disabled: ['a'],
+          subtitle: 'Select state:',
           selectOptions: [
             {
-              value: 'pet dolphin',
-              label: 'pet dolphin',
+              value: 'new-york',
+              label: 'new-york',
             },
             {
-              value: 'pet fish',
-              label: 'pet fish',
-            },
-            {
-              value: 'pet bib',
-              label: 'pet bib',
-            },
-            {
-              value: 'pet bob',
-              label: 'pet bob',
-            },
-            {
-              value: 'pet pet',
-              label: 'pet pet',
-            },
-            {
-              value: 'pet put',
-              label: 'pet put',
-            },
-            {
-              value: 'pet poty',
-              label: 'pet poty',
+              value: 'france',
+              label: 'france',
             },
           ],
-          value: '',
-          active: false,
+          value: 'new-york',
+          buttonOption: {
+            value: 'change city',
+            function: 'change-city',
+            style: {
+              display: 'block',
+            },
+          },
         },
-      },
+        {
+          type: 'button',
+          value: 'change value',
+          function: 'change-value',
+          disabled: ['a', 'b'],
+        },
+      ],
+      submenuTbody: [
+        {
+          type: 'button',
+          value: 'change color',
+          function: 'change-color',
+          disabled: ['img'],
+        },
+        {
+          type: 'button',
+          value: 'change value',
+          function: 'change-value',
+          disabled: ['img', 'name'],
+        },
+      ],
     };
   },
   components: {
@@ -608,60 +546,44 @@ export default {
   },
   methods: {
     changeData(row, header) {
-      // console.log(row, header);
-    },
-    handleUpDragToFill(selectedMultipleCell, entry, rowIndex, colIndex) {
-      // console.log(selectedMultipleCell, entry, rowIndex, colIndex);
-    },
-    sortProduct(event, entry, colIndex) {
-      // console.log('sort product');
-    },
-    deleteCell(rowIndex, colIndex, header) {
-      // console.log(event, actualElement, actualCol, rowIndex, colIndex);
     },
     inputChange(event, entry, rowIndex, colIndex) {
-      // console.log('InputChange', event, entry, rowIndex, colIndex);
     },
     selectChange(event, entry, col, option, rowIndex, colIndex) {
-      // console.log('selectChange', event, entry, rowIndex, colIndex);
       this.changeValueSelect(rowIndex, colIndex);
     },
-    deleteMultipleCell(rowMin, colMin, keyValue) {
-      // console.log(rowMin, colMin, keyValue);
+    sortProduct(event, entry, colIndex) {
     },
     // callback
-    changeCity(event, entry, colIndex, selectOptions) {
-      this.products.forEach((elm) => {
-        const product = elm;
-        product[entry].value = selectOptions;
-      });
-    },
-    changeValueSelect(rowIndex, colIndex) {
-      // console.log('changeValueSelect', rowIndex, colIndex);
-      // to get our element => Object.values(this.products[rowIndex])[colIndex];
-    },
-    changeColor(event, entry, colIndex) {
-      // console.log('changeColor', event, entry, colIndex);
-      this.headers[colIndex].style.color = '#e40000';
-    },
-    changeValue(event, entry, colIndex) {
-      // console.log('changeValue', event, entry, colIndex);
-      this.headers[colIndex].headerName = 'T-shirt';
-    },
     changeColorTbody(event, entry, rowIndex, colIndex, type) {
-      // console.log('changeColorTbody', event, entry, rowIndex, colIndex, type);
       if (type === 'input') {
         this.products[rowIndex][entry].style.color = '#e40000';
       }
     },
     changeValueTbody(event, entry, rowIndex, colIndex, type) {
-      // console.log('changeValueTbody', event, entry, rowIndex, colIndex, type);
       if (type === 'input') {
         this.products[rowIndex][entry].value = 'T-shirt';
       }
     },
+    changeColorThead(event, entry, colIndex) {
+      this.headers[colIndex].style.color = '#e40000';
+    },
+    changeValueThead(event, entry, colIndex) {
+      this.headers[colIndex].headerName = 'T-shirt';
+    },
   },
 };
 </script>
+
+<style lang="scss">
+::-moz-selection {
+  color: #2c3e50;
+  background: transparent;
+}
+::selection {
+  color: #2c3e50;
+  background: transparent;
+}
+</style>
 
 ````
