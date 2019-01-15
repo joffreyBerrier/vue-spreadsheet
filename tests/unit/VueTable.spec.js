@@ -124,7 +124,7 @@ describe('VueTable', () => {
     describe('DisabledEvent', () => {
       test('Disabled Col : false | with disableCells', () => {
         const fakeData = { disabled: false };
-        expect(wrapper.vm.disabledEvent(fakeData, 'a')).toBeTruthy()
+        expect(wrapper.vm.disabledEvent(fakeData, 'a')).toBeTruthy();
       });
       test('Disabled Col : true | with disableCells', () => {
         const fakeData = { disabled: true };
