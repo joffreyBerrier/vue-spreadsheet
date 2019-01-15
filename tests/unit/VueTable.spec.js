@@ -44,7 +44,6 @@ beforeEach(() => {
 });
 
 describe('VueTable', () => {
-
   describe('Render component with props', () => {
     test('Vue Instance', () => {
       expect(wrapper.isVueInstance()).toBeTruthy();
@@ -138,6 +137,22 @@ describe('VueTable', () => {
       test('Disabled Col : true | without disableCells', () => {
         const fakeData = { disabled: true };
         expect(wrapper.vm.disabledEvent(fakeData, 'b')).toBeFalsy();
+      });
+    });
+
+    describe('setOldValueOnInputSelect', () => {
+      test('return false', () => {
+        const rowIndex = 0;
+        const colIndex = 7;
+        const header = 'f';
+        const data = wrapper.vm.tbodyData[rowIndex][header];
+        const { type } = data;
+
+        data.show = true;
+        data.search = true;
+        wrapper.vm.setOldValueOnInputSelect(data, rowIndex, header, colIndex, type);
+        expect(data.show).toBeFalsy();
+        expect(data.search).toBeFalsy();
       });
     });
 
@@ -280,6 +295,125 @@ describe('VueTable', () => {
         const colIndex = 5;
         wrapper.vm.showDropdown(colIndex, rowIndex);
       });
+    });
+
+    describe('copyStoreData', () => {
+      // 'drag / 'copy'
+      test('Copy one cell', () => {
+        const rowIndex = 0;
+        const colIndex = 7;
+        const header = 'f';
+        const data = wrapper.vm.tbodyData[rowIndex][header];
+
+        wrapper.vm.selectedCell = {
+          header,
+          row: rowIndex,
+          col: colIndex,
+        };
+
+        wrapper.vm.copyStoreData('copy');
+        expect(wrapper.vm.storeCopyDatas[0].stateCopy).toBeFalsy();
+        data.stateCopy = false;
+        expect(wrapper.vm.storeCopyDatas[0]).toEqual(data);
+
+        expect(wrapper.vm.copyMultipleCell).toBeFalsy();
+      });
+
+      test('Copy multiple Col One Row', () => {
+        const rowIndex = 0;
+        const colIndex = 7;
+        const header = 'f';
+
+        const multipleProduct = {
+          colEnd: 3,
+          colStart: 2,
+          keyEnd: 'd',
+          keyStart: 'c',
+          rowEnd: 4,
+          rowStart: 4,
+        };
+
+        wrapper.vm.selectedCell = {
+          header,
+          row: rowIndex,
+          col: colIndex,
+        };
+        wrapper.vm.selectedCoordCells = multipleProduct;
+
+        const col1 = wrapper.vm.tbodyData[multipleProduct.rowStart][multipleProduct.keyStart];
+        const col2 = wrapper.vm.tbodyData[multipleProduct.rowEnd][multipleProduct.keyEnd];
+
+        wrapper.vm.selectedMultipleCell = true;
+        wrapper.vm.copyStoreData('copy');
+        expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyStart].stateCopy).toBeFalsy();
+        expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyEnd].stateCopy).toBeFalsy();
+
+        wrapper.vm.storeCopyDatas[0][multipleProduct.keyStart].stateCopy = true;
+
+        expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyStart]).toEqual(col1);
+        expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyEnd]).toEqual(col2);
+
+        expect(wrapper.vm.copyMultipleCell).toBeTruthy();
+      });
+
+      test('Copy multiple Col Multiple Row', () => {
+        const rowIndex = 0;
+        const colIndex = 7;
+        const header = 'f';
+
+        const multipleProduct = {
+          colEnd: 3,
+          colStart: 2,
+          keyEnd: 'd',
+          keyStart: 'c',
+          rowEnd: 5,
+          rowStart: 4,
+        };
+
+        wrapper.vm.selectedCell = {
+          header,
+          row: rowIndex,
+          col: colIndex,
+        };
+        wrapper.vm.selectedCoordCells = multipleProduct;
+
+        const product1Col1 = wrapper.vm.tbodyData[multipleProduct.rowStart][multipleProduct.keyStart];
+        const product1Col2 = wrapper.vm.tbodyData[multipleProduct.rowStart][multipleProduct.keyEnd];
+
+        const product2Col1 = wrapper.vm.tbodyData[multipleProduct.rowEnd][multipleProduct.keyStart];
+        const product2Col2 = wrapper.vm.tbodyData[multipleProduct.rowEnd][multipleProduct.keyEnd];
+
+        wrapper.vm.selectedMultipleCell = true;
+        wrapper.vm.copyStoreData('copy');
+
+        expect(wrapper.vm.storeCopyDatas.length).toEqual(2);
+        expect(Object.values(wrapper.vm.storeCopyDatas).length).toEqual(2);
+
+        expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyStart]).toEqual(product1Col1);
+        expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyEnd]).toEqual(product1Col2);
+
+        expect(wrapper.vm.storeCopyDatas[1][multipleProduct.keyStart]).toEqual(product2Col1);
+        expect(wrapper.vm.storeCopyDatas[1][multipleProduct.keyEnd]).toEqual(product2Col2);
+
+        expect(wrapper.vm.copyMultipleCell).toBeTruthy();
+      });
+    });
+
+    test('Drag one cell', () => {
+      const rowIndex = 0;
+      const colIndex = 7;
+      const header = 'f';
+      const data = wrapper.vm.tbodyData[rowIndex][header];
+
+      wrapper.vm.selectedCell = {
+        header,
+        row: rowIndex,
+        col: colIndex,
+      };
+
+      wrapper.vm.copyStoreData('drag');
+      expect(wrapper.vm.storeCopyDatas.length).toEqual(1);
+      expect(wrapper.vm.storeCopyDatas[0]).toEqual(data);
     });
   });
 });
