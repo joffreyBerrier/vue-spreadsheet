@@ -55,7 +55,7 @@ Function                               | Type       | Description
   v-on:tbody-move-dragtofill           | Function   | Fired when moved on dragToFill
   v-on:tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
   v-on:tbody-nav-multiple-backspace    | Function   | Fired when the multiple cell are delete
-  v-on:tbody-replace-data              | Function   | When you copy/paste - dragToFill
+  v-on:tbody-change-data              | Function   | When you copy/paste - dragToFill
   v-on:tbody-select-change             | Function   | When the **select change**
   v-on:tbody-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-tbody**
   v-on:tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
