@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
-import VueTable from '../src/components/VueTable.vue';
+import VueTable from '../../src/components/VueTable.vue';
 
 // data
-import exempleData from '../src/data';
+import exempleData from '../../src/data';
 
 let wrapper;
 
