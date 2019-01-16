@@ -840,6 +840,15 @@ export default {
       this.$emit('tbody-input-change', event, header, rowIndex, colIndex);
       this.$emit('tbody-change-data', rowIndex, header);
     },
+    handleTBodyContextMenu(event, header, rowIndex, colIndex, type) {
+      this.lastSubmenuOpen = {
+        event,
+        header,
+        rowIndex,
+        colIndex,
+      };
+    },
+    // callback
     callbackSubmenuThead(event, header, colIndex, submenuFunction, selectOptions) {
       this.submenuStatusThead = false;
       if (selectOptions) {
@@ -852,20 +861,12 @@ export default {
       this.calculPosition(event, rowIndex, colIndex, 'submenu');
       this.$emit(`tbody-submenu-click-${submenuFunction}`, event, header, rowIndex, colIndex, type, submenuFunction);
     },
-    handleTBodyContextMenu(event, header, rowIndex, colIndex, type) {
-      this.lastSubmenuOpen = {
-        event,
-        header,
-        rowIndex,
-        colIndex,
-      };
-    },  
+    callbackSort(event, header, colIndex) {
+      this.$emit('thead-td-sort', event, header, colIndex);
+    },
     // thead
     handleTheadContextMenu() {
       this.submenuStatusTbody = false;
-    },
-    callbackSort(event, header, colIndex) {
-      this.$emit('thead-td-sort', event, header, colIndex);
     },
     moveOnSelect(event) {
       if (this.incrementOption <= this.filteredList.length) {

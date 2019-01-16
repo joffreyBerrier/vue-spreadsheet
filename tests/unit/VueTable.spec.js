@@ -661,8 +661,38 @@ describe('VueTable', () => {
     describe('callbackSort', () => {
       test('Emitted', () => {
         const tBody = wrapper.vm;
-        tBody.callbackSort('', 'h', 2);
+        tBody.callbackSort('fakeEvent', 'h', 2);
         expect(wrapper.emitted('thead-td-sort')).toBeTruthy();
+        expect(wrapper.emitted('thead-td-sort')).toEqual([['fakeEvent', 'h', 2]]);
+      });
+    });
+
+    describe('callbackSubmenuTbody', () => {
+      test('Emitted', () => {
+        const tBody = wrapper.vm;
+        tBody.callbackSubmenuTbody('', 'b', 0, 2, 'input', 'test-function');
+        expect(wrapper.emitted('tbody-submenu-click-test-function')).toBeTruthy();
+        expect(wrapper.emitted('tbody-submenu-click-test-function')).toEqual([['', 'b', 0, 2, 'input', 'test-function']]);
+      });
+    });
+
+    describe('callbackSubmenuThead', () => {
+      test('Emitted without option', () => {
+        const tBody = wrapper.vm;
+        tBody.submenuStatusThead = true;
+        tBody.callbackSubmenuThead('fakeEvent', 'b', 0, 'test-function', undefined);
+        expect(wrapper.emitted('thead-submenu-click-test-function')).toBeTruthy();
+        expect(tBody.submenuStatusThead).toBeFalsy();
+        expect(wrapper.emitted('thead-submenu-click-test-function')).toEqual([['fakeEvent', 'b', 0]]);
+      });
+
+      test('Emitted with option', () => {
+        const tBody = wrapper.vm;
+        tBody.submenuStatusThead = true;
+        tBody.callbackSubmenuThead('fakeEvent', 'b', 0, 'test-function', ['a']);
+        expect(wrapper.emitted('thead-submenu-click-test-function')).toBeTruthy();
+        expect(tBody.submenuStatusThead).toBeFalsy();
+        expect(wrapper.emitted('thead-submenu-click-test-function')).toEqual([['fakeEvent', 'b', 0, ['a']]]);
       });
     });
 
@@ -676,5 +706,5 @@ describe('VueTable', () => {
         expect(tBody.submenuStatusTbody).toBeFalsy();
       });
     });
-  });    
+  });
 });
