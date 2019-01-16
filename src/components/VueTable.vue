@@ -321,7 +321,6 @@ export default {
     },
     handleSearchInputSelect(event, searchValue, col, header, rowIndex, colIndex) {
       let disableSearch = !(searchValue === "" && event.keyCode === 8);
-
       if ((!this.keys.cmd || !this.keys.ctrl) &&
         disableSearch &&
         event.keyCode !== 13 &&
@@ -357,15 +356,17 @@ export default {
     },
     showDropdown(colIndex, rowIndex) {
       // clear timeout
-      const dropdown = this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`][0];
-      if (!this.scrollToSelectTimeout === null) {
-        clearTimeout(this.scrollToSelectTimeout);
+      if (this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`]) {
+        const dropdown = this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`][0];
+        if (!this.scrollToSelectTimeout === null) {
+          clearTimeout(this.scrollToSelectTimeout);
+        }
+        // set scrollTop on select
+        this.scrollToSelectTimeout = setTimeout(() => {
+          dropdown.scrollTop = 45 * this.incrementOption;
+          this.scrollToSelectTimeout = null;
+        }, 100);
       }
-      // set scrollTop on select
-      this.scrollToSelectTimeout = setTimeout(() => {
-        dropdown.scrollTop = 45 * this.incrementOption;
-        this.scrollToSelectTimeout = null;
-      }, 100);
     },
     handleTbodySelectChange(event, header, col, option, rowIndex, colIndex) {
       const currentData = this.tbodyData[rowIndex][header];
@@ -839,6 +840,15 @@ export default {
       this.$emit('tbody-input-change', event, header, rowIndex, colIndex);
       this.$emit('tbody-change-data', rowIndex, header);
     },
+    handleTBodyContextMenu(event, header, rowIndex, colIndex, type) {
+      this.lastSubmenuOpen = {
+        event,
+        header,
+        rowIndex,
+        colIndex,
+      };
+    },
+    // callback
     callbackSubmenuThead(event, header, colIndex, submenuFunction, selectOptions) {
       this.submenuStatusThead = false;
       if (selectOptions) {
@@ -851,20 +861,12 @@ export default {
       this.calculPosition(event, rowIndex, colIndex, 'submenu');
       this.$emit(`tbody-submenu-click-${submenuFunction}`, event, header, rowIndex, colIndex, type, submenuFunction);
     },
-    handleTBodyContextMenu(event, header, rowIndex, colIndex, type) {
-      this.lastSubmenuOpen = {
-        event,
-        header,
-        rowIndex,
-        colIndex,
-      };
-    },  
+    callbackSort(event, header, colIndex) {
+      this.$emit('thead-td-sort', event, header, colIndex);
+    },
     // thead
     handleTheadContextMenu() {
       this.submenuStatusTbody = false;
-    },
-    callbackSort(event, header, colIndex) {
-      this.$emit('thead-td-sort', event, header, colIndex);
     },
     moveOnSelect(event) {
       if (this.incrementOption <= this.filteredList.length) {
