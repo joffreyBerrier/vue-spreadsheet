@@ -657,5 +657,24 @@ describe('VueTable', () => {
         expect(vueTable.scrollLeft).toEqual(200);
       });
     });
-  });
+
+    describe('callbackSort', () => {
+      test('Emitted', () => {
+        const tBody = wrapper.vm;
+        tBody.callbackSort('', 'h', 2);
+        expect(wrapper.emitted('thead-td-sort')).toBeTruthy();
+      });
+    });
+
+    describe('handleTheadContextMenu', () => {
+      test('submenuStatusTbody: false', () => {
+        const tBody = wrapper.vm;
+
+        tBody.submenuStatusTbody = true;
+        expect(tBody.submenuStatusTbody).toBeTruthy();
+        tBody.handleTheadContextMenu();
+        expect(tBody.submenuStatusTbody).toBeFalsy();
+      });
+    });
+  });    
 });
