@@ -321,7 +321,6 @@ export default {
     },
     handleSearchInputSelect(event, searchValue, col, header, rowIndex, colIndex) {
       let disableSearch = !(searchValue === "" && event.keyCode === 8);
-
       if ((!this.keys.cmd || !this.keys.ctrl) &&
         disableSearch &&
         event.keyCode !== 13 &&
@@ -357,15 +356,17 @@ export default {
     },
     showDropdown(colIndex, rowIndex) {
       // clear timeout
-      const dropdown = this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`][0];
-      if (!this.scrollToSelectTimeout === null) {
-        clearTimeout(this.scrollToSelectTimeout);
+      if (this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`]) {
+        const dropdown = this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`][0];
+        if (!this.scrollToSelectTimeout === null) {
+          clearTimeout(this.scrollToSelectTimeout);
+        }
+        // set scrollTop on select
+        this.scrollToSelectTimeout = setTimeout(() => {
+          dropdown.scrollTop = 45 * this.incrementOption;
+          this.scrollToSelectTimeout = null;
+        }, 100);
       }
-      // set scrollTop on select
-      this.scrollToSelectTimeout = setTimeout(() => {
-        dropdown.scrollTop = 45 * this.incrementOption;
-        this.scrollToSelectTimeout = null;
-      }, 100);
     },
     handleTbodySelectChange(event, header, col, option, rowIndex, colIndex) {
       const currentData = this.tbodyData[rowIndex][header];

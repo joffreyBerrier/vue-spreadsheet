@@ -261,7 +261,7 @@ describe('VueTable', () => {
         wrapper.vm.setFirstCell = false;
         wrapper.vm.updateSelectedCell(header, row, col);
         expect(wrapper.vm.setFirstCell).toBeTruthy();
-        expect(wrapper.vm.tbodyData[row][header].rectangleSelection).toBeTruthy()
+        expect(wrapper.vm.tbodyData[row][header].rectangleSelection).toBeTruthy();
       });
       test('setFirstCell = true', () => {
         wrapper.vm.setFirstCell = true;
@@ -397,23 +397,265 @@ describe('VueTable', () => {
 
         expect(wrapper.vm.copyMultipleCell).toBeTruthy();
       });
+
+      test('Drag one cell', () => {
+        const rowIndex = 0;
+        const colIndex = 7;
+        const header = 'f';
+        const data = wrapper.vm.tbodyData[rowIndex][header];
+
+        wrapper.vm.selectedCell = {
+          header,
+          row: rowIndex,
+          col: colIndex,
+        };
+
+        wrapper.vm.copyStoreData('drag');
+        expect(wrapper.vm.storeCopyDatas.length).toEqual(1);
+        expect(wrapper.vm.storeCopyDatas[0]).toEqual(data);
+      });
     });
 
-    test('Drag one cell', () => {
-      const rowIndex = 0;
-      const colIndex = 7;
-      const header = 'f';
-      const data = wrapper.vm.tbodyData[rowIndex][header];
+    describe('activeSelectSearch', () => {
+      test('return typing false', () => {
+        wrapper.vm.activeSelectSearch('', 1, 3, 'c');
+        expect(wrapper.vm.tbodyData[1].c.typing).toBeFalsy();
+      });
+    });
 
-      wrapper.vm.selectedCell = {
-        header,
-        row: rowIndex,
-        col: colIndex,
-      };
+    describe('handleTbodySelectChange', () => {
+      test('return emit tbody-select-change', () => {
+        const tBody = wrapper.vm;
+        const data = tBody.tbodyData[1].f;
+        const fakeEvent = {
+          keyCode: 99,
+        };
+        const option = {
+          active: true,
+          label: 'pet country',
+          value: 'pet country',
+        };
 
-      wrapper.vm.copyStoreData('drag');
-      expect(wrapper.vm.storeCopyDatas.length).toEqual(1);
-      expect(wrapper.vm.storeCopyDatas[0]).toEqual(data);
+        tBody.handleTbodySelectChange(fakeEvent, 'f', data, option, 0, 5);
+        expect(wrapper.emitted('tbody-select-change')).toBeTruthy();
+        expect(wrapper.emitted('tbody-select-change')).toEqual([[fakeEvent, 'f', data, option, 0, 5]]);
+      });
+
+      test('return emit tbody-change-data', () => {
+        const tBody = wrapper.vm;
+        const data = tBody.tbodyData[1].f;
+        const fakeEvent = {
+          keyCode: 99,
+        };
+        const option = {
+          active: true,
+          label: 'pet country',
+          value: 'pet country',
+        };
+
+        tBody.handleTbodySelectChange(fakeEvent, 'f', data, option, 0, 5);
+        expect(wrapper.emitted('tbody-change-data')).toBeTruthy();
+        expect(wrapper.emitted('tbody-change-data')).toEqual([[0, 'f']]);
+      });
+
+      test('return currentData', () => {
+        const tBody = wrapper.vm;
+        const data = tBody.tbodyData[0].f;
+        const fakeEvent = {
+          keyCode: 99,
+        };
+        const option = {
+          active: true,
+          label: 'pet country',
+          value: 'pet country',
+        };
+
+        tBody.handleTbodySelectChange(fakeEvent, 'f', data, option, 0, 5);
+
+        expect(data.search).toBeFalsy();
+        expect(data.show).toBeFalsy();
+        expect(data.value).toEqual(option.value);
+
+        expect(data.selectOptions.find(x => x.value === option.value).active).toBeTruthy();
+
+        expect(wrapper.emitted('tbody-select-change')).toBeTruthy();
+        expect(wrapper.emitted('tbody-change-data')).toBeTruthy();
+      });
+
+      test('return currentData.show: false', () => {
+        const tBody = wrapper.vm;
+        const data = tBody.tbodyData[0].f;
+        const fakeEvent = {
+          keyCode: 99,
+        };
+        const option = {
+          active: true,
+          label: 'pet country',
+          value: 'pet country',
+        };
+
+        tBody.oldTdShow = { key: 'f', row: 0, col: 6 };
+        tBody.handleTbodySelectChange(fakeEvent, 'f', data, option, 0, 5);
+
+        expect(data.search).toBeFalsy();
+        expect(data.show).toBeFalsy();
+        expect(data.value).toEqual(option.value);
+        expect(tBody.tbodyData[tBody.oldTdShow.row][tBody.oldTdShow.key].show).toBeFalsy();
+
+        expect(data.selectOptions.find(x => x.value === option.value).active).toBeTruthy();
+
+        expect(wrapper.emitted('tbody-select-change')).toBeTruthy();
+        expect(wrapper.emitted('tbody-change-data')).toBeTruthy();
+      });
+    });
+
+    describe('moveOnTable', () => {
+      test('top', () => {
+        const tBody = wrapper.vm;
+        const { vueTable } = tBody.$refs;
+        const fakeEvent = {
+          keyCode: 38,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+
+        tBody.moveOnTable(fakeEvent, 0, 0);
+        expect(vueTable.scrollTop).toEqual(-40);
+        expect(vueTable.scrollLeft).toEqual(0);
+      });
+      test('bottom', () => {
+        const tBody = wrapper.vm;
+        const { vueTable } = tBody.$refs;
+        const fakeEvent = {
+          keyCode: 40,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+
+        tBody.moveOnTable(fakeEvent, 0, 0);
+        expect(vueTable.scrollTop).toEqual(40);
+        expect(vueTable.scrollLeft).toEqual(0);
+      });
+
+      test('left', () => {
+        const tBody = wrapper.vm;
+        const { vueTable } = tBody.$refs;
+        const fakeEvent = {
+          keyCode: 37,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+
+        tBody.moveOnTable(fakeEvent, 0, 0);
+        expect(vueTable.scrollTop).toEqual(0);
+        expect(vueTable.scrollLeft).toEqual(-200);
+      });
+
+      test('right', () => {
+        const tBody = wrapper.vm;
+        const { vueTable } = tBody.$refs;
+        const fakeEvent = {
+          keyCode: 39,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+
+        tBody.moveOnTable(fakeEvent, 0, 0);
+        expect(vueTable.scrollTop).toEqual(0);
+        expect(vueTable.scrollLeft).toEqual(200);
+      });
+
+      test('top left', () => {
+        const tBody = wrapper.vm;
+        const { vueTable } = tBody.$refs;
+        const fakeEvent = {
+          keyCode: 38,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+        const fakeEvent2 = {
+          keyCode: 37,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+
+        tBody.moveOnTable(fakeEvent, 0, 0);
+        tBody.moveOnTable(fakeEvent2, 0, 0);
+        expect(vueTable.scrollTop).toEqual(-40);
+        expect(vueTable.scrollLeft).toEqual(-200);
+      });
+
+      test('top right', () => {
+        const tBody = wrapper.vm;
+        const { vueTable } = tBody.$refs;
+        const fakeEvent = {
+          keyCode: 38,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+        const fakeEvent2 = {
+          keyCode: 39,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+
+        tBody.moveOnTable(fakeEvent, 0, 0);
+        tBody.moveOnTable(fakeEvent2, 0, 0);
+        expect(vueTable.scrollTop).toEqual(-40);
+        expect(vueTable.scrollLeft).toEqual(200);
+      });
+
+      test('bottom left', () => {
+        const tBody = wrapper.vm;
+        const { vueTable } = tBody.$refs;
+        const fakeEvent = {
+          keyCode: 40,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+        const fakeEvent2 = {
+          keyCode: 37,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+
+        tBody.moveOnTable(fakeEvent, 0, 0);
+        tBody.moveOnTable(fakeEvent2, 0, 0);
+        expect(vueTable.scrollTop).toEqual(40);
+        expect(vueTable.scrollLeft).toEqual(-200);
+      });
+
+      test('bottom right', () => {
+        const tBody = wrapper.vm;
+        const { vueTable } = tBody.$refs;
+        const fakeEvent = {
+          keyCode: 40,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+        const fakeEvent2 = {
+          keyCode: 39,
+          preventDefault() {
+            return 'preventDefault';
+          },
+        };
+
+        tBody.moveOnTable(fakeEvent, 0, 0);
+        tBody.moveOnTable(fakeEvent2, 0, 0);
+        expect(vueTable.scrollTop).toEqual(40);
+        expect(vueTable.scrollLeft).toEqual(200);
+      });
     });
   });
 });

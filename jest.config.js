@@ -8,7 +8,9 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: [
     '**/src/components/*.{js,vue}',
-    '!**/node_modules/**',
+  ],
+  transformIgnorePatterns: [
+    '<rootDir>/node_modules/',
   ],
   transform: {
     '^.+\\.vue$': 'vue-jest',
