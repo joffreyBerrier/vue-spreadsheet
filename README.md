@@ -35,7 +35,6 @@ Props                                  | Type       | Description
 ---------------------------------------|------------|-------------------------
   :disable-cells                       | Array      | That contains the headerKey you want to disable
   :disable-sort-thead                  | Array      | That contains the disabled th
-  :drag-to-fill                        | Boolean    | That activates drag to fill
   :headers                             | Array      | That contains headers
   :new-data                            | Object     | That contains the type of data when you have empty cell in a row
   :parent-element-scroll               | Number     | That contains the OffsetTop of the parent
@@ -322,7 +321,6 @@ newData: {
     <vue-table
       :disable-cells="disableCells"
       :disable-sort-thead="disableSortThead"
-      :drag-to-fill="dragToFill"
       :headers="headers"
       :loading="loading"
       :new-data="newData"
@@ -360,7 +358,6 @@ export default {
   name: 'app',
   data() {
     return {
-      dragToFill: true,
       disableCells: ['a'],
       sortHeader: true,
       tbodyIndex: true,
