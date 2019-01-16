@@ -1,5 +1,4 @@
 export default {
-  dragToFill: true,
   disableCells: ['a'],
   sortHeader: true,
   tbodyIndex: true,

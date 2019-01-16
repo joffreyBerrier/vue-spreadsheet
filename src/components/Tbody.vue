@@ -31,14 +31,11 @@
             :key="header"
             :style="row[header].style">
 
-            <template
-              v-if="dragToFill">
-              <button
-                class="drag_to_fill"
-                @mousedown="handleDownDragToFill($event, header, row[header], rowIndex, colIndex)"
-                @mouseup="handleUpDragToFill($event, header, row[header], rowIndex, colIndex, row[header].type)">
-              </button>
-            </template>
+            <button
+              class="drag_to_fill"
+              @mousedown="handleDownDragToFill($event, header, row[header], rowIndex, colIndex)"
+              @mouseup="handleUpDragToFill($event, header, row[header], rowIndex, colIndex, row[header].type)">
+            </button>
 
             <div class="submenu" :ref="'contextMenu-' + colIndex + '-' + rowIndex">
               <div
@@ -150,10 +147,6 @@ export default {
     },
     disableCells: {
       type: Array,
-      required: false,
-    },
-    dragToFill: {
-      type: Boolean,
       required: false,
     },
     newData: {

@@ -30,7 +30,6 @@
       <vue-tbody v-if="!loading"
         ref="vueTbody"
         :disable-cells="disableCells"
-        :drag-to-fill="dragToFill"
         :filtered-list="filteredList"
         :headers="headers"
         :newData="newData"
@@ -76,10 +75,6 @@ export default {
     },
     disableCells: {
       type: Array,
-      required: false,
-    },
-    dragToFill: {
-      type: Boolean,
       required: false,
     },
     newData: {
@@ -561,7 +556,7 @@ export default {
           // remove stateCopy if present of storeData
           if (newCopyData.copy) { newCopyData.copy = false; }
 
-          if (this.dragToFill && this.eventDrag) { // Drag To Fill
+          if (this.eventDrag) { // Drag To Fill
             if (newCopyData[0][header]) {
               this.tbodyData[rowMin][header] = newCopyData[0][header]; // multiple cell
             } else {
