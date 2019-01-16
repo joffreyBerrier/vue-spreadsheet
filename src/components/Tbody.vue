@@ -262,7 +262,6 @@ export default {
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
     },
     handleSearchInputSelect(event, col, header, rowIndex, colIndex) {
-      console.log(this.disabledEvent(col, header))
       if (this.disabledEvent(col, header)) {
         this.$emit('tbody-handle-search-input-select', event, this.searchInput, col, header, rowIndex, colIndex);
       }

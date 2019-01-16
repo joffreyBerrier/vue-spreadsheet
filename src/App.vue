@@ -3,7 +3,6 @@
     <vue-table
       :disable-cells="disableCells"
       :disable-sort-thead="disableSortThead"
-      :drag-to-fill="dragToFill"
       :headers="headers"
       :loading="loading"
       :new-data="newData"
