@@ -53,6 +53,7 @@ Options                                | Type       | Description
   :new-data                            | Object     | That contains the type of data when you have empty cell in a row
   :sort-header                         | Boolean    | That activates sort button on header
   :submenu-thead                       | Array      | That contains the submenu-thead
+  :tbody-data                          | Array      | That contains data
   :tbody-index                         | Boolean    | That displays the index of each row on the left of the table
   :trad                                | Object     | That contains an object of translating
 
@@ -395,6 +396,7 @@ newData: {
 </template>
 
 <script>
+
 import VueTable from './components/VueTable.vue';
 import exempleData from './data';
 
@@ -656,6 +658,12 @@ export default {
     changeValueTbody(event, header, rowIndex, colIndex) {
       this.products[rowIndex][header].value = 'T-shirt';
     },
+    changeColorThead(event, entry, colIndex) {
+      this.headers[colIndex].style.color = '#e40000';
+    },
+    changeValueThead(event, entry, colIndex) {
+      this.headers[colIndex].headerName = 'T-shirt';
+    },
   },
 };
 </script>
@@ -670,7 +678,3 @@ export default {
   background: transparent;
 }
 </style>
-
-
-````
-//parentScrollElement object

@@ -31,7 +31,6 @@
         ref="vueTbody"
         :tbody-data="tbodyData"
         :headers="headers"
-        :drag-to-fill="customOptions.dragToFill"
         :tbody-index="customOptions.tbodyIndex"
         :trad="customOptions.trad"
         :disable-cells="disableCells"
@@ -293,7 +292,7 @@ export default {
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
 
         if (currentElement.value !== '') {
-          this.showDropdown(currentElement, colIndex, rowIndex);
+          this.showDropdown(colIndex, rowIndex);
           const index = currentElement.selectOptions.map(x => x.value).indexOf(currentElement.value);
           this.incrementOption = index;
         } else {
@@ -338,22 +337,24 @@ export default {
           this.$set(currentData, 'search', true);
           this.$set(currentData, 'show', true);
 
-          this.showDropdown(currentData, colIndex, rowIndex);
+          this.showDropdown(colIndex, rowIndex);
         }
         this.incrementOption = 0;
       }
     },
-    showDropdown(currentData, colIndex, rowIndex) {
+    showDropdown(colIndex, rowIndex) {
       // clear timeout
-      const dropdown = this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`][0];
-      if (!this.scrollToSelectTimeout === null) {
-        clearTimeout(this.scrollToSelectTimeout);
+      if (this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`]) {
+        const dropdown = this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`][0];
+        if (!this.scrollToSelectTimeout === null) {
+          clearTimeout(this.scrollToSelectTimeout);
+        }
+        // set scrollTop on select
+        this.scrollToSelectTimeout = setTimeout(() => {
+          dropdown.scrollTop = 45 * this.incrementOption;
+          this.scrollToSelectTimeout = null;
+        }, 100);
       }
-      // set scrollTop on select
-      this.scrollToSelectTimeout = setTimeout(() => {
-        dropdown.scrollTop = 45 * this.incrementOption;
-        this.scrollToSelectTimeout = null;
-      }, 100);
     },
     handleTbodySelectChange(event, header, col, option, rowIndex, colIndex) {
       const currentData = this.tbodyData[rowIndex][header];
@@ -493,7 +494,7 @@ export default {
           const copyData = tbodyData[rowMin][this.headerKeys[colMin]];
           copyData.active = false;
           copyData.selected = false;
-          copyData.copy = false;
+          copyData.stateCopy = false;
 
           storeData[this.headerKeys[colMin]] = copyData;
           colMin += 1;
@@ -516,7 +517,7 @@ export default {
         const copyData = tbodyData[this.selectedCell.row][this.selectedCell.header];
         copyData.active = false;
         copyData.selected = false;
-        copyData.copy = false;
+        copyData.stateCopy = false;
         this.storeCopyDatas.push(copyData);
         this.copyMultipleCell = false;
       }
@@ -560,7 +561,7 @@ export default {
           const header = this.headerKeys[colMin];
           const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
 
-          if (this.customOptions.dragToFill && this.eventDrag) { // Drag To Fill
+          if (this.eventDrag) { // Drag To Fill
             if (newCopyData[0][header]) {
               this.tbodyData[rowMin][header] = newCopyData[0][header]; // multiple cell
             } else {
@@ -857,6 +858,10 @@ export default {
       this.$emit('tbody-input-change', event, header, rowIndex, colIndex);
       this.$emit('tbody-change-data', rowIndex, header);
     },
+    // callback
+    callbackSort(event, header, colIndex) {
+      this.$emit('thead-td-sort', event, header, colIndex);
+    },
     callbackSubmenuThead(event, header, colIndex, submenuFunction, selectOptions) {
       this.submenuStatusThead = false;
       if (selectOptions) {
@@ -880,9 +885,6 @@ export default {
     // thead
     handleTheadContextMenu() {
       this.submenuStatusTbody = false;
-    },
-    callbackSort(event, header, colIndex) {
-      this.$emit('thead-td-sort', event, header, colIndex);
     },
     moveOnSelect(event) {
       if (this.incrementOption <= this.filteredList.length) {
