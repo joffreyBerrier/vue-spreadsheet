@@ -41,19 +41,16 @@ Props                                  | Type       | Description
   :disable-sort-thead                  | Array      | That contains the disabled th
   :loading                             | Boolean    | True => Hidden TbodyData / show slot loader | false => contrary
   :parent-scroll-element               | Object     | That contains the HTML attribute which overflow-y: scroll (by-default is 'html')
-  ----                                 |            | That contains a top and left position you want to add to the select
+    ....                               |            | That contains a top and left position you want to add to the select
   :select-position                     | Object     | That contains a top and left position you want to add to the select
   :submenu-tbody                       | Array      | That contains the submenu-tbody
   :submenu-thead                       | Array      | That contains the submenu-thead
 
 Options                                | Type       | Description
 ---------------------------------------|------------|-------------------------
-  :drag-to-fill                        | Boolean    | That activates drag to fill
   :fuse-options                        | Object     | That contains an object of fuse configuration look on her website: http://fusejs.io/
   :new-data                            | Object     | That contains the type of data when you have empty cell in a row
   :sort-header                         | Boolean    | That activates sort button on header
-  :submenu-thead                       | Array      | That contains the submenu-thead
-  :tbody-data                          | Array      | That contains data
   :tbody-index                         | Boolean    | That displays the index of each row on the left of the table
   :trad                                | Object     | That contains an object of translating
 
@@ -397,15 +394,13 @@ newData: {
 
 <script>
 
-import VueTable from './components/VueTable.vue';
-import exempleData from './data';
+import VueTable from 'vuejs-spreadsheet';
 
 export default {
   name: 'app',
   data() {
     return {
       customOptions: {
-        dragToFill: true,
         tbodyIndex: true,
         sortHeader: true,
         trad: {
@@ -443,6 +438,57 @@ export default {
           ],
         },
       },
+      submenuTbody: [
+        {
+          type: 'button',
+          value: 'change color',
+          function: 'change-color',
+          disabled: ['img'],
+        },
+        {
+          type: 'button',
+          value: 'change value',
+          function: 'change-value',
+          disabled: ['img', 'name'],
+        },
+      ],
+      submenuThead: [
+        {
+          type: 'button',
+          value: 'change color',
+          function: 'change-color',
+          disabled: ['a'],
+        },
+        {
+          type: 'select',
+          disabled: ['a'],
+          subtitle: 'Select state:',
+          selectOptions: [
+            {
+              value: 'new-york',
+              label: 'new-york',
+            },
+            {
+              value: 'france',
+              label: 'france',
+            },
+          ],
+          value: 'new-york',
+          buttonOption: {
+            value: 'change city',
+            function: 'change-city',
+            style: {
+              display: 'block',
+            },
+          },
+        },
+        {
+          type: 'button',
+          value: 'change value',
+          function: 'change-value',
+          disabled: ['a', 'b'],
+        },
+      ],
       disableCells: ['a'],
       loading: false,
       parentScrollElement: {
@@ -455,9 +501,7 @@ export default {
       },
       disableSortThead: ['a'],
       styleWrapVueTable: {
-        height: '400px',
-        width: '700px',
-        overflow: 'scroll',
+        color: '15px',
       },
       headers: [
         {
@@ -625,8 +669,8 @@ export default {
             active: false,
           },
         },
-      },
-    }
+      ],
+    };
   },
   components: {
     VueTable,
@@ -639,17 +683,14 @@ export default {
   },
   methods: {
     changeData(row, header) {
-      // console.log(row, header);
+      console.log(row, header);
     },
     sortProduct(event, header, colIndex) {
-      // console.log('sort product');
+      console.log('sort product');
     },
     // callback
     changeColorThead(event, header, colIndex) {
       this.headers[colIndex].style.color = '#e40000';
-    },
-    changeValueThead(event, header, colIndex) {
-      this.headers[colIndex].headerName = 'T-shirt';
     },
     changeColorTbody(event, header, rowIndex, colIndex) {
       this.products[rowIndex][header].style = {};
@@ -657,9 +698,6 @@ export default {
     },
     changeValueTbody(event, header, rowIndex, colIndex) {
       this.products[rowIndex][header].value = 'T-shirt';
-    },
-    changeColorThead(event, entry, colIndex) {
-      this.headers[colIndex].style.color = '#e40000';
     },
     changeValueThead(event, entry, colIndex) {
       this.headers[colIndex].headerName = 'T-shirt';
@@ -678,3 +716,5 @@ export default {
   background: transparent;
 }
 </style>
+
+```
