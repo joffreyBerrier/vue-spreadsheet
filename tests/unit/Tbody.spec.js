@@ -7,26 +7,24 @@ import exempleData from '../../src/data';
 let wrapper;
 
 beforeEach(() => {
-  const { disableCells } = exempleData;
-  const { dragToFill } = exempleData;
-  const { headers } = exempleData;
-  const { newData } = exempleData;
-  const { submenuTbody } = exempleData;
-  const submenuStatusTbody = true;
-  const filteredList = exempleData.products[0].f.selectOptions;
   const tbodyData = exempleData.products;
-  const { tbodyIndex } = exempleData;
+  const { headers } = exempleData;
+  const { tbodyIndex } = exempleData.customOptions;
+  const { trad } = exempleData.customOptions;
+  const { disableCells } = exempleData;
+  const { submenuTbody } = exempleData;
+  const filteredList = exempleData.products[0].f.selectOptions;
+  const submenuStatusTbody = true;
 
   wrapper = mount(Tbody, {
     propsData: {
       disableCells,
-      dragToFill,
       headers,
-      newData,
       submenuTbody,
       submenuStatusTbody,
       filteredList,
       tbodyData,
+      trad,
       tbodyIndex,
     },
   });

@@ -33,57 +33,64 @@ npm i vuejs-spreadsheet
 
 Props                                  | Type       | Description
 ---------------------------------------|------------|-------------------------
+  :tbody-data                          | Array      | That contains data
+  :headers                             | Array      | That contains headers
+  :custom-options                      | Object     | That contains Options
+  :style-wrap-vue-table                | Object     | That contains style of the wrapper tableVue
   :disable-cells                       | Array      | That contains the headerKey you want to disable
   :disable-sort-thead                  | Array      | That contains the disabled th
-  :headers                             | Array      | That contains headers
-  :new-data                            | Object     | That contains the type of data when you have empty cell in a row
-  :parent-element-scroll               | Number     | That contains the OffsetTop of the parent
-  :parent-scroll-element               | String     | That contains the HTML attribute which overflow-y: scroll (by-default is 'html')
+  :loading                             | Boolean    | True => Hidden TbodyData / show slot loader | false => contrary
+  :parent-scroll-element               | Object     | That contains the HTML attribute which overflow-y: scroll (by-default is 'html')
+  ----                                 |            | That contains a top and left position you want to add to the select
   :select-position                     | Object     | That contains a top and left position you want to add to the select
-  :sort-header                         | Boolean    | That activates sort button on header
-  :style-wrap-vue-table                | Object     | That contains style of the wrapper tableVue
   :submenu-tbody                       | Array      | That contains the submenu-tbody
+  :submenu-thead                       | Array      | That contains the submenu-thead
+
+Options                                | Type       | Description
+---------------------------------------|------------|-------------------------
+  :drag-to-fill                        | Boolean    | That activates drag to fill
+  :fuse-options                        | Object     | That contains an object of fuse configuration look on her website: http://fusejs.io/
+  :new-data                            | Object     | That contains the type of data when you have empty cell in a row
+  :sort-header                         | Boolean    | That activates sort button on header
   :submenu-thead                       | Array      | That contains the submenu-thead
   :tbody-data                          | Array      | That contains data
   :tbody-index                         | Boolean    | That displays the index of each row on the left of the table
+  :trad                                | Object     | That contains an object of translating
 
 Function                               | Type       | Description
 ---------------------------------------|------------|-------------------------
-  v-on:handle-up-drag-size-header      | Function   | Fired when the header size changed
+  v-on:tbody-change-data               | Function   | Fired when data undergo modifications
   v-on:tbody-input-change              | Function   | When the **input changes**
+  v-on:tbody-select-change             | Function   | When the **select change**
+  v-on:handle-up-drag-size-header      | Function   | Fired when the header size changed
+  v-on:thead-td-sort                   | Function   | When you press the button sort
+  v-on:tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
   v-on:tbody-move-dragtofill           | Function   | Fired when moved on dragToFill
   v-on:tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
   v-on:tbody-nav-multiple-backspace    | Function   | Fired when the multiple cell are delete
-  v-on:tbody-change-data              | Function   | When you copy/paste - dragToFill
-  v-on:tbody-select-change             | Function   | When the **select change**
   v-on:tbody-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-tbody**
-  v-on:tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
-  v-on:thead-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-thead**
-  v-on:thead-td-sort                   | Function   | When you press the button
 
 
 ### Example
 ``` javascript
   <vue-table
+    :tbody-data="Array"
+    :headers="Array"
+    :custom-options="Object"
+    :style-wrap-vue-table="Object"
     :disable-cells="Array"
     :disable-sort-thead="Array"
-    :drag-to-fill="Boolean"
-    :headers="Array"
-    :loading="Object"
-    :new-data="Number"
-    :parent-element-scroll="String"
-    :parent-scroll-element="'Object'"
-    :sort-header="Boolean"
-    :style-wrap-vue-table="Object"
+    :loading="Boolean"
+    :parent-scroll-element="Object"
+    :select-position="Object"
     :submenu-tbody="Array"
     :submenu-thead="Array"
-    :tbody-data="Array"
-    :tbody-index="Boolean"
-    v-on:tbody-change-data="Function"
-    v-on:tbody-input-change="Function"
-    v-on:tbody-select-change="Function"
-    v-on:tbody-up-dragtofill="Function"
-    v-on:thead-td-sort="Function">
+    v-on:tbody-change-data="changeData"
+    v-on:tbody-submenu-click-change-color="changeColorTbody"
+    v-on:tbody-submenu-click-change-value="changeValueTbody"
+    v-on:thead-submenu-click-change-color="changeColorThead"
+    v-on:thead-submenu-click-change-value="changeValueThead"
+    v-on:thead-td-sort="sortProduct">
 
     // if your want to add an specific header
     <div slot="header">
@@ -91,11 +98,53 @@ Function                               | Type       | Description
     </div>
 
     // if your want to add a loader
-    <div slot="loader" v-if="loader">
+    <div slot="loader">
       Loader
     </div>
-
   </vue-table>
+```
+
+### Options :honeybee:
+```
+  customOptions: {
+    dragToFill: true,
+    tbodyIndex: true,
+    sortHeader: true,
+    trad: {
+      lang: 'fr',
+      en: {
+        select: {
+          placeholder: 'Search by typing',
+        },
+      },
+      fr: {
+        select: {
+          placeholder: 'Taper pour chercher',
+        },
+      },
+    },
+    newData: {
+      type: 'input',
+      value: '',
+      active: false,
+      style: {
+        color: '#000',
+      },
+    },
+    fuseOptions: {
+      shouldSort: true,
+      threshold: 0.2,
+      location: 0,
+      distance: 30,
+      maxPatternLength: 64,
+      minMatchCharLength: 1,
+      findAllMatches: false,
+      tokenize: false,
+      keys: [
+        'value',
+      ],
+    },
+  },
 ```
 
 ### Headers :tiger:
@@ -319,22 +368,18 @@ newData: {
 <template>
   <div id="app">
     <vue-table
+      :tbody-data="products"
+      :headers="headers"
+      :custom-options="customOptions"
+      :style-wrap-vue-table="styleWrapVueTable"
       :disable-cells="disableCells"
       :disable-sort-thead="disableSortThead"
-      :headers="headers"
       :loading="loading"
-      :new-data="newData"
-      :parent-element-scroll="0"
-      :parent-scroll-element="'html'"
-      :sort-header="sortHeader"
-      :style-wrap-vue-table="styleWrapVueTable"
+      :parent-scroll-element="parentScrollElement"
+      :select-position="selectPosition"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead"
-      :tbody-data="products"
-      :tbody-index="tbodyIndex"
       v-on:tbody-change-data="changeData"
-      v-on:tbody-input-change="inputChange"
-      v-on:tbody-select-change="selectChange"
       v-on:tbody-submenu-click-change-color="changeColorTbody"
       v-on:tbody-submenu-click-change-value="changeValueTbody"
       v-on:thead-submenu-click-change-color="changeColorThead"
@@ -343,7 +388,7 @@ newData: {
     <div slot="header">
       Specific Header
     </div>
-    <div slot="loader" v-if="loader">
+    <div slot="loader">
       Loader
     </div>
     </vue-table>
@@ -353,31 +398,66 @@ newData: {
 <script>
 
 import VueTable from './components/VueTable.vue';
+import exempleData from './data';
 
 export default {
   name: 'app',
   data() {
     return {
+      customOptions: {
+        dragToFill: true,
+        tbodyIndex: true,
+        sortHeader: true,
+        trad: {
+          lang: 'fr',
+          en: {
+            select: {
+              placeholder: 'Search by typing',
+            },
+          },
+          fr: {
+            select: {
+              placeholder: 'Taper pour chercher',
+            },
+          },
+        },
+        newData: {
+          type: 'input',
+          value: '',
+          active: false,
+          style: {
+            color: '#000',
+          },
+        },
+        fuseOptions: {
+          shouldSort: true,
+          threshold: 0.2,
+          location: 0,
+          distance: 30,
+          maxPatternLength: 64,
+          minMatchCharLength: 1,
+          findAllMatches: false,
+          tokenize: false,
+          keys: [
+            'value',
+          ],
+        },
+      },
       disableCells: ['a'],
-      sortHeader: true,
-      tbodyIndex: true,
-      loader: false,
       loading: false,
+      parentScrollElement: {
+        attribute: 'html',
+        positionTop: 0,
+      },
       selectPosition: {
         top: 0,
         left: 0,
       },
       disableSortThead: ['a'],
       styleWrapVueTable: {
+        height: '400px',
+        width: '700px',
         overflow: 'scroll',
-      },
-      newData: {
-        type: 'input',
-        value: '',
-        active: false,
-        style: {
-          color: '#000',
-        },
       },
       headers: [
         {
@@ -425,6 +505,24 @@ export default {
             color: '#000',
           },
         },
+        {
+          headerName: 'F',
+          headerKey: 'f',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
+        },
+        {
+          headerName: 'G',
+          headerKey: 'g',
+          style: {
+            width: '200px',
+            minWidth: '200px',
+            color: '#000',
+          },
+        },
       ],
       products: [
         {
@@ -450,87 +548,85 @@ export default {
             },
           },
           e: {
+            type: 'input',
+            value: 'Boe',
+            active: false,
+            style: {
+              color: '#000',
+            },
+          },
+          f: {
             type: 'select',
             handleSearch: true,
             selectOptions: [
               {
-                value: 'pet dolphin',
-                label: 'pet dolphin',
+                value: 'Harry Potter',
+                label: 'harry potter',
               },
               {
-                value: 'pet fish',
-                label: 'pet fish',
+                value: 'Hermione Granger',
+                label: 'hermione granger',
               },
               {
-                value: 'pet bib',
-                label: 'pet bib',
+                value: 'Ron Whisley',
+                label: 'ron whisley',
               },
               {
-                value: 'pet bob',
-                label: 'pet bob',
+                value: 'Dobby',
+                label: 'dobby',
               },
               {
-                value: 'pet poty',
-                label: 'pet poty',
+                value: 'Hagrid',
+                label: 'hagrid',
+              },
+              {
+                value: 'Professeur Rogue',
+                label: 'professeur rogue',
+              },
+              {
+                value: 'Professeur Mcgonagal',
+                label: 'professeur mcgonagal',
+              },
+              {
+                value: 'Professeur Dumbledor',
+                label: 'professeur dumbledor',
               },
             ],
-            value: '',
+            value: 'professeur dumbledor',
+            active: false,
+          },
+          g: {
+            type: 'select',
+            handleSearch: true,
+            selectOptions: [
+              {
+                value: 1980,
+                label: 1980,
+              },
+              {
+                value: 1981,
+                label: 1981,
+              },
+              {
+                value: 1982,
+                label: 1982,
+              },
+              {
+                value: 1983,
+                label: 1983,
+                active: true,
+              },
+              {
+                value: 1984,
+                label: 1984,
+              },
+            ],
+            value: 1983,
             active: false,
           },
         },
-      ],
-      submenuThead: [
-        {
-          type: 'button',
-          value: 'change color',
-          function: 'change-color',
-          disabled: ['a'],
-        },
-        {
-          type: 'select',
-          disabled: ['a'],
-          subtitle: 'Select state:',
-          selectOptions: [
-            {
-              value: 'new-york',
-              label: 'new-york',
-            },
-            {
-              value: 'france',
-              label: 'france',
-            },
-          ],
-          value: 'new-york',
-          buttonOption: {
-            value: 'change city',
-            function: 'change-city',
-            style: {
-              display: 'block',
-            },
-          },
-        },
-        {
-          type: 'button',
-          value: 'change value',
-          function: 'change-value',
-          disabled: ['a', 'b'],
-        },
-      ],
-      submenuTbody: [
-        {
-          type: 'button',
-          value: 'change color',
-          function: 'change-color',
-          disabled: ['img'],
-        },
-        {
-          type: 'button',
-          value: 'change value',
-          function: 'change-value',
-          disabled: ['img', 'name'],
-        },
-      ],
-    };
+      },
+    }
   },
   components: {
     VueTable,
@@ -543,24 +639,24 @@ export default {
   },
   methods: {
     changeData(row, header) {
+      // console.log(row, header);
     },
-    inputChange(event, entry, rowIndex, colIndex) {
-    },
-    selectChange(event, entry, col, option, rowIndex, colIndex) {
-      this.changeValueSelect(rowIndex, colIndex);
-    },
-    sortProduct(event, entry, colIndex) {
+    sortProduct(event, header, colIndex) {
+      // console.log('sort product');
     },
     // callback
-    changeColorTbody(event, entry, rowIndex, colIndex, type) {
-      if (type === 'input') {
-        this.products[rowIndex][entry].style.color = '#e40000';
-      }
+    changeColorThead(event, header, colIndex) {
+      this.headers[colIndex].style.color = '#e40000';
     },
-    changeValueTbody(event, entry, rowIndex, colIndex, type) {
-      if (type === 'input') {
-        this.products[rowIndex][entry].value = 'T-shirt';
-      }
+    changeValueThead(event, header, colIndex) {
+      this.headers[colIndex].headerName = 'T-shirt';
+    },
+    changeColorTbody(event, header, rowIndex, colIndex) {
+      this.products[rowIndex][header].style = {};
+      this.products[rowIndex][header].style.color = '#e40000';
+    },
+    changeValueTbody(event, header, rowIndex, colIndex) {
+      this.products[rowIndex][header].value = 'T-shirt';
     },
     changeColorThead(event, entry, colIndex) {
       this.headers[colIndex].style.color = '#e40000';
@@ -582,5 +678,3 @@ export default {
   background: transparent;
 }
 </style>
-
-````

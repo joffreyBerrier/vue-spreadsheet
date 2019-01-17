@@ -1,9 +1,48 @@
 export default {
-  disableCells: ['a'],
-  sortHeader: true,
-  tbodyIndex: true,
-  loader: false,
+  customOptions: {
+    tbodyIndex: true,
+    sortHeader: true,
+    trad: {
+      lang: 'fr',
+      en: {
+        select: {
+          placeholder: 'Search by typing',
+        },
+      },
+      fr: {
+        select: {
+          placeholder: 'Taper pour chercher',
+        },
+      },
+    },
+    newData: {
+      type: 'input',
+      value: '',
+      active: false,
+      style: {
+        color: '#000',
+      },
+    },
+    fuseOptions: {
+      shouldSort: true,
+      threshold: 0.2,
+      location: 0,
+      distance: 30,
+      maxPatternLength: 64,
+      minMatchCharLength: 1,
+      findAllMatches: false,
+      tokenize: false,
+      keys: [
+        'value',
+      ],
+    },
+  },
   loading: false,
+  disableCells: ['a'],
+  parentScrollElement: {
+    attribute: 'html',
+    positionTop: 0,
+  },
   selectPosition: {
     top: 0,
     left: 0,
@@ -11,16 +50,8 @@ export default {
   disableSortThead: ['a'],
   styleWrapVueTable: {
     height: '400px',
-    width: '700px',
+    // width: '700px',
     overflow: 'scroll',
-  },
-  newData: {
-    type: 'input',
-    value: '',
-    active: false,
-    style: {
-      color: '#000',
-    },
   },
   headers: [
     {
@@ -123,95 +154,39 @@ export default {
         handleSearch: true,
         selectOptions: [
           {
-            value: 'pet country',
-            label: 'pet country',
+            value: 'Harry Potter',
+            label: 'harry potter',
           },
           {
-            value: 'pet cat',
-            label: 'pet cat',
+            value: 'Hermione Granger',
+            label: 'hermione granger',
           },
           {
-            value: 'pet doggy dog',
-            label: 'pet doggy dog',
+            value: 'Ron Whisley',
+            label: 'ron whisley',
           },
           {
-            value: 'pet horse',
-            label: 'pet horse',
+            value: 'Dobby',
+            label: 'dobby',
           },
           {
-            value: 'pet dolphin',
-            label: 'pet dolphin',
+            value: 'Hagrid',
+            label: 'hagrid',
           },
           {
-            value: 'pet fish',
-            label: 'pet fish',
+            value: 'Professeur Rogue',
+            label: 'professeur rogue',
           },
           {
-            value: 'pet bib',
-            label: 'pet bib',
+            value: 'Professeur Mcgonagal',
+            label: 'professeur mcgonagal',
           },
           {
-            value: 'pet',
-            label: 'pet',
-          },
-          {
-            value: 'pet bob',
-            label: 'pet bob',
-          },
-          {
-            value: 'pet pet',
-            label: 'pet pet',
-          },
-          {
-            value: 'pet put',
-            label: 'pet put',
-          },
-          {
-            value: 'pet poty',
-            label: 'pet poty',
-          },
-          {
-            value: 'pet petete',
-            label: 'pet petete',
-          },
-          {
-            value: 'pet harry',
-            label: 'pet harry',
-          },
-          {
-            value: 'pet potter',
-            label: 'pet potter',
-          },
-          {
-            value: 'pet watson',
-            label: 'pet watson',
-          },
-          {
-            value: 'pet djobi',
-            label: 'pet djobi',
-          },
-          {
-            value: 'pet djoba',
-            label: 'pet djoba',
-          },
-          {
-            value: 'doby',
-            label: 'doby',
-          },
-          {
-            value: 'joffrey',
-            label: 'joffrey',
-          },
-          {
-            value: 'fake data',
-            label: 'fake data',
-          },
-          {
-            value: 'fake data 2',
-            label: 'fake data 2',
+            value: 'Professeur Dumbledor',
+            label: 'professeur dumbledor',
           },
         ],
-        value: '',
+        value: 'professeur dumbledor',
         active: false,
       },
       g: {
@@ -279,28 +254,39 @@ export default {
         handleSearch: true,
         selectOptions: [
           {
-            value: 26,
-            label: 26,
+            value: 'Harry Potter',
+            label: 'harry potter',
           },
           {
-            value: 27,
-            label: 27,
+            value: 'Hermione Granger',
+            label: 'hermione granger',
           },
           {
-            value: 28,
-            label: 28,
+            value: 'Ron Whisley',
+            label: 'ron whisley',
           },
           {
-            value: 29,
-            label: 29,
+            value: 'Dobby',
+            label: 'dobby',
           },
           {
-            value: 30,
-            label: 30,
-            active: true,
+            value: 'Hagrid',
+            label: 'hagrid',
+          },
+          {
+            value: 'Professeur Rogue',
+            label: 'professeur rogue',
+          },
+          {
+            value: 'Professeur Mcgonagal',
+            label: 'professeur mcgonagal',
+          },
+          {
+            value: 'Professeur Dumbledor',
+            label: 'professeur dumbledor',
           },
         ],
-        value: 30,
+        value: 'Harry Potter',
         active: false,
       },
       g: {
@@ -376,28 +362,39 @@ export default {
         handleSearch: true,
         selectOptions: [
           {
-            value: 26,
-            label: 26,
+            value: 'Harry Potter',
+            label: 'harry potter',
           },
           {
-            value: 27,
-            label: 27,
+            value: 'Hermione Granger',
+            label: 'hermione granger',
           },
           {
-            value: 28,
-            label: 28,
+            value: 'Ron Whisley',
+            label: 'ron whisley',
           },
           {
-            value: 29,
-            label: 29,
+            value: 'Dobby',
+            label: 'dobby',
           },
           {
-            value: 30,
-            label: 30,
-            active: true,
+            value: 'Hagrid',
+            label: 'hagrid',
+          },
+          {
+            value: 'Professeur Rogue',
+            label: 'professeur rogue',
+          },
+          {
+            value: 'Professeur Mcgonagal',
+            label: 'professeur mcgonagal',
+          },
+          {
+            value: 'Professeur Dumbledor',
+            label: 'professeur dumbledor',
           },
         ],
-        value: 30,
+        value: 'Hermione Granger',
         active: false,
       },
       g: {
@@ -473,28 +470,39 @@ export default {
         handleSearch: true,
         selectOptions: [
           {
-            value: 26,
-            label: 26,
+            value: 'Harry Potter',
+            label: 'harry potter',
           },
           {
-            value: 27,
-            label: 27,
+            value: 'Hermione Granger',
+            label: 'hermione granger',
           },
           {
-            value: 28,
-            label: 28,
+            value: 'Ron Whisley',
+            label: 'ron whisley',
           },
           {
-            value: 29,
-            label: 29,
+            value: 'Dobby',
+            label: 'dobby',
           },
           {
-            value: 30,
-            label: 30,
-            active: true,
+            value: 'Hagrid',
+            label: 'hagrid',
+          },
+          {
+            value: 'Professeur Rogue',
+            label: 'professeur rogue',
+          },
+          {
+            value: 'Professeur Mcgonagal',
+            label: 'professeur mcgonagal',
+          },
+          {
+            value: 'Professeur Dumbledor',
+            label: 'professeur dumbledor',
           },
         ],
-        value: 30,
+        value: 'Professeur Rogue',
         active: false,
       },
       g: {
@@ -570,28 +578,39 @@ export default {
         handleSearch: true,
         selectOptions: [
           {
-            value: 26,
-            label: 26,
+            value: 'Harry Potter',
+            label: 'harry potter',
           },
           {
-            value: 27,
-            label: 27,
+            value: 'Hermione Granger',
+            label: 'hermione granger',
           },
           {
-            value: 28,
-            label: 28,
+            value: 'Ron Whisley',
+            label: 'ron whisley',
           },
           {
-            value: 29,
-            label: 29,
+            value: 'Dobby',
+            label: 'dobby',
           },
           {
-            value: 30,
-            label: 30,
-            active: true,
+            value: 'Hagrid',
+            label: 'hagrid',
+          },
+          {
+            value: 'Professeur Rogue',
+            label: 'professeur rogue',
+          },
+          {
+            value: 'Professeur Mcgonagal',
+            label: 'professeur mcgonagal',
+          },
+          {
+            value: 'Professeur Dumbledor',
+            label: 'professeur dumbledor',
           },
         ],
-        value: 30,
+        value: 'Dobby',
         active: false,
       },
       g: {
@@ -667,28 +686,39 @@ export default {
         handleSearch: true,
         selectOptions: [
           {
-            value: 26,
-            label: 26,
+            value: 'Harry Potter',
+            label: 'harry potter',
           },
           {
-            value: 27,
-            label: 27,
+            value: 'Hermione Granger',
+            label: 'hermione granger',
           },
           {
-            value: 28,
-            label: 28,
+            value: 'Ron Whisley',
+            label: 'ron whisley',
           },
           {
-            value: 29,
-            label: 29,
+            value: 'Dobby',
+            label: 'dobby',
           },
           {
-            value: 30,
-            label: 30,
-            active: true,
+            value: 'Hagrid',
+            label: 'hagrid',
+          },
+          {
+            value: 'Professeur Rogue',
+            label: 'professeur rogue',
+          },
+          {
+            value: 'Professeur Mcgonagal',
+            label: 'professeur mcgonagal',
+          },
+          {
+            value: 'Professeur Dumbledor',
+            label: 'professeur dumbledor',
           },
         ],
-        value: 30,
+        value: 'Professeur Dumbledor',
         active: false,
       },
       g: {

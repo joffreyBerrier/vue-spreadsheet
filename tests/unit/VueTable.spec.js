@@ -7,37 +7,31 @@ import exempleData from '../../src/data';
 let wrapper;
 
 beforeEach(() => {
+  const tbodyData = exempleData.products;
+  const { headers } = exempleData;
+  const { customOptions } = exempleData;
+  const { styleWrapVueTable } = exempleData;
   const { disableCells } = exempleData;
   const { disableSortThead } = exempleData;
-  const { dragToFill } = exempleData;
-  const { headers } = exempleData;
   const { loading } = exempleData;
-  const { newData } = exempleData;
-  const { sortHeader } = exempleData;
-  const { styleWrapVueTable } = exempleData;
+  const { parentScrollElement } = exempleData;
+  const { selectPosition } = exempleData;
   const { submenuTbody } = exempleData;
   const { submenuThead } = exempleData;
-  const tbodyData = exempleData.products;
-  const { tbodyIndex } = exempleData;
-  const parentElementScroll = 0;
-  const parentScrollElement = 'html';
 
   wrapper = mount(VueTable, {
     propsData: {
+      tbodyData,
+      headers,
+      customOptions,
+      styleWrapVueTable,
       disableCells,
       disableSortThead,
-      dragToFill,
-      headers,
       loading,
-      newData,
-      sortHeader,
-      styleWrapVueTable,
+      parentScrollElement,
+      selectPosition,
       submenuTbody,
       submenuThead,
-      tbodyData,
-      tbodyIndex,
-      parentElementScroll,
-      parentScrollElement,
     },
   });
   return wrapper;
@@ -124,17 +118,17 @@ describe('VueTable', () => {
     describe('createdCell', () => {
       test('return newData', () => {
         const tBody = wrapper.vm;
-        const { newData } = exempleData;
+        const { newData } = exempleData.customOptions;
 
-        expect(tBody.newData).toEqual(newData);
+        expect(tBody.customOptions.newData).toEqual(newData);
       });
 
       test('return newProduct', () => {
         const tBody = wrapper.vm;
-        const { newData } = exempleData;
+        const { newData } = exempleData.customOptions;
         const newHeader = {
-          headerName: 'Z',
-          headerKey: 'z',
+          headerName: 'H',
+          headerKey: 'h',
           style: {
             width: '200px',
             minWidth: '200px',
@@ -142,19 +136,19 @@ describe('VueTable', () => {
         };
 
         tBody.headers.push(newHeader);
-        tBody.headerKeys.push('z');
+        tBody.headerKeys.push('h');
 
-        expect(tBody.headerKeys.find(x => x === 'z')).toBeTruthy();
-        expect(tBody.newData).toEqual(newData);
-        expect(tBody.tbodyData[0].z).toBeUndefined();
+        expect(tBody.headerKeys.find(x => x === 'h')).toBeTruthy();
+        expect(tBody.customOptions.newData).toEqual(newData);
+        expect(tBody.tbodyData[0].h).toBeUndefined();
 
         tBody.createdCell();
 
-        expect(tBody.tbodyData[0].z).toBeTruthy();
-        expect(tBody.tbodyData[1].z).toBeTruthy();
-        expect(tBody.tbodyData[2].z).toBeTruthy();
-        expect(tBody.tbodyData[3].z).toBeTruthy();
-        expect(tBody.tbodyData[4].z).toBeTruthy();
+        expect(tBody.tbodyData[0].h).toBeTruthy();
+        expect(tBody.tbodyData[1].h).toBeTruthy();
+        expect(tBody.tbodyData[2].h).toBeTruthy();
+        expect(tBody.tbodyData[3].h).toBeTruthy();
+        expect(tBody.tbodyData[4].h).toBeTruthy();
       });
     });
 
@@ -223,7 +217,6 @@ describe('VueTable', () => {
         wrapper.vm.enableSelect('', header, col, rowIndex, colIndex);
         expect(wrapper.vm.tbodyData[rowIndex][header].search).toBeFalsy();
         expect(wrapper.vm.tbodyData[rowIndex][header].show).toBeFalsy();
-        expect(wrapper.vm.tbodyData[rowIndex][header].typing).toBeTruthy();
         expect(wrapper.vm.lastSelectOpen).toBeNull();
       });
     });
@@ -239,16 +232,15 @@ describe('VueTable', () => {
     describe('handleTbodySelectChange', () => {
       test('return emit tbody-select-change', () => {
         const tBody = wrapper.vm;
-        const data = tBody.tbodyData[1].f;
+        const data = tBody.tbodyData[0].f;
         const fakeEvent = {
           keyCode: 99,
         };
         const option = {
           active: true,
-          label: 'pet country',
-          value: 'pet country',
+          label: 'hagrid',
+          value: 'Hagrid',
         };
-
         tBody.handleTbodySelectChange(fakeEvent, 'f', data, option, 0, 5);
         expect(wrapper.emitted('tbody-select-change')).toBeTruthy();
         expect(wrapper.emitted('tbody-select-change')).toEqual([[fakeEvent, 'f', data, option, 0, 5]]);
@@ -262,8 +254,8 @@ describe('VueTable', () => {
         };
         const option = {
           active: true,
-          label: 'pet country',
-          value: 'pet country',
+          label: 'hagrid',
+          value: 'Hagrid',
         };
 
         tBody.handleTbodySelectChange(fakeEvent, 'f', data, option, 0, 5);
@@ -279,8 +271,8 @@ describe('VueTable', () => {
         };
         const option = {
           active: true,
-          label: 'pet country',
-          value: 'pet country',
+          label: 'hagrid',
+          value: 'Hagrid',
         };
 
         tBody.handleTbodySelectChange(fakeEvent, 'f', data, option, 0, 5);
@@ -303,8 +295,8 @@ describe('VueTable', () => {
         };
         const option = {
           active: true,
-          label: 'pet country',
-          value: 'pet country',
+          label: 'hagrid',
+          value: 'Hagrid',
         };
 
         tBody.oldTdShow = { key: 'f', row: 0, col: 6 };
@@ -430,26 +422,27 @@ describe('VueTable', () => {
     describe('copyStoreData', () => {
       // 'drag / 'copy'
       test('Copy one cell', () => {
+        const vueTable = wrapper.vm;
         const rowIndex = 0;
         const colIndex = 7;
         const header = 'f';
-        const data = wrapper.vm.tbodyData[rowIndex][header];
+        const data = vueTable.tbodyData[rowIndex][header];
 
-        wrapper.vm.selectedCell = {
+        vueTable.selectedCell = {
           header,
           row: rowIndex,
           col: colIndex,
         };
 
-        wrapper.vm.copyStoreData('copy');
-        expect(wrapper.vm.storeCopyDatas[0].stateCopy).toBeFalsy();
+        vueTable.copyStoreData('copy');
+        expect(vueTable.storeCopyDatas[0].stateCopy).toBeFalsy();
         data.stateCopy = false;
-        expect(wrapper.vm.storeCopyDatas[0]).toEqual(data);
-
-        expect(wrapper.vm.copyMultipleCell).toBeFalsy();
+        expect(vueTable.storeCopyDatas[0]).toEqual(data);
+        expect(vueTable.copyMultipleCell).toBeFalsy();
       });
 
       test('Copy multiple Col One Row', () => {
+        const vueTable = wrapper.vm;
         const rowIndex = 0;
         const colIndex = 7;
         const header = 'f';
@@ -463,27 +456,31 @@ describe('VueTable', () => {
           rowStart: 4,
         };
 
-        wrapper.vm.selectedCell = {
+        vueTable.selectedCell = {
           header,
           row: rowIndex,
           col: colIndex,
         };
-        wrapper.vm.selectedCoordCells = multipleProduct;
+        vueTable.selectedCoordCells = multipleProduct;
 
-        const col1 = wrapper.vm.tbodyData[multipleProduct.rowStart][multipleProduct.keyStart];
-        const col2 = wrapper.vm.tbodyData[multipleProduct.rowEnd][multipleProduct.keyEnd];
+        const col1 = vueTable.tbodyData[multipleProduct.rowStart][multipleProduct.keyStart];
+        const col2 = vueTable.tbodyData[multipleProduct.rowEnd][multipleProduct.keyEnd];
 
-        wrapper.vm.selectedMultipleCell = true;
-        wrapper.vm.copyStoreData('copy');
-        expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyStart].stateCopy).toBeFalsy();
-        expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyEnd].stateCopy).toBeFalsy();
+        vueTable.selectedMultipleCell = true;
+        vueTable.copyStoreData('copy');
+        expect(vueTable.storeCopyDatas[0][multipleProduct.keyStart].stateCopy).toBeFalsy();
+        expect(vueTable.storeCopyDatas[0][multipleProduct.keyEnd].stateCopy).toBeFalsy();
 
-        wrapper.vm.storeCopyDatas[0][multipleProduct.keyStart].stateCopy = true;
+        vueTable.storeCopyDatas[0][multipleProduct.keyStart].stateCopy = false;
+        col1.selected = false;
+        col1.stateCopy = false;
+        col2.selected = false;
+        col2.stateCopy = false;
 
-        expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyStart]).toEqual(col1);
-        expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyEnd]).toEqual(col2);
+        expect(vueTable.storeCopyDatas[0][multipleProduct.keyStart]).toEqual(col1);
+        expect(vueTable.storeCopyDatas[0][multipleProduct.keyEnd]).toEqual(col2);
 
-        expect(wrapper.vm.copyMultipleCell).toBeTruthy();
+        expect(vueTable.copyMultipleCell).toBeTruthy();
       });
 
       test('Copy multiple Col Multiple Row', () => {
@@ -518,6 +515,13 @@ describe('VueTable', () => {
 
         expect(wrapper.vm.storeCopyDatas.length).toEqual(2);
         expect(Object.values(wrapper.vm.storeCopyDatas).length).toEqual(2);
+
+        product1Col1.stateCopy = false;
+        product1Col2.stateCopy = false;
+        product2Col1.selected = false;
+        product2Col1.stateCopy = false;
+        product2Col2.selected = false;
+        product2Col2.stateCopy = false;
 
         expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyStart]).toEqual(product1Col1);
         expect(wrapper.vm.storeCopyDatas[0][multipleProduct.keyEnd]).toEqual(product1Col2);

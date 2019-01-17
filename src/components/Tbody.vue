@@ -15,7 +15,7 @@
             :data-type="row[header].type"
             @click.shift.exact="handleSelectMultipleCell($event, header, rowIndex, colIndex, row[header].type)"
             @contextmenu="handleContextMenuTd($event, header, rowIndex, colIndex, row[header].type)"
-            @click="handleClickTd($event, row[header], header, rowIndex, colIndex, row[header].type)"
+            @click.exact="handleClickTd($event, row[header], header, rowIndex, colIndex, row[header].type)"
             @dblclick="handleDoubleClickTd($event, header, row[header], rowIndex, colIndex, row[header].type)"
             @mousemove="handleMoveDragToFill($event, header, row[header], rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, header, row[header], rowIndex, colIndex, row[header].type)"
@@ -77,34 +77,31 @@
             <!-- If Select -->
             <template v-if="row[header].type === 'select' && row[header].handleSearch">
               <span>{{row[header].value}}</span>
-              <button @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)" v-bind:class="{'active': row[header].search === true}" class="enable_select"><i></i></button>
+              <i class="icon_glass"
+                v-bind:class="{'show': row[header].search}">
+              </i>
+              <button
+                @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)"
+                v-bind:class="{'active': row[header].search === true}"
+                class="enable_select"><i></i>
+              </button>
               <div class="dropdown">
                 <input
                   v-model="searchInput"
                   :ref="'input-' + colIndex + '-' + rowIndex"
                   @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
-                  @keyup="handleSearchInputSelect($event, row[header], header, rowIndex, colIndex)"/>
+                  @keyup.exact="handleSearchInputSelect($event, row[header], header, rowIndex, colIndex)"
+                  :placeholder="trad[trad.lang].select.placeholder" />
                 <ul
                   v-bind:class="{'show': row[header].search}"
                   :ref="'dropdown-' + colIndex + '-' + rowIndex">
-                  <template v-if="!row[header].typing">
-                    <li v-for="(option, index) in row[header].selectOptions"
-                      @click.stop="validSearch($event, header, row[header], option, rowIndex, colIndex)"
-                      v-bind:class="{'active': option.active}"
-                      :value="option.value"
-                      :key="index + 'option'">
-                        {{option.label}}
-                    </li>
-                  </template>
-                  <template v-if="row[header].typing">
-                    <li v-for="(option, index) in filteredList"
-                      @click.stop="validSearch($event, header, row[header], option, rowIndex, colIndex)"
-                      v-bind:class="{'active': option.active}"
-                      :value="option.value"
-                      :key="index">
-                        {{option.label}}
-                    </li>
-                  </template>
+                  <li v-for="(option, index) in filteredList"
+                    @click.stop="validSearch($event, header, row[header], option, rowIndex, colIndex)"
+                    v-bind:class="{'active': option.active}"
+                    :value="option.value"
+                    :key="index">
+                      {{option.label}}
+                  </li>
                 </ul>
               </div>
             </template>
@@ -145,12 +142,12 @@ export default {
       type: Array,
       required: true,
     },
+    trad: {
+      type: Object,
+      required: true,
+    },
     disableCells: {
       type: Array,
-      required: false,
-    },
-    newData: {
-      type: Object,
       required: false,
     },
     tbodyIndex: {
@@ -337,6 +334,9 @@ $dragToFillColor:#3183fc;
     &.active_td.rectangleSelection:after {
       display: block;
     }
+    &.active_td.copy:after {
+      display: block;
+    }
   }
   &.copy:after {
     content: '';
@@ -488,6 +488,35 @@ $dragToFillColor:#3183fc;
         z-index: 14;
       }
     }
+  }
+}
+.icon_glass {
+  position: absolute;
+  top: 50%;
+  right: 25px;
+  z-index: 13;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50px;
+  border: 1px solid #000000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all ease .2s;
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    transform: rotate(45deg);
+    bottom: 0;
+    right: -4px;
+    height: 1px;
+    width: 5px;
+    background: #000000;
+  }
+  &.show {
+    opacity: 1;
+    visibility: visible;
   }
 }
 .enable_select {
