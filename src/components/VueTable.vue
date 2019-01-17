@@ -623,6 +623,7 @@ export default {
               this.selectedCoordCells.colStart !== this.selectedCoordCells.colEnd;
             if (rowColsToRowsCols) {
               this.tbodyData[incrementRow][currentHeader] = newCopyData[0][currentHeader];
+              this.$emit('tbody-change-data', incrementRow, currentHeader);
               if (colMin < colMax) {
                 col += 1;
               } else {
