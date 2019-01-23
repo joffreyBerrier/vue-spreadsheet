@@ -70,8 +70,7 @@
                 v-model="row[header].value"
                 @change="inputHandleChange($event, header, rowIndex, colIndex)"
                 @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
-                :ref="'input-' + colIndex + '-' + rowIndex"
-                :style="textareaStyle(row[header].value)"></textarea>
+                :ref="'input-' + colIndex + '-' + rowIndex"></textarea>
             </template>
 
             <!-- If Select -->
@@ -197,18 +196,6 @@ export default {
       if (this.disabledEvent(col, header)) {
         this.$emit('tbody-handle-set-oldvalue', col, rowIndex, header, colIndex, type);
       }
-    },
-    textareaStyle(value) {
-      if (value.length > 100) {
-        return {
-          height: `${150}px`,
-          width: `${400}px`,
-        };
-      }
-      return {
-        height: `${100}%`,
-        width: `${100}%`,
-      };
     },
     handleSelectMultipleCell(event, header, rowIndex, colIndex, type) {
       this.$emit('tbody-select-multiple-cell', event, header, rowIndex, colIndex, type);
@@ -354,7 +341,7 @@ $dragToFillColor:#3183fc;
     box-sizing: border-box;
   }
   &.disabled {
-    background: #e0e0e0;
+    background: #efeeee;
     span {
       opacity: .5;
     }

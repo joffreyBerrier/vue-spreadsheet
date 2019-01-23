@@ -79,20 +79,6 @@ describe('VueTable', () => {
       });
     });
 
-    describe('textareaStyle', () => {
-      test('value.length > 100', () => {
-        const tBody = wrapper.vm;
-        const col = exempleData.products[0].c;
-        expect(tBody.textareaStyle(col.value)).toEqual({ height: '150px', width: '400px' });
-      });
-
-      test('value.length < 100', () => {
-        const tBody = wrapper.vm;
-        const col = exempleData.products[0].f;
-        expect(tBody.textareaStyle(col.value)).toEqual({ height: '100%', width: '100%' });
-      });
-    });
-
     describe('handleDownDragToFill', () => {
       test('return eventDrag to true', () => {
         const tBody = wrapper.vm;
