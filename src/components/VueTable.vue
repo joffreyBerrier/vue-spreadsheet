@@ -1095,7 +1095,7 @@ export default {
         this.keys.ctrl = true;
       }
 
-      if (this.keys.cmd && event.keyCode === 90 || this.keys.ctrl && event.keyCode === 90) {
+      if ((this.keys.cmd && event.keyCode === 90) || (this.keys.ctrl && event.keyCode === 90)) {
         this.rollBackUndo();
       }
 
