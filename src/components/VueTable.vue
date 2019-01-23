@@ -198,8 +198,8 @@ export default {
         const index = this.changeDataIncrement - 1;
         const store = this.storeUndoData[index];
 
-        this.$set(this.tbodyData[store.rowIndex][store.header], 'value', store.cell.oldValue);
         this.$emit('tbody-undo-data', store.rowIndex, store.header);
+        this.$set(this.tbodyData[store.rowIndex][store.header], 'value', store.cell.oldValue);
         this.storeUndoData.splice(index, 1);
         this.changeDataIncrement -= 1;
       }
