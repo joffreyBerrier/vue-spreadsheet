@@ -341,9 +341,9 @@ $dragToFillColor:#3183fc;
     box-sizing: border-box;
   }
   &.disabled {
-    background: #efeeee;
+    background: #e0e0e0;
     span {
-      opacity: .5;
+      opacity: .8;
     }
     .enable_select {
       opacity: 0;
