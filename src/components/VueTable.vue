@@ -199,10 +199,14 @@ export default {
         const store = this.storeUndoData[index];
 
         this.$emit('tbody-undo-data', store.rowIndex, store.header);
-        this.$set(this.tbodyData[store.rowIndex][store.header], 'value', store.cell.oldValue);
+        this.tbodyData[store.rowIndex][store.header] = store.cell.duplicate;
         this.storeUndoData.splice(index, 1);
         this.changeDataIncrement -= 1;
       }
+    },
+    clearStoreUndo() {
+      this.changeDataIncrement = 0;
+      this.storeUndoData = [];
     },
     sorter(options) {
       return options.sort((a, b) => {
@@ -236,14 +240,12 @@ export default {
       // create cell if isn't exist
       this.tbodyData.forEach((tbody, rowIndex) => {
         this.headerKeys.forEach((header) => {
-          const value = this.tbodyData[rowIndex][header] ? this.tbodyData[rowIndex][header].value : null;
-          if (value) {
-            this.$set(this.tbodyData[rowIndex][header], 'oldValue', value);
-          }
           if (!tbody[header]) {
             const data = JSON.parse(JSON.stringify(this.customOptions.newData));
             this.$set(this.tbodyData[rowIndex], header, data);
           }
+          const copy = JSON.parse(JSON.stringify(this.tbodyData[rowIndex][header]));
+          this.$set(this.tbodyData[rowIndex][header], 'duplicate', copy);
         });
       });
     },
@@ -551,8 +553,8 @@ export default {
 
       // copy / paste one cell || disable on disabled cell
       if (this.storeCopyDatas[0].value && !this.copyMultipleCell && !this.selectedMultipleCell && !this.eventDrag && this.disabledEvent(this.selectedCell.col, this.selectedCell.header)) {
-        const { oldValue } = this.tbodyData[this.selectedCell.row][this.selectedCell.header];
-        this.storeCopyDatas[0].oldValue = oldValue;
+        const { duplicate } = this.tbodyData[this.selectedCell.row][this.selectedCell.header];
+        this.storeCopyDatas[0].duplicate = duplicate;
         this.storeCopyDatas[0].active = true;
 
         // create newCopyData
@@ -592,12 +594,12 @@ export default {
           const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
 
           if (this.eventDrag) { // Drag To Fill
-            const { oldValue } = this.tbodyData[rowMin][header];
+            const { duplicate } = this.tbodyData[rowMin][header];
             if (newCopyData[0][header]) {
-              newCopyData[0][header].oldValue = oldValue;
+              newCopyData[0][header].duplicate = duplicate;
               this.tbodyData[rowMin][header] = newCopyData[0][header]; // multiple cell
             } else {
-              newCopyData[0].oldValue = oldValue;
+              newCopyData[0].duplicate = duplicate;
               [this.tbodyData[rowMin][header]] = newCopyData; // one cell
             }
             this.changeData(rowMin, header);
@@ -617,7 +619,7 @@ export default {
             if (colsToCols) {
               currentHeader = this.headerKeys[this.selectedCell.col];
               if (incrementRow < maxRow) {
-                newCopyData[col][header].oldValue = this.tbodyData[incrementRow][currentHeader].oldValue;
+                newCopyData[col][header].duplicate = this.tbodyData[incrementRow][currentHeader].duplicate;
                 this.tbodyData[incrementRow][currentHeader] = newCopyData[col][header];
                 this.changeData(incrementRow, currentHeader);
                 col += 1;
@@ -628,7 +630,7 @@ export default {
             const cellToCells = newCopyData.length === 1 && Object.values(newCopyData).length === 1 && newCopyData[0].type;
             if (cellToCells) {
               currentHeader = this.selectedCell.header;
-              newCopyData[0].oldValue = this.tbodyData[rowMin][currentHeader].oldValue;
+              newCopyData[0].duplicate = this.tbodyData[rowMin][currentHeader].duplicate;
               [this.tbodyData[rowMin][currentHeader]] = newCopyData;
               if (rowMin === this.selectedCell.row || rowMin === this.selectedCoordCells.rowStart) {
                 this.$set(this.tbodyData[rowMin][currentHeader], 'selected', true);
@@ -645,7 +647,7 @@ export default {
             // 1 row to 1 row
             const rowToRow = newCopyData.length === 1 && Object.values(newCopyData[0]).length > 1 && !newCopyData[0].type && this.selectedCoordCells.rowStart === this.selectedCoordCells.rowEnd;
             if (rowToRow) {
-              newCopyData[0][header].oldValue = this.tbodyData[this.selectedCell.row][currentHeader].oldValue;
+              newCopyData[0][header].duplicate = this.tbodyData[this.selectedCell.row][currentHeader].duplicate;
               this.tbodyData[this.selectedCell.row][currentHeader] = newCopyData[0][header];
               this.changeData(this.selectedCell.row, currentHeader);
               col += 1;
@@ -657,7 +659,7 @@ export default {
               this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd &&
               this.selectedCoordCells.colStart !== this.selectedCoordCells.colEnd;
             if (rowColsToRowsCols) {
-              newCopyData[0][currentHeader].oldValue = this.tbodyData[incrementRow][currentHeader].oldValue;
+              newCopyData[0][currentHeader].duplicate = this.tbodyData[incrementRow][currentHeader].duplicate;
               this.tbodyData[incrementRow][currentHeader] = newCopyData[0][currentHeader];
               this.changeData(incrementRow, currentHeader);
               if (colMin < colMax) {
@@ -671,7 +673,7 @@ export default {
             const rowsColsToRowsCols = newCopyData.length > 1 && Object.values(newCopyData[0]).length > 1;
             if (rowsColsToRowsCols) {
               if (this.tbodyData[incrementRow][currentHeader]) {
-                newCopyData[row][header].oldValue = this.tbodyData[incrementRow][currentHeader].oldValue;
+                newCopyData[row][header].duplicate = this.tbodyData[incrementRow][currentHeader].duplicate;
               }
               this.tbodyData[incrementRow][currentHeader] = newCopyData[row][header];
               this.changeData(incrementRow, currentHeader);
