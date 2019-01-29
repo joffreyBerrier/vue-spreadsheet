@@ -41,7 +41,6 @@ Props                                  | Type       | Description
   :disable-sort-thead                  | Array      | That contains the disabled th
   :loading                             | Boolean    | True => Hidden TbodyData / show slot loader | false => contrary
   :parent-scroll-element               | Object     | That contains the HTML attribute which overflow-y: scroll (by-default is 'html')
-    ....                               |            | That contains a top and left position you want to add to the select
   :select-position                     | Object     | That contains a top and left position you want to add to the select
   :submenu-tbody                       | Array      | That contains the submenu-tbody
   :submenu-thead                       | Array      | That contains the submenu-thead
