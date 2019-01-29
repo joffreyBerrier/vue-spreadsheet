@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
-import Thead from '../../src/components/Thead.vue';
+import Thead from '@/components/Thead.vue';
 
 // data
-import exempleData from '../../src/data';
+import exempleData from '@/data';
 
 let wrapper;
 
@@ -31,16 +31,6 @@ describe('VueTable', () => {
   describe('Render component with props', () => {
     test('Vue Instance', () => {
       expect(wrapper.isVueInstance()).toBeTruthy();
-    });
-  });
-
-  describe('Data', () => {
-    test('Present Data', () => {
-      const tHead = wrapper.vm;
-      expect(tHead.eventDrag).toBeFalsy();
-      expect(tHead.submenuEnableCol).toBeNull();
-      expect(tHead.beforeChangeSize).toEqual({});
-      expect(tHead.newSize).toEqual('');
     });
   });
 
