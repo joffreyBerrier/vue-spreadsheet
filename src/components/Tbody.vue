@@ -453,6 +453,7 @@ $dragToFillColor:#3183fc;
       // select style
       left: var(--selectLeft);
       top: var(--selectTop);
+      bottom: var(--selectBottom);
       width: var(--selectWidth);
       li {
         list-style: none;
