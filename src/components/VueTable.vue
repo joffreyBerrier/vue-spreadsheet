@@ -410,14 +410,17 @@ export default {
       const width = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetWidth;
 
       let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentScrollElement.positionTop;
+      let bottom = (this.$refs.vueTbody.$el.offsetHeight - this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop) + 150;
       let left = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
 
       if (this.selectPosition) {
         top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top) - this.parentScrollElement.positionTop;
+        bottom = (this.$refs.vueTbody.$el.offsetHeight - this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop) + 150 + scrollTop;
         left = (this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.selectPosition.left;
       }
       // subtracted top of scroll top document
       if (this.scrollDocument) {
+        bottom = (this.$refs.vueTbody.$el.offsetHeight - this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop) + 150 + scrollTop;
         top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentScrollElement.positionTop) - this.scrollDocument;
       }
 
@@ -425,8 +428,14 @@ export default {
       const currentSelect = this.$refs.vueTbody.$refs[`${header}-${colIndex}-${rowIndex}`];
       if (currentSelect && currentSelect.length > 0) {
         currentSelect[0].style.setProperty('--selectWidth', `${width}px`);
-        currentSelect[0].style.setProperty('--selectTop', `${top}px`);
         currentSelect[0].style.setProperty('--selectLeft', `${left}px`);
+        if ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop + 150) > this.$refs.vueTable.offsetHeight) {
+          currentSelect[0].style.setProperty('--selectTop', 'auto');
+          currentSelect[0].style.setProperty('--selectBottom', `${bottom}px`);
+        } else {
+          currentSelect[0].style.setProperty('--selectBottom', 'auto');
+          currentSelect[0].style.setProperty('--selectTop', `${top}px`);
+        }
       }
     },
     setOldValueOnInputSelect(col, rowIndex, header, colIndex, type) {
