@@ -10,12 +10,13 @@
     <table class="vue_table" oncontextmenu="return false;">
       <vue-thead
         ref="vueThead"
+        :disable-sort-thead="disableSortThead"
         :headers="headers"
         :sort-header="customOptions.sortHeader"
-        :tbody-index="customOptions.tbodyIndex"
         :submenu-status-thead="submenuStatusThead"
         :submenu-thead="submenuThead"
-        :disable-sort-thead="disableSortThead"
+        :tbody-index="customOptions.tbodyIndex"
+        :vue-table-height="vueTableHeight"
         v-on:handle-up-drag-size-header="handleUpDragSizeHeader"
         v-on:handle-up-drag-to-fill="handleUpDragToFill"
         v-on:submenu-enable="enableSubmenu"
@@ -120,6 +121,7 @@ export default {
       changeDataIncrement: 0,
       disableKeyTimeout: null,
       eventDrag: false,
+      vueTableHeight: 0,
       incrementCol: 0,
       incrementOption: null,
       incrementRow: null,
@@ -165,6 +167,7 @@ export default {
     document.addEventListener('scroll', () => {
       this.debounce(this.scrollTopDocument(), 600);
     });
+    this.vueTableHeight = this.$refs.vueTable.offsetHeight;
   },
   computed: {
     colHeaderWidths() {

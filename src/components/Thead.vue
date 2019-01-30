@@ -95,6 +95,10 @@
 export default {
   name: 'vue-thead',
   props: {
+    vueTableHeight: {
+      type: Number,
+      required: true,
+    },
     headers: {
       type: Array,
       required: true,
@@ -162,7 +166,7 @@ export default {
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
         element.style.left = `${event.clientX}px`;
         // set height of after dragElement
-        const heightTbody = this.$el.parentElement.lastElementChild.offsetHeight - this.$el.offsetHeight - 30;
+        const heightTbody = this.vueTableHeight - this.$el.offsetHeight;
         element.style.setProperty('--dragHeaderHeight', `${heightTbody}px`);
       }
     },
