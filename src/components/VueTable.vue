@@ -406,22 +406,28 @@ export default {
       const { scrollLeft } = this.$refs.vueTable;
       const { scrollTop } = this.$refs.vueTable;
 
+      // get offsetTop of firstCell
+      const firstCellOffsetTop = this.$refs.vueTbody.$refs['td-0-0'][0].offsetTop;
+      // stock $el
+      const el = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0];
+      // stock height Of VueTable
+      const realHeightTable = this.$refs.vueTable.offsetHeight;
       // stock size / offsetTop / offsetLeft of the element
-      const width = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetWidth;
+      const width = el.offsetWidth;
+      // stock heightOfScrollbar(40) cell(40) dropdown(140)
+      const heightOfScrollbarCellDropdown = 180;
 
-      let top = ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentScrollElement.positionTop;
-      let bottom = (this.$refs.vueTbody.$el.offsetHeight - this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop) + 150;
-      let left = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft;
+      let top = ((el.offsetTop - scrollTop) + 40) - this.parentScrollElement.positionTop;
+      let left = el.offsetLeft - scrollLeft;
 
       if (this.selectPosition) {
-        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) + this.selectPosition.top) - this.parentScrollElement.positionTop;
-        bottom = (this.$refs.vueTbody.$el.offsetHeight - this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop) + 150 + scrollTop;
-        left = (this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetLeft - scrollLeft) + this.selectPosition.left;
+        top = (((el.offsetTop - scrollTop) + 40) + this.selectPosition.top) - this.parentScrollElement.positionTop;
+        left = (el.offsetLeft - scrollLeft) + this.selectPosition.left;
       }
+
       // subtracted top of scroll top document
       if (this.scrollDocument) {
-        bottom = (this.$refs.vueTbody.$el.offsetHeight - this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop) + 150 + scrollTop;
-        top = (((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop - scrollTop) + 40) - this.parentScrollElement.positionTop) - this.scrollDocument;
+        top = (((el.offsetTop - scrollTop) + 40) - this.parentScrollElement.positionTop) - this.scrollDocument;
       }
 
       // set size / top position / left position
@@ -429,11 +435,10 @@ export default {
       if (currentSelect && currentSelect.length > 0) {
         currentSelect[0].style.setProperty('--selectWidth', `${width}px`);
         currentSelect[0].style.setProperty('--selectLeft', `${left}px`);
-        if ((this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0].offsetTop + 150) > this.$refs.vueTable.offsetHeight) {
-          currentSelect[0].style.setProperty('--selectTop', 'auto');
-          currentSelect[0].style.setProperty('--selectBottom', `${bottom}px`);
+
+        if ((realHeightTable + firstCellOffsetTop) < (el.offsetTop + 250)) {
+          currentSelect[0].style.setProperty('--selectTop', `${top - heightOfScrollbarCellDropdown}px`);
         } else {
-          currentSelect[0].style.setProperty('--selectBottom', 'auto');
           currentSelect[0].style.setProperty('--selectTop', `${top}px`);
         }
       }
@@ -1242,11 +1247,15 @@ export default {
     --rectangleRight: 0;
     --rectangleTop: 0;
     --rectangleWidth: 100%;
+
+    // drag Header
+    --dragHeaderHeight: 100%;
   }
 
   table{
     margin: 0;
     border-collapse: collapse;
+    border-spacing: 0;
     th {
       color: #000;
       font-weight: normal;
