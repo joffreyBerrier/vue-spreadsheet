@@ -1,4 +1,4 @@
-# VueJs Spreadsheet
+# VueJs Spreadsheet 1.5.8 (https://github.com/joffreyBerrier/vuejs-spreadsheet/releases)
 
 ## Description
 
