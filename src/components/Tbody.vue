@@ -438,6 +438,7 @@ $dragToFillColor:#3183fc;
       border: 0;
       background: transparent;
       outline: none;
+      box-sizing: border-box;
     }
     ul {
       display: none;
@@ -449,11 +450,11 @@ $dragToFillColor:#3183fc;
       padding: 0;
       margin: 0;
       max-height: 140px;
+      min-height: 140px;
       overflow-y: auto;
       // select style
       left: var(--selectLeft);
       top: var(--selectTop);
-      bottom: var(--selectBottom);
       width: var(--selectWidth);
       li {
         list-style: none;
@@ -464,6 +465,7 @@ $dragToFillColor:#3183fc;
         display: block;
         cursor: pointer;
         transition: all ease .5s;
+        border-bottom: 1px solid #ebebeb;
         &:hover {
           background: #e7ecf5;
         }

@@ -95,6 +95,10 @@
 export default {
   name: 'vue-thead',
   props: {
+    vueTableHeight: {
+      type: Number,
+      required: true,
+    },
     headers: {
       type: Array,
       required: true,
@@ -161,6 +165,9 @@ export default {
       if (this.eventDrag) {
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
         element.style.left = `${event.clientX}px`;
+        // set height of after dragElement
+        const heightTbody = this.vueTableHeight - this.$el.offsetHeight;
+        element.style.setProperty('--dragHeaderHeight', `${heightTbody}px`);
       }
     },
     handleUpDragToFill(event) {
@@ -174,6 +181,8 @@ export default {
         element.style.left = 'auto';
         element.style.top = '0';
         element.style.opacity = '';
+        // set height of after dragElement
+        element.style.setProperty('--dragHeaderHeight', '100%');
         // set new size on header
         this.headers[this.beforeChangeSize.col].style.width = this.newSize;
         this.headers[this.beforeChangeSize.col].style.minWidth = this.newSize;
@@ -261,7 +270,7 @@ export default {
   &:after {
     content: '';
     display: block;
-    height: 100vh;
+    height: var(--dragHeaderHeight);
     position: absolute;
     top: 0;
     right: 0;
