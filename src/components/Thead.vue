@@ -8,8 +8,9 @@
         <th
           class="th"
           v-bind:class="{'disabled': header.disabled}"
+          :ref="'th-' + colIndex"
           :key="header.headerKey"
-          :style="header.style">
+          v-bind:style="[header.style, header.style.top = headerTop + 'px']">
 
           <span>{{header.headerName}}</span>
 
@@ -95,6 +96,10 @@
 export default {
   name: 'vue-thead',
   props: {
+    headerTop: {
+      type: Number,
+      required: true,
+    },
     vueTableHeight: {
       type: Number,
       required: true,
@@ -234,7 +239,7 @@ export default {
   border-right: 0;
   border-top: 0;
   border-right: 1px solid white;
-  transition: all ease 0.5s;
+  transition: width ease 0.5s;
   &.disabled {
     pointer-events: none;
     span {

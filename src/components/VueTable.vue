@@ -7,10 +7,11 @@
     <slot name="header">
     </slot>
 
-    <table class="vue_table" oncontextmenu="return false;">
+    <table class="vue_table" oncontextmenu="return false;" ref="table">
       <vue-thead
         ref="vueThead"
         :disable-sort-thead="disableSortThead"
+        :header-top="headerTop"
         :headers="headers"
         :sort-header="customOptions.sortHeader"
         :submenu-status-thead="submenuStatusThead"
@@ -121,7 +122,7 @@ export default {
       changeDataIncrement: 0,
       disableKeyTimeout: null,
       eventDrag: false,
-      vueTableHeight: 0,
+      headerTop: 0,
       incrementCol: 0,
       incrementOption: null,
       incrementRow: null,
@@ -145,6 +146,7 @@ export default {
       storeUndoData: [],
       submenuStatusTbody: false,
       submenuStatusThead: false,
+      vueTableHeight: 0,
     };
   },
   mounted() {
@@ -164,8 +166,8 @@ export default {
         this.pasteReplaceData();
       }
     });
-    document.addEventListener('scroll', () => {
-      this.debounce(this.scrollTopDocument(), 600);
+    document.addEventListener('scroll', (event) => {
+      this.scrollTopDocument(event);
     });
     this.vueTableHeight = this.$refs.vueTable.offsetHeight;
   },
@@ -269,12 +271,32 @@ export default {
         timeout = setTimeout(functionCall, delay);
       };
     },
+    scrollFunction(event) {
+      this.affixHeader(event, 'vueTable');
+
+      if (this.lastSelectOpen) {
+        this.calculPosition(this.lastSelectOpen.event, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex, 'dropdown');
+      } else if (this.lastSubmenuOpen) {
+        this.calculPosition(this.lastSubmenuOpen.event, this.lastSubmenuOpen.rowIndex, this.lastSubmenuOpen.colIndex, 'contextMenu');
+      }
+    },
     scrollTopDocument(event) {
       this.scrollDocument = document.querySelector(`${this.parentScrollElement.attribute}`).scrollTop;
       if (this.lastSelectOpen) {
         this.calculPosition(event, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex, 'dropdown');
       } else if (this.lastSubmenuOpen) {
         this.calculPosition(event, this.lastSubmenuOpen.rowIndex, this.lastSubmenuOpen.colIndex, 'contextMenu');
+      }
+      this.affixHeader(event, 'document');
+    },
+    affixHeader(offset, target) {
+      const offsetEl = target === 'vueTable' ? offset.target.scrollTop : this.scrollDocument;
+      const offsetTopVueTable = this.$refs.table.offsetTop;
+
+      if (offsetEl > 50) {
+        this.headerTop = target === 'vueTable' ? offsetEl - 18 : offsetEl - offsetTopVueTable;
+      } else {
+        this.headerTop = 0;
       }
     },
     updateSelectedCell(header, row, col) {
@@ -292,13 +314,6 @@ export default {
       this.calculPosition(event, rowIndex, colIndex, 'dropdown');
       if (this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0]) {
         this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
-      }
-    },
-    scrollFunction() {
-      if (this.lastSelectOpen) {
-        this.calculPosition(this.lastSelectOpen.event, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex, 'dropdown');
-      } else if (this.lastSubmenuOpen) {
-        this.calculPosition(this.lastSubmenuOpen.event, this.lastSubmenuOpen.rowIndex, this.lastSubmenuOpen.colIndex, 'contextMenu');
       }
     },
     enableSelect(event, header, col, rowIndex, colIndex) {

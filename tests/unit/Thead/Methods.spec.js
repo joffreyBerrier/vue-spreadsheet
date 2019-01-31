@@ -14,6 +14,7 @@ beforeEach(() => {
   const { sortHeader } = exempleData;
   const submenuStatusThead = true;
   const vueTableHeight = 400;
+  const headerTop = 0;
 
   wrapper = mount(Thead, {
     propsData: {
@@ -24,6 +25,7 @@ beforeEach(() => {
       sortHeader,
       tbodyIndex,
       vueTableHeight,
+      headerTop,
     },
   });
   return wrapper;
@@ -231,6 +233,7 @@ describe('VueTable', () => {
         const { sortHeader } = exempleData;
         const submenuStatusThead = false;
         const vueTableHeight = 400;
+        const headerTop = 0;
 
         wrapper = mount(Thead, {
           propsData: {
@@ -241,6 +244,7 @@ describe('VueTable', () => {
             sortHeader,
             tbodyIndex,
             vueTableHeight,
+            headerTop,
           },
         });
 
