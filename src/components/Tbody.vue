@@ -475,7 +475,7 @@ $dragToFillColor:#3183fc;
       }
       &.show {
         display: block;
-        z-index: 14;
+        z-index: 15;
       }
     }
   }
