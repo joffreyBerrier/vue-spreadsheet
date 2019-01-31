@@ -74,6 +74,7 @@ describe('VueTable', () => {
       expect(vueTable.submenuStatusThead).toBeFalsy();
       expect(vueTable.changeDataIncrement).toEqual(0);
       expect(vueTable.storeUndoData).toEqual([]);
+      expect(vueTable.headerTop).toEqual(0);
     });
   });
 });

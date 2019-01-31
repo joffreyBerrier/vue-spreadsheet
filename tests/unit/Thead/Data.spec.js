@@ -13,11 +13,13 @@ beforeEach(() => {
   const { disableSortThead } = exempleData;
   const { sortHeader } = exempleData;
   const submenuStatusThead = true;
+  const headerTop = 0;
   const vueTableHeight = 400;
 
   wrapper = mount(Thead, {
     propsData: {
       submenuStatusThead,
+      headerTop,
       submenuThead,
       headers,
       disableSortThead,
