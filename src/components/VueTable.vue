@@ -293,7 +293,7 @@ export default {
       const offsetEl = target === 'vueTable' ? offset.target.scrollTop : this.scrollDocument;
       const offsetTopVueTable = this.$refs.table.offsetTop;
 
-      if (offsetEl > 50) {
+      if (offsetEl > offsetTopVueTable) {
         this.headerTop = target === 'vueTable' ? offsetEl - 18 : offsetEl - offsetTopVueTable;
       } else {
         this.headerTop = 0;
