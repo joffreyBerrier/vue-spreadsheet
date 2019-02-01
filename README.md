@@ -2,7 +2,7 @@
 (https://github.com/joffreyBerrier/vuejs-spreadsheet/releases)
 
 
-# Sandbox exemple
+# Sandbox example
 https://codesandbox.io/embed/n7kylkpr7p?view=preview
 
 
