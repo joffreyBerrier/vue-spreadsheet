@@ -2,6 +2,10 @@
 (https://github.com/joffreyBerrier/vuejs-spreadsheet/releases)
 
 
+# Sandbox exemple
+https://codesandbox.io/embed/n7kylkpr7p?view=preview
+
+
 ## Description
 
 :facepunch: An easier Spreadsheet in Vue.js :facepunch:
