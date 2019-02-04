@@ -325,6 +325,9 @@ $dragToFillColor:#3183fc;
       display: block;
     }
   }
+  &.active_td.rectangleSelection {
+    border: $rectangleBorder;
+  }
   &.copy:after {
     content: '';
     display: block;
