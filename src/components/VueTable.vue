@@ -598,26 +598,34 @@ export default {
         this.changeData(this.selectedCell.row, this.selectedCell.header);
         // disable on disabled cell
       } else if (this.disabledEvent(this.selectedCell.col, this.selectedCell.header) && this.selectedCoordCells) {
+        // if paste in multiple selection
+        const conditionPasteToMultipleSelection = this.selectedCoordCopyCells !== null && this.selectedCoordCells !== this.selectedCoordCopyCells;
+
+        // new paste data
+        const conditionRowToMultiplePasteRow = this.storeCopyDatas.length === 1 &&
+          !this.storeCopyDatas[0].type &&
+          Object.values(this.storeCopyDatas[0]).length > 1 &&
+          this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd;
+
         // copy / paste multiple cell | drag to fill one / multiple cell
         let rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
         let rowMax = Math.max(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
         let colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
         let colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
 
-        // if paste in multiple selection
-        if (this.selectedCoordCopyCells !== null && this.selectedCoordCells !== this.selectedCoordCopyCells) {
+        if (conditionPasteToMultipleSelection) {
           rowMin = Math.min(this.selectedCoordCopyCells.rowStart, this.selectedCoordCopyCells.rowEnd);
           rowMax = Math.max(this.selectedCoordCopyCells.rowStart, this.selectedCoordCopyCells.rowEnd);
-          colMin = Math.min(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
-          colMax = Math.max(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
         }
 
-        // new paste data
-        if (this.storeCopyDatas.length === 1 && Object.values(this.storeCopyDatas[0]).length > 1 && this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd) {
+        if (conditionRowToMultiplePasteRow) {
           rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
           rowMax = Math.max(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
-          colMin = Math.min(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
-          colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
+        }
+
+        if (conditionPasteToMultipleSelection || conditionRowToMultiplePasteRow) {
+          colMin = Math.min(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
+          colMax = Math.max(this.selectedCoordCopyCells.colStart, this.selectedCoordCopyCells.colEnd);
         }
 
         let row = 0;
@@ -652,9 +660,7 @@ export default {
             if (colsToCols) {
               currentHeader = this.headerKeys[this.selectedCell.col];
               if (incrementRow < maxRow) {
-                newCopyData[col][header].duplicate = this.tbodyData[incrementRow][currentHeader].duplicate;
-                this.tbodyData[incrementRow][currentHeader] = newCopyData[col][header];
-                this.changeData(incrementRow, currentHeader);
+                this.replacePasteData(col, header, incrementRow, currentHeader);
                 col += 1;
               }
             }
@@ -665,24 +671,13 @@ export default {
               currentHeader = this.selectedCell.header;
               newCopyData[0].duplicate = this.tbodyData[rowMin][currentHeader].duplicate;
               [this.tbodyData[rowMin][currentHeader]] = newCopyData;
-              if (rowMin === this.selectedCell.row || rowMin === this.selectedCoordCells.rowStart) {
-                this.$set(this.tbodyData[rowMin][currentHeader], 'selected', true);
-                this.$set(this.tbodyData[rowMin][currentHeader], 'rectangleSelection', true);
-              }
-              if (rowMin === rowMax) {
-                this.$set(this.tbodyData[rowMin][currentHeader], 'active', true);
-                this.$set(this.tbodyData[rowMin][currentHeader], 'rectangleSelection', false);
-                this.$set(this.tbodyData[rowMin][currentHeader], 'selected', true);
-              }
               this.changeData(rowMin, currentHeader);
             }
 
             // 1 row to 1 row
             const rowToRow = newCopyData.length === 1 && Object.values(newCopyData[0]).length > 1 && !newCopyData[0].type && this.selectedCoordCells.rowStart === this.selectedCoordCells.rowEnd;
             if (rowToRow) {
-              newCopyData[0][header].duplicate = this.tbodyData[this.selectedCell.row][currentHeader].duplicate;
-              this.tbodyData[this.selectedCell.row][currentHeader] = newCopyData[0][header];
-              this.changeData(this.selectedCell.row, currentHeader);
+              this.replacePasteData(0, header, this.selectedCell.row, currentHeader);
               col += 1;
             }
 
@@ -692,9 +687,7 @@ export default {
               this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd &&
               this.selectedCoordCells.colStart !== this.selectedCoordCells.colEnd;
             if (rowColsToRowsCols) {
-              newCopyData[0][currentHeader].duplicate = this.tbodyData[incrementRow][currentHeader].duplicate;
-              this.tbodyData[incrementRow][currentHeader] = newCopyData[0][currentHeader];
-              this.changeData(incrementRow, currentHeader);
+              this.replacePasteData(0, header, incrementRow, currentHeader);
               if (colMin < colMax) {
                 col += 1;
               } else {
@@ -708,15 +701,17 @@ export default {
               if (this.tbodyData[incrementRow][currentHeader]) {
                 newCopyData[row][header].duplicate = this.tbodyData[incrementRow][currentHeader].duplicate;
               }
-              this.tbodyData[incrementRow][currentHeader] = newCopyData[row][header];
-              this.changeData(incrementRow, currentHeader);
+              this.replacePasteData(row, header, incrementRow, currentHeader);
               if (colMin < colMax) {
                 col += 1;
               } else {
                 col = 0;
               }
             }
+
+            // add active / selected status on firstCell
             this.tbodyData[this.selectedCell.row][this.selectedCell.header].selected = true;
+            this.tbodyData[this.selectedCell.row][this.selectedCell.header].active = true;
           }
           colMin += 1;
           if (colMin > colMax) {
@@ -731,6 +726,12 @@ export default {
         }
         this.modifyMultipleCell();
       }
+    },
+    replacePasteData(col, header, incrementRow, currentHeader) {
+      const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
+      newCopyData[col][header].duplicate = this.tbodyData[incrementRow][currentHeader].duplicate;
+      this.tbodyData[incrementRow][currentHeader] = newCopyData[col][header];
+      this.changeData(incrementRow, currentHeader);
     },
     modifyMultipleCell(params) {
       let rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
@@ -1012,36 +1013,38 @@ export default {
       const { vueTable } = this.$refs;
       const maxCol = Math.max(...this.colHeaderWidths);
       // get the correct height of visible table
-      const heightTable = vueTable.clientHeight - vueTable.firstElementChild.clientHeight - this.$refs.vueThead.$el.clientHeight;
-      const widthTable = vueTable.clientWidth - 40;
-      const borderBottomCell = Math.round(heightTable / 40);
-      const borderRightCell = Math.round(widthTable / maxCol);
-      // top
-      if (event.keyCode === 38) {
-        event.preventDefault();
-        if (borderBottomCell >= rowIndex) {
-          vueTable.scrollTop -= 40;
+      if (vueTable) {
+        const heightTable = vueTable.clientHeight - vueTable.firstElementChild.clientHeight - this.$refs.vueThead.$el.clientHeight;
+        const widthTable = vueTable.clientWidth - 40;
+        const borderBottomCell = Math.round(heightTable / 40);
+        const borderRightCell = Math.round(widthTable / maxCol);
+        // top
+        if (event.keyCode === 38) {
+          event.preventDefault();
+          if (borderBottomCell >= rowIndex) {
+            vueTable.scrollTop -= 40;
+          }
         }
-      }
-      // bottom
-      if (event.keyCode === 40) {
-        event.preventDefault();
-        if ((borderBottomCell - 1) <= rowIndex) {
-          vueTable.scrollTop += 40;
+        // bottom
+        if (event.keyCode === 40) {
+          event.preventDefault();
+          if ((borderBottomCell - 1) <= rowIndex) {
+            vueTable.scrollTop += 40;
+          }
         }
-      }
-      // left
-      if (event.keyCode === 37) {
-        event.preventDefault();
-        if ((borderRightCell + 1) >= colIndex) {
-          vueTable.scrollLeft -= maxCol;
+        // left
+        if (event.keyCode === 37) {
+          event.preventDefault();
+          if ((borderRightCell + 1) >= colIndex) {
+            vueTable.scrollLeft -= maxCol;
+          }
         }
-      }
-      // right
-      if (event.keyCode === 39) {
-        event.preventDefault();
-        if ((borderRightCell - 1) <= colIndex) {
-          vueTable.scrollLeft += maxCol;
+        // right
+        if (event.keyCode === 39) {
+          event.preventDefault();
+          if ((borderRightCell - 1) <= colIndex) {
+            vueTable.scrollLeft += maxCol;
+          }
         }
       }
     },
@@ -1133,10 +1136,6 @@ export default {
       if ((this.keys.cmd && event.keyCode === 90) || (this.keys.ctrl && event.keyCode === 90)) {
         this.rollBackUndo();
       }
-
-      // if (this.keys.cmd && event.keyCode === 90) {
-      //   this.rollBackRedo();
-      // }
 
       if (this.lastSelectOpen) {
         this.moveOnSelect(event);
