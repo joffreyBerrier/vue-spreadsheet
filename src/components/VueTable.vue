@@ -290,11 +290,12 @@ export default {
       this.affixHeader(event, 'document');
     },
     affixHeader(offset, target) {
-      const offsetEl = target === 'vueTable' ? offset.target.scrollTop : this.scrollDocument;
       const offsetTopVueTable = this.$refs.table.offsetTop;
+      const scrollOnDocument = this.scrollDocument || target === 'document';
+      const offsetEl = scrollOnDocument ? this.scrollDocument : offset.target.scrollTop;
 
       if (offsetEl > offsetTopVueTable) {
-        this.headerTop = target === 'vueTable' ? offsetEl - 18 : offsetEl - offsetTopVueTable;
+        this.headerTop = scrollOnDocument ? (offsetEl - offsetTopVueTable) : (offsetEl - 18);
       } else {
         this.headerTop = 0;
       }
