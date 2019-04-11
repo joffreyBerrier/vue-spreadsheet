@@ -506,7 +506,7 @@ export default {
       },
       disableSortThead: ['a'],
       styleWrapVueTable: {
-        color: '15px',
+        color: 'black',
       },
       headers: [
         {
