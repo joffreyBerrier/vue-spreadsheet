@@ -171,6 +171,11 @@ export default {
     });
     this.vueTableHeight = this.$refs.vueTable.offsetHeight;
   },
+  watch: {
+    tbodyData() {
+      this.createdCell();
+    },
+  },
   computed: {
     colHeaderWidths() {
       return this.headers.map(x => parseInt(x.style.width, 10));
@@ -290,14 +295,16 @@ export default {
       this.affixHeader(event, 'document');
     },
     affixHeader(offset, target) {
-      const offsetTopVueTable = this.$refs.table.offsetTop;
-      const scrollOnDocument = this.scrollDocument || target === 'document';
-      const offsetEl = scrollOnDocument ? this.scrollDocument : offset.target.scrollTop;
+      if (this.$refs && this.$refs.table && this.$refs.table.offsetTop) {
+        const offsetTopVueTable = this.$refs.table.offsetTop;
+        const scrollOnDocument = this.scrollDocument || target === 'document';
+        const offsetEl = scrollOnDocument ? this.scrollDocument : offset.target.scrollTop;
 
-      if (offsetEl > offsetTopVueTable) {
-        this.headerTop = scrollOnDocument ? (offsetEl - offsetTopVueTable) : (offsetEl - 18);
-      } else {
-        this.headerTop = 0;
+        if (offsetEl > offsetTopVueTable) {
+          this.headerTop = scrollOnDocument ? (offsetEl - offsetTopVueTable) : (offsetEl - 18);
+        } else {
+          this.headerTop = 0;
+        }
       }
     },
     updateSelectedCell(header, row, col) {
