@@ -1,4 +1,4 @@
-# :fire: VueJs Spreadsheet 1.6.1 :fire:
+# :fire: VueJs Spreadsheet 1.6.2 :fire:
 (https://github.com/joffreyBerrier/vuejs-spreadsheet/releases)
 
 
