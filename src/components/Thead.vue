@@ -7,10 +7,10 @@
       <template v-for="(header, colIndex) in headers">
         <th
           class="th"
-          v-bind:class="{'disabled': header.disabled}"
+          :class="{'disabled': header.disabled}"
           :ref="'th-' + colIndex"
           :key="header.headerKey"
-          v-bind:style="[header.style, header.style.top = headerTop + 'px']">
+          :style="[header.style, header.style.top = headerTop + 'px']">
 
           <span>{{header.headerName}}</span>
 
@@ -19,7 +19,7 @@
             submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
               <button
                 @click="handleContextMenuTd($event, header.headerKey, colIndex)"
-                v-bind:class="{'active': submenuThead && submenuStatusThead && colIndex === submenuEnableCol}"
+                :class="{'active': submenuThead && submenuStatusThead && colIndex === submenuEnableCol}"
                 class="button_submenu button_submenu-2">
                 <span class="icon icon_menu">
                   <i class="bullet bullet-1"></i>
@@ -33,7 +33,7 @@
             disableSortThead.indexOf(header.headerKey) === -1">
               <button
                 @click="handleSort($event, header, colIndex)"
-                v-bind:class="{'sort_A': header.activeSort === 'A', 'sort_Z' : header.activeSort === 'Z'}"
+                :class="{'sort_A': header.activeSort === 'A', 'sort_Z' : header.activeSort === 'Z'}"
                 class="button_submenu">
                 <i class="icon sort"></i>
                 <i class="icon sort"></i>
@@ -84,7 +84,7 @@
             @mousedown="handleDownChangeSize($event, header, colIndex)"
             @mouseup="handleUpDragToFill($event, header, colIndex)"
             class="resize"
-            v-bind:class="{'active': header.active}">
+            :class="{'active': header.active}">
           </button>
         </th>
       </template>
@@ -97,10 +97,6 @@ export default {
   name: 'vue-thead',
   props: {
     headerTop: {
-      type: Number,
-      required: true,
-    },
-    vueTableHeight: {
       type: Number,
       required: true,
     },
@@ -131,10 +127,11 @@ export default {
   },
   data() {
     return {
-      eventDrag: false,
-      submenuEnableCol: null,
       beforeChangeSize: {},
+      eventDrag: false,
       newSize: '',
+      submenuEnableCol: null,
+      vueTableHeight: 0,
     };
   },
   methods: {
@@ -148,6 +145,10 @@ export default {
     handleDownChangeSize(event, header, colIndex) {
       this.eventDrag = true;
       const head = header;
+
+      if (this.$parent && this.$parent.$refs && this.$parent.$refs.vueTable) {
+        this.vueTableHeight = this.$parent.$refs.vueTable.offsetHeight;
+      }
 
       this.beforeChangeSize = {
         col: colIndex,
@@ -167,19 +168,29 @@ export default {
       this.$forceUpdate();
     },
     handleMoveChangeSize(event) {
-      if (this.eventDrag) {
+      const offsetTopVueTable = event.currentTarget.offsetParent.offsetTop;
+      const offsetBottomVueTable = offsetTopVueTable + event.currentTarget.offsetHeight;
+
+      if (this.eventDrag && offsetTopVueTable <= event.clientY && offsetBottomVueTable >= event.clientY) {
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
         element.style.left = `${event.clientX}px`;
         // set height of after dragElement
-        const heightTbody = this.vueTableHeight - this.$el.offsetHeight;
+        const heightTbody = this.vueTableHeight;
         element.style.setProperty('--dragHeaderHeight', `${heightTbody}px`);
+      } else if (this.eventDrag) {
+        this.handleUpDragToFill(event);
       }
     },
     handleUpDragToFill(event) {
       if (this.eventDrag) {
         this.eventDrag = false;
         // get new size
-        const newWidth = ((event.clientX - this.beforeChangeSize.elementLeft) + this.$parent.$refs.vueTable.scrollLeft) + 5;
+        let offsetParentLeft = 0;
+        if (this.$refs[`th-${this.beforeChangeSize.col}`][0] && this.$refs[`th-${this.beforeChangeSize.col}`][0].offsetParent) {
+          offsetParentLeft = this.$refs[`th-${this.beforeChangeSize.col}`][0].offsetParent.offsetLeft;
+        }
+        const scrollLeftParent = this.$parent.$refs.vueTable ? this.$parent.$refs.vueTable.scrollLeft : 0;
+        const newWidth = ((event.clientX - (this.beforeChangeSize.elementLeft + offsetParentLeft)) + scrollLeftParent) + 5;
         this.newSize = `${newWidth}px`;
         // set initial style on button resize
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
@@ -239,7 +250,7 @@ export default {
   border-right: 0;
   border-top: 0;
   border-right: 1px solid white;
-  transition: width ease 0.5s;
+  transition: width ease .5s;
   &.disabled {
     pointer-events: none;
     span {

@@ -2,7 +2,7 @@
   <div
     ref="vueTable"
     :style="styleWrapVueTable"
-    v-on:scroll="scrollFunction">
+    @scroll="scrollFunction">
 
     <slot name="header">
     </slot>
@@ -17,13 +17,12 @@
         :submenu-status-thead="submenuStatusThead"
         :submenu-thead="submenuThead"
         :tbody-index="customOptions.tbodyIndex"
-        :vue-table-height="vueTableHeight"
-        v-on:handle-up-drag-size-header="handleUpDragSizeHeader"
-        v-on:handle-up-drag-to-fill="handleUpDragToFill"
-        v-on:submenu-enable="enableSubmenu"
-        v-on:thead-submenu-click-callback="callbackSubmenuThead"
-        v-on:thead-td-context-menu="handleTheadContextMenu"
-        v-on:thead-td-sort="callbackSort">
+        @handle-up-drag-size-header="handleUpDragSizeHeader"
+        @handle-up-drag-to-fill="handleUpDragToFill"
+        @submenu-enable="enableSubmenu"
+        @thead-submenu-click-callback="callbackSubmenuThead"
+        @thead-td-context-menu="handleTheadContextMenu"
+        @thead-td-sort="callbackSort">
       </vue-thead>
 
       <slot name="loader" v-if="loading">
@@ -39,21 +38,21 @@
         :submenu-tbody="submenuTbody"
         :filtered-list="filteredList"
         :submenu-status-tbody="submenuStatusTbody"
-        v-on:handle-to-calculate-position="calculPosition"
-        v-on:handle-to-open-select="enableSelect"
-        v-on:submenu-enable="enableSubmenu"
-        v-on:tbody-down-dragtofill="handleDownDragToFill"
-        v-on:tbody-handle-search-input-select="handleSearchInputSelect"
-        v-on:tbody-handle-set-oldvalue="setOldValueOnInputSelect"
-        v-on:tbody-input-change="handleTbodyInputChange"
-        v-on:tbody-move-dragtofill="handleMoveDragToFill"
-        v-on:tbody-select-change="handleTbodySelectChange"
-        v-on:tbody-select-multiple-cell="handleSelectMultipleCell"
-        v-on:tbody-submenu-click-callback="callbackSubmenuTbody"
-        v-on:tbody-td-click="handleTbodyTdClick"
-        v-on:tbody-td-context-menu="handleTBodyContextMenu"
-        v-on:tbody-td-double-click="handleTbodyTdDoubleClick"
-        v-on:tbody-up-dragtofill="handleUpDragToFill">
+        @handle-to-calculate-position="calculPosition"
+        @handle-to-open-select="enableSelect"
+        @submenu-enable="enableSubmenu"
+        @tbody-down-dragtofill="handleDownDragToFill"
+        @tbody-handle-search-input-select="handleSearchInputSelect"
+        @tbody-handle-set-oldvalue="setOldValueOnInputSelect"
+        @tbody-input-change="handleTbodyInputChange"
+        @tbody-move-dragtofill="handleMoveDragToFill"
+        @tbody-select-change="handleTbodySelectChange"
+        @tbody-select-multiple-cell="handleSelectMultipleCell"
+        @tbody-submenu-click-callback="callbackSubmenuTbody"
+        @tbody-td-click="handleTbodyTdClick"
+        @tbody-td-context-menu="handleTBodyContextMenu"
+        @tbody-td-double-click="handleTbodyTdDoubleClick"
+        @tbody-up-dragtofill="handleUpDragToFill">
       </vue-tbody>
     </table>
   </div>
@@ -146,7 +145,6 @@ export default {
       storeUndoData: [],
       submenuStatusTbody: false,
       submenuStatusThead: false,
-      vueTableHeight: 0,
     };
   },
   mounted() {
@@ -169,7 +167,6 @@ export default {
     document.addEventListener('scroll', (event) => {
       this.scrollTopDocument(event);
     });
-    this.vueTableHeight = this.$refs.vueTable.offsetHeight;
   },
   watch: {
     tbodyData() {
@@ -286,16 +283,17 @@ export default {
       }
     },
     scrollTopDocument(event) {
-      this.scrollDocument = document.querySelector(`${this.parentScrollElement.attribute}`).scrollTop;
+      this.affixHeader(event, 'document');
+
       if (this.lastSelectOpen) {
         this.calculPosition(event, this.lastSelectOpen.rowIndex, this.lastSelectOpen.colIndex, 'dropdown');
       } else if (this.lastSubmenuOpen) {
         this.calculPosition(event, this.lastSubmenuOpen.rowIndex, this.lastSubmenuOpen.colIndex, 'contextMenu');
       }
-      this.affixHeader(event, 'document');
     },
     affixHeader(offset, target) {
       if (this.$refs && this.$refs.table && this.$refs.table.offsetTop) {
+        this.scrollDocument = document.querySelector(`${this.parentScrollElement.attribute}`).scrollTop;
         const offsetTopVueTable = this.$refs.table.offsetTop;
         const scrollOnDocument = this.scrollDocument || target === 'document';
         const offsetEl = scrollOnDocument ? this.scrollDocument : offset.target.scrollTop;

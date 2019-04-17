@@ -25,7 +25,6 @@ beforeEach(() => {
       disableSortThead,
       sortHeader,
       tbodyIndex,
-      vueTableHeight,
     },
   });
   return wrapper;
@@ -45,7 +44,6 @@ describe('VueTable', () => {
       expect(tHead.submenuEnableCol).toBeNull();
       expect(tHead.beforeChangeSize).toEqual({});
       expect(tHead.newSize).toEqual('');
-      expect(tHead.vueTableHeight).toEqual(400);
     });
   });
 });
