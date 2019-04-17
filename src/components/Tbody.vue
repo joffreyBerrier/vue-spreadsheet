@@ -31,6 +31,10 @@
             :key="header"
             :style="row[header].style">
 
+            <div class="vuetable_tooltip">
+              {{row[header].value}}
+            </div>
+
             <button
               class="drag_to_fill"
               @mousedown="handleDownDragToFill($event, header, row[header], rowIndex, colIndex)"
@@ -482,7 +486,33 @@ $dragToFillColor:#3183fc;
       }
     }
   }
+  &:hover .vuetable_tooltip {
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-name: showTooltip;
+  }
 }
+.vuetable_tooltip {
+  background: white;
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  font-size: 14px;
+  height: auto;
+  left: 0;
+  line-height: 1.3;
+  max-height: 80px;
+  min-height: 40px;
+  opacity: 0;
+  overflow-y: auto;
+  padding: 2px 5px;
+  position: absolute;
+  position: absolute;
+  top: 40px;
+  visibility: hidden;
+  width: 100%;
+  z-index: 20;
+}
+
 .icon_glass {
   position: absolute;
   top: 50%;
@@ -593,5 +623,20 @@ $dragToFillColor:#3183fc;
   border-left: 1px solid #e6ecf6;
   background: transparent;
   box-sizing: border-box;
+}
+
+@keyframes showTooltip {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  80% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 </style>
