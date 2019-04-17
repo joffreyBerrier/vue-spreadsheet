@@ -127,10 +127,11 @@ export default {
   },
   data() {
     return {
-      eventDrag: false,
-      submenuEnableCol: null,
       beforeChangeSize: {},
+      eventDrag: false,
       newSize: '',
+      submenuEnableCol: null,
+      vueTableHeight: 0,
     };
   },
   methods: {
@@ -145,7 +146,9 @@ export default {
       this.eventDrag = true;
       const head = header;
 
-      this.vueTableHeight = this.$parent.$refs.vueTable.offsetHeight;
+      if (this.$parent && this.$parent.$refs && this.$parent.$refs.vueTable) {
+        this.vueTableHeight = this.$parent.$refs.vueTable.offsetHeight;
+      }
 
       this.beforeChangeSize = {
         col: colIndex,
@@ -165,8 +168,9 @@ export default {
       this.$forceUpdate();
     },
     handleMoveChangeSize(event) {
-      const offsetTopVueTable = event.currentTarget.offsetParent.offsetTop
+      const offsetTopVueTable = event.currentTarget.offsetParent.offsetTop;
       const offsetBottomVueTable = offsetTopVueTable + event.currentTarget.offsetHeight;
+
       if (this.eventDrag && offsetTopVueTable <= event.clientY && offsetBottomVueTable >= event.clientY) {
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
         element.style.left = `${event.clientX}px`;
@@ -181,8 +185,12 @@ export default {
       if (this.eventDrag) {
         this.eventDrag = false;
         // get new size
-        const offsetParentLeft = this.$refs[`th-${this.beforeChangeSize.col}`][0].offsetParent.offsetLeft;
-        const newWidth = ((event.clientX - (this.beforeChangeSize.elementLeft + offsetParentLeft)) + this.$parent.$refs.vueTable.scrollLeft) + 5;
+        let offsetParentLeft = 0;
+        if (this.$refs[`th-${this.beforeChangeSize.col}`][0] && this.$refs[`th-${this.beforeChangeSize.col}`][0].offsetParent) {
+          offsetParentLeft = this.$refs[`th-${this.beforeChangeSize.col}`][0].offsetParent.offsetLeft;
+        }
+        const scrollLeftParent = this.$parent.$refs.vueTable ? this.$parent.$refs.vueTable.scrollLeft : 0;
+        const newWidth = ((event.clientX - (this.beforeChangeSize.elementLeft + offsetParentLeft)) + scrollLeftParent) + 5;
         this.newSize = `${newWidth}px`;
         // set initial style on button resize
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];

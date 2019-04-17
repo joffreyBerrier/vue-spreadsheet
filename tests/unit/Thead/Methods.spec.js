@@ -125,20 +125,25 @@ describe('VueTable', () => {
             parentElement: {
               offsetLeft: 10,
             },
+            offsetHeight: 0,
+            offsetParent: {
+              offsetTop: 0,
+            },
           },
         };
 
         tHead.handleDownChangeSize(fakeEvent, head, 1);
         tHead.handleMoveChangeSize(fakeEvent);
-        expect(tHead.eventDrag).toBeTruthy();
+        expect(tHead.eventDrag).toBeFalsy();
       });
 
       test('event drag is false', () => {
         const tHead = wrapper.vm;
         const fakeEvent = {
           currentTarget: {
-            parentElement: {
-              offsetLeft: 10,
+            offsetHeight: 0,
+            offsetParent: {
+              offsetTop: 0,
             },
           },
         };
