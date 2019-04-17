@@ -145,7 +145,7 @@ export default {
       this.eventDrag = true;
       const head = header;
 
-      this.vueTableHeight = this.$parent.$refs.vueTable.offsetHeight + 43;
+      this.vueTableHeight = this.$parent.$refs.vueTable.offsetHeight;
 
       this.beforeChangeSize = {
         col: colIndex,
@@ -171,7 +171,7 @@ export default {
         const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
         element.style.left = `${event.clientX}px`;
         // set height of after dragElement
-        const heightTbody = this.vueTableHeight - this.$el.offsetHeight;
+        const heightTbody = this.vueTableHeight;
         element.style.setProperty('--dragHeaderHeight', `${heightTbody}px`);
       } else if (this.eventDrag) {
         this.handleUpDragToFill(event);
