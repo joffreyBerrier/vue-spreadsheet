@@ -13,6 +13,8 @@
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
             :data-type="row[header].type"
+            @mouseover.stop="handleHoverTooltip(header, rowIndex)"
+            @mouseout.stop="handleOutTooltip"
             @click.shift.exact="handleSelectMultipleCell($event, header, rowIndex, colIndex, row[header].type)"
             @contextmenu="handleContextMenuTd($event, header, rowIndex, colIndex, row[header].type)"
             @click.exact="handleClickTd($event, row[header], header, rowIndex, colIndex, row[header].type)"
@@ -31,9 +33,26 @@
             :key="header"
             :style="row[header].style">
 
-            <div class="vuetable_tooltip" v-if="row[header].value !== '' && !row[header].search">
-              {{row[header].value}}
-            </div>
+            <transition name="transitionTooltip">
+              <div
+                class="vuetable_tooltip"
+                v-if="row[header].value !== '' && !row[header].search && !row[header].active && !row[header].selected && vuetableTooltip[rowIndex] === header">
+                {{row[header].value}}
+              </div>
+            </transition>
+
+            <span
+              class="vuetable_triange"
+              v-if="row[header].value !== '' && !row[header].search && row[header].comment"
+              @mouseover.stop="handleHoverTriangleComment(header, rowIndex)"
+              @mouseout.stop="handleOutTriangleComment">
+              <transition name="transitionComment">
+                <div class="vuetable_triange_comment"
+                  v-if="vueTableComment[rowIndex] === header">
+                  {{row[header].comment}}
+                </div>
+              </transition>
+            </span>
 
             <button
               class="drag_to_fill"
@@ -170,10 +189,13 @@ export default {
     return {
       emptyCell: '',
       eventDrag: false,
+      oldTooltipHover: {},
       oldValue: null,
       searchInput: '',
       submenuEnableCol: null,
       submenuEnableRow: null,
+      vuetableTooltip: {},
+      vueTableComment: {},
     };
   },
   computed: {
@@ -182,6 +204,22 @@ export default {
     },
   },
   methods: {
+    handleHoverTriangleComment(header, rowIndex) {
+      if (!this.vueTableComment[rowIndex]) {
+        this.vueTableComment[rowIndex] = header;
+      }
+    },
+    handleOutTriangleComment() {
+      this.vueTableComment = {};
+    },
+    handleHoverTooltip(header, rowIndex) {
+      if (!this.vuetableTooltip[rowIndex]) {
+        this.vuetableTooltip[rowIndex] = header;
+      }
+    },
+    handleOutTooltip() {
+      this.vuetableTooltip = {};
+    },
     disabledEvent(col, header) {
       if (col.disabled === undefined) {
         return !this.disableCells.find(x => x === header);
@@ -486,29 +524,55 @@ $dragToFillColor:#3183fc;
       }
     }
   }
-  &:hover .vuetable_tooltip {
-    animation-duration: 2s;
-    animation-fill-mode: forwards;
-    animation-name: showTooltip;
+  .vuetable_triange {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: var(--borderCommentSize) var(--borderCommentSize) 0 0;
+    border-color: var(--borderCommentColor) transparent transparent transparent;
+    position: absolute;
+    top: 0;
+    padding: 0;
+    z-index: 12;
+    cursor: pointer;
+    left: 0;
+    overflow: visible;
+    .vuetable_triange_comment {
+      width: var(--boxCommentWidth);
+      height: var(--BoxCommentHeight);
+      position: absolute;
+      top: -8px;
+      left: -120px;
+      background: #FFF;
+      padding: 10px 7px;
+      line-height: 1.2;
+      box-sizing: border-box;
+      box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
+      z-index: 99999;
+      transition: all ease .5s;
+      &.showComment {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
   }
 }
+
 .vuetable_tooltip {
   background: white;
   box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  font-size: 14px;
+  font-size: 12px;
   height: auto;
   left: 0;
   line-height: 1.3;
   max-height: 80px;
   min-height: 40px;
-  opacity: 0;
   overflow-y: auto;
-  padding: 2px 5px;
+  padding: 5px;
   position: absolute;
   position: absolute;
   top: 40px;
-  visibility: hidden;
   width: 100%;
   z-index: 20;
 }
@@ -625,18 +689,29 @@ $dragToFillColor:#3183fc;
   box-sizing: border-box;
 }
 
-@keyframes showTooltip {
-  0% {
-    opacity: 0;
-    visibility: hidden;
-  }
-  80% {
-    opacity: 0;
-    visibility: hidden;
-  }
-  100% {
-    opacity: 1;
-    visibility: visible;
-  }
+// transition tooltip
+.transitionTooltip-enter-active {
+  transition: all .5s ease 1.5s;
+}
+.transitionTooltip-leave-active {
+  transition: all .1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.transitionTooltip-enter,
+.transitionTooltip-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}
+
+// transition comment
+.transitionComment-enter-active {
+  transition: all .5s ease 1s;
+}
+.transitionComment-leave-active {
+  transition: all .1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.transitionComment-enter,
+.transitionComment-leave-to {
+  transform: translateX(-10px);
+  opacity: 0;
 }
 </style>

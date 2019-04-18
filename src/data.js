@@ -50,8 +50,14 @@ export default {
   disableSortThead: ['a'],
   styleWrapVueTable: {
     height: '400px',
-    // width: '700px',
     overflow: 'visible',
+    fontSize: '12px',
+    comment: {
+      borderColor: '#696969',
+      borderSize: '8px',
+      widthBox: '120px',
+      heightBox: '80px',
+    },
   },
   headers: [
     {
@@ -152,6 +158,7 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -192,6 +199,7 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 1980,
@@ -252,6 +260,7 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -292,6 +301,7 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 1980,
@@ -360,6 +370,7 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -400,6 +411,7 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 1980,
@@ -468,6 +480,7 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -508,6 +521,7 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 1980,
@@ -576,6 +590,7 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -616,6 +631,7 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 1980,
@@ -684,6 +700,7 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -724,6 +741,7 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 1980,
@@ -792,6 +810,7 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 26,
@@ -821,6 +840,7 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 1980,
@@ -889,6 +909,7 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 26,
@@ -918,6 +939,7 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 1980,
@@ -986,6 +1008,7 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 26,
@@ -1015,6 +1038,7 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 1980,
@@ -1083,6 +1107,7 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 26,
@@ -1112,6 +1137,7 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 1980,
@@ -1180,6 +1206,7 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 26,
@@ -1209,6 +1236,7 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
+        comment: 'comment',
         selectOptions: [
           {
             value: 1980,
