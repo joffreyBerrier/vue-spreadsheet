@@ -31,7 +31,7 @@
             :key="header"
             :style="row[header].style">
 
-            <div class="vuetable_tooltip">
+            <div class="vuetable_tooltip" v-if="row[header].value !== '' && !row[header].search">
               {{row[header].value}}
             </div>
 
