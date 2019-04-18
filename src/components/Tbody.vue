@@ -206,7 +206,7 @@ export default {
   methods: {
     handleHoverTriangleComment(header, rowIndex) {
       if (!this.vueTableComment[rowIndex]) {
-        this.vueTableComment[rowIndex] = header;
+        this.$set(this.vueTableComment, rowIndex, header);
       }
     },
     handleOutTriangleComment() {
@@ -214,7 +214,7 @@ export default {
     },
     handleHoverTooltip(header, rowIndex) {
       if (!this.vuetableTooltip[rowIndex]) {
-        this.vuetableTooltip[rowIndex] = header;
+        this.$set(this.vuetableTooltip, rowIndex, header);
       }
     },
     handleOutTooltip() {
