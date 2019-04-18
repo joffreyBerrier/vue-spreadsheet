@@ -574,7 +574,6 @@ export default {
           copyData.active = false;
           copyData.selected = false;
           copyData.stateCopy = false;
-          copyData.vuetableTooltip = false;
 
           storeData[this.headerKeys[colMin]] = copyData;
           colMin += 1;
@@ -598,7 +597,6 @@ export default {
         copyData.active = false;
         copyData.selected = false;
         copyData.stateCopy = false;
-        copyData.vuetableTooltip = false;
         this.storeCopyDatas.push(copyData);
         this.copyMultipleCell = false;
       }

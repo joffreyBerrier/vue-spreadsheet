@@ -14,7 +14,7 @@
             :data-row-index="rowIndex"
             :data-type="row[header].type"
             @mouseover.stop="handleHoverTooltip(header, rowIndex)"
-            @mouseout.stop="handleOutTooltip()"
+            @mouseout.stop="handleOutTooltip"
             @click.shift.exact="handleSelectMultipleCell($event, header, rowIndex, colIndex, row[header].type)"
             @contextmenu="handleContextMenuTd($event, header, rowIndex, colIndex, row[header].type)"
             @click.exact="handleClickTd($event, row[header], header, rowIndex, colIndex, row[header].type)"
@@ -36,7 +36,7 @@
             <transition name="transitionTooltip">
               <div
                 class="vuetable_tooltip"
-                v-if="row[header].value !== '' && !row[header].search && !row[header].active && !row[header].selected && row[header].vuetableTooltip">
+                v-if="row[header].value !== '' && !row[header].search && !row[header].active && !row[header].selected && vuetableTooltip[rowIndex] === header">
                 {{row[header].value}}
               </div>
             </transition>
@@ -45,10 +45,10 @@
               class="vuetable_triange"
               v-if="row[header].value !== '' && !row[header].search && row[header].comment"
               @mouseover.stop="handleHoverTriangleComment(header, rowIndex)"
-              @mouseout.stop="handleOutTriangleComment(header, rowIndex)">
+              @mouseout.stop="handleOutTriangleComment">
               <transition name="transitionComment">
                 <div class="vuetable_triange_comment"
-                  v-if="row[header].vueTableComment">
+                  v-if="vueTableComment[rowIndex] === header">
                   {{row[header].comment}}
                 </div>
               </transition>
@@ -194,6 +194,8 @@ export default {
       searchInput: '',
       submenuEnableCol: null,
       submenuEnableRow: null,
+      vuetableTooltip: {},
+      vueTableComment: {},
     };
   },
   computed: {
@@ -203,10 +205,20 @@ export default {
   },
   methods: {
     handleHoverTriangleComment(header, rowIndex) {
-      this.$set(this.tbodyData[rowIndex][header], 'vueTableComment', true);
+      if (!this.vueTableComment[rowIndex]) {
+        this.vueTableComment[rowIndex] = header;
+      }
     },
-    handleOutTriangleComment(header, rowIndex) {
-      this.$set(this.tbodyData[rowIndex][header], 'vueTableComment', false);
+    handleOutTriangleComment() {
+      this.vueTableComment = {};
+    },
+    handleHoverTooltip(header, rowIndex) {
+      if (!this.vuetableTooltip[rowIndex]) {
+        this.vuetableTooltip[rowIndex] = header;
+      }
+    },
+    handleOutTooltip() {
+      this.vuetableTooltip = {};
     },
     disabledEvent(col, header) {
       if (col.disabled === undefined) {
@@ -226,16 +238,6 @@ export default {
       if (this.disabledEvent(col, header)) {
         this.$emit('tbody-handle-set-oldvalue', col, rowIndex, header, colIndex, type);
       }
-    },
-    handleHoverTooltip(header, rowIndex) {
-      this.oldTooltipHover = {
-        header,
-        rowIndex,
-      };
-      this.$set(this.tbodyData[rowIndex][header], 'vuetableTooltip', true);
-    },
-    handleOutTooltip() {
-      this.$set(this.tbodyData[this.oldTooltipHover.rowIndex][this.oldTooltipHover.header], 'vuetableTooltip', false);
     },
     handleSelectMultipleCell(event, header, rowIndex, colIndex, type) {
       this.$emit('tbody-select-multiple-cell', event, header, rowIndex, colIndex, type);
@@ -542,7 +544,6 @@ $dragToFillColor:#3183fc;
       top: -8px;
       left: -120px;
       background: #FFF;
-      border-radius: 5px;
       padding: 10px 7px;
       line-height: 1.2;
       box-sizing: border-box;
@@ -568,7 +569,7 @@ $dragToFillColor:#3183fc;
   max-height: 80px;
   min-height: 40px;
   overflow-y: auto;
-  padding: 2px 5px;
+  padding: 5px;
   position: absolute;
   position: absolute;
   top: 40px;
