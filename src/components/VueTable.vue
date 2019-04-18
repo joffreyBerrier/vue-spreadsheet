@@ -167,6 +167,8 @@ export default {
     document.addEventListener('scroll', (event) => {
       this.scrollTopDocument(event);
     });
+    // set property of triangle bg comment
+    this.setPropertyStyleOfComment();
   },
   watch: {
     tbodyData() {
@@ -194,6 +196,20 @@ export default {
     },
   },
   methods: {
+    setPropertyStyleOfComment() {
+      if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.borderColor) {
+        this.$refs.vueTable.style.setProperty('--borderCommentColor', this.styleWrapVueTable.comment.borderColor);
+      }
+      if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.borderSize) {
+        this.$refs.vueTable.style.setProperty('--borderCommentSize', this.styleWrapVueTable.comment.borderSize);
+      }
+      if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.widthBox) {
+        this.$refs.vueTable.style.setProperty('--boxCommentWidth', this.styleWrapVueTable.comment.widthBox);
+      }
+      if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.heightBox) {
+        this.$refs.vueTable.style.setProperty('--BoxCommentHeight', this.styleWrapVueTable.comment.heightBox);
+      }
+    },
     changeData(rowIndex, header) {
       const cell = this.tbodyData[rowIndex][header];
       this.changeDataIncrement += 1;
@@ -558,6 +574,7 @@ export default {
           copyData.active = false;
           copyData.selected = false;
           copyData.stateCopy = false;
+          copyData.vuetableTooltip = false;
 
           storeData[this.headerKeys[colMin]] = copyData;
           colMin += 1;
@@ -581,6 +598,7 @@ export default {
         copyData.active = false;
         copyData.selected = false;
         copyData.stateCopy = false;
+        copyData.vuetableTooltip = false;
         this.storeCopyDatas.push(copyData);
         this.copyMultipleCell = false;
       }
@@ -1262,6 +1280,12 @@ export default {
     --selectLeft: 0;
     --selectTop: 0;
     --selectWidth: 0;
+
+    // bg of comment triangle
+    --borderCommentColor: #696969;
+    --borderCommentSize: 8px;
+    --boxCommentWidth: 120px;
+    --BoxCommentHeight: 80px;
 
     // rectangle style
     --rectangleBottom: 0;
