@@ -157,7 +157,7 @@ Create an object ``comment: {} `` on ``styleWrapVueTable`` and on each data
 
 #### :exclamation: You can choose a global BorderColor for each commentBox
 
-### Example:
+#### Example
 
 ```
   styleWrapVueTable: {
