@@ -158,7 +158,10 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#eee',
+        },
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -199,7 +202,10 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#eee',
+        },
         selectOptions: [
           {
             value: 1980,
@@ -260,7 +266,10 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#eee',
+        },
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -301,7 +310,10 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#eee',
+        },
         selectOptions: [
           {
             value: 1980,
@@ -370,7 +382,10 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -411,7 +426,10 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 1980,
@@ -480,7 +498,10 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -521,7 +542,10 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 1980,
@@ -590,7 +614,10 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -631,7 +658,10 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 1980,
@@ -700,7 +730,10 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 'Harry Potter',
@@ -741,7 +774,10 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 1980,
@@ -810,7 +846,10 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 26,
@@ -840,7 +879,10 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 1980,
@@ -909,7 +951,10 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 26,
@@ -939,7 +984,10 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 1980,
@@ -1008,7 +1056,10 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 26,
@@ -1038,7 +1089,10 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 1980,
@@ -1107,7 +1161,10 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 26,
@@ -1137,7 +1194,10 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 1980,
@@ -1206,7 +1266,10 @@ export default {
       f: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 26,
@@ -1236,7 +1299,10 @@ export default {
       g: {
         type: 'select',
         handleSearch: true,
-        comment: 'comment',
+        comment: {
+          value: 'comment',
+          borderColor: '#000',
+        },
         selectOptions: [
           {
             value: 1980,

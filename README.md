@@ -1,4 +1,4 @@
-# :fire: VueJs Spreadsheet 1.6.2 :fire:
+# :fire: VueJs Spreadsheet 1.6.6 :fire:
 (https://github.com/joffreyBerrier/vuejs-spreadsheet/releases)
 
 
@@ -146,6 +146,55 @@ Function                               | Type       | Description
         'value',
       ],
     },
+  },
+```
+
+### Comment Box :triangular_ruler:
+
+If you want to use the commentBox (like excel)
+
+Create an object ``comment: {} `` on ``styleWrapVueTable`` and on each data
+
+#### :exclamation: You can choose a global BorderColor for each commentBox
+
+### Example:
+
+```
+  styleWrapVueTable: {
+    ...
+    comment: {
+      borderColor: '#696969',
+      borderSize: '8px',
+      widthBox: '120px',
+      heightBox: '80px',
+    },
+  },
+```
+
+#### :exclamation: Or specific color for each commentBox
+
+CommentBox without content:
+
+```
+  f: {
+    ...
+    comment: {
+      borderColor: '#eee',
+    },
+    ...
+  },
+```
+
+CommentBox with content:
+
+```
+  f: {
+    ...
+    comment: {
+      value: 'comment',
+      borderColor: '#eee',
+    },
+    ...
   },
 ```
 
@@ -506,7 +555,13 @@ export default {
       },
       disableSortThead: ['a'],
       styleWrapVueTable: {
-        color: 'black',
+        fontSize: '12px',
+        comment: {
+          borderColor: '#696969',
+          borderSize: '8px',
+          widthBox: '120px',
+          heightBox: '80px',
+        },
       },
       headers: [
         {

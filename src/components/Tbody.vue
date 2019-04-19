@@ -43,13 +43,14 @@
 
             <span
               class="vuetable_triange"
+              :style="[row[header].comment.borderColor ? {'borderTopColor': row[header].comment.borderColor} : {}]"
               v-if="row[header].value !== '' && !row[header].search && row[header].comment"
               @mouseover.stop="handleHoverTriangleComment(header, rowIndex)"
               @mouseout.stop="handleOutTriangleComment">
               <transition name="transitionComment">
                 <div class="vuetable_triange_comment"
-                  v-if="vueTableComment[rowIndex] === header">
-                  {{row[header].comment}}
+                  v-if="vueTableComment[rowIndex] === header && row[header].comment.value">
+                  {{row[header].comment.value}}
                 </div>
               </transition>
             </span>
