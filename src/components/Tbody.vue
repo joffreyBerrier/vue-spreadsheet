@@ -13,7 +13,7 @@
             :data-col-index="colIndex"
             :data-row-index="rowIndex"
             :data-type="row[header].type"
-            @mouseover.stop="handleHoverTooltip(header, rowIndex)"
+            @mouseover.stop="handleHoverTooltip(header, rowIndex, colIndex, row[header].type)"
             @mouseout.stop="handleOutTooltip"
             @click.shift.exact="handleSelectMultipleCell($event, header, rowIndex, colIndex, row[header].type)"
             @contextmenu="handleContextMenuTd($event, header, rowIndex, colIndex, row[header].type)"
@@ -29,14 +29,19 @@
               'disabled': row[header].disabled || disableCells.find(x => x === header),
               'rectangleSelection': row[header].rectangleSelection,
             }"
-            :ref="'td-' + colIndex + '-' + rowIndex"
+            :ref="`td-${colIndex}-${rowIndex}`"
             :key="header"
             :style="row[header].style">
 
             <transition name="transitionTooltip">
               <div
                 class="vuetable_tooltip"
-                v-if="row[header].value !== '' && !row[header].search && !row[header].active && !row[header].selected && vuetableTooltip[rowIndex] === header">
+                v-if="row[header].value !== '' &&
+                !row[header].search &&
+                !row[header].active &&
+                row[header].type !== 'img' &&
+                !row[header].selected &&
+                vuetableTooltip[rowIndex] === header">
                 {{row[header].value}}
               </div>
             </transition>
@@ -84,12 +89,16 @@
 
             <!-- If Img -->
             <template v-if="row[header].type === 'img'">
-              <span><img :src="row[header].value" :title="row[header].value" /></span>
+              <span>
+                <img :src="row[header].value" :title="row[header].value" />
+              </span>
             </template>
 
             <!-- If Input -->
             <template v-if="row[header].type === 'input'">
-              <span>{{row[header].value}}</span>
+              <span :ref="`span-${colIndex}-${rowIndex}`">
+                {{row[header].value}}
+              </span>
               <textarea
                 v-model="row[header].value"
                 @change="inputHandleChange($event, header, rowIndex, colIndex)"
@@ -99,7 +108,7 @@
 
             <!-- If Select -->
             <template v-if="row[header].type === 'select' && row[header].handleSearch">
-              <span>{{row[header].value}}</span>
+              <span :ref="`span-${colIndex}-${rowIndex}`">{{row[header].value}}</span>
               <i class="icon_glass"
                 v-bind:class="{'show': row[header].search}">
               </i>
@@ -130,7 +139,7 @@
             </template>
 
             <template v-else-if="row[header].type === 'select'">
-              <span>{{row[header].value}}</span>
+              <span :ref="`span-${colIndex}-${rowIndex}`">{{row[header].value}}</span>
               <select
                 v-model="row[header].value"
                 @change="selectHandleChange($event, header, row[header], option, rowIndex, colIndex)">
@@ -213,9 +222,12 @@ export default {
     handleOutTriangleComment() {
       this.vueTableComment = {};
     },
-    handleHoverTooltip(header, rowIndex) {
-      if (!this.vuetableTooltip[rowIndex]) {
-        this.$set(this.vuetableTooltip, rowIndex, header);
+    handleHoverTooltip(header, rowIndex, colIndex, type) {
+      if (this.$refs[`span-${colIndex}-${rowIndex}`] && type !== 'img') {
+        const element = this.$refs[`span-${colIndex}-${rowIndex}`][0];
+        if (!this.vuetableTooltip[rowIndex] && element.scrollWidth > element.clientWidth) {
+          this.$set(this.vuetableTooltip, rowIndex, header);
+        }
       }
     },
     handleOutTooltip() {
@@ -542,8 +554,9 @@ $dragToFillColor:#3183fc;
       width: var(--boxCommentWidth);
       height: var(--BoxCommentHeight);
       position: absolute;
-      top: -8px;
-      left: -120px;
+      white-space: normal;
+      top: -10px;
+      left: calc(#{var(--boxCommentWidth)} * -1);
       background: #FFF;
       padding: 10px 7px;
       line-height: 1.2;
