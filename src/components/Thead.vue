@@ -200,9 +200,9 @@ export default {
         // set height of after dragElement
         element.style.setProperty('--dragHeaderHeight', '100%');
         // set new size on header
-        this.headers[this.beforeChangeSize.col].style.width = this.newSize;
-        this.headers[this.beforeChangeSize.col].style.minWidth = this.newSize;
-        this.beforeChangeSize.header.active = false;
+        this.$set(this.headers[this.beforeChangeSize.col].style, 'width', this.newSize);
+        this.$set(this.headers[this.beforeChangeSize.col].style, 'minWidth', this.newSize);
+        this.$set(this.headers[this.beforeChangeSize.col], 'active', false);
 
         this.$emit('handle-up-drag-size-header', event, this.headers);
       }
@@ -240,7 +240,7 @@ export default {
 <style lang="scss" scoped>
 .th {
   height: 45px;
-  line-height: 41px;
+  line-height: 2;
   position: relative;
   background: #e7ecf5;
   z-index: 15;
@@ -261,9 +261,6 @@ export default {
   span {
     display: block;
     width: calc(100% - 30px);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 }
 .resize {
