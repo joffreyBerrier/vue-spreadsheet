@@ -1298,6 +1298,7 @@ export default {
   }
 
   table{
+    table-layout: fixed;
     margin: 0;
     border-collapse: collapse;
     border-spacing: 0;
