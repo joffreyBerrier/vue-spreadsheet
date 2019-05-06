@@ -625,6 +625,7 @@ export default {
         // new paste data
         const conditionRowToMultiplePasteRow = this.storeCopyDatas.length === 1 &&
           !this.storeCopyDatas[0].type &&
+          this.selectedCoordCopyCells !== null &&
           Object.values(this.storeCopyDatas[0]).length > 1 &&
           this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd;
 
@@ -651,6 +652,7 @@ export default {
 
         let row = 0;
         let col = 0;
+
         while (rowMin <= rowMax) {
           const header = this.headerKeys[colMin];
           const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
@@ -772,6 +774,11 @@ export default {
         if (params === 'selected') {
           this.$set(this.tbodyData[rowMin][header], 'selected', true);
           this.selectedMultipleCellActive = true;
+          if (colMin === colMax && rowMin === rowMax) {
+            // add active on the last cell
+            this.removeClass(['active']);
+            this.$set(this.tbodyData[rowMin][header], 'active', true);
+          }
         }
         colMin += 1;
         if (colMin > colMax) {
@@ -781,7 +788,7 @@ export default {
       }
 
       // Set height / width of rectangle
-      this.debounce(this.setRectangleSelection(colMin, colMax, rowMin, rowMax), 800);
+      this.setRectangleSelection(colMin, colMax, rowMin, rowMax);
     },
     setRectangleSelection(colMin, colMax, rowMin, rowMax) {
       let width = 100;
@@ -836,6 +843,7 @@ export default {
     },
     // drag To Fill
     handleDownDragToFill(event, header, col, rowIndex) {
+      this.storeCopyDatas = [];
       this.$set(this.tbodyData[rowIndex][header], 'active', true);
       this.eventDrag = true;
       if (!this.selectedCoordCells && !this.selectedMultipleCell) {
@@ -850,6 +858,15 @@ export default {
       } else if (this.selectedMultipleCell) {
         // if drag col to col in row to row to row
         this.selectedCoordCells.rowStart = rowIndex;
+      } else {
+        this.selectedCoordCells = {
+          rowStart: this.selectedCell.row,
+          colStart: this.selectedCell.col,
+          keyStart: this.selectedCell.header,
+          rowEnd: rowIndex,
+          colEnd: this.selectedCell.col,
+          keyEnd: this.selectedCell.header,
+        };
       }
       this.copyStoreData('drag');
     },
