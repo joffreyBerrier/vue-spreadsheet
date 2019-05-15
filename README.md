@@ -1,5 +1,5 @@
-# :fire: VueJs Spreadsheet 1.6.9 :fire:
-(https://github.com/joffreyBerrier/vuejs-spreadsheet/releases/tag/1.6.6)
+# :fire: VueJs Spreadsheet 1.7.0 :fire:
+(https://github.com/joffreyBerrier/vuejs-spreadsheet/releases/tag/1.7.0)
 
 
 # Sandbox example
