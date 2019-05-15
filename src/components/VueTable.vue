@@ -812,10 +812,12 @@ export default {
         height = 40 * ((this.selectedCoordCells.rowStart - this.selectedCoordCells.rowEnd) + 1);
       }
 
-      [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`];
+      if (this.$refs.vueTbody && this.$refs.vueTbody.$refs) {
+        [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`];
 
-      if (!this.selectedMultipleCellActive) {
-        [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`];
+        if (!this.selectedMultipleCellActive) {
+          [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`];
+        }
       }
 
       this.rectangleSelectedCell.style.setProperty('--rectangleWidth', `${width + 1}%`);
