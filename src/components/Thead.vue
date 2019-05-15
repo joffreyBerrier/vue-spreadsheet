@@ -1,6 +1,5 @@
 <template>
   <thead class="thead"
-    @mousemove="handleMoveChangeSize($event)"
     @mouseup="handleUpDragToFill($event)">
     <tr>
       <th v-if="tbodyIndex" class="index" key="th-index"></th>
@@ -28,6 +27,7 @@
                 </span>
               </button>
           </template>
+
           <template
             v-if="sortHeader &&
             disableSortThead.indexOf(header.headerKey) === -1">
@@ -134,6 +134,9 @@ export default {
       vueTableHeight: 0,
     };
   },
+  mounted() {
+    window.addEventListener('mousemove', this.handleMoveChangeSize);
+  },
   methods: {
     removeClass(params, colIndex) {
       this.headers.forEach((header, index) => {
@@ -168,17 +171,20 @@ export default {
       this.$forceUpdate();
     },
     handleMoveChangeSize(event) {
-      const offsetTopVueTable = event.currentTarget.offsetParent.offsetTop;
-      const offsetBottomVueTable = offsetTopVueTable + event.currentTarget.offsetHeight;
+      if (this.eventDrag) {
+        const elm = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
+        const offsetTopVueTable = elm.offsetTop;
+        const offsetBottomVueTable = offsetTopVueTable + elm.offsetHeight;
 
-      if (this.eventDrag && offsetTopVueTable <= event.clientY && offsetBottomVueTable >= event.clientY) {
-        const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
-        element.style.left = `${event.clientX}px`;
-        // set height of after dragElement
-        const heightTbody = this.vueTableHeight;
-        element.style.setProperty('--dragHeaderHeight', `${heightTbody}px`);
-      } else if (this.eventDrag) {
-        this.handleUpDragToFill(event);
+        if (offsetTopVueTable <= event.clientY && offsetBottomVueTable >= event.clientY) {
+          const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
+          element.style.left = `${event.clientX}px`;
+          // set height of after dragElement
+          const heightTbody = this.vueTableHeight;
+          element.style.setProperty('--dragHeaderHeight', `${heightTbody}px`);
+        } else {
+          this.handleUpDragToFill(event);
+        }
       }
     },
     handleUpDragToFill(event) {
