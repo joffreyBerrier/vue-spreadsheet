@@ -200,7 +200,7 @@
     handleHoverTooltip(header: string, rowIndex: number, colIndex: number, type: string) {
       if (this.$refs[`span-${colIndex}-${rowIndex}`] && type !== 'img') {
         const element = this.$refs[`span-${colIndex}-${rowIndex}`][0];
-        if (!this.vuetableTooltip[rowIndex] && element.scrollWidth > element.clientWidth) {
+        if (!this.vuetableTooltip[rowIndex] && element && (element.scrollWidth > element.clientWidth)) {
           this.$set(this.vuetableTooltip, rowIndex, header);
         }
       }
