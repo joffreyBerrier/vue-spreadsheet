@@ -129,9 +129,8 @@
         }
       });
     }
-    handleDownChangeSize(event: any, header: any, colIndex: number) {
+    handleDownChangeSize(event: any, col: any, colIndex: number) {
       this.eventDrag = true;
-      const head = header;
 
       if (this.$parent && this.$parent.$refs && this.$parent.$refs.vueTable) {
         this.vueTableHeight = this.$parent.$refs.vueTable.offsetHeight;
@@ -140,12 +139,12 @@
       this.beforeChangeSize = {
         col: colIndex,
         elementLeft: event.currentTarget.parentElement.offsetLeft,
-        header: head,
-        width: parseInt(head.style.width, 10),
+        header: col,
+        width: parseInt(col.style.width, 10),
       };
 
-      head.active = true;
-      head.style.left = event.clientX;
+      col.active = true;
+      col.style.left = event.clientX;
 
       const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
       element.style.opacity = 0;
@@ -197,17 +196,17 @@
         this.$emit('handle-up-drag-size-header', event, this.headers);
       }
     }
-    handleSort(event: MouseEvent, h: any, colIndex: number) {
-      const header = h;
-      if (!header.activeSort || header.activeSort === 'Z') {
+    handleSort(event: MouseEvent, col: any, colIndex: number) {
+      if (!col.activeSort || col.activeSort === 'Z') {
         this.$set(this.headers[colIndex], 'activeSort', 'A');
       } else {
         this.$set(this.headers[colIndex], 'activeSort', 'Z');
       }
+
       this.removeClass(colIndex);
-      this.$emit('thead-td-sort', event, header, colIndex);
+      this.$emit('thead-td-sort', event, col, colIndex);
     }
-    handleContextMenuTd(event: MouseEvent, header: any, colIndex: number) {
+    handleContextMenuTd(event: MouseEvent, header: string, colIndex: number) {
       this.submenuEnableCol = colIndex;
       if (this.submenuStatusThead === true) {
         this.$emit('submenu-enable', 'tbody');

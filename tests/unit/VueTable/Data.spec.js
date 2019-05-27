@@ -21,17 +21,17 @@ beforeEach(() => {
 
   wrapper = mount(VueTable, {
     propsData: {
-      tbodyData,
-      headers,
       customOptions,
-      styleWrapVueTable,
       disableCells,
       disableSortThead,
+      headers,
       loading,
       parentScrollElement,
       selectPosition,
+      styleWrapVueTable,
       submenuTbody,
       submenuThead,
+      tbodyData,
     },
   });
   return wrapper;
@@ -48,8 +48,12 @@ describe('VueTable', () => {
     test('Present Data', () => {
       const vueTable = wrapper.vm;
 
+      expect(vueTable.actualElement).toBeNull();
+      expect(vueTable.changeDataIncrement).toEqual(0);
+      expect(vueTable.copyMultipleCell).toBeNull();
       expect(vueTable.disableKeyTimeout).toBeNull();
       expect(vueTable.eventDrag).toBeFalsy();
+      expect(vueTable.headerTop).toEqual(0);
       expect(vueTable.incrementCol).toEqual(0);
       expect(vueTable.incrementOption).toBeNull();
       expect(vueTable.incrementRow).toBeNull();
@@ -70,11 +74,9 @@ describe('VueTable', () => {
       expect(vueTable.setFirstCell).toBeFalsy();
       expect(vueTable.storeCopyDatas).toEqual([]);
       expect(vueTable.storeRectangleSelection).toEqual([]);
+      expect(vueTable.storeUndoData).toEqual([]);
       expect(vueTable.submenuStatusTbody).toBeFalsy();
       expect(vueTable.submenuStatusThead).toBeFalsy();
-      expect(vueTable.changeDataIncrement).toEqual(0);
-      expect(vueTable.storeUndoData).toEqual([]);
-      expect(vueTable.headerTop).toEqual(0);
     });
   });
 });
