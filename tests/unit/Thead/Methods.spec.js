@@ -44,7 +44,7 @@ describe('VueTable', () => {
         const tHead = wrapper.vm;
         tHead.headers[0].activeSort = 'Z';
         tHead.headers[1].activeSort = 'Z';
-        tHead.removeClass('activeSort', 1);
+        tHead.removeClass(1);
         expect(tHead.headers[0].activeSort).toEqual('');
       });
 
@@ -52,7 +52,7 @@ describe('VueTable', () => {
         const tHead = wrapper.vm;
         tHead.headers[0].activeSort = 'Z';
         tHead.headers[1].activeSort = 'Z';
-        tHead.removeClass('activeSort', 1);
+        tHead.removeClass(1);
         expect(tHead.headers[1].activeSort).toEqual('Z');
       });
 
@@ -60,7 +60,7 @@ describe('VueTable', () => {
         const tHead = wrapper.vm;
         tHead.headers[0].activeSort = 'A';
         tHead.headers[1].activeSort = 'A';
-        tHead.removeClass('activeSort', 1);
+        tHead.removeClass(1);
         expect(tHead.headers[1].activeSort).toEqual('A');
       });
     });

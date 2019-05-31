@@ -42,12 +42,12 @@ describe('VueTable', () => {
     test('Present Data', () => {
       const tBody = wrapper.vm;
 
-      expect(tBody.emptyCell).toEqual('');
       expect(tBody.eventDrag).toBeFalsy();
-      expect(tBody.oldValue).toBeNull();
       expect(tBody.searchInput).toEqual('');
       expect(tBody.submenuEnableCol).toBeNull();
       expect(tBody.submenuEnableRow).toBeNull();
+      expect(tBody.vueTableComment).toEqual({});
+      expect(tBody.vuetableTooltip).toEqual({});
     });
   });
 });

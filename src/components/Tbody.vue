@@ -158,158 +158,132 @@
   </tbody>
 </template>
 
-<script type="text/javascript">
-export default {
-  name: 'vue-tbody',
-  props: {
-    filteredList: {
-      type: Array,
-      required: true,
-    },
-    headers: {
-      type: Array,
-      required: true,
-    },
-    tbodyData: {
-      type: Array,
-      required: true,
-    },
-    trad: {
-      type: Object,
-      required: true,
-    },
-    disableCells: {
-      type: Array,
-      required: false,
-    },
-    tbodyIndex: {
-      type: Boolean,
-      required: false,
-    },
-    submenuStatusTbody: {
-      type: Boolean,
-      required: false,
-    },
-    submenuTbody: {
-      type: Array,
-      required: false,
-    },
-  },
-  data() {
-    return {
-      emptyCell: '',
-      eventDrag: false,
-      oldTooltipHover: {},
-      oldValue: null,
-      searchInput: '',
-      submenuEnableCol: null,
-      submenuEnableRow: null,
-      vuetableTooltip: {},
-      vueTableComment: {},
-    };
-  },
-  computed: {
-    headerKeys() {
+<script lang="ts">
+  import { Component, Vue, Watch, Prop } from 'vue-property-decorator';
+  
+  @Component
+  export default class VueTbody extends Vue {
+    name: 'VueTbody'
+
+    // Prop
+    @Prop({ required: true }) filteredList!: any[]
+    @Prop({ required: true }) headers!: any[]
+    @Prop({ required: true }) tbodyData!: any[]
+    @Prop({ required: true }) trad!: object
+    @Prop({ required: true }) disableCells!: any[]
+    @Prop({ required: true }) tbodyIndex!: boolean
+    @Prop({ required: true }) submenuStatusTbody!: boolean
+    @Prop({ required: true }) submenuTbody!: any[]
+
+    // Data
+    eventDrag: boolean = false
+    searchInput: string = ''
+    submenuEnableCol: number | null = null
+    submenuEnableRow: number | null = null
+    vueTableComment: any = {}
+    vuetableTooltip: any = {}
+    
+    // Computed
+    get headerKeys() : any[] {
       return this.headers.map(x => x.headerKey);
-    },
-  },
-  methods: {
-    handleHoverTriangleComment(header, rowIndex) {
+    }
+
+    // Methods
+    handleHoverTriangleComment(header: string, rowIndex: number) {
       if (!this.vueTableComment[rowIndex]) {
         this.$set(this.vueTableComment, rowIndex, header);
       }
-    },
+    }
     handleOutTriangleComment() {
       this.vueTableComment = {};
-    },
-    handleHoverTooltip(header, rowIndex, colIndex, type) {
+    }
+    handleHoverTooltip(header: string, rowIndex: number, colIndex: number, type: string) {
       if (this.$refs[`span-${colIndex}-${rowIndex}`] && type !== 'img') {
         const element = this.$refs[`span-${colIndex}-${rowIndex}`][0];
-        if (!this.vuetableTooltip[rowIndex] && element.scrollWidth > element.clientWidth) {
+        if (!this.vuetableTooltip[rowIndex] && element && (element.scrollWidth > element.clientWidth)) {
           this.$set(this.vuetableTooltip, rowIndex, header);
         }
       }
-    },
+    }
     handleOutTooltip() {
       this.vuetableTooltip = {};
-    },
-    disabledEvent(col, header) {
+    }
+    disabledEvent(col: any, header: string) : boolean {
       if (col.disabled === undefined) {
         return !this.disableCells.find(x => x === header);
       } else if (col.disabled) {
         return !col.disabled;
       }
       return true;
-    },
-    enableSelect(event, header, col, rowIndex, colIndex) {
+    }
+    enableSelect(event: any, header: string, col: any, rowIndex: number, colIndex: number) {
       if (this.disabledEvent(col, header)) {
         this.searchInput = '';
         this.$emit('handle-to-open-select', event, header, col, rowIndex, colIndex);
       }
-    },
-    escKeyup(col, rowIndex, header, colIndex, type) {
+    }
+    escKeyup(col: any, rowIndex: number, header: string, colIndex: number, type: string) {
       if (this.disabledEvent(col, header)) {
         this.$emit('tbody-handle-set-oldvalue', col, rowIndex, header, colIndex, type);
       }
-    },
-    handleSelectMultipleCell(event, header, rowIndex, colIndex, type) {
+    }
+    handleSelectMultipleCell(event: any, header: string, rowIndex: number, colIndex: number, type: string) {
       this.$emit('tbody-select-multiple-cell', event, header, rowIndex, colIndex, type);
-    },
-    handleDownDragToFill(event, header, col, rowIndex, colIndex) {
+    }
+    handleDownDragToFill(event: any, header: string, col: any, rowIndex: number, colIndex: number) {
       if (this.disabledEvent(col, header)) {
         this.eventDrag = true;
         this.$emit('tbody-down-dragtofill', event, header, col, rowIndex, colIndex);
       }
-    },
-    handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
+    }
+    handleMoveDragToFill(event: any, header: string, col: any, rowIndex: number, colIndex: number) {
       if (this.eventDrag && this.disabledEvent(col, header)) {
         this.$emit('tbody-move-dragtofill', event, header, col, rowIndex, colIndex);
       }
-    },
-    handleUpDragToFill(event, header, col, rowIndex, colIndex, type) {
+    }
+    handleUpDragToFill(event: any, header: string, col: any, rowIndex: number, colIndex: number, type: string) {
       if (this.eventDrag && this.disabledEvent(col, header)) {
         this.eventDrag = false;
         this.$emit('tbody-up-dragtofill', event, header, rowIndex, colIndex, type);
       }
-    },
-    handleClickTd(event, col, header, rowIndex, colIndex, type) {
+    }
+    handleClickTd(event: any, col: any, header: string, rowIndex: number, colIndex: number, type: string) {
       this.searchInput = '';
       this.$emit('tbody-td-click', event, col, header, rowIndex, colIndex, type);
-    },
-    handleDoubleClickTd(event, header, col, rowIndex, colIndex, type) {
+    }
+    handleDoubleClickTd(event: any, header: string, col: any, rowIndex: number, colIndex: number, type: string) {
       if (this.disabledEvent(col, header)) {
         if (type === 'input') {
           this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
         }
         this.$emit('tbody-td-double-click', event, header, col, rowIndex, colIndex);
       }
-    },
-    handleContextMenuTd(event, header, rowIndex, colIndex, type) {
+    }
+    handleContextMenuTd(event: any, header: string, rowIndex: number, colIndex: number, type: string) {
       this.submenuEnableCol = colIndex;
       this.submenuEnableRow = rowIndex;
       this.$emit('handle-to-calculate-position', event, rowIndex, colIndex, 'contextMenu');
       this.$emit('submenu-enable', 'tbody');
       this.$emit('tbody-td-context-menu', event, header, rowIndex, colIndex, type);
-    },
-    inputHandleChange(event, header, rowIndex, colIndex) {
+    }
+    inputHandleChange(event: any, header: string, rowIndex: number, colIndex: number) {
       this.$emit('tbody-input-change', event, header, rowIndex, colIndex);
-    },
-    validSearch(event, header, col, option, rowIndex, colIndex) {
+    }
+    validSearch(event: any, header: string, col: any, option, rowIndex: number, colIndex: number) {
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
-    },
-    selectHandleChange(event, header, col, option, rowIndex, colIndex) {
+    }
+    selectHandleChange(event: any, header: string, col: any, option, rowIndex: number, colIndex: number) {
       this.$emit('tbody-select-change', event, header, col, option, rowIndex, colIndex);
-    },
-    handleSearchInputSelect(event, col, header, rowIndex, colIndex) {
+    }
+    handleSearchInputSelect(event: any, col: any, header: string, rowIndex: number, colIndex: number) {
       if (this.disabledEvent(col, header)) {
         this.$emit('tbody-handle-search-input-select', event, this.searchInput, col, header, rowIndex, colIndex);
       }
-    },
-    handleClickSubmenu(event, header, rowIndex, colIndex, type, submenuFunction) {
+    }
+    handleClickSubmenu(event: any, header: string, rowIndex: number, colIndex: number, type: string, submenuFunction: void) {
       this.$emit('tbody-submenu-click-callback', event, header, rowIndex, colIndex, type, submenuFunction);
-    },
-  },
-};
+    }
+  };
 </script>
 
 <style lang="scss" scoped>
