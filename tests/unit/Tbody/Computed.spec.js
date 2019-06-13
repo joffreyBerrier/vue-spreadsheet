@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import Tbody from '@/components/Tbody.vue';
+import Tbody from '@/components/Tbody/Tbody.vue';
 
 // data
 import exempleData from '@/data';
