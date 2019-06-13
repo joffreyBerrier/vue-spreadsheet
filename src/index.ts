@@ -1,3 +1,3 @@
-import VueTable from './components/VueTable.vue';
+import VueTable from './components/VueTable/VueTable.vue';
 
 export default VueTable;

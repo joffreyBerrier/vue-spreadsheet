@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import VueTable from './components/VueTable.vue';
+import VueTable from '@/components/VueTable/VueTable';
 import exempleData from './data';
 
 export default {

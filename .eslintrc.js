@@ -9,6 +9,8 @@ module.exports = {
     '@vue/typescript',
   ],
   rules: {
+    '@typescript-eslint/no-unused-vars': 'off',
+    'max-len': ['error', { 'code': 200 }],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },

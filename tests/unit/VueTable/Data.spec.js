@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import VueTable from '@/components/VueTable.vue';
+import VueTable from '@/components/VueTable/VueTable.vue';
 
 // data
 import exempleData from '@/data';
