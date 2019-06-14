@@ -19,7 +19,7 @@ export default class VueTbody extends Vue {
 
   @Prop({ required: true }) tbodyData!: any[]
 
-  @Prop({ required: true }) tbodyHighlight!: any[]
+  @Prop({ required: true }) tbodyHighlight!: string[]
 
   @Prop({ required: true }) trad!: Tbody.Trad
 

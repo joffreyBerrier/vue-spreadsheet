@@ -66,12 +66,8 @@ declare namespace VueTable {
 
   // Highlight
   interface Highlight {
-    tbodyHighlight: {
-      [key: number]: boolean
-    },
-    theadHighlight: {
-      [key: number]: boolean
-    },
+    tbody: number[],
+    thead: number[],
   }
 
   // Submenu

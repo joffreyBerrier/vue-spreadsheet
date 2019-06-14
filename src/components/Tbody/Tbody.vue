@@ -2,7 +2,7 @@
   <tbody>
     <template v-for="(row, rowIndex) in tbodyData">
       <tr class="table_row" :key="row + '' + rowIndex">
-        <td class="index" :class="{ 'active': tbodyHighlight[rowIndex] == true }" v-if="tbodyIndex" :key="'td-index-' + rowIndex">
+        <td class="index" :class="{ 'active': tbodyHighlight.includes(rowIndex) }" v-if="tbodyIndex" :key="'td-index-' + rowIndex">
           {{rowIndex + 1}}
         </td>
         <template v-for="(header, colIndex) in headerKeys">

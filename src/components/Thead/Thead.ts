@@ -17,7 +17,7 @@ export default class VueThead extends Vue {
 
   @Prop({ required: true }) headers!: VueTable.Header[]
 
-  @Prop({ required: true }) theadHighlight!: any[]
+  @Prop({ required: true }) theadHighlight!: string[]
 
   @Prop({ required: true }) submenuThead!: VueTable.Submenu[]
 

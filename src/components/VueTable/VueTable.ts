@@ -26,8 +26,6 @@ export default class VueTable extends Vue {
 
   @Prop({ required: true }) tbodyData!: any[]
 
-  @Prop({ required: true }) highlight!: VueTable.Highlight
-
   @Prop({ required: true }) customOptions!: VueTable.CustomOptions
 
   @Prop({ required: true }) styleWrapVueTable!: VueTable.StyleWrapVueTable
@@ -64,6 +62,11 @@ export default class VueTable extends Vue {
   incrementOption: number | null = null
 
   incrementRow: number | null = null
+
+  highlight: VueTable.Highlight = {
+    tbody: [],
+    thead: [],
+  }
 
   keys: any | null = {}
 
@@ -885,12 +888,10 @@ export default class VueTable extends Vue {
     if (this.selectedMultipleCell) {
       this.selectedMultipleCell = false;
     }
-    this.highlight = {
-      tbodyHighlight: {},
-      theadHighlight: {},
-    }
-    this.highlight.tbodyHighlight[rowIndex] = true;
-    this.highlight.theadHighlight[colIndex] = true;
+    this.highlight.tbody = [];
+    this.highlight.thead = [];
+    this.highlight.tbody.push(rowIndex);
+    this.highlight.thead.push(colIndex);
 
     if (!column.active) {
       if (!this.keys[16]) {
@@ -927,21 +928,11 @@ export default class VueTable extends Vue {
         };
       }
 
-      this.highlight = {
-        tbodyHighlight: {},
-        theadHighlight: {},
-      }
-      let listRow = [];
-      for (let i = this.selectedCell.row; i <= rowIndex; i++) {
-        listRow.push(i);
-      }
-      listRow.forEach(x => this.highlight.tbodyHighlight[x] = true);
+      this.highlight.tbody = [];
+      this.highlight.thead = [];
+      this.highlight.tbody = [this.selectedCell.row, rowIndex];
+      this.highlight.thead = [this.selectedCell.col, colIndex];
 
-      let listCol = []
-      for (let i = this.selectedCell.col; i <= colIndex; i++) {
-        listCol.push(i);
-      }
-      listCol.forEach(x => this.highlight.theadHighlight[x] = true);
       // Add active on selectedCoordCells selected
       this.modifyMultipleCell('selected');
     }
@@ -1081,6 +1072,7 @@ export default class VueTable extends Vue {
       const widthTable = vueTable.clientWidth - 40;
       const borderBottomCell = Math.round(heightTable / 40);
       const borderRightCell = Math.round(widthTable / maxCol);
+
       // top
       if (event.keyCode === 38) {
         event.preventDefault();
@@ -1221,6 +1213,11 @@ export default class VueTable extends Vue {
       const rowIndex = Number(this.actualElement.getAttribute('data-row-index'));
       const dataType = this.actualElement.getAttribute('data-type');
       const header = this.actualElement.getAttribute('data-header');
+
+      this.highlight.tbody = [];
+      this.highlight.thead = [];
+      this.highlight.tbody.push(rowIndex + 1);
+      this.highlight.thead.push(colIndex + 1);
 
       if (!this.setFirstCell) {
         this.$set(this.tbodyData[rowIndex][header], 'rectangleSelection', true);

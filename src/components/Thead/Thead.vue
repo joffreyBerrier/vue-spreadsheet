@@ -6,7 +6,7 @@
       <template v-for="(header, colIndex) in headers" >
         <th
           class="th"
-          :class="{'disabled': header.disabled, 'active': theadHighlight[colIndex] == true }"
+          :class="{'disabled': header.disabled, 'active': theadHighlight.includes(colIndex) }"
           :ref="'th-' + colIndex"
           :key="header.headerKey"
           :style="[header.style, header.style.top = headerTop + 'px']">

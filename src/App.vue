@@ -4,7 +4,6 @@
       :tbody-data="products"
       :headers="headers"
       :custom-options="customOptions"
-      :highlight="highlight"
       :style-wrap-vue-table="styleWrapVueTable"
       :disable-cells="disableCells"
       :disable-sort-thead="disableSortThead"
