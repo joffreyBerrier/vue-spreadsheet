@@ -934,8 +934,8 @@ export default class VueTable extends Vue {
 
       this.highlight.tbody = [];
       this.highlight.thead = [];
-      this.highlight.tbody = [this.selectedCell.row, rowIndex];
-      this.highlight.thead = [this.selectedCell.col, colIndex];
+      this.highlight.tbody = [...this.range(Math.min(this.selectedCell.row, rowIndex), Math.max(this.selectedCell.row, rowIndex))];
+      this.highlight.thead = [...this.range(Math.min(this.selectedCell.col, colIndex), Math.max(this.selectedCell.col, colIndex))];
 
       // Add active on selectedCoordCells selected
       this.modifyMultipleCell('selected');

@@ -6,7 +6,7 @@
       <template v-for="(header, colIndex) in headers" >
         <th
           class="th"
-          :class="{'disabled': header.disabled, 'active': theadHighlight.includes(colIndex) }"
+          :class="{'disabled': header.disabled, 'highlight': theadHighlight.includes(colIndex) }"
           :ref="'th-' + colIndex"
           :key="header.headerKey"
           :style="[header.style, header.style.top = headerTop + 'px']">
@@ -108,13 +108,16 @@
   border-right: 0;
   border-top: 0;
   border-right: 1px solid white;
-  transition: width ease .5s;
+  transition: width ease .5s, background ease .5s;
   &.disabled {
     pointer-events: none;
     span {
       background: #cccccc;
       opacity: .5;
     }
+  }
+  &.highlight {
+    background: aliceblue;
   }
   span {
     display: block;
@@ -319,9 +322,5 @@
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
-}
-
-.active {
-  background: red;
 }
 </style>
