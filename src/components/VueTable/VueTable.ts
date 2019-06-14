@@ -162,6 +162,10 @@ export default class VueTable extends Vue {
   }
 
   // Methods
+  range(start: number, end: number) {
+    // [...range(number, number)]
+    return (new Array(end - start + 1)).fill(undefined).map((_, i) => i + start);
+  }
   setPropertyStyleOfComment() {
     if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.borderColor) {
       this.$refs.vueTable.style.setProperty('--borderCommentColor', this.styleWrapVueTable.comment.borderColor);
