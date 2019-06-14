@@ -1,4 +1,8 @@
 export default {
+  highlight: {
+    tbodyHighlight: {},
+    theadHighlight: {},
+  },
   customOptions: {
     tbodyIndex: true,
     sortHeader: true,

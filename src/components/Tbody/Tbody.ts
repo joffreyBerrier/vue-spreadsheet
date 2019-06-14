@@ -19,6 +19,8 @@ export default class VueTbody extends Vue {
 
   @Prop({ required: true }) tbodyData!: any[]
 
+  @Prop({ required: true }) tbodyHighlight!: any[]
+
   @Prop({ required: true }) trad!: Tbody.Trad
 
   @Prop({ required: true }) disableCells!: VueTable.DisableCells[]

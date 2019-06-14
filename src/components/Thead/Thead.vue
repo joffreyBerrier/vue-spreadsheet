@@ -3,10 +3,10 @@
     @mouseup="handleUpDragToFill($event)">
     <tr>
       <th v-if="tbodyIndex" class="index" key="th-index"></th>
-      <template v-for="(header, colIndex) in headers">
+      <template v-for="(header, colIndex) in headers" >
         <th
           class="th"
-          :class="{'disabled': header.disabled}"
+          :class="{'disabled': header.disabled, 'active': theadHighlight[colIndex] == true }"
           :ref="'th-' + colIndex"
           :key="header.headerKey"
           :style="[header.style, header.style.top = headerTop + 'px']">
@@ -319,5 +319,9 @@
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.active {
+  background: red;
 }
 </style>

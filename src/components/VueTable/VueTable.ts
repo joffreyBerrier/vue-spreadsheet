@@ -26,6 +26,8 @@ export default class VueTable extends Vue {
 
   @Prop({ required: true }) tbodyData!: any[]
 
+  @Prop({ required: true }) highlight!: VueTable.Highlight
+
   @Prop({ required: true }) customOptions!: VueTable.CustomOptions
 
   @Prop({ required: true }) styleWrapVueTable!: VueTable.StyleWrapVueTable
@@ -877,12 +879,18 @@ export default class VueTable extends Vue {
   }
 
   // On click on td
-  handleTbodyTdClick(event: any, col: any, header, rowIndex: number, colIndex: number, type: string) {
+  handleTbodyTdClick(event: any, col: any, header: string, rowIndex: number, colIndex: number, type: string) {
     const column = col;
 
     if (this.selectedMultipleCell) {
       this.selectedMultipleCell = false;
     }
+    this.highlight = {
+      tbodyHighlight: {},
+      theadHighlight: {},
+    }
+    this.highlight.tbodyHighlight[rowIndex] = true;
+    this.highlight.theadHighlight[colIndex] = true;
 
     if (!column.active) {
       if (!this.keys[16]) {
@@ -918,6 +926,22 @@ export default class VueTable extends Vue {
           keyEnd: header,
         };
       }
+
+      this.highlight = {
+        tbodyHighlight: {},
+        theadHighlight: {},
+      }
+      let listRow = [];
+      for (let i = this.selectedCell.row; i <= rowIndex; i++) {
+        listRow.push(i);
+      }
+      listRow.forEach(x => this.highlight.tbodyHighlight[x] = true);
+
+      let listCol = []
+      for (let i = this.selectedCell.col; i <= colIndex; i++) {
+        listCol.push(i);
+      }
+      listCol.forEach(x => this.highlight.theadHighlight[x] = true);
       // Add active on selectedCoordCells selected
       this.modifyMultipleCell('selected');
     }
