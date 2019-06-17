@@ -181,6 +181,13 @@ export default class VueTable extends Vue {
     }
   }
 
+  highlightTdAndThead(rowIndex, colIndex) {
+    this.highlight.tbody = [];
+    this.highlight.thead = [];
+    this.highlight.tbody.push(rowIndex);
+    this.highlight.thead.push(colIndex);
+  }
+
   changeData(rowIndex: number, header: string) {
     const cell = this.tbodyData[rowIndex][header];
     this.changeDataIncrement += 1;
@@ -294,15 +301,16 @@ export default class VueTable extends Vue {
     }
   }
 
-  updateSelectedCell(header: string, row: number, col: any) {
+  updateSelectedCell(header: string, rowIndex: number, colIndex: any) {
     if (!this.setFirstCell) {
-      this.$set(this.tbodyData[row][header], 'rectangleSelection', true);
+      this.$set(this.tbodyData[rowIndex][header], 'rectangleSelection', true);
       this.setFirstCell = true;
     }
+    this.highlightTdAndThead(rowIndex, colIndex);
     this.selectedCell = {
       header,
-      row,
-      col,
+      row: rowIndex,
+      col: colIndex,
     };
   }
 
@@ -892,10 +900,6 @@ export default class VueTable extends Vue {
     if (this.selectedMultipleCell) {
       this.selectedMultipleCell = false;
     }
-    this.highlight.tbody = [];
-    this.highlight.thead = [];
-    this.highlight.tbody.push(rowIndex);
-    this.highlight.thead.push(colIndex);
 
     if (!column.active) {
       if (!this.keys[16]) {
@@ -1218,10 +1222,7 @@ export default class VueTable extends Vue {
       const dataType = this.actualElement.getAttribute('data-type');
       const header = this.actualElement.getAttribute('data-header');
 
-      this.highlight.tbody = [];
-      this.highlight.thead = [];
-      this.highlight.tbody.push(rowIndex + 1);
-      this.highlight.thead.push(colIndex + 1);
+      // this.highlightTdAndThead(rowIndex + 1, colIndex + 1);
 
       if (!this.setFirstCell) {
         this.$set(this.tbodyData[rowIndex][header], 'rectangleSelection', true);
