@@ -17,6 +17,8 @@ export default class VueThead extends Vue {
 
   @Prop({ required: true }) headers!: VueTable.Header[]
 
+  @Prop({ required: true }) theadHighlight!: string[]
+
   @Prop({ required: true }) submenuThead!: VueTable.Submenu[]
 
   @Prop({ required: true }) disableSortThead!: VueTable.DisableSortThead[]

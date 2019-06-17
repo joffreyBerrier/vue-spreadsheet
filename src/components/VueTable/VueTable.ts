@@ -63,6 +63,11 @@ export default class VueTable extends Vue {
 
   incrementRow: number | null = null
 
+  highlight: VueTable.Highlight = {
+    tbody: [],
+    thead: [],
+  }
+
   keys: any | null = {}
 
   lastSelectOpen: any | null = null
@@ -174,6 +179,13 @@ export default class VueTable extends Vue {
     if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.heightBox) {
       this.$refs.vueTable.style.setProperty('--BoxCommentHeight', this.styleWrapVueTable.comment.heightBox);
     }
+  }
+
+  highlightTdAndThead(rowIndex: number, colIndex: number) {
+    this.highlight.tbody = [];
+    this.highlight.thead = [];
+    this.highlight.tbody = [...this.range(Math.min(this.selectedCell.row, rowIndex), Math.max(this.selectedCell.row, rowIndex))];
+    this.highlight.thead = [...this.range(Math.min(this.selectedCell.col, colIndex), Math.max(this.selectedCell.col, colIndex))];
   }
 
   changeData(rowIndex: number, header: string) {
@@ -289,16 +301,18 @@ export default class VueTable extends Vue {
     }
   }
 
-  updateSelectedCell(header: string, row: number, col: any) {
+  updateSelectedCell(header: string, rowIndex: number, colIndex: any) {
     if (!this.setFirstCell) {
-      this.$set(this.tbodyData[row][header], 'rectangleSelection', true);
+      this.$set(this.tbodyData[rowIndex][header], 'rectangleSelection', true);
       this.setFirstCell = true;
     }
     this.selectedCell = {
       header,
-      row,
-      col,
+      row: rowIndex,
+      col: colIndex,
     };
+    // highlight selected row and column
+    this.highlightTdAndThead(rowIndex, colIndex);
   }
 
   activeSelectSearch(event: any, rowIndex: number, colIndex: number) {
@@ -881,7 +895,7 @@ export default class VueTable extends Vue {
   }
 
   // On click on td
-  handleTbodyTdClick(event: any, col: any, header, rowIndex: number, colIndex: number, type: string) {
+  handleTbodyTdClick(event: any, col: any, header: string, rowIndex: number, colIndex: number, type: string) {
     const column = col;
 
     if (this.selectedMultipleCell) {
@@ -922,8 +936,12 @@ export default class VueTable extends Vue {
           keyEnd: header,
         };
       }
+
       // Add active on selectedCoordCells selected
       this.modifyMultipleCell('selected');
+
+      // highlight row and column of selected cell
+      this.highlightTdAndThead(rowIndex, colIndex);
     }
   }
 

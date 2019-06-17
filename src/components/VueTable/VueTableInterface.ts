@@ -64,6 +64,12 @@ declare namespace VueTable {
     }
   }
 
+  // Highlight
+  interface Highlight {
+    tbody: number[],
+    thead: number[],
+  }
+
   // Submenu
   interface Submenu {
     disabled: {
