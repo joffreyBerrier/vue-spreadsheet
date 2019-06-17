@@ -937,7 +937,6 @@ export default class VueTable extends Vue {
         };
       }
 
-
       // Add active on selectedCoordCells selected
       this.modifyMultipleCell('selected');
 
