@@ -8,7 +8,7 @@
           class="th"
           :class="{
             'disabled': header.disabled,
-            'highlight': theadHighlight.includes(colIndex)
+            'highlight_spreadsheet': theadHighlight.includes(colIndex)
           }"
           :ref="'th-' + colIndex"
           :key="header.headerKey"
@@ -271,7 +271,7 @@ export default {
       opacity: .5;
     }
   }
-  &.highlight {
+  &.highlight_spreadsheet {
     background: #d5ddec;
   }
   span {
