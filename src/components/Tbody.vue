@@ -2,7 +2,7 @@
   <tbody>
     <template v-for="(row, rowIndex) in tbodyData">
       <tr class="table_row" :key="row + '' + rowIndex">
-        <td class="index" v-if="tbodyIndex" :key="'td-index-' + rowIndex">
+        <td class="index" :class="{ 'highlight': tbodyHighlight.includes(rowIndex) }" v-if="tbodyIndex" :key="'td-index-' + rowIndex">
           {{rowIndex + 1}}
         </td>
         <template v-for="(header, colIndex) in headerKeys">
@@ -162,6 +162,10 @@
 export default {
   name: 'vue-tbody',
   props: {
+    tbodyHighlight: {
+      type: Array,
+      required: true
+    },
     filteredList: {
       type: Array,
       required: true,
@@ -225,7 +229,7 @@ export default {
     handleHoverTooltip(header, rowIndex, colIndex, type) {
       if (this.$refs[`span-${colIndex}-${rowIndex}`] && type !== 'img') {
         const element = this.$refs[`span-${colIndex}-${rowIndex}`][0];
-        if (!this.vuetableTooltip[rowIndex] && element.scrollWidth > element.clientWidth) {
+        if (!this.vuetableTooltip[rowIndex] && element && (element.scrollWidth > element.clientWidth)) {
           this.$set(this.vuetableTooltip, rowIndex, header);
         }
       }
@@ -701,6 +705,10 @@ $dragToFillColor:#3183fc;
   border-left: 1px solid #e6ecf6;
   background: transparent;
   box-sizing: border-box;
+  transition: background ease .5s;
+  &.highlight {
+    background: #d5ddec;
+  }
 }
 
 // transition tooltip

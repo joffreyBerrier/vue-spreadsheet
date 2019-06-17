@@ -17,6 +17,7 @@
         :submenu-status-thead="submenuStatusThead"
         :submenu-thead="submenuThead"
         :tbody-index="customOptions.tbodyIndex"
+        :thead-highlight="highlight.thead"
         @handle-up-drag-size-header="handleUpDragSizeHeader"
         @handle-up-drag-to-fill="handleUpDragToFill"
         @submenu-enable="enableSubmenu"
@@ -38,6 +39,7 @@
         :submenu-tbody="submenuTbody"
         :filtered-list="filteredList"
         :submenu-status-tbody="submenuStatusTbody"
+        :tbody-highlight="highlight.tbody"
         @handle-to-calculate-position="calculPosition"
         @handle-to-open-select="enableSelect"
         @submenu-enable="enableSubmenu"
@@ -122,6 +124,10 @@ export default {
       disableKeyTimeout: null,
       eventDrag: false,
       headerTop: 0,
+      highlight: {
+        tbody: [],
+        thead: [],
+      },
       incrementCol: 0,
       incrementOption: null,
       incrementRow: null,
@@ -196,6 +202,16 @@ export default {
     },
   },
   methods: {
+    highlightTdAndThead(rowIndex, colIndex) {
+      this.highlight.tbody = [];
+      this.highlight.thead = [];
+      this.highlight.tbody = [...this.range(Math.min(this.selectedCell.row, rowIndex), Math.max(this.selectedCell.row, rowIndex))];
+      this.highlight.thead = [...this.range(Math.min(this.selectedCell.col, colIndex), Math.max(this.selectedCell.col, colIndex))];
+    },
+    range(start, end) {
+      // [...range(number, number)]
+      return (new Array(end - start + 1)).fill(undefined).map((_, i) => i + start);
+    },
     setPropertyStyleOfComment() {
       if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.borderColor) {
         this.$refs.vueTable.style.setProperty('--borderCommentColor', this.styleWrapVueTable.comment.borderColor);
@@ -321,16 +337,18 @@ export default {
         }
       }
     },
-    updateSelectedCell(header, row, col) {
+    updateSelectedCell(header, rowIndex, colIndex) {
       if (!this.setFirstCell) {
-        this.$set(this.tbodyData[row][header], 'rectangleSelection', true);
+        this.$set(this.tbodyData[rowIndex][header], 'rectangleSelection', true);
         this.setFirstCell = true;
       }
       this.selectedCell = {
         header,
-        row,
-        col,
+        row: rowIndex,
+        col: colIndex,
       };
+      // highlight selected row and column
+      this.highlightTdAndThead(rowIndex, colIndex);
     },
     activeSelectSearch(event, rowIndex, colIndex) {
       this.calculPosition(event, rowIndex, colIndex, 'dropdown');
@@ -372,17 +390,17 @@ export default {
     handleSearchInputSelect(event, searchValue, col, header, rowIndex, colIndex) {
       const disableSearch = !(searchValue === '' && event.keyCode === 8);
 
-      if ((!this.keys.cmd || !this.keys.ctrl) &&
-        disableSearch &&
-        event.keyCode !== 13 &&
-        event.keyCode !== 16 &&
-        event.keyCode !== 17 &&
-        event.keyCode !== 27 &&
-        event.keyCode !== 37 &&
-        event.keyCode !== 38 &&
-        event.keyCode !== 39 &&
-        event.keyCode !== 40 &&
-        event.keyCode !== 91) {
+      if ((!this.keys.cmd || !this.keys.ctrl)
+        && disableSearch
+        && event.keyCode !== 13
+        && event.keyCode !== 16
+        && event.keyCode !== 17
+        && event.keyCode !== 27
+        && event.keyCode !== 37
+        && event.keyCode !== 38
+        && event.keyCode !== 39
+        && event.keyCode !== 40
+        && event.keyCode !== 91) {
         if (this.lastSelectOpen) {
           this.$set(this.lastSelectOpen, 'searchValue', searchValue);
         } else {
@@ -545,10 +563,10 @@ export default {
         }
       }
 
-      if (this.selectedCoordCells &&
-        this.selectedCell.col === this.selectedCoordCells.colEnd &&
-        this.selectedCell.row === this.selectedCoordCells.rowEnd &&
-        params === 'copy') {
+      if (this.selectedCoordCells
+        && this.selectedCell.col === this.selectedCoordCells.colEnd
+        && this.selectedCell.row === this.selectedCoordCells.rowEnd
+        && params === 'copy') {
         this.selectedCoordCopyCells = this.selectedCoordCells;
       } else {
         this.selectedCoordCopyCells = null;
@@ -623,11 +641,11 @@ export default {
         const conditionPasteToMultipleSelection = this.selectedCoordCopyCells !== null && this.selectedCoordCells !== this.selectedCoordCopyCells;
 
         // new paste data
-        const conditionRowToMultiplePasteRow = this.storeCopyDatas.length === 1 &&
-          !this.storeCopyDatas[0].type &&
-          this.selectedCoordCopyCells !== null &&
-          Object.values(this.storeCopyDatas[0]).length > 1 &&
-          this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd;
+        const conditionRowToMultiplePasteRow = this.storeCopyDatas.length === 1
+          && !this.storeCopyDatas[0].type
+          && this.selectedCoordCopyCells !== null
+          && Object.values(this.storeCopyDatas[0]).length > 1
+          && this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd;
 
         // copy / paste multiple cell | drag to fill one / multiple cell
         let rowMin = Math.min(this.selectedCoordCells.rowStart, this.selectedCoordCells.rowEnd);
@@ -705,10 +723,10 @@ export default {
             }
 
             // 1 row & multiple cols => to multiple row & cols
-            const rowColsToRowsCols = newCopyData.length === 1 &&
-              Object.values(newCopyData[0]).length > 1 &&
-              this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd &&
-              this.selectedCoordCells.colStart !== this.selectedCoordCells.colEnd;
+            const rowColsToRowsCols = newCopyData.length === 1
+              && Object.values(newCopyData[0]).length > 1
+              && this.selectedCoordCells.rowStart < this.selectedCoordCells.rowEnd
+              && this.selectedCoordCells.colStart !== this.selectedCoordCells.colEnd;
             if (rowColsToRowsCols) {
               this.replacePasteData(0, header, incrementRow, currentHeader);
               if (colMin < colMax) {
@@ -933,6 +951,9 @@ export default {
         }
         // Add active on selectedCoordCells selected
         this.modifyMultipleCell('selected');
+
+        // highlight row and column of selected cell
+        this.highlightTdAndThead(rowIndex, colIndex);
       }
     },
     handleTbodyTdDoubleClick(event, header, col, rowIndex, colIndex) {
@@ -1181,14 +1202,14 @@ export default {
         this.moveOnSelect(event);
       }
 
-      if (this.actualElement &&
-        (event.keyCode === 37 ||
-        event.keyCode === 39 ||
-        event.keyCode === 40 ||
-        event.keyCode === 38 ||
-        event.keyCode === 13 ||
-        event.keyCode === 27 ||
-        event.keyCode === 8)) {
+      if (this.actualElement
+        && (event.keyCode === 37
+        || event.keyCode === 39
+        || event.keyCode === 40
+        || event.keyCode === 38
+        || event.keyCode === 13
+        || event.keyCode === 27
+        || event.keyCode === 8)) {
         this.removeClass(['selected']);
 
         const colIndex = Number(this.actualElement.getAttribute('data-col-index'));

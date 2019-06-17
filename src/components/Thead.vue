@@ -6,7 +6,10 @@
       <template v-for="(header, colIndex) in headers">
         <th
           class="th"
-          :class="{'disabled': header.disabled}"
+          :class="{
+            'disabled': header.disabled,
+            'highlight': theadHighlight.includes(colIndex)
+          }"
           :ref="'th-' + colIndex"
           :key="header.headerKey"
           :style="[header.style, header.style.top = headerTop + 'px']">
@@ -96,6 +99,10 @@
 export default {
   name: 'vue-thead',
   props: {
+    theadHighlight: {
+      type: Array,
+      required: true
+    },
     headerTop: {
       type: Number,
       required: true,
@@ -256,13 +263,16 @@ export default {
   border-right: 0;
   border-top: 0;
   border-right: 1px solid white;
-  transition: width ease .5s;
+  transition: width ease .5s, background ease .5s;
   &.disabled {
     pointer-events: none;
     span {
       background: #cccccc;
       opacity: .5;
     }
+  }
+  &.highlight {
+    background: #d5ddec;
   }
   span {
     display: block;
