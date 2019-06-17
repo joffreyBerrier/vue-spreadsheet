@@ -551,7 +551,7 @@ $dragToFillColor:#3183fc;
   box-sizing: border-box;
   transition: background ease .5s;
   &.highlight {
-    background: aliceblue;
+    background: #d5ddec;
   }
 }
 

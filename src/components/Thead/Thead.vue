@@ -117,7 +117,7 @@
     }
   }
   &.highlight {
-    background: aliceblue;
+    background: #d5ddec;
   }
   span {
     display: block;
