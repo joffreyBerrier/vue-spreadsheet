@@ -181,11 +181,11 @@ export default class VueTable extends Vue {
     }
   }
 
-  highlightTdAndThead(rowIndex, colIndex) {
+  highlightTdAndThead(rowIndex: number, colIndex: number) {
     this.highlight.tbody = [];
     this.highlight.thead = [];
-    this.highlight.tbody.push(rowIndex);
-    this.highlight.thead.push(colIndex);
+    this.highlight.tbody = [...this.range(Math.min(this.selectedCell.row, rowIndex), Math.max(this.selectedCell.row, rowIndex))];
+    this.highlight.thead = [...this.range(Math.min(this.selectedCell.col, colIndex), Math.max(this.selectedCell.col, colIndex))];
   }
 
   changeData(rowIndex: number, header: string) {
@@ -306,12 +306,13 @@ export default class VueTable extends Vue {
       this.$set(this.tbodyData[rowIndex][header], 'rectangleSelection', true);
       this.setFirstCell = true;
     }
-    this.highlightTdAndThead(rowIndex, colIndex);
     this.selectedCell = {
       header,
       row: rowIndex,
       col: colIndex,
     };
+    // highlight selected row and column
+    this.highlightTdAndThead(rowIndex, colIndex);
   }
 
   activeSelectSearch(event: any, rowIndex: number, colIndex: number) {
@@ -936,13 +937,12 @@ export default class VueTable extends Vue {
         };
       }
 
-      this.highlight.tbody = [];
-      this.highlight.thead = [];
-      this.highlight.tbody = [...this.range(Math.min(this.selectedCell.row, rowIndex), Math.max(this.selectedCell.row, rowIndex))];
-      this.highlight.thead = [...this.range(Math.min(this.selectedCell.col, colIndex), Math.max(this.selectedCell.col, colIndex))];
 
       // Add active on selectedCoordCells selected
       this.modifyMultipleCell('selected');
+
+      // highlight row and column of selected cell
+      this.highlightTdAndThead(rowIndex, colIndex);
     }
   }
 
@@ -1080,7 +1080,6 @@ export default class VueTable extends Vue {
       const widthTable = vueTable.clientWidth - 40;
       const borderBottomCell = Math.round(heightTable / 40);
       const borderRightCell = Math.round(widthTable / maxCol);
-
       // top
       if (event.keyCode === 38) {
         event.preventDefault();
@@ -1221,8 +1220,6 @@ export default class VueTable extends Vue {
       const rowIndex = Number(this.actualElement.getAttribute('data-row-index'));
       const dataType = this.actualElement.getAttribute('data-type');
       const header = this.actualElement.getAttribute('data-header');
-
-      // this.highlightTdAndThead(rowIndex + 1, colIndex + 1);
 
       if (!this.setFirstCell) {
         this.$set(this.tbodyData[rowIndex][header], 'rectangleSelection', true);

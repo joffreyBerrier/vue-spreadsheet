@@ -580,8 +580,4 @@ $dragToFillColor:#3183fc;
   transform: translateX(-10px);
   opacity: 0;
 }
-
-.active {
-  background: red;
-}
 </style>
