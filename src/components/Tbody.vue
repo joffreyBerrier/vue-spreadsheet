@@ -2,7 +2,7 @@
   <tbody>
     <template v-for="(row, rowIndex) in tbodyData">
       <tr class="table_row" :key="row + '' + rowIndex">
-        <td class="index" :class="{ 'highlight': tbodyHighlight.includes(rowIndex) }" v-if="tbodyIndex" :key="'td-index-' + rowIndex">
+        <td class="index" :class="{ 'highlight_spreadsheet': tbodyHighlight.includes(rowIndex) }" v-if="tbodyIndex" :key="'td-index-' + rowIndex">
           {{rowIndex + 1}}
         </td>
         <template v-for="(header, colIndex) in headerKeys">
@@ -706,7 +706,7 @@ $dragToFillColor:#3183fc;
   background: transparent;
   box-sizing: border-box;
   transition: background ease .5s;
-  &.highlight {
+  &.highlight_spreadsheet {
     background: #d5ddec;
   }
 }
