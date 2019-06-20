@@ -778,3 +778,7 @@ export default {
 </style>
 
 ```
+
+## LICENSE
+
+[MIT](LICENSE)
