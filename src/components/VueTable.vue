@@ -210,6 +210,7 @@ export default {
   },
   methods: {
     checkedRow(row) {
+      this.$emit('tbody-checked-row', row);
       this.$refs.vueThead.checkedAll = false
     },
     highlightTdAndThead(rowIndex, colIndex) {
@@ -1007,6 +1008,7 @@ export default {
     },
     // callback
     callbackCheckedAll(isChecked) {
+      this.$emit('tbody-all-checked-row', isChecked);
       if (this.customOptions.tbodyCheckbox) {
         this.tbodyData.forEach(x => x.checked = isChecked)
       }
