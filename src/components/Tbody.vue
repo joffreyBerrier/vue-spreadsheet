@@ -1,10 +1,32 @@
 <template>
   <tbody>
     <template v-for="(row, rowIndex) in tbodyData">
-      <tr class="table_row" :key="row + '' + rowIndex">
-        <td class="index" :class="{ 'highlight_spreadsheet': tbodyHighlight.includes(rowIndex) }" v-if="tbodyIndex" :key="'td-index-' + rowIndex">
+      <tr 
+        class="table_row"
+        :key="`row${rowIndex}`"
+        :class="{ 'checked_row': 'checked' in tbodyData[rowIndex] && tbodyData[rowIndex].checked === true }">
+
+        <td
+          v-if="tbodyCheckbox && 'checked' in tbodyData[rowIndex]"
+          :class="{ 'highlight_spreadsheet': tbodyHighlight.includes(rowIndex) }"
+          :key="`checkbox-${rowIndex}`"
+          class="checkbox index">
+          <input
+            type="checkbox"
+            :id="`checkbox-${rowIndex}`"
+            @change="checkedRow(tbodyData[rowIndex])"
+            v-model="tbodyData[rowIndex].checked">
+          <label :for="`checkbox-${rowIndex}`"></label>
+        </td>
+
+        <td
+          v-if="tbodyIndex"
+          class="index"
+          :class="{ 'highlight_spreadsheet': tbodyHighlight.includes(rowIndex) }"
+          :key="`td-index-${rowIndex}`">
           {{rowIndex + 1}}
         </td>
+
         <template v-for="(header, colIndex) in headerKeys">
           <td
             v-if="row[header]"
@@ -21,13 +43,13 @@
             @dblclick="handleDoubleClickTd($event, header, row[header], rowIndex, colIndex, row[header].type)"
             @mousemove="handleMoveDragToFill($event, header, row[header], rowIndex, colIndex)"
             @mouseup="handleUpDragToFill($event, header, row[header], rowIndex, colIndex, row[header].type)"
-            v-bind:class="{
+            :class="{
               'active_td': row[header].active,
               'show': row[header].show,
               'selected': row[header].selected,
               'copy': row[header].stateCopy,
               'disabled': row[header].disabled || disableCells.find(x => x === header),
-              'rectangleSelection': row[header].rectangleSelection,
+              'rectangleSelection': row[header].rectangleSelection
             }"
             :ref="`td-${colIndex}-${rowIndex}`"
             :key="header"
@@ -190,6 +212,10 @@ export default {
       type: Boolean,
       required: false,
     },
+    tbodyCheckbox: {
+      type: Boolean,
+      required: false,
+    },
     submenuStatusTbody: {
       type: Boolean,
       required: false,
@@ -218,6 +244,9 @@ export default {
     },
   },
   methods: {
+    checkedRow(row) {
+      this.$emit('tbody-checked-row', row);
+    },
     handleHoverTriangleComment(header, rowIndex) {
       if (!this.vueTableComment[rowIndex]) {
         this.$set(this.vueTableComment, rowIndex, header);
@@ -323,6 +352,30 @@ $rectangleBg: #a0c3ff99;
 
 $dragToFillSize: 9px;
 $dragToFillColor:#3183fc;
+
+$chedkedColor: #b2d1ff;
+
+.table_row {
+  transition: background ease .3s;
+  &.checked_row {
+    background: $chedkedColor;
+    td {
+      background: $chedkedColor;
+    }
+  }
+  .checkbox {
+    position: relative;
+    label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
 
 .td {
   height: 40px;

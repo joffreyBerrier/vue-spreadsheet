@@ -110,6 +110,7 @@ Function                               | Type       | Description
 ```
   customOptions: {
     dragToFill: true,
+    tbodyCheckbox: false,
     tbodyIndex: true,
     sortHeader: true,
     trad: {
@@ -194,6 +195,34 @@ CommentBox with content:
       value: 'comment',
       borderColor: '#eee',
     },
+    ...
+  },
+```
+
+
+### Checkbox :white_check_mark:
+
+If you want to use the checkbox
+
+1: Create a key ``tbodyCheckbox: true`` on ``customOptions``
+2: Create a key ``checkbox: boolean`` on each data (false by default)
+
+If you want to get the array of the checked data use ``this.$refs.vueTable.checkedRows``
+
+#### Example
+
+```
+  data: {
+    checked: boolean,
+    a: {}
+    ...
+  },
+```
+
+```
+  customOptions: {
+    ...
+    tbodyCheckbox: boolean
     ...
   },
 ```

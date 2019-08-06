@@ -17,10 +17,12 @@
         :submenu-status-thead="submenuStatusThead"
         :submenu-thead="submenuThead"
         :tbody-index="customOptions.tbodyIndex"
+        :tbody-checkbox="customOptions.tbodyCheckbox"
         :thead-highlight="highlight.thead"
         @handle-up-drag-size-header="handleUpDragSizeHeader"
         @handle-up-drag-to-fill="handleUpDragToFill"
         @submenu-enable="enableSubmenu"
+        @thead-checked-all-callback="callbackCheckedAll"
         @thead-submenu-click-callback="callbackSubmenuThead"
         @thead-td-context-menu="handleTheadContextMenu"
         @thead-td-sort="callbackSort">
@@ -33,6 +35,7 @@
         ref="vueTbody"
         :tbody-data="tbodyData"
         :headers="headers"
+        :tbody-checkbox="customOptions.tbodyCheckbox"
         :tbody-index="customOptions.tbodyIndex"
         :trad="customOptions.trad"
         :disable-cells="disableCells"
@@ -40,6 +43,7 @@
         :filtered-list="filteredList"
         :submenu-status-tbody="submenuStatusTbody"
         :tbody-highlight="highlight.tbody"
+        @tbody-checked-row="checkedRow"
         @handle-to-calculate-position="calculPosition"
         @handle-to-open-select="enableSelect"
         @submenu-enable="enableSubmenu"
@@ -182,6 +186,9 @@ export default {
     },
   },
   computed: {
+    checkedRows() {
+      return this.tbodyData.filter(x => x.checked)
+    },
     colHeaderWidths() {
       return this.headers.map(x => parseInt(x.style.width, 10));
     },
@@ -202,6 +209,9 @@ export default {
     },
   },
   methods: {
+    checkedRow(row) {
+      this.$refs.vueThead.checkedAll = false
+    },
     highlightTdAndThead(rowIndex, colIndex) {
       this.highlight.tbody = [];
       this.highlight.thead = [];
@@ -996,6 +1006,11 @@ export default {
       this.changeData(rowIndex, header);
     },
     // callback
+    callbackCheckedAll(isChecked) {
+      if (this.customOptions.tbodyCheckbox) {
+        this.tbodyData.forEach(x => x.checked = isChecked)
+      }
+    },
     callbackSort(event, header, colIndex) {
       this.$emit('thead-td-sort', event, header, colIndex);
     },
