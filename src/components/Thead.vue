@@ -2,6 +2,14 @@
   <thead class="thead"
     @mouseup="handleUpDragToFill($event)">
     <tr>
+      <th class="index">
+        <input
+          type="checkbox"
+          id="checkbox-all"
+          v-model="checkedAll"
+          @change="checkedAllRow">
+        <label for="checkbox-all"></label>
+      </th>
       <th v-if="tbodyIndex" class="index" key="th-index"></th>
       <template v-for="(header, colIndex) in headers">
         <th
@@ -101,7 +109,7 @@ export default {
   props: {
     theadHighlight: {
       type: Array,
-      required: true
+      required: true,
     },
     headerTop: {
       type: Number,
@@ -127,6 +135,10 @@ export default {
       type: Boolean,
       required: false,
     },
+    tbodyCheckbox: {
+      type: Boolean,
+      required: false,
+    },
     submenuStatusThead: {
       type: Boolean,
       required: false,
@@ -134,6 +146,7 @@ export default {
   },
   data() {
     return {
+      checkedAll: false,
       beforeChangeSize: {},
       eventDrag: false,
       newSize: '',
@@ -145,6 +158,9 @@ export default {
     window.addEventListener('mousemove', this.handleMoveChangeSize);
   },
   methods: {
+    checkedAllRow() {
+      this.$emit('thead-checked-all-callback', this.checkedAll);
+    },
     removeClass(params, colIndex) {
       this.headers.forEach((header, index) => {
         if (index !== colIndex) {
