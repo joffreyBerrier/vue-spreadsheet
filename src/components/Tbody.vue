@@ -186,7 +186,7 @@ export default {
   props: {
     tbodyHighlight: {
       type: Array,
-      required: true
+      required: true,
     },
     filteredList: {
       type: Array,

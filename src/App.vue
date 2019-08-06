@@ -12,6 +12,8 @@
       :select-position="selectPosition"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead"
+      @tbody-checked-row="checkedData"
+      @tbody-all-checked-row="checkedAllData"
       @tbody-change-data="changeData"
       @tbody-submenu-click-change-color="changeColorTbody"
       @tbody-submenu-click-change-value="changeValueTbody"
@@ -47,6 +49,12 @@ export default {
     }, 300);
   },
   methods: {
+    checkedAllData(isChecked) {
+      // console.log('checked all data', isChecked)
+    },
+    checkedData(row) {
+      // console.log('checked data', row)
+    },
     changeData(row, header) {
       // console.log(row, header);
     },
