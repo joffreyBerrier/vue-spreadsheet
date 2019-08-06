@@ -2,7 +2,7 @@
   <thead class="thead"
     @mouseup="handleUpDragToFill($event)">
     <tr>
-      <th class="index">
+      <th class="index" v-if="tbodyCheckbox">
         <input
           type="checkbox"
           id="checkbox-all"
