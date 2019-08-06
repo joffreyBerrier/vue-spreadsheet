@@ -10,7 +10,7 @@
           v-if="tbodyCheckbox && 'checked' in tbodyData[rowIndex]"
           :class="{ 'highlight_spreadsheet': tbodyHighlight.includes(rowIndex) }"
           :key="`checkbox-${rowIndex}`"
-          class="checkbox index">
+          class="vuejsspreadsheet_checkbox index">
           <input
             type="checkbox"
             :id="`checkbox-${rowIndex}`"
@@ -363,7 +363,7 @@ $chedkedColor: #b2d1ff;
       background: $chedkedColor;
     }
   }
-  .checkbox {
+  .vuejsspreadsheet_checkbox {
     position: relative;
     label {
       position: absolute;
