@@ -289,9 +289,16 @@ export default {
     createdCell() {
       // create cell if isn't exist
       this.tbodyData.forEach((tbody, rowIndex) => {
+        if (this.customOptions.tbodyCheckbox && !tbody.vuetable_checked) {
+          this.$set(this.tbodyData[rowIndex], 'vuetable_checked', false);
+        }
         this.headerKeys.forEach((header) => {
           if (!tbody[header]) {
             const data = JSON.parse(JSON.stringify(this.customOptions.newData));
+            this.$set(this.tbodyData[rowIndex], header, data);
+          } else if (!tbody[header].type && tbody[header].value) {
+            let data = JSON.parse(JSON.stringify(this.customOptions.newData));
+            data.value = tbody[header].value
             this.$set(this.tbodyData[rowIndex], header, data);
           }
           const copy = JSON.parse(JSON.stringify(this.tbodyData[rowIndex][header]));
@@ -1010,7 +1017,7 @@ export default {
     callbackCheckedAll(isChecked) {
       this.$emit('tbody-all-checked-row', isChecked);
       if (this.customOptions.tbodyCheckbox) {
-        this.tbodyData.forEach(x => x.checked = isChecked)
+        this.tbodyData.forEach(x => x.vuetable_checked = isChecked)
       }
     },
     callbackSort(event, header, colIndex) {

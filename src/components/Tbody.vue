@@ -4,10 +4,10 @@
       <tr 
         class="table_row"
         :key="`row${rowIndex}`"
-        :class="{ 'checked_row': 'checked' in tbodyData[rowIndex] && tbodyData[rowIndex].checked === true }">
+        :class="{ 'checked_row': 'vuetable_checked' in tbodyData[rowIndex] && tbodyData[rowIndex].vuetable_checked === true }">
 
         <td
-          v-if="tbodyCheckbox && 'checked' in tbodyData[rowIndex]"
+          v-if="tbodyCheckbox && 'vuetable_checked' in tbodyData[rowIndex]"
           :class="{ 'highlight_spreadsheet': tbodyHighlight.includes(rowIndex) }"
           :key="`checkbox-${rowIndex}`"
           class="vuejsspreadsheet_checkbox index">
@@ -15,7 +15,7 @@
             type="checkbox"
             :id="`checkbox-${rowIndex}`"
             @change="checkedRow(tbodyData[rowIndex])"
-            v-model="tbodyData[rowIndex].checked">
+            v-model="tbodyData[rowIndex].vuetable_checked">
           <label :for="`checkbox-${rowIndex}`"></label>
         </td>
 

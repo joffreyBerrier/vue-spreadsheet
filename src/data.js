@@ -127,7 +127,6 @@ export default {
   ],
   products: [
     {
-      checked: false,
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -236,7 +235,6 @@ export default {
       },
     },
     {
-      checked: false,
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -345,7 +343,6 @@ export default {
       },
     },
     {
-      checked: false,
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -462,7 +459,6 @@ export default {
       },
     },
     {
-      checked: false,
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -579,7 +575,6 @@ export default {
       },
     },
     {
-      checked: false,
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -696,7 +691,6 @@ export default {
       },
     },
     {
-      checked: false,
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -813,7 +807,6 @@ export default {
       },
     },
     {
-      checked: false,
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -919,7 +912,6 @@ export default {
       },
     },
     {
-      checked: false,
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -1025,7 +1017,6 @@ export default {
       },
     },
     {
-      checked: false,
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -1131,7 +1122,6 @@ export default {
       },
     },
     {
-      checked: false,
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
@@ -1237,7 +1227,6 @@ export default {
       },
     },
     {
-      checked: false,
       a: {
         type: 'img',
         value: 'https://via.placeholder.com/350x150',
