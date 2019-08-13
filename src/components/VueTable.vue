@@ -158,7 +158,6 @@ export default {
     };
   },
   mounted() {
-    this.createdCell();
     window.addEventListener('keydown', this.moveKeydown);
     window.addEventListener('keyup', this.moveKeyup);
     document.addEventListener('copy', (event) => {
@@ -184,6 +183,9 @@ export default {
     tbodyData() {
       this.createdCell();
     },
+    headers() {
+      this.createdCell();
+    }
   },
   computed: {
     checkedRows() {
