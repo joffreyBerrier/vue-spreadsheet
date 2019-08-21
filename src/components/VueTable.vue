@@ -1,15 +1,18 @@
 <template>
   <div
-    ref="vueTable"
+    :ref="`${customTable}-vueTable`"
     :style="styleWrapVueTable"
     @scroll="scrollFunction">
 
     <slot name="header">
     </slot>
 
-    <table class="vue_table" oncontextmenu="return false;" ref="table">
+    <table
+      class="vue_table"
+      oncontextmenu="return false;"
+      :ref="`${customTable}-table`">
       <vue-thead
-        ref="vueThead"
+        :ref="`${customTable}-vueThead`"
         :disable-sort-thead="disableSortThead"
         :header-top="headerTop"
         :headers="headers"
@@ -33,7 +36,7 @@
       </slot>
 
       <vue-tbody v-if="!loading"
-        ref="vueTbody"
+        :ref="`${customTable}-vueTbody`"
         :tbody-data="tbodyData"
         :headers="headers"
         :tbody-checkbox="customOptions.tbodyCheckbox"
@@ -220,7 +223,7 @@ export default {
   methods: {
     checkedRow(row) {
       this.$emit('tbody-checked-row', row);
-      this.$refs.vueThead.checkedAll = false;
+      this.$refs[`${this.customTable}-vueThead`].checkedAll = false;
     },
     highlightTdAndThead(rowIndex, colIndex) {
       this.highlight.tbody = [];
@@ -233,16 +236,16 @@ export default {
     },
     setPropertyStyleOfComment() {
       if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.borderColor) {
-        this.$refs.vueTable.style.setProperty('--borderCommentColor', this.styleWrapVueTable.comment.borderColor);
+        this.$refs[`${this.customTable}-vueTable`].style.setProperty('--borderCommentColor', this.styleWrapVueTable.comment.borderColor);
       }
       if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.borderSize) {
-        this.$refs.vueTable.style.setProperty('--borderCommentSize', this.styleWrapVueTable.comment.borderSize);
+        this.$refs[`${this.customTable}-vueTable`].style.setProperty('--borderCommentSize', this.styleWrapVueTable.comment.borderSize);
       }
       if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.widthBox) {
-        this.$refs.vueTable.style.setProperty('--boxCommentWidth', this.styleWrapVueTable.comment.widthBox);
+        this.$refs[`${this.customTable}-vueTable`].style.setProperty('--boxCommentWidth', this.styleWrapVueTable.comment.widthBox);
       }
       if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.heightBox) {
-        this.$refs.vueTable.style.setProperty('--BoxCommentHeight', this.styleWrapVueTable.comment.heightBox);
+        this.$refs[`${this.customTable}-vueTable`].style.setProperty('--BoxCommentHeight', this.styleWrapVueTable.comment.heightBox);
       }
     },
     changeData(rowIndex, header) {
@@ -351,9 +354,9 @@ export default {
       }
     },
     affixHeader(offset, target) {
-      if (this.$refs && this.$refs.table && this.$refs.table.offsetTop) {
+      if (this.$refs && this.$refs[`${this.customTable}-table`] && this.$refs[`${this.customTable}-table`].offsetTop) {
         this.scrollDocument = document.querySelector(`${this.parentScrollElement.attribute}`).scrollTop;
-        const offsetTopVueTable = this.$refs.table.offsetTop;
+        const offsetTopVueTable = this.$refs[`${this.customTable}-table`].offsetTop;
         const scrollOnDocument = this.scrollDocument || target === 'document';
         const offsetEl = scrollOnDocument ? this.scrollDocument : offset.target.scrollTop;
 
@@ -379,8 +382,8 @@ export default {
     },
     activeSelectSearch(event, rowIndex, colIndex) {
       this.calculPosition(event, rowIndex, colIndex, 'dropdown');
-      if (this.$refs.vueTbody.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0]) {
-        this.$refs.vueTbody.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
+      if (this.$refs[`${this.customTable}-vueTbody`].$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0]) {
+        this.$refs[`${this.customTable}-vueTbody`].$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
       }
     },
     enableSelect(event, header, col, rowIndex, colIndex) {
@@ -398,7 +401,7 @@ export default {
         this.$set(currentElement, 'search', true);
         this.$set(currentElement, 'show', true);
 
-        this.$refs.vueTbody.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
+        this.$refs[`${this.customTable}-vueTbody`].$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
 
         if (currentElement.value !== '') {
@@ -454,8 +457,8 @@ export default {
     },
     showDropdown(colIndex, rowIndex) {
       // clear timeout
-      if (this.$refs.vueTbody.$refs[`dropdown-${this.customTable}-${colIndex}-${rowIndex}`]) {
-        const dropdown = this.$refs.vueTbody.$refs[`dropdown-${this.customTable}-${colIndex}-${rowIndex}`][0];
+      if (this.$refs[`${this.customTable}-vueTbody`].$refs[`dropdown-${this.customTable}-${colIndex}-${rowIndex}`]) {
+        const dropdown = this.$refs[`${this.customTable}-vueTbody`].$refs[`dropdown-${this.customTable}-${colIndex}-${rowIndex}`][0];
         if (!this.scrollToSelectTimeout === null) {
           clearTimeout(this.scrollToSelectTimeout);
         }
@@ -488,15 +491,15 @@ export default {
     },
     calculPosition(event, rowIndex, colIndex, header) {
       // stock scrollLeft / scrollTop position of parent
-      const { scrollLeft } = this.$refs.vueTable;
-      const { scrollTop } = this.$refs.vueTable;
+      const { scrollLeft } = this.$refs[`${this.customTable}-vueTable`];
+      const { scrollTop } = this.$refs[`${this.customTable}-vueTable`];
 
       // get offsetTop of firstCell
-      const firstCellOffsetTop = this.$refs.vueTbody.$refs[`td-${this.customTable}-0-0`][0].offsetTop;
+      const firstCellOffsetTop = this.$refs[`${this.customTable}-vueTbody`].$refs[`td-${this.customTable}-0-0`][0].offsetTop;
       // stock $el
-      const el = this.$refs.vueTbody.$refs[`td-${this.customTable}-${colIndex}-${rowIndex}`][0];
+      const el = this.$refs[`${this.customTable}-vueTbody`].$refs[`td-${this.customTable}-${colIndex}-${rowIndex}`][0];
       // stock height Of VueTable
-      const realHeightTable = this.$refs.vueTable.offsetHeight;
+      const realHeightTable = this.$refs[`${this.customTable}-vueTable`].offsetHeight;
       // stock size / offsetTop / offsetLeft of the element
       const width = el.offsetWidth;
       // stock heightOfScrollbar(40) cell(40) dropdown(140)
@@ -516,7 +519,7 @@ export default {
       }
 
       // set size / top position / left position
-      const currentSelect = this.$refs.vueTbody.$refs[`${header}-${this.customTable}-${colIndex}-${rowIndex}`];
+      const currentSelect = this.$refs[`${this.customTable}-vueTbody`].$refs[`${header}-${this.customTable}-${colIndex}-${rowIndex}`];
       if (currentSelect && currentSelect.length > 0) {
         currentSelect[0].style.setProperty('--selectWidth', `${width}px`);
         currentSelect[0].style.setProperty('--selectLeft', `${left}px`);
@@ -857,11 +860,11 @@ export default {
         height = 40 * ((this.selectedCoordCells.rowStart - this.selectedCoordCells.rowEnd) + 1);
       }
 
-      if (this.$refs.vueTbody && this.$refs.vueTbody.$refs) {
-        [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.customTable}-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`];
+      if (this.$refs[`${this.customTable}-vueTbody`] && this.$refs[`${this.customTable}-vueTbody`].$refs) {
+        [this.rectangleSelectedCell] = this.$refs[`${this.customTable}-vueTbody`].$refs[`td-${this.customTable}-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`];
 
         if (!this.selectedMultipleCellActive) {
-          [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.customTable}-${this.selectedCell.col}-${this.selectedCell.row}`];
+          [this.rectangleSelectedCell] = this.$refs[`${this.customTable}-vueTbody`].$refs[`td-${this.customTable}-${this.selectedCell.col}-${this.selectedCell.row}`];
         }
       }
 
@@ -1061,7 +1064,7 @@ export default {
     moveOnSelect(event) {
       if (this.incrementOption <= this.filteredList.length) {
         // top
-        const dropdown = this.$refs.vueTbody.$refs[`dropdown-${this.customTable}-${this.lastSelectOpen.colIndex}-${this.lastSelectOpen.rowIndex}`][0];
+        const dropdown = this.$refs[`${this.customTable}-vueTbody`].$refs[`dropdown-${this.customTable}-${this.lastSelectOpen.colIndex}-${this.lastSelectOpen.rowIndex}`][0];
         if (event.keyCode === 38) {
           if (this.incrementOption <= this.filteredList.length && this.incrementOption > 0) {
             if (this.filteredList[this.incrementOption]) {
@@ -1106,11 +1109,12 @@ export default {
       }
     },
     moveOnTable(event, colIndex, rowIndex) {
-      const { vueTable } = this.$refs;
+      const vueTable = this.$refs[`${this.customTable}-vueTable`];
+
       const maxCol = Math.max(...this.colHeaderWidths);
       // get the correct height of visible table
       if (vueTable) {
-        const heightTable = vueTable.clientHeight - vueTable.firstElementChild.clientHeight - this.$refs.vueThead.$el.clientHeight;
+        const heightTable = vueTable.clientHeight - vueTable.firstElementChild.clientHeight - this.$refs[`${this.customTable}-vueThead`].$el.clientHeight;
         const widthTable = vueTable.clientWidth - 40;
         const borderBottomCell = Math.round(heightTable / 40);
         const borderRightCell = Math.round(widthTable / maxCol);
@@ -1238,6 +1242,7 @@ export default {
       }
 
       if (this.actualElement
+        && this.actualElement.getAttribute('current-table') === this.customTable.toString()
         && (event.keyCode === 37
         || event.keyCode === 39
         || event.keyCode === 40

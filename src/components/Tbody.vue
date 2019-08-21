@@ -1,7 +1,7 @@
 <template>
   <tbody>
     <template v-for="(row, rowIndex) in tbodyData">
-      <tr
+      <tr 
         class="table_row"
         :key="`row${rowIndex}`"
         :class="{ 'checked_row': 'vuetable_checked' in tbodyData[rowIndex] && tbodyData[rowIndex].vuetable_checked === true }">
@@ -51,6 +51,7 @@
               'disabled': row[header].disabled || disableCells.find(x => x === header),
               'rectangleSelection': row[header].rectangleSelection
             }"
+            :current-table="currentTable"
             :ref="`td-${currentTable}-${colIndex}-${rowIndex}`"
             :key="header"
             :style="row[header].style">
@@ -125,7 +126,7 @@
                 v-model="row[header].value"
                 @change="inputHandleChange($event, header, rowIndex, colIndex)"
                 @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
-                :ref="`input-${currentTable}-${colIndex}-${rowIndex}`"></textarea>
+                :ref="`input-${currentTable}-${colIndex}-${rowIndex}`"></textarea>
             </template>
 
             <!-- If Select -->
