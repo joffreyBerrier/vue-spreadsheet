@@ -31,6 +31,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import VueTable from './components/VueTable.vue';
 import exempleData from './data';
 
@@ -50,16 +51,16 @@ export default {
   },
   methods: {
     checkedAllData(isChecked) {
-      // console.log('checked all data', isChecked)
+      console.log('checked all data', isChecked)
     },
     checkedData(row) {
-      // console.log('checked data', row)
+      console.log('checked data', row)
     },
     changeData(row, header) {
-      // console.log(row, header);
+      console.log(row, header);
     },
     sortProduct(event, header, colIndex) {
-      // console.log('sort product');
+      console.log('sort product');
     },
     // callback
     changeColorThead(event, header, colIndex) {

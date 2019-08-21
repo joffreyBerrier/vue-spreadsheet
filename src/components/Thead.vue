@@ -5,10 +5,10 @@
       <th class="index" v-if="tbodyCheckbox">
         <input
           type="checkbox"
-          id="checkbox-all"
+          :id="`checkbox-all-${currentTable}`"
           v-model="checkedAll"
           @change="checkedAllRow">
-        <label for="checkbox-all"></label>
+        <label :for="`checkbox-all-${currentTable}`"></label>
       </th>
       <th v-if="tbodyIndex" class="index" key="th-index"></th>
       <template v-for="(header, colIndex) in headers">
@@ -117,6 +117,10 @@ export default {
     },
     headers: {
       type: Array,
+      required: true,
+    },
+    currentTable: {
+      type: Number,
       required: true,
     },
     submenuThead: {
@@ -482,7 +486,7 @@ export default {
   text-align: center;
   border-top: 1px solid #e6ecf6;
   border-bottom: 1px solid #e6ecf6;
-  border-left: 1px solid #e6ecf6;
+  border-right: 1px solid #e6ecf6;
   box-sizing: border-box;
 }
 
