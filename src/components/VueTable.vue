@@ -19,6 +19,7 @@
         :tbody-index="customOptions.tbodyIndex"
         :tbody-checkbox="customOptions.tbodyCheckbox"
         :thead-highlight="highlight.thead"
+        :current-table="customTable"
         @handle-up-drag-size-header="handleUpDragSizeHeader"
         @handle-up-drag-to-fill="handleUpDragToFill"
         @submenu-enable="enableSubmenu"
@@ -43,6 +44,7 @@
         :filtered-list="filteredList"
         :submenu-status-tbody="submenuStatusTbody"
         :tbody-highlight="highlight.tbody"
+        :current-table="customTable"
         @tbody-checked-row="checkedRow"
         @handle-to-calculate-position="calculPosition"
         @handle-to-open-select="enableSelect"
@@ -124,6 +126,7 @@ export default {
   },
   data() {
     return {
+      customTable: 0,
       changeDataIncrement: 0,
       disableKeyTimeout: null,
       eventDrag: false,
@@ -157,7 +160,11 @@ export default {
       submenuStatusThead: false,
     };
   },
+  created() {
+    this.customTable = Date.now();
+  },
   mounted() {
+    this.createdCell();
     window.addEventListener('keydown', this.moveKeydown);
     window.addEventListener('keyup', this.moveKeyup);
     document.addEventListener('copy', (event) => {
@@ -185,11 +192,11 @@ export default {
     },
     headers() {
       this.createdCell();
-    }
+    },
   },
   computed: {
     checkedRows() {
-      return this.tbodyData.filter(x => x.checked)
+      return this.tbodyData.filter(x => x.checked);
     },
     colHeaderWidths() {
       return this.headers.map(x => parseInt(x.style.width, 10));
@@ -213,7 +220,7 @@ export default {
   methods: {
     checkedRow(row) {
       this.$emit('tbody-checked-row', row);
-      this.$refs.vueThead.checkedAll = false
+      this.$refs.vueThead.checkedAll = false;
     },
     highlightTdAndThead(rowIndex, colIndex) {
       this.highlight.tbody = [];
@@ -222,8 +229,7 @@ export default {
       this.highlight.thead = [...this.range(Math.min(this.selectedCell.col, colIndex), Math.max(this.selectedCell.col, colIndex))];
     },
     range(start, end) {
-      // [...range(number, number)]
-      return (new Array(end - start + 1)).fill(undefined).map((_, i) => i + start);
+      return (new Array((end - start) + 1)).fill(undefined).map((_, i) => i + start);
     },
     setPropertyStyleOfComment() {
       if (this.styleWrapVueTable.comment && this.styleWrapVueTable.comment.borderColor) {
@@ -299,9 +305,10 @@ export default {
             const data = JSON.parse(JSON.stringify(this.customOptions.newData));
             this.$set(this.tbodyData[rowIndex], header, data);
           } else if (!tbody[header].type && tbody[header].value) {
-            let data = JSON.parse(JSON.stringify(this.customOptions.newData));
-            data.value = tbody[header].value
-            this.$set(this.tbodyData[rowIndex], header, data);
+            const data = JSON.parse(JSON.stringify(this.customOptions.newData));
+            const copyTbody = JSON.parse(JSON.stringify(tbody[header]));
+            copyTbody.type = data.type;
+            this.$set(this.tbodyData[rowIndex], header, copyTbody);
           }
           const copy = JSON.parse(JSON.stringify(this.tbodyData[rowIndex][header]));
           this.$set(this.tbodyData[rowIndex][header], 'duplicate', copy);
@@ -372,8 +379,8 @@ export default {
     },
     activeSelectSearch(event, rowIndex, colIndex) {
       this.calculPosition(event, rowIndex, colIndex, 'dropdown');
-      if (this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0]) {
-        this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+      if (this.$refs.vueTbody.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0]) {
+        this.$refs.vueTbody.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
       }
     },
     enableSelect(event, header, col, rowIndex, colIndex) {
@@ -391,7 +398,7 @@ export default {
         this.$set(currentElement, 'search', true);
         this.$set(currentElement, 'show', true);
 
-        this.$refs.vueTbody.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+        this.$refs.vueTbody.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
         this.calculPosition(event, rowIndex, colIndex, 'dropdown');
 
         if (currentElement.value !== '') {
@@ -447,8 +454,8 @@ export default {
     },
     showDropdown(colIndex, rowIndex) {
       // clear timeout
-      if (this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`]) {
-        const dropdown = this.$refs.vueTbody.$refs[`dropdown-${colIndex}-${rowIndex}`][0];
+      if (this.$refs.vueTbody.$refs[`dropdown-${this.customTable}-${colIndex}-${rowIndex}`]) {
+        const dropdown = this.$refs.vueTbody.$refs[`dropdown-${this.customTable}-${colIndex}-${rowIndex}`][0];
         if (!this.scrollToSelectTimeout === null) {
           clearTimeout(this.scrollToSelectTimeout);
         }
@@ -485,9 +492,9 @@ export default {
       const { scrollTop } = this.$refs.vueTable;
 
       // get offsetTop of firstCell
-      const firstCellOffsetTop = this.$refs.vueTbody.$refs['td-0-0'][0].offsetTop;
+      const firstCellOffsetTop = this.$refs.vueTbody.$refs[`td-${this.customTable}-0-0`][0].offsetTop;
       // stock $el
-      const el = this.$refs.vueTbody.$refs[`td-${colIndex}-${rowIndex}`][0];
+      const el = this.$refs.vueTbody.$refs[`td-${this.customTable}-${colIndex}-${rowIndex}`][0];
       // stock height Of VueTable
       const realHeightTable = this.$refs.vueTable.offsetHeight;
       // stock size / offsetTop / offsetLeft of the element
@@ -509,7 +516,7 @@ export default {
       }
 
       // set size / top position / left position
-      const currentSelect = this.$refs.vueTbody.$refs[`${header}-${colIndex}-${rowIndex}`];
+      const currentSelect = this.$refs.vueTbody.$refs[`${header}-${this.customTable}-${colIndex}-${rowIndex}`];
       if (currentSelect && currentSelect.length > 0) {
         currentSelect[0].style.setProperty('--selectWidth', `${width}px`);
         currentSelect[0].style.setProperty('--selectLeft', `${left}px`);
@@ -851,10 +858,10 @@ export default {
       }
 
       if (this.$refs.vueTbody && this.$refs.vueTbody.$refs) {
-        [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`];
+        [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.customTable}-${this.selectedCoordCells.colStart}-${this.selectedCoordCells.rowStart}`];
 
         if (!this.selectedMultipleCellActive) {
-          [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.selectedCell.col}-${this.selectedCell.row}`];
+          [this.rectangleSelectedCell] = this.$refs.vueTbody.$refs[`td-${this.customTable}-${this.selectedCell.col}-${this.selectedCell.row}`];
         }
       }
 
@@ -1019,7 +1026,9 @@ export default {
     callbackCheckedAll(isChecked) {
       this.$emit('tbody-all-checked-row', isChecked);
       if (this.customOptions.tbodyCheckbox) {
-        this.tbodyData.forEach(x => x.vuetable_checked = isChecked)
+        this.tbodyData.forEach((data) => {
+          this.$set(data, 'vuetable_checked', isChecked);
+        });
       }
     },
     callbackSort(event, header, colIndex) {
@@ -1052,7 +1061,7 @@ export default {
     moveOnSelect(event) {
       if (this.incrementOption <= this.filteredList.length) {
         // top
-        const dropdown = this.$refs.vueTbody.$refs[`dropdown-${this.lastSelectOpen.colIndex}-${this.lastSelectOpen.rowIndex}`][0];
+        const dropdown = this.$refs.vueTbody.$refs[`dropdown-${this.customTable}-${this.lastSelectOpen.colIndex}-${this.lastSelectOpen.rowIndex}`][0];
         if (event.keyCode === 38) {
           if (this.incrementOption <= this.filteredList.length && this.incrementOption > 0) {
             if (this.filteredList[this.incrementOption]) {
@@ -1320,9 +1329,9 @@ export default {
         }
         // press enter
         if (event.keyCode === 13) {
-          if (this.$refs[`input-${colIndex}-${rowIndex}`]) {
+          if (this.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`]) {
             this.tbodyData[rowIndex][header].show = true;
-            this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+            this.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
           }
           this.$emit('tbody-nav-enter', event, event.keyCode, this.actualElement, rowIndex, colIndex);
         }

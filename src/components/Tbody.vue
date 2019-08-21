@@ -1,7 +1,7 @@
 <template>
   <tbody>
     <template v-for="(row, rowIndex) in tbodyData">
-      <tr 
+      <tr
         class="table_row"
         :key="`row${rowIndex}`"
         :class="{ 'checked_row': 'vuetable_checked' in tbodyData[rowIndex] && tbodyData[rowIndex].vuetable_checked === true }">
@@ -9,21 +9,21 @@
         <td
           v-if="tbodyCheckbox && 'vuetable_checked' in tbodyData[rowIndex]"
           :class="{ 'highlight_spreadsheet': tbodyHighlight.includes(rowIndex) }"
-          :key="`checkbox-${rowIndex}`"
+          :key="`checkbox-${currentTable}-${rowIndex}`"
           class="vuejsspreadsheet_checkbox index">
           <input
             type="checkbox"
-            :id="`checkbox-${rowIndex}`"
+            :id="`checkbox-${currentTable}-${rowIndex}`"
             @change="checkedRow(tbodyData[rowIndex])"
             v-model="tbodyData[rowIndex].vuetable_checked">
-          <label :for="`checkbox-${rowIndex}`"></label>
+          <label :for="`checkbox-${currentTable}-${rowIndex}`"></label>
         </td>
 
         <td
           v-if="tbodyIndex"
           class="index"
           :class="{ 'highlight_spreadsheet': tbodyHighlight.includes(rowIndex) }"
-          :key="`td-index-${rowIndex}`">
+          :key="`td-${currentTable}-index-${rowIndex}`">
           {{rowIndex + 1}}
         </td>
 
@@ -51,7 +51,7 @@
               'disabled': row[header].disabled || disableCells.find(x => x === header),
               'rectangleSelection': row[header].rectangleSelection
             }"
-            :ref="`td-${colIndex}-${rowIndex}`"
+            :ref="`td-${currentTable}-${colIndex}-${rowIndex}`"
             :key="header"
             :style="row[header].style">
 
@@ -88,7 +88,7 @@
               @mouseup="handleUpDragToFill($event, header, row[header], rowIndex, colIndex, row[header].type)">
             </button>
 
-            <div class="submenu" :ref="'contextMenu-' + colIndex + '-' + rowIndex">
+            <div class="submenu" :ref="`contextMenu-${currentTable}-${colIndex}-${rowIndex}`">
               <div
                 class="submenu_wrap"
                 v-if="submenuTbody &&
@@ -118,19 +118,19 @@
 
             <!-- If Input -->
             <template v-if="row[header].type === 'input'">
-              <span :ref="`span-${colIndex}-${rowIndex}`">
+              <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">
                 {{row[header].value}}
               </span>
               <textarea
                 v-model="row[header].value"
                 @change="inputHandleChange($event, header, rowIndex, colIndex)"
                 @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
-                :ref="'input-' + colIndex + '-' + rowIndex"></textarea>
+                :ref="`input-${currentTable}-${colIndex}-${rowIndex}`"></textarea>
             </template>
 
             <!-- If Select -->
             <template v-if="row[header].type === 'select' && row[header].handleSearch">
-              <span :ref="`span-${colIndex}-${rowIndex}`">{{row[header].value}}</span>
+              <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{row[header].value}}</span>
               <i class="icon_glass"
                 v-bind:class="{'show': row[header].search}">
               </i>
@@ -142,13 +142,13 @@
               <div class="dropdown">
                 <input
                   v-model="searchInput"
-                  :ref="'input-' + colIndex + '-' + rowIndex"
+                  :ref="`input-${currentTable}-${colIndex}-${rowIndex}`"
                   @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
                   @keyup.exact="handleSearchInputSelect($event, row[header], header, rowIndex, colIndex)"
                   :placeholder="trad[trad.lang].select.placeholder" />
                 <ul
                   v-bind:class="{'show': row[header].search}"
-                  :ref="'dropdown-' + colIndex + '-' + rowIndex">
+                  :ref="`dropdown-${currentTable}-${colIndex}-${rowIndex}`">
                   <li v-for="(option, index) in filteredList"
                     @click.stop="validSearch($event, header, row[header], option, rowIndex, colIndex)"
                     v-bind:class="{'active': option.active}"
@@ -161,7 +161,7 @@
             </template>
 
             <template v-else-if="row[header].type === 'select'">
-              <span :ref="`span-${colIndex}-${rowIndex}`">{{row[header].value}}</span>
+              <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{row[header].value}}</span>
               <select
                 v-model="row[header].value"
                 @change="selectHandleChange($event, header, row[header], option, rowIndex, colIndex)">
@@ -194,6 +194,10 @@ export default {
     },
     headers: {
       type: Array,
+      required: true,
+    },
+    currentTable: {
+      type: Number,
       required: true,
     },
     tbodyData: {
@@ -256,8 +260,8 @@ export default {
       this.vueTableComment = {};
     },
     handleHoverTooltip(header, rowIndex, colIndex, type) {
-      if (this.$refs[`span-${colIndex}-${rowIndex}`] && type !== 'img') {
-        const element = this.$refs[`span-${colIndex}-${rowIndex}`][0];
+      if (this.$refs[`span-${this.currentTable}-${colIndex}-${rowIndex}`] && type !== 'img') {
+        const element = this.$refs[`span-${this.currentTable}-${colIndex}-${rowIndex}`][0];
         if (!this.vuetableTooltip[rowIndex] && element && (element.scrollWidth > element.clientWidth)) {
           this.$set(this.vuetableTooltip, rowIndex, header);
         }
@@ -312,7 +316,7 @@ export default {
     handleDoubleClickTd(event, header, col, rowIndex, colIndex, type) {
       if (this.disabledEvent(col, header)) {
         if (type === 'input') {
-          this.$refs[`input-${colIndex}-${rowIndex}`][0].focus();
+          this.$refs[`input-${this.currentTable}-${colIndex}-${rowIndex}`][0].focus();
         }
         this.$emit('tbody-td-double-click', event, header, col, rowIndex, colIndex);
       }
