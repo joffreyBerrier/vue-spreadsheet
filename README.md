@@ -1,4 +1,4 @@
-# :fire: VueJs Spreadsheet 1.8.1 :fire:
+# :fire: VueJs Spreadsheet 1.8.2 :fire:
 https://github.com/joffreyBerrier/vuejs-spreadsheet/releases/tag/1.8.1
 
 # Medium article (in french)
