@@ -307,7 +307,7 @@ export default {
           if (!tbody[header]) {
             const data = JSON.parse(JSON.stringify(this.customOptions.newData));
             this.$set(this.tbodyData[rowIndex], header, data);
-          } else if (!tbody[header].type && tbody[header].value) {
+          } else if (!tbody[header].type && 'value' in tbody[header]) {
             const data = JSON.parse(JSON.stringify(this.customOptions.newData));
             const copyTbody = JSON.parse(JSON.stringify(tbody[header]));
             copyTbody.type = data.type;

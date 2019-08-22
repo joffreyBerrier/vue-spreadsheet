@@ -12,7 +12,10 @@ beforeEach(() => {
   const { tbodyIndex } = exempleData.customOptions;
   const { trad } = exempleData.customOptions;
   const { disableCells } = exempleData;
+  const tbodyHighlight = [];
+  const { tbodyCheckbox } = exempleData;
   const { submenuTbody } = exempleData;
+  const currentTable = Date.now();
   const filteredList = exempleData.products[0].f.selectOptions;
   const submenuStatusTbody = true;
 
@@ -20,6 +23,9 @@ beforeEach(() => {
     propsData: {
       disableCells,
       headers,
+      currentTable,
+      tbodyCheckbox,
+      tbodyHighlight,
       submenuTbody,
       submenuStatusTbody,
       filteredList,

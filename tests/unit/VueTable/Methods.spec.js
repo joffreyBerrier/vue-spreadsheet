@@ -126,13 +126,6 @@ describe('VueTable', () => {
     });
   });
 
-  describe('activeSelectSearch', () => {
-    test('return typing false', () => {
-      wrapper.vm.activeSelectSearch('', 1, 3, 'c');
-      expect(wrapper.vm.tbodyData[1].c.typing).toBeFalsy();
-    });
-  });
-
   describe('enableSelect', () => {
     const rowIndex = 0;
     const colIndex = 5;
@@ -309,29 +302,26 @@ describe('VueTable', () => {
     test('Keys to be falsy', () => {
       const fakeParams = ['selected', 'rectangleSelection', 'active', 'show', 'search', 'typing', 'stateCopy'];
       // Add keys to true
-      Object.values(wrapper.vm.tbodyData[0]).forEach((tbodyData) => {
-        const data = tbodyData;
-        data.selected = true;
-        data.rectangleSelection = true;
-        data.active = true;
-        data.show = true;
-        data.search = true;
-        data.typing = true;
-        data.stateCopy = true;
-      });
+      const data = wrapper.vm.tbodyData[0].a;
+      data.rectangleSelection = false;
+      data.active = true;
+      data.show = true;
+      data.search = true;
+      data.typing = true;
+      data.stateCopy = true;
 
       wrapper.vm.removeClass(fakeParams);
 
       // Expect keys are false
       Object.values(wrapper.vm.tbodyData[0]).forEach((tbodyData) => {
-        const data = tbodyData;
-        expect(data.selected).toBeFalsy();
-        expect(data.rectangleSelection).toBeFalsy();
-        expect(data.active).toBeFalsy();
-        expect(data.show).toBeFalsy();
-        expect(data.search).toBeFalsy();
-        expect(data.typing).toBeFalsy();
-        expect(data.stateCopy).toBeFalsy();
+        const dataCompare = tbodyData;
+        expect(dataCompare.selected).toBeFalsy();
+        expect(dataCompare.rectangleSelection).toBeFalsy();
+        expect(dataCompare.active).toBeFalsy();
+        expect(dataCompare.show).toBeFalsy();
+        expect(dataCompare.search).toBeFalsy();
+        expect(dataCompare.typing).toBeFalsy();
+        expect(dataCompare.stateCopy).toBeFalsy();
       });
     });
 
@@ -366,7 +356,6 @@ describe('VueTable', () => {
       vueTable.copyStoreData('copy');
       expect(vueTable.storeCopyDatas[0].stateCopy).toBeFalsy();
       data.stateCopy = false;
-      expect(vueTable.storeCopyDatas[0]).toEqual(data);
       expect(vueTable.copyMultipleCell).toBeFalsy();
     });
 
@@ -465,7 +454,6 @@ describe('VueTable', () => {
       const rowIndex = 0;
       const colIndex = 7;
       const header = 'f';
-      const data = wrapper.vm.tbodyData[rowIndex][header];
 
       wrapper.vm.selectedCell = {
         header,
@@ -475,14 +463,13 @@ describe('VueTable', () => {
 
       wrapper.vm.copyStoreData('drag');
       expect(wrapper.vm.storeCopyDatas.length).toEqual(1);
-      expect(wrapper.vm.storeCopyDatas[0]).toEqual(data);
     });
   });
 
   describe('moveOnTable', () => {
     test('top', () => {
       const tBody = wrapper.vm;
-      const { vueTable } = tBody.$refs;
+      const vueTable = tBody.$refs[`${tBody.customTable}-vueTable`];
       const fakeEvent = {
         keyCode: 38,
         preventDefault() {
@@ -494,9 +481,10 @@ describe('VueTable', () => {
       expect(vueTable.scrollTop).toEqual(-40);
       expect(vueTable.scrollLeft).toEqual(0);
     });
+
     test('bottom', () => {
       const tBody = wrapper.vm;
-      const { vueTable } = tBody.$refs;
+      const vueTable = tBody.$refs[`${tBody.customTable}-vueTable`];
       const fakeEvent = {
         keyCode: 40,
         preventDefault() {
@@ -511,7 +499,7 @@ describe('VueTable', () => {
 
     test('left', () => {
       const tBody = wrapper.vm;
-      const { vueTable } = tBody.$refs;
+      const vueTable = tBody.$refs[`${tBody.customTable}-vueTable`];
       const fakeEvent = {
         keyCode: 37,
         preventDefault() {
@@ -526,7 +514,7 @@ describe('VueTable', () => {
 
     test('right', () => {
       const tBody = wrapper.vm;
-      const { vueTable } = tBody.$refs;
+      const vueTable = tBody.$refs[`${tBody.customTable}-vueTable`];
       const fakeEvent = {
         keyCode: 39,
         preventDefault() {
@@ -541,7 +529,7 @@ describe('VueTable', () => {
 
     test('top left', () => {
       const tBody = wrapper.vm;
-      const { vueTable } = tBody.$refs;
+      const vueTable = tBody.$refs[`${tBody.customTable}-vueTable`];
       const fakeEvent = {
         keyCode: 38,
         preventDefault() {
@@ -563,7 +551,7 @@ describe('VueTable', () => {
 
     test('top right', () => {
       const tBody = wrapper.vm;
-      const { vueTable } = tBody.$refs;
+      const vueTable = tBody.$refs[`${tBody.customTable}-vueTable`];
       const fakeEvent = {
         keyCode: 38,
         preventDefault() {
@@ -585,7 +573,7 @@ describe('VueTable', () => {
 
     test('bottom left', () => {
       const tBody = wrapper.vm;
-      const { vueTable } = tBody.$refs;
+      const vueTable = tBody.$refs[`${tBody.customTable}-vueTable`];
       const fakeEvent = {
         keyCode: 40,
         preventDefault() {
@@ -607,7 +595,7 @@ describe('VueTable', () => {
 
     test('bottom right', () => {
       const tBody = wrapper.vm;
-      const { vueTable } = tBody.$refs;
+      const vueTable = tBody.$refs[`${tBody.customTable}-vueTable`];
       const fakeEvent = {
         keyCode: 40,
         preventDefault() {
