@@ -12,20 +12,26 @@ beforeEach(() => {
   const { submenuThead } = exempleData;
   const { disableSortThead } = exempleData;
   const { sortHeader } = exempleData;
+  const theadHighlight = [];
+  const currentTable = Date.now();
+  const { tbodyCheckbox } = exempleData;
   const submenuStatusThead = true;
-  const vueTableHeight = 400;
   const headerTop = 0;
+  const vueTableHeight = 400;
 
   wrapper = mount(Thead, {
     propsData: {
       submenuStatusThead,
+      theadHighlight,
+      currentTable,
+      tbodyCheckbox,
+      headerTop,
       submenuThead,
       headers,
       disableSortThead,
       sortHeader,
       tbodyIndex,
       vueTableHeight,
-      headerTop,
     },
   });
   return wrapper;
@@ -239,10 +245,16 @@ describe('VueTable', () => {
         const submenuStatusThead = false;
         const vueTableHeight = 400;
         const headerTop = 0;
+        const theadHighlight = [];
+        const currentTable = Date.now();
+        const { tbodyCheckbox } = exempleData;
 
         wrapper = mount(Thead, {
           propsData: {
             submenuStatusThead,
+            theadHighlight,
+            currentTable,
+            tbodyCheckbox,
             submenuThead,
             headers,
             disableSortThead,
