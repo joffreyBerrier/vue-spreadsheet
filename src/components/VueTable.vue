@@ -571,7 +571,7 @@ export default {
       params.forEach((param) => {
         this.tbodyData.forEach((data, index) => {
           Object.keys(data).forEach((key) => {
-            if (this.tbodyData[index][key][param] === true) {
+            if (this.tbodyData[index] && this.tbodyData[index][key] && this.tbodyData[index][key][param] === true) {
               this.tbodyData[index][key][param] = false;
             }
           });
