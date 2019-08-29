@@ -317,7 +317,7 @@ export default {
     handleDoubleClickTd(event, header, col, rowIndex, colIndex, type) {
       if (this.disabledEvent(col, header)) {
         if (type === 'input') {
-          this.$refs[`input-${this.currentTable}-${colIndex}-${rowIndex}`][0].focus();
+          this.$refs[`td-${this.currentTable}-${colIndex}-${rowIndex}`][0].lastElementChild.focus();
         }
         this.$emit('tbody-td-double-click', event, header, col, rowIndex, colIndex);
       }
