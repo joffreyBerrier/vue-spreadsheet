@@ -126,7 +126,8 @@
                 v-model="row[header].value"
                 @change="inputHandleChange($event, header, rowIndex, colIndex)"
                 @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
-                :ref="`input-${currentTable}-${colIndex}-${rowIndex}`"></textarea>
+                :ref="`textarea-${currentTable}-${colIndex}-${rowIndex}`">
+              </textarea>
             </template>
 
             <!-- If Select -->
@@ -316,9 +317,6 @@ export default {
     },
     handleDoubleClickTd(event, header, col, rowIndex, colIndex, type) {
       if (this.disabledEvent(col, header)) {
-        if (type === 'input') {
-          this.$refs[`td-${this.currentTable}-${colIndex}-${rowIndex}`][0].lastElementChild.focus();
-        }
         this.$emit('tbody-td-double-click', event, header, col, rowIndex, colIndex);
       }
     },
@@ -351,7 +349,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 $rectangleBorder: 1px solid #3183fc;
 $rectangleBg: #a0c3ff99;
 
@@ -441,9 +438,6 @@ $chedkedColor: #b2d1ff;
     &.active_td.copy:after {
       display: block;
     }
-  }
-  &.active_td.rectangleSelection {
-    border: $rectangleBorder;
   }
   &.copy:after {
     content: '';
