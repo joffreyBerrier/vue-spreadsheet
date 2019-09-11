@@ -991,7 +991,8 @@ export default {
       if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
 
       // add class show on element
-      this.tbodyData[rowIndex][header].show = true;
+      this.$set(this.tbodyData[rowIndex][header], 'show', true);
+      event.currentTarget.lastElementChild.focus();
 
       this.oldTdShow = {
         key: header,
