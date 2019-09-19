@@ -213,7 +213,6 @@ export default {
         const result = Math.max(newOffset, oldOffset) - Math.min(newOffset, oldOffset);
 
         // get new size
-        let newWidth;
         if (newOffset > oldOffset) {
           this.newSize = this.beforeChangeSize.width + result;
         } else {
