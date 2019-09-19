@@ -16,7 +16,8 @@
           class="th"
           :class="{
             'disabled': header.disabled,
-            'highlight_spreadsheet': theadHighlight.includes(colIndex)
+            'highlight_spreadsheet': theadHighlight.includes(colIndex),
+            'dragged': beforeChangeSize.col === colIndex
           }"
           :ref="'th-' + colIndex"
           :key="header.headerKey"
@@ -174,28 +175,19 @@ export default {
     },
     handleDownChangeSize(event, header, colIndex) {
       this.eventDrag = true;
-      const head = header;
 
-      if (this.$parent && this.$parent.$refs && this.$parent.$refs.vueTable) {
-        this.vueTableHeight = this.$parent.$refs.vueTable.offsetHeight;
+      if (this.$parent && this.$parent.$refs && this.$parent.$refs[`${this.currentTable}-table`]) {
+        this.vueTableHeight = this.$parent.$refs[`${this.currentTable}-table`].offsetHeight;
       }
 
       this.beforeChangeSize = {
         col: colIndex,
-        elementLeft: event.currentTarget.parentElement.offsetLeft,
-        header: head,
-        width: parseInt(head.style.width, 10),
+        offset: event.clientX,
+        width: parseInt(header.style.width, 10),
       };
 
-      head.active = true;
-      head.style.left = event.clientX;
-
-      const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
-      element.style.opacity = 0;
+      const [element] = this.$refs[`resize-${this.beforeChangeSize.col}`];
       element.style.top = `${element.parentElement.offsetTop}px`;
-      element.style.opacity = 1;
-
-      this.$forceUpdate();
     },
     handleMoveChangeSize(event) {
       if (this.eventDrag) {
@@ -206,9 +198,7 @@ export default {
         if (offsetTopVueTable <= event.clientY && offsetBottomVueTable >= event.clientY) {
           const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
           element.style.left = `${event.clientX}px`;
-          // set height of after dragElement
-          const heightTbody = this.vueTableHeight;
-          element.style.setProperty('--dragHeaderHeight', `${heightTbody}px`);
+          element.style.setProperty('--dragHeaderHeight', `${this.vueTableHeight}px`);
         } else {
           this.handleUpDragToFill(event);
         }
@@ -217,26 +207,31 @@ export default {
     handleUpDragToFill(event) {
       if (this.eventDrag) {
         this.eventDrag = false;
+
+        const oldOffset = this.beforeChangeSize.offset;
+        const newOffset = event.clientX;
+        const result = Math.max(newOffset, oldOffset) - Math.min(newOffset, oldOffset);
+
         // get new size
-        let offsetParentLeft = 0;
-        if (this.$refs[`th-${this.beforeChangeSize.col}`][0] && this.$refs[`th-${this.beforeChangeSize.col}`][0].offsetParent) {
-          offsetParentLeft = this.$refs[`th-${this.beforeChangeSize.col}`][0].offsetParent.offsetLeft;
+        let newWidth;
+        if (newOffset > oldOffset) {
+          this.newSize = this.beforeChangeSize.width + result;
+        } else {
+          this.newSize = this.beforeChangeSize.width - result;
         }
-        const scrollLeftParent = this.$parent.$refs.vueTable ? this.$parent.$refs.vueTable.scrollLeft : 0;
-        const newWidth = ((event.clientX - (this.beforeChangeSize.elementLeft + offsetParentLeft)) + scrollLeftParent) + 5;
-        this.newSize = `${newWidth}px`;
+
         // set initial style on button resize
-        const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
+        const [element] = this.$refs[`resize-${this.beforeChangeSize.col}`];
         element.style.left = 'auto';
         element.style.top = '0';
-        element.style.opacity = '';
-        // set height of after dragElement
         element.style.setProperty('--dragHeaderHeight', '100%');
+
         // set new size on header
-        this.$set(this.headers[this.beforeChangeSize.col].style, 'width', this.newSize);
-        this.$set(this.headers[this.beforeChangeSize.col].style, 'minWidth', this.newSize);
+        this.$set(this.headers[this.beforeChangeSize.col].style, 'width', `${this.newSize}px`);
+        this.$set(this.headers[this.beforeChangeSize.col].style, 'minWidth', `${this.newSize}px`);
         this.$set(this.headers[this.beforeChangeSize.col], 'active', false);
 
+        this.beforeChangeSize = {};
         this.$emit('handle-up-drag-size-header', event, this.headers);
       }
     },
@@ -284,6 +279,15 @@ export default {
   border-top: 0;
   border-right: 1px solid white;
   transition: width ease .5s, background ease .5s;
+  &.dragged .resize {
+    opacity: 1;
+    position: fixed;
+    top: auto;
+    &:after {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
   &.disabled {
     pointer-events: none;
     span {
@@ -326,15 +330,6 @@ export default {
     border: 1px dashed #7d8ba5;
     opacity: 0;
     visibility: hidden;
-  }
-  &.active {
-    opacity: 1;
-    position: fixed;
-    top: auto;
-    &:after {
-      opacity: 1;
-      visibility: visible;
-    }
   }
 }
 .submenu_wrap {
