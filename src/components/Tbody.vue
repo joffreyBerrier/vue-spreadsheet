@@ -1,7 +1,7 @@
 <template>
   <tbody>
     <template v-for="(row, rowIndex) in tbodyData">
-      <tr 
+      <tr
         class="table_row"
         :key="`row${rowIndex}`"
         :class="{ 'checked_row': 'vuetable_checked' in tbodyData[rowIndex] && tbodyData[rowIndex].vuetable_checked === true }">
@@ -71,14 +71,16 @@
 
             <span
               class="vuetable_triange"
-              :style="[row[header].comment.borderColor ? {'borderTopColor': row[header].comment.borderColor} : {}]"
+              :style="[row[header].comment.borderColor ? { 'borderTopColor': row[header].comment.borderColor } : {}]"
               v-if="row[header].value !== '' && !row[header].search && row[header].comment"
               @mouseover.stop="handleHoverTriangleComment(header, rowIndex)"
               @mouseout.stop="handleOutTriangleComment">
               <transition name="transitionComment">
                 <div class="vuetable_triange_comment"
-                  v-if="vueTableComment[rowIndex] === header && row[header].comment.value">
-                  {{row[header].comment.value}}
+                  v-if="vueTableComment[rowIndex] === header && row[header].comment.value"
+                  @mouseout.stop="handleOutTriangleComment"
+                  >
+                  {{ row[header].comment.value }}
                 </div>
               </transition>
             </span>
@@ -134,14 +136,14 @@
             <template v-if="row[header].type === 'select' && row[header].handleSearch">
               <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{row[header].value}}</span>
               <i class="icon_glass"
-                v-bind:class="{'show': row[header].search}">
+                :class="{'show': row[header].search}">
               </i>
               <button
                 @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)"
-                v-bind:class="{'active': row[header].search === true}"
+                :class="{ 'active': row[header].search === true }"
                 class="enable_select"><i></i>
               </button>
-              <div class="dropdown">
+              <div class="dropdown" v-if="row[header].search === true">
                 <input
                   v-model="searchInput"
                   :ref="`input-${currentTable}-${colIndex}-${rowIndex}`"
@@ -149,11 +151,11 @@
                   @keyup.exact="handleSearchInputSelect($event, row[header], header, rowIndex, colIndex)"
                   :placeholder="trad[trad.lang].select.placeholder" />
                 <ul
-                  v-bind:class="{'show': row[header].search}"
+                  :class="{ 'show': row[header].search }"
                   :ref="`dropdown-${currentTable}-${colIndex}-${rowIndex}`">
                   <li v-for="(option, index) in filteredList"
                     @click.stop="validSearch($event, header, row[header], option, rowIndex, colIndex)"
-                    v-bind:class="{'active': option.active}"
+                    :class="{ 'active': option.active }"
                     :value="option.value"
                     :key="index">
                       {{option.label}}
@@ -271,6 +273,7 @@ export default {
     },
     handleOutTooltip() {
       this.vuetableTooltip = {};
+      this.handleOutTriangleComment();
     },
     disabledEvent(col, header) {
       if (col.disabled === undefined) {
@@ -315,7 +318,7 @@ export default {
       this.searchInput = '';
       this.$emit('tbody-td-click', event, col, header, rowIndex, colIndex, type);
     },
-    handleDoubleClickTd(event, header, col, rowIndex, colIndex, type) {
+    handleDoubleClickTd(event, header, col, rowIndex, colIndex) {
       if (this.disabledEvent(col, header)) {
         this.$emit('tbody-td-double-click', event, header, col, rowIndex, colIndex);
       }
@@ -413,21 +416,23 @@ $chedkedColor: #b2d1ff;
     background: $rectangleBg;
     box-sizing: border-box;
   }
+  &.rectangleSelection:after {
+    content: '';
+    position: absolute;
+    bottom: var(--rectangleBottom);
+    height: var(--rectangleHeight);
+    left: var(--rectangleLeft);
+    right: var(--rectangleRight);
+    top: var(--rectangleTop);
+    width: var(--rectangleWidth);
+    z-index: 3;
+    border: $rectangleBorder;
+    background: $rectangleBg;
+    box-sizing: border-box;
+  }
   &.selected {
     &.rectangleSelection:after {
-      content: '';
       display: block;
-      position: absolute;
-      bottom: var(--rectangleBottom);
-      height: var(--rectangleHeight);
-      left: var(--rectangleLeft);
-      right: var(--rectangleRight);
-      top: var(--rectangleTop);
-      width: var(--rectangleWidth);
-      z-index: 3;
-      border: $rectangleBorder;
-      background: $rectangleBg;
-      box-sizing: border-box;
     }
     &.active_td:after {
       display: none;
@@ -555,7 +560,8 @@ $chedkedColor: #b2d1ff;
       box-sizing: border-box;
     }
     ul {
-      display: none;
+      opacity: 0;
+      visibility: hidden;
       position: fixed;
       margin: 0 auto;
       background-color: #fff;
@@ -563,9 +569,10 @@ $chedkedColor: #b2d1ff;
       box-shadow: 0px -8px 34px 0px rgba(0, 0, 0, 0.05);
       padding: 0;
       margin: 0;
-      max-height: 140px;
-      min-height: 140px;
+      max-height: 135px;
+      min-height: 135px;
       overflow-y: auto;
+      transition: opacity ease .5s, visibility ease .5s;
       // select style
       left: var(--selectLeft);
       top: var(--selectTop);
@@ -584,11 +591,15 @@ $chedkedColor: #b2d1ff;
           background: #e7ecf5;
         }
         &.active {
-          background: #e7ecf5;
+          background: #b2d1ff;
+          &:hover {
+            background: #b2d1ff55;
+          }
         }
       }
       &.show {
-        display: block;
+        opacity: 1;
+        visibility: visible;
         z-index: 15;
       }
     }
@@ -619,11 +630,6 @@ $chedkedColor: #b2d1ff;
       box-sizing: border-box;
       box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
       z-index: 99999;
-      transition: all ease .5s;
-      &.showComment {
-        opacity: 1;
-        visibility: visible;
-      }
     }
   }
 }
@@ -678,10 +684,9 @@ $chedkedColor: #b2d1ff;
 }
 .enable_select {
   position: absolute;
-  top: 50%;
+  top: calc(20px - 8px);
   right: 5px;
   z-index: 13;
-  transform: translateY(-50%);
   border: 0;
   box-shadow: none;
   background: transparent;
@@ -691,8 +696,8 @@ $chedkedColor: #b2d1ff;
   border-radius: 50%;
   outline: none;
   cursor: pointer;
-  transform: translateY(-50%) rotate(0deg);
-  transition: all ease .5s;
+  transform: rotate(0deg);
+  transition: transform ease .5s;
   i {
     display: block;
     position: absolute;
@@ -719,7 +724,7 @@ $chedkedColor: #b2d1ff;
     }
   }
   &.active {
-    transform: translateY(-50%) rotate(180deg);
+    transform: rotate(180deg);
   }
 }
 .submenu{
@@ -778,14 +783,14 @@ $chedkedColor: #b2d1ff;
 
 // transition comment
 .transitionComment-enter-active {
-  transition: all .5s ease 1s;
+  transition: all .1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
 .transitionComment-leave-active {
   transition: all .1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
 .transitionComment-enter,
 .transitionComment-leave-to {
-  transform: translateX(-10px);
+  transform: translateX(-20px);
   opacity: 0;
 }
 </style>
