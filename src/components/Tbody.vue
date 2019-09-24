@@ -355,12 +355,14 @@ export default {
 $rectangleBorder: 1px solid #3183fc;
 $rectangleBg: #a0c3ff99;
 
-$dragToFillSize: 9px;
+$dragToFillSize: 10px;
 $dragToFillColor:#3183fc;
 
 $chedkedColor: #b2d1ff;
 
 .table_row {
+  min-height: 40px;
+  height: 40px;
   transition: background ease .3s;
   &.checked_row {
     background: $chedkedColor;
@@ -383,7 +385,7 @@ $chedkedColor: #b2d1ff;
 }
 
 .td {
-  height: 40px;
+  min-height: 40px;
   line-height: 40px;
   position: relative;
   background-color: white;
@@ -478,7 +480,7 @@ $chedkedColor: #b2d1ff;
       opacity: 1;
     }
     textarea {
-      font-size: 12px;
+      font-size: 11px;
       line-height: 1.3;
       border: 1px solid #e9e9e9;
       z-index: 20;
@@ -505,8 +507,8 @@ $chedkedColor: #b2d1ff;
     height: 100%;
     background: transparent;
     text-align: left;
-    padding: 2px 5px;
-    line-height: 40px;
+    padding: 2px 8px;
+    line-height: 36px;
     box-sizing: border-box;
     border: 1px solid transparent;
     outline: none;
@@ -517,6 +519,7 @@ $chedkedColor: #b2d1ff;
   }
   span {
     width: 100%;
+    font-size: 11px;
     z-index: 10;
     opacity: 1;
     white-space: nowrap;
@@ -546,11 +549,13 @@ $chedkedColor: #b2d1ff;
     outline: none;
   }
   .dropdown {
+    border: 0;
     input {
       position: absolute;
       top: 0;
       left: 0;
-      padding: 2px 5px;
+      font-size: 11px;
+      padding: 2px 8px;
       text-align: left;
       height: 100%;
       width: 100%;
@@ -581,7 +586,7 @@ $chedkedColor: #b2d1ff;
         list-style: none;
         font-size: 11px;
         line-height: 40px;
-        padding: 2px 5px;
+        padding: 2px 8px;
         text-decoration: none;
         display: block;
         cursor: pointer;
@@ -638,7 +643,7 @@ $chedkedColor: #b2d1ff;
   background: white;
   box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  font-size: 12px;
+  font-size: 11px;
   height: auto;
   left: 0;
   line-height: 1.3;
@@ -655,10 +660,9 @@ $chedkedColor: #b2d1ff;
 
 .icon_glass {
   position: absolute;
-  top: 50%;
+  top: calc(20px - 8px);
   right: 25px;
   z-index: 13;
-  transform: translateY(-50%);
   width: 12px;
   height: 12px;
   border-radius: 50px;
