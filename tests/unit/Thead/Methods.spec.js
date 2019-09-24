@@ -99,8 +99,6 @@ describe('VueTable', () => {
         tHead.handleDownChangeSize(fakeEvent, head, 1);
 
         expect(tHead.beforeChangeSize.col).toEqual(1);
-        expect(tHead.beforeChangeSize.header).toEqual(head);
-        expect(tHead.beforeChangeSize.elementLeft).toEqual(10);
         expect(tHead.beforeChangeSize.width).toEqual(parseInt(head.style.width, 10));
       });
 
@@ -116,8 +114,6 @@ describe('VueTable', () => {
         };
         tHead.handleDownChangeSize(fakeEvent, head, 1);
 
-        expect(head.active).toBeTruthy();
-        expect(tHead.$refs[`resize-${tHead.beforeChangeSize.col}`][0].style.opacity).toEqual('1');
         expect(tHead.$refs[`resize-${tHead.beforeChangeSize.col}`][0].style.top).toContain('px');
       });
     });
