@@ -382,9 +382,9 @@ export default {
     },
     activeSelectSearch(event, rowIndex, colIndex) {
       this.calculPosition(event, rowIndex, colIndex, 'dropdown');
-      if (this.$refs[`${this.customTable}-vueTbody`].$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0]) {
-        this.$refs[`${this.customTable}-vueTbody`].$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
-      }
+      // if (this.$refs[`${this.customTable}-vueTbody`].$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0]) {
+      //   this.$refs[`${this.customTable}-vueTbody`].$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
+      // }
     },
     enableSelect(event, header, col, rowIndex, colIndex) {
       const currentElement = this.tbodyData[rowIndex][header];
@@ -401,16 +401,18 @@ export default {
         this.$set(currentElement, 'search', true);
         this.$set(currentElement, 'show', true);
 
-        this.$refs[`${this.customTable}-vueTbody`].$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
-        this.calculPosition(event, rowIndex, colIndex, 'dropdown');
+        this.$nextTick(() => {
+          this.$refs[`${this.customTable}-vueTbody`].$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
+          this.calculPosition(event, rowIndex, colIndex, 'dropdown');
 
-        if (currentElement.value !== '') {
-          this.showDropdown(colIndex, rowIndex);
-          const index = currentElement.selectOptions.map(x => x.value).indexOf(currentElement.value);
-          this.incrementOption = index;
-        } else {
-          this.incrementOption = 0;
-        }
+          if (currentElement.value !== '') {
+            this.showDropdown(colIndex, rowIndex);
+            const index = currentElement.selectOptions.map(x => x.value).indexOf(currentElement.value);
+            this.incrementOption = index;
+          } else {
+            this.incrementOption = 0;
+          }
+        });
       } else {
         this.$set(currentElement, 'search', false);
         this.$set(currentElement, 'show', false);
