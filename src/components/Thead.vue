@@ -21,7 +21,7 @@
           }"
           :ref="'th-' + colIndex"
           :key="header.headerKey"
-          :style="[header.style, header.style.top = headerTop + 'px']">
+          :style="[header.style, header.style.top = headerTop > 0 ? headerTop + 'px' : 'auto']">
 
           <span>{{header.headerName}}</span>
 
@@ -300,6 +300,9 @@ export default {
   span {
     display: block;
     width: calc(100% - 30px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 .resize {

@@ -800,7 +800,9 @@ export default {
     },
     replacePasteData(col, header, incrementRow, currentHeader) {
       const newCopyData = JSON.parse(JSON.stringify(this.storeCopyDatas));
-      newCopyData[col][header].duplicate = this.tbodyData[incrementRow][currentHeader].duplicate;
+      if (this.tbodyData[incrementRow][currentHeader] && 'duplicate' in this.tbodyData[incrementRow][currentHeader]) {
+        this.$set(newCopyData[col][header], 'duplicate', this.tbodyData[incrementRow][currentHeader].duplicate);
+      }
       this.tbodyData[incrementRow][currentHeader] = newCopyData[col][header];
       this.changeData(incrementRow, currentHeader);
     },
