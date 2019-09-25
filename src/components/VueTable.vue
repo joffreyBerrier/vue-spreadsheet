@@ -636,7 +636,7 @@ export default {
         }
         this.copyMultipleCell = true;
       } else {
-        if (params === 'copy') {
+        if (params === 'copy' && this.selectedCell) {
           this.cleanPropertyOnCell('copy');
           this.$set(this.tbodyData[this.selectedCell.row][this.selectedCell.header], 'stateCopy', true);
         } else {
