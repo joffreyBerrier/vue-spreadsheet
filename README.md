@@ -1,11 +1,11 @@
-# :fire: VueJs Spreadsheet 1.8.6 :fire:
+# :fire: VueJs Spreadsheet 1.8.9 :fire:
 https://github.com/joffreyBerrier/vuejs-spreadsheet/releases/tag/1.8.1
 
 # Medium article (in french)
 https://medium.com/scalia/vuejs-spreadsheet-692cab2cb5c8
 
 # Sandbox example
-https://codesandbox.io/embed/n7kylkpr7p?view=preview
+[![Edit vuejs-spreadsheet](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vuejs-spreadsheet-wctsv?fontsize=14)
 
 
 ## Description
