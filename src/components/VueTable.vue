@@ -492,8 +492,8 @@ export default {
       this.changeData(rowIndex, header);
     },
     calculPosition(event, rowIndex, colIndex, header) {
+      // If we calculPosition for dropdown, but there is no dropdown to render.
       if (header === 'dropdown' && !this.tbodyData[rowIndex][this.headers[colIndex].headerKey].search) {
-        // If we calculPosition for dropdown, but there is no dropdown to render.
         return;
       }
       const cellHeight = 40;
