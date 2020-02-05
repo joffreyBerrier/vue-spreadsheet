@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "author": "Joffrey Berrier <joffrey.berrier@gmail.com>",
   "repository": {
-    "url": "git+https://github.com/joffreyBerrier/vuejs-dynamic-table.git",
+    "url": "git+https://github.com/joffreyBerrier/vuejs-spreadsheet.git",
     "type": "git"
   },
   "keywords": [
@@ -45,7 +45,7 @@
     "vue-template-compiler": "^2.5.17"
   },
   "bugs": {
-    "url": "https://github.com/joffreyBerrier/vuejs-dynamic-table/issues"
+    "url": "https://github.com/joffreyBerrier/vuejs-spreadsheet/issues"
   },
-  "homepage": "https://github.com/joffreyBerrier/vuejs-dynamic-table#readme"
+  "homepage": "https://github.com/joffreyBerrier/vuejs-spreadsheet#readme"
 }

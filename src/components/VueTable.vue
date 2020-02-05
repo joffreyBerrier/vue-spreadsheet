@@ -492,6 +492,11 @@ export default {
       this.changeData(rowIndex, header);
     },
     calculPosition(event, rowIndex, colIndex, header) {
+      // If we calculPosition for dropdown, but there is no dropdown to render.
+      if (header === 'dropdown' && !this.tbodyData[rowIndex][this.headers[colIndex].headerKey].search) {
+        return;
+      }
+      const cellHeight = 40;
       // stock scrollLeft / scrollTop position of parent
       const { scrollLeft } = this.$refs[`${this.customTable}-vueTable`];
       const { scrollTop } = this.$refs[`${this.customTable}-vueTable`];
@@ -504,20 +509,18 @@ export default {
       const realHeightTable = this.$refs[`${this.customTable}-vueTable`].offsetHeight;
       // stock size / offsetTop / offsetLeft of the element
       const width = el.offsetWidth;
-      // stock heightOfScrollbar(40) cell(40) dropdown(140)
-      const heightOfScrollbarCellDropdown = 180;
 
-      let top = ((el.offsetTop - scrollTop) + 40) - this.parentScrollElement.positionTop;
+      let top = ((el.offsetTop - scrollTop) + cellHeight) - this.parentScrollElement.positionTop;
       let left = el.offsetLeft - scrollLeft;
 
       if (this.selectPosition) {
-        top = (((el.offsetTop - scrollTop) + 40) + this.selectPosition.top) - this.parentScrollElement.positionTop;
-        left = (el.offsetLeft - scrollLeft) + this.selectPosition.left;
+        top += this.selectPosition.top;
+        left += this.selectPosition.left;
       }
 
       // subtracted top of scroll top document
       if (this.scrollDocument) {
-        top = (((el.offsetTop - scrollTop) + 40) - this.parentScrollElement.positionTop) - this.scrollDocument;
+        top = (((el.offsetTop - scrollTop) + cellHeight) - this.parentScrollElement.positionTop) - this.scrollDocument;
       }
 
       // set size / top position / left position
@@ -526,9 +529,18 @@ export default {
         currentSelect[0].style.setProperty('--selectWidth', `${width}px`);
         currentSelect[0].style.setProperty('--selectLeft', `${left}px`);
 
+        // After we set the width, the div updates its height, so we can get it to compute the top position. Before, we only get the max-height!
+        // stock dynamic height of dropdown
+        const itemRef = this.$refs[`${this.customTable}-vueTbody`].$refs[`${header}-${this.customTable}-${colIndex}-${rowIndex}`];
+        const heightOfAbsoluteItem = itemRef[0].offsetHeight || 180;
+        // stock cell(40) + dynamic height of dropdown
+        const heightOfCellDropdown = cellHeight + heightOfAbsoluteItem;
+
         if ((realHeightTable + firstCellOffsetTop) < (el.offsetTop + 250)) {
-          currentSelect[0].style.setProperty('--selectTop', `${top - heightOfScrollbarCellDropdown}px`);
+          // Set on top of cell
+          currentSelect[0].style.setProperty('--selectTop', `${top - heightOfCellDropdown}px`);
         } else {
+          // Set on bottom of cell
           currentSelect[0].style.setProperty('--selectTop', `${top}px`);
         }
       }

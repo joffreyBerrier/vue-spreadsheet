@@ -37,6 +37,15 @@ npm i vuejs-spreadsheet
 </script>
 ```
 
+## Contributing to development
+
+- First, fork the repo on github.
+- Clone your forked repo and run: `yarn` or `npm i`
+- Then, make your changes on any branch you want and push it.
+- Finally, open a pull request on the official repo, using the source branch from your forked repo.
+
+Please do not push the `package-lock.json`.
+
 ## Wiki :mortar_board:
 
 Props                                  | Type       | Description
