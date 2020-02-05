@@ -44,7 +44,7 @@ npm i vuejs-spreadsheet
 - Then, make your changes on any branch you want and push it.
 - Finally, open a pull request on the official repo, using the source branch from your forked repo.
 
-Please do not push the `package.lock.json`.
+Please do not push the `package-lock.json`.
 
 ## Wiki :mortar_board:
 
