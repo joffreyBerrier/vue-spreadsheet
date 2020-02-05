@@ -492,6 +492,10 @@ export default {
       this.changeData(rowIndex, header);
     },
     calculPosition(event, rowIndex, colIndex, header) {
+      if (header === 'dropdown' && !this.tbodyData[rowIndex][this.headers[colIndex].headerKey].search) {
+        // If we calculPosition for dropdown, but there is no dropdown to render.
+        return;
+      }
       const cellHeight = 40;
       // stock scrollLeft / scrollTop position of parent
       const { scrollLeft } = this.$refs[`${this.customTable}-vueTable`];
@@ -505,11 +509,6 @@ export default {
       const realHeightTable = this.$refs[`${this.customTable}-vueTable`].offsetHeight;
       // stock size / offsetTop / offsetLeft of the element
       const width = el.offsetWidth;
-      // stock dynamic height of dropdown
-      const dropdownRef = this.$refs[`${this.customTable}-vueTbody`].$refs[`dropdown-${this.customTable}-${colIndex}-${rowIndex}`] || [{}];
-      const heightOfDropdown = (dropdownRef[0] || {}).offsetHeight || 180;
-      // stock cell(40) + dynamic height of dropdown
-      const heightOfCellDropdown = cellHeight + heightOfDropdown;
 
       let top = ((el.offsetTop - scrollTop) + cellHeight) - this.parentScrollElement.positionTop;
       let left = el.offsetLeft - scrollLeft;
@@ -529,6 +528,13 @@ export default {
       if (currentSelect && currentSelect.length > 0) {
         currentSelect[0].style.setProperty('--selectWidth', `${width}px`);
         currentSelect[0].style.setProperty('--selectLeft', `${left}px`);
+
+        // After we set the width, the div updates its height, so we can get it to compute the top position. Before, we only get the max-height!
+        // stock dynamic height of dropdown
+        const itemRef = this.$refs[`${this.customTable}-vueTbody`].$refs[`${header}-${this.customTable}-${colIndex}-${rowIndex}`];
+        const heightOfAbsoluteItem = itemRef[0].offsetHeight || 180;
+        // stock cell(40) + dynamic height of dropdown
+        const heightOfCellDropdown = cellHeight + heightOfAbsoluteItem;
 
         if ((realHeightTable + firstCellOffsetTop) < (el.offsetTop + 250)) {
           // Set on top of cell
