@@ -1,4 +1,4 @@
-# :fire: VueJs Spreadsheet 1.9.1 :fire:
+# :fire: VueJs Spreadsheet 1.9.2 :fire:
 https://github.com/joffreyBerrier/vuejs-spreadsheet/releases/tag/1.9.1
 
 # Medium article (in french)
@@ -414,7 +414,7 @@ newData: {
       disabled: ['img'],
     },
   ],
-  submenuThead: [ 
+  submenuThead: [
     {
       type: 'button',
       value: 'Change Color',
