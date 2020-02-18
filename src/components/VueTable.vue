@@ -1080,9 +1080,15 @@ export default {
     },
     moveOnSelect(event) {
       if (this.incrementOption <= this.filteredList.length) {
-        // top
         const dropdown = this.$refs[`${this.customTable}-vueTbody`].$refs[`dropdown-${this.customTable}-${this.lastSelectOpen.colIndex}-${this.lastSelectOpen.rowIndex}`][0];
+        const cellHeight = 45;
+
+        // top
         if (event.keyCode === 38) {
+          // The distance between the top border of element with the top viewport border of parent (dropdown)
+          const topOffsetElementWithinViewport = dropdown.children[this.incrementOption].offsetTop - dropdown.scrollTop;
+          // Divided by cellHeight gives the index from *top* of the current element.
+          const isFirstItemInViewport = topOffsetElementWithinViewport / cellHeight < 1;
           if (this.incrementOption <= this.filteredList.length && this.incrementOption > 0) {
             if (this.filteredList[this.incrementOption]) {
               this.$set(this.filteredList[this.incrementOption], 'active', false);
@@ -1094,13 +1100,23 @@ export default {
               this.incrementOption -= 1;
               this.$set(this.filteredList[this.incrementOption], 'active', true);
             }
-            if (this.incrementOption % 3 === 0) {
-              dropdown.scrollTop -= (45 * 3);
+            if (isFirstItemInViewport) {
+              dropdown.scrollTop -= cellHeight;
             }
           }
         }
         // bottom
         if (event.keyCode === 40) {
+          /* The distance between the bottom border of element with the bottom viewport border of parent (dropdown)
+           * The value is always negative, so we invert it with the first minus.
+           * (dropdown.children[this.incrementOption].offsetTop + cellHeight) => offsetBottom of element
+           * - dropdown.scrollTop => gives the offsetBottom starting from the top viewport border of dropdown
+           * - dropdown.offsetHeight => gives the offsetBottom starting from the bottom of viewport dropdown
+           * You should actually draw a schematic in order to properly understand this. It helped me!
+           */
+          const bottomOffsetElementWithinViewport = -((dropdown.children[this.incrementOption].offsetTop + cellHeight) - (dropdown.offsetHeight + dropdown.scrollTop));
+          // Divided by cellHeight gives the index from *bottom* of the current element.
+          const isLastItemInViewport = bottomOffsetElementWithinViewport / cellHeight < 1;
           if (this.incrementOption < this.filteredList.length - 1) {
             if (this.incrementOption === 0 || this.incrementOption === 1) {
               this.$set(this.filteredList[this.incrementOption], 'active', true);
@@ -1113,8 +1129,9 @@ export default {
               this.$set(this.filteredList[this.incrementOption], 'active', true);
             }
           }
-          if (this.incrementOption % 3 === 0) {
-            dropdown.scrollTop = 45 * this.incrementOption;
+
+          if (isLastItemInViewport) {
+            dropdown.scrollTop += cellHeight;
           }
         }
       }
