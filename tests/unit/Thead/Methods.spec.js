@@ -1,8 +1,8 @@
-import { mount } from '@vue/test-utils';
-import Thead from '@/components/Thead.vue';
+import { mount } from "@vue/test-utils";
+import Thead from "@/components/Thead.vue";
 
 // data
-import exempleData from '@/data';
+import exempleData from "@/data";
 
 let wrapper;
 
@@ -34,45 +34,49 @@ beforeEach(() => {
       vueTableHeight,
     },
   });
+
   return wrapper;
 });
 
-describe('VueTable', () => {
-  describe('Render component with props', () => {
-    test('Vue Instance', () => {
+describe("VueTable", () => {
+  describe("Render component with props", () => {
+    test("Vue Instance", () => {
       expect(wrapper.isVueInstance()).toBeTruthy();
     });
   });
 
-  describe('Methods', () => {
-    describe('removeClass', () => {
+  describe("Methods", () => {
+    describe("removeClass", () => {
       test('return ""', () => {
         const tHead = wrapper.vm;
-        tHead.headers[0].activeSort = 'Z';
-        tHead.headers[1].activeSort = 'Z';
-        tHead.removeClass('activeSort', 1);
-        expect(tHead.headers[0].activeSort).toEqual('');
+
+        tHead.headers[0].activeSort = "Z";
+        tHead.headers[1].activeSort = "Z";
+        tHead.removeClass("activeSort", 1);
+        expect(tHead.headers[0].activeSort).toEqual("");
       });
 
-      test('return Z', () => {
+      test("return Z", () => {
         const tHead = wrapper.vm;
-        tHead.headers[0].activeSort = 'Z';
-        tHead.headers[1].activeSort = 'Z';
-        tHead.removeClass('activeSort', 1);
-        expect(tHead.headers[1].activeSort).toEqual('Z');
+
+        tHead.headers[0].activeSort = "Z";
+        tHead.headers[1].activeSort = "Z";
+        tHead.removeClass("activeSort", 1);
+        expect(tHead.headers[1].activeSort).toEqual("Z");
       });
 
-      test('return A', () => {
+      test("return A", () => {
         const tHead = wrapper.vm;
-        tHead.headers[0].activeSort = 'A';
-        tHead.headers[1].activeSort = 'A';
-        tHead.removeClass('activeSort', 1);
-        expect(tHead.headers[1].activeSort).toEqual('A');
+
+        tHead.headers[0].activeSort = "A";
+        tHead.headers[1].activeSort = "A";
+        tHead.removeClass("activeSort", 1);
+        expect(tHead.headers[1].activeSort).toEqual("A");
       });
     });
 
-    describe('handleDownChangeSize', () => {
-      test('event drag be true', () => {
+    describe("handleDownChangeSize", () => {
+      test("event drag be true", () => {
         const tHead = wrapper.vm;
         const head = tHead.headers[1];
         const fakeEvent = {
@@ -82,11 +86,12 @@ describe('VueTable', () => {
             },
           },
         };
+
         tHead.handleDownChangeSize(fakeEvent, head, 1);
         expect(tHead.eventDrag).toBeTruthy();
       });
 
-      test('beforeChangeSize exist', () => {
+      test("beforeChangeSize exist", () => {
         const tHead = wrapper.vm;
         const head = tHead.headers[1];
         const fakeEvent = {
@@ -96,13 +101,14 @@ describe('VueTable', () => {
             },
           },
         };
+
         tHead.handleDownChangeSize(fakeEvent, head, 1);
 
         expect(tHead.beforeChangeSize.col).toEqual(1);
         expect(tHead.beforeChangeSize.width).toEqual(parseInt(head.style.width, 10));
       });
 
-      test('current element has style', () => {
+      test("current element has style", () => {
         const tHead = wrapper.vm;
         const head = tHead.headers[1];
         const fakeEvent = {
@@ -112,14 +118,15 @@ describe('VueTable', () => {
             },
           },
         };
+
         tHead.handleDownChangeSize(fakeEvent, head, 1);
 
-        expect(tHead.$refs[`resize-${tHead.beforeChangeSize.col}`][0].style.top).toContain('px');
+        expect(tHead.$refs[`resize-${tHead.beforeChangeSize.col}`][0].style.top).toContain("px");
       });
     });
 
-    describe('handleMoveChangeSize', () => {
-      test('event drag is true', () => {
+    describe("handleMoveChangeSize", () => {
+      test("event drag is true", () => {
         const tHead = wrapper.vm;
         const head = tHead.headers[1];
         const fakeEvent = {
@@ -139,7 +146,7 @@ describe('VueTable', () => {
         expect(tHead.eventDrag).toBeFalsy();
       });
 
-      test('event drag is false', () => {
+      test("event drag is false", () => {
         const tHead = wrapper.vm;
         const fakeEvent = {
           currentTarget: {
@@ -155,8 +162,8 @@ describe('VueTable', () => {
       });
     });
 
-    describe('handleUpDragToFill', () => {
-      test('event drag are false', () => {
+    describe("handleUpDragToFill", () => {
+      test("event drag are false", () => {
         const tHead = wrapper.vm;
         const fakeEvent = {
           currentTarget: {
@@ -168,71 +175,71 @@ describe('VueTable', () => {
 
         expect(tHead.handleUpDragToFill(fakeEvent)).toBeFalsy();
         expect(tHead.eventDrag).toBeFalsy();
-        expect(wrapper.emitted('handle-up-drag-size-header')).toBeFalsy();
+        expect(wrapper.emitted("handle-up-drag-size-header")).toBeFalsy();
       });
     });
 
-    describe('handleSort', () => {
+    describe("handleSort", () => {
       test('send "" return A', () => {
         const tHead = wrapper.vm;
         const head = tHead.headers[3];
 
-        tHead.headers[1].activeSort = 'Z';
-        tHead.handleSort('', head, 3);
+        tHead.headers[1].activeSort = "Z";
+        tHead.handleSort("", head, 3);
 
-        expect(tHead.headers[3].activeSort).toEqual('A');
-        expect(tHead.headers[1].activeSort).toEqual('');
-        expect(wrapper.emitted('thead-td-sort')).toBeTruthy();
+        expect(tHead.headers[3].activeSort).toEqual("A");
+        expect(tHead.headers[1].activeSort).toEqual("");
+        expect(wrapper.emitted("thead-td-sort")).toBeTruthy();
       });
 
-      test('send Z return A', () => {
+      test("send Z return A", () => {
         const tHead = wrapper.vm;
         const head = tHead.headers[3];
 
-        head.activeSort = 'Z';
-        tHead.headers[1].activeSort = 'Z';
-        tHead.handleSort('', head, 3);
+        head.activeSort = "Z";
+        tHead.headers[1].activeSort = "Z";
+        tHead.handleSort("", head, 3);
 
-        expect(tHead.headers[3].activeSort).toEqual('A');
-        expect(tHead.headers[1].activeSort).toEqual('');
-        expect(wrapper.emitted('thead-td-sort')).toBeTruthy();
+        expect(tHead.headers[3].activeSort).toEqual("A");
+        expect(tHead.headers[1].activeSort).toEqual("");
+        expect(wrapper.emitted("thead-td-sort")).toBeTruthy();
       });
 
-      test('send A return Z', () => {
+      test("send A return Z", () => {
         const tHead = wrapper.vm;
         const head = tHead.headers[1];
 
-        head.activeSort = 'A';
-        tHead.handleSort('', head, 1);
+        head.activeSort = "A";
+        tHead.handleSort("", head, 1);
 
-        expect(tHead.headers[1].activeSort).toEqual('Z');
-        expect(wrapper.emitted('thead-td-sort')).toBeTruthy();
+        expect(tHead.headers[1].activeSort).toEqual("Z");
+        expect(wrapper.emitted("thead-td-sort")).toBeTruthy();
       });
     });
 
-    describe('handleContextMenuTd', () => {
-      test('expect submenuEnableCol', () => {
+    describe("handleContextMenuTd", () => {
+      test("expect submenuEnableCol", () => {
         const tHead = wrapper.vm;
 
-        tHead.handleContextMenuTd('', 'e', 3);
+        tHead.handleContextMenuTd("", "e", 3);
 
         expect(tHead.submenuEnableCol).toEqual(3);
-        expect(wrapper.emitted('thead-td-context-menu')).toBeTruthy();
+        expect(wrapper.emitted("thead-td-context-menu")).toBeTruthy();
       });
 
-      test('submenuStatusThead = true', () => {
+      test("submenuStatusThead = true", () => {
         const tHead = wrapper.vm;
 
         tHead.submenuStatusThead = true;
-        tHead.handleContextMenuTd('', 'e', 3);
+        tHead.handleContextMenuTd("", "e", 3);
 
         expect(tHead.submenuEnableCol).toEqual(3);
         expect(tHead.submenuStatusThead).toBeTruthy();
-        expect(wrapper.emitted('thead-td-context-menu')).toBeTruthy();
-        expect(wrapper.emitted('submenu-enable')).toEqual([['tbody']]);
+        expect(wrapper.emitted("thead-td-context-menu")).toBeTruthy();
+        expect(wrapper.emitted("submenu-enable")).toEqual([["tbody"]]);
       });
 
-      test('submenuStatusThead = false', () => {
+      test("submenuStatusThead = false", () => {
         const { headers } = exempleData;
         const { tbodyIndex } = exempleData;
         const { submenuThead } = exempleData;
@@ -262,32 +269,37 @@ describe('VueTable', () => {
         });
 
         const tHead = wrapper.vm;
-        tHead.handleContextMenuTd('', 'e', 3);
+
+        tHead.handleContextMenuTd("", "e", 3);
 
         expect(tHead.submenuEnableCol).toEqual(3);
         expect(tHead.submenuStatusThead).toBeFalsy();
-        expect(wrapper.emitted('thead-td-context-menu')).toBeTruthy();
-        expect(wrapper.emitted('submenu-enable')).toEqual([['thead']]);
+        expect(wrapper.emitted("thead-td-context-menu")).toBeTruthy();
+        expect(wrapper.emitted("submenu-enable")).toEqual([["thead"]]);
       });
     });
 
-    describe('handleClickSubmenu', () => {
-      test('Without selectOptions', () => {
+    describe("handleClickSubmenu", () => {
+      test("Without selectOptions", () => {
         const tHead = wrapper.vm;
 
-        tHead.handleClickSubmenu('', 'e', 3, 'change-color', undefined);
+        tHead.handleClickSubmenu("", "e", 3, "change-color", undefined);
 
-        expect(wrapper.emitted('thead-submenu-click-callback')).toBeTruthy();
-        expect(wrapper.emitted('thead-submenu-click-callback')).toEqual([['', 'e', 3, 'change-color']]);
+        expect(wrapper.emitted("thead-submenu-click-callback")).toBeTruthy();
+        expect(wrapper.emitted("thead-submenu-click-callback")).toEqual([
+          ["", "e", 3, "change-color"],
+        ]);
       });
 
-      test('With selectOptions', () => {
+      test("With selectOptions", () => {
         const tHead = wrapper.vm;
 
-        tHead.handleClickSubmenu('', 'e', 3, 'change-color', ['e']);
+        tHead.handleClickSubmenu("", "e", 3, "change-color", ["e"]);
 
-        expect(wrapper.emitted('thead-submenu-click-callback')).toBeTruthy();
-        expect(wrapper.emitted('thead-submenu-click-callback')).toEqual([['', 'e', 3, 'change-color', ['e']]]);
+        expect(wrapper.emitted("thead-submenu-click-callback")).toBeTruthy();
+        expect(wrapper.emitted("thead-submenu-click-callback")).toEqual([
+          ["", "e", 3, "change-color", ["e"]],
+        ]);
       });
     });
   });
