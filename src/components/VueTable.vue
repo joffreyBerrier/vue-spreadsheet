@@ -1311,8 +1311,9 @@ export default {
           }
           this.$set(this.tbodyData[rowIndex][header], 'active', false);
           this.removeClass(['rectangleSelection']);
+          const currentlyEditingCell = this.tbodyData[rowIndex][header].show;
           // left
-          if (event.keyCode === 37) {
+          if (event.keyCode === 37 && !currentlyEditingCell) {
             const decrementHeader = Object.values(this.headerKeys)[colIndex - 1];
             if (decrementHeader) {
               this.$set(this.tbodyData[rowIndex][decrementHeader], 'active', true);
@@ -1325,7 +1326,7 @@ export default {
             }
           }
           // top
-          if (event.keyCode === 38) {
+          if (event.keyCode === 38 && !currentlyEditingCell) {
             if (rowIndex !== 0) {
               this.$set(this.tbodyData[rowIndex - 1][header], 'active', true);
               if (dataType === 'select') { this.activeSelectSearch(event, rowIndex - 1, colIndex, header); }
@@ -1337,7 +1338,7 @@ export default {
             }
           }
           // right
-          if (event.keyCode === 39) {
+          if (event.keyCode === 39 && !currentlyEditingCell) {
             const incrementHeader = Object.values(this.headerKeys)[colIndex + 1];
             if (incrementHeader) {
               this.$set(this.tbodyData[rowIndex][incrementHeader], 'active', true);
@@ -1350,7 +1351,7 @@ export default {
             }
           }
           // bottom
-          if (event.keyCode === 40) {
+          if (event.keyCode === 40 && !currentlyEditingCell) {
             if (rowIndex + 1 !== rowMax) {
               this.$set(this.tbodyData[rowIndex + 1][header], 'active', true);
               if (dataType === 'select') { this.activeSelectSearch(event, rowIndex + 1, colIndex, header); }
