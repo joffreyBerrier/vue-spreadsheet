@@ -1,4 +1,4 @@
-# :fire: VueJs Spreadsheet 1.9.2 :fire:
+# :fire: Vue Spreadsheet 1.9.2 :fire:
 https://github.com/joffreyBerrier/vuejs-spreadsheet/releases/tag/1.9.1
 
 # Medium article (in french)
