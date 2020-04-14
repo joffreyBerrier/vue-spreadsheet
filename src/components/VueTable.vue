@@ -1290,96 +1290,98 @@ export default {
         const rowIndex = Number(this.actualElement.getAttribute('data-row-index'));
         const dataType = this.actualElement.getAttribute('data-type');
         const header = this.actualElement.getAttribute('data-header');
+        const currentlyEditingCell = this.tbodyData[rowIndex][header].show;
 
-        if (!this.setFirstCell) {
-          this.$set(this.tbodyData[rowIndex][header], 'rectangleSelection', true);
-          this.setFirstCell = true;
-        }
-
-        // set colMax rowMax
-        const rowMax = this.tbodyData.length;
-        const colMax = this.headers.length;
-
-        this.moveOnTable(event, colIndex, rowIndex);
-
-        // shift
-        if (this.keys[16]) {
-          this.pressShiftMultipleCell(event, header, rowMax, rowIndex, colMax, colIndex);
-        } else if (!this.lastSelectOpen && event.keyCode !== 8) {
-          if (this.selectedMultipleCell) {
-            this.selectedMultipleCell = false;
+        if (!currentlyEditingCell) {
+          if (!this.setFirstCell) {
+            this.$set(this.tbodyData[rowIndex][header], 'rectangleSelection', true);
+            this.setFirstCell = true;
           }
-          this.$set(this.tbodyData[rowIndex][header], 'active', false);
-          this.removeClass(['rectangleSelection']);
-          const currentlyEditingCell = this.tbodyData[rowIndex][header].show;
-          // left
-          if (event.keyCode === 37 && !currentlyEditingCell) {
-            const decrementHeader = Object.values(this.headerKeys)[colIndex - 1];
-            if (decrementHeader) {
-              this.$set(this.tbodyData[rowIndex][decrementHeader], 'active', true);
-              if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, decrementHeader); }
-              this.updateSelectedCell(decrementHeader, rowIndex, colIndex - 1);
-            } else {
-              this.$set(this.tbodyData[rowIndex][header], 'active', true);
-              if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, header); }
-              this.updateSelectedCell(header, rowIndex, colIndex);
+
+          // set colMax rowMax
+          const rowMax = this.tbodyData.length;
+          const colMax = this.headers.length;
+
+          this.moveOnTable(event, colIndex, rowIndex);
+
+          // shift
+          if (this.keys[16]) {
+            this.pressShiftMultipleCell(event, header, rowMax, rowIndex, colMax, colIndex);
+          } else if (!this.lastSelectOpen && event.keyCode !== 8) {
+            if (this.selectedMultipleCell) {
+              this.selectedMultipleCell = false;
+            }
+            this.$set(this.tbodyData[rowIndex][header], 'active', false);
+            this.removeClass(['rectangleSelection']);
+            // left
+            if (event.keyCode === 37) {
+              const decrementHeader = Object.values(this.headerKeys)[colIndex - 1];
+              if (decrementHeader) {
+                this.$set(this.tbodyData[rowIndex][decrementHeader], 'active', true);
+                if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, decrementHeader); }
+                this.updateSelectedCell(decrementHeader, rowIndex, colIndex - 1);
+              } else {
+                this.$set(this.tbodyData[rowIndex][header], 'active', true);
+                if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, header); }
+                this.updateSelectedCell(header, rowIndex, colIndex);
+              }
+            }
+            // top
+            if (event.keyCode === 38) {
+              if (rowIndex !== 0) {
+                this.$set(this.tbodyData[rowIndex - 1][header], 'active', true);
+                if (dataType === 'select') { this.activeSelectSearch(event, rowIndex - 1, colIndex, header); }
+                this.updateSelectedCell(header, rowIndex - 1, colIndex);
+              } else {
+                this.$set(this.tbodyData[rowIndex][header], 'active', true);
+                if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, header); }
+                this.updateSelectedCell(header, rowIndex, colIndex);
+              }
+            }
+            // right
+            if (event.keyCode === 39) {
+              const incrementHeader = Object.values(this.headerKeys)[colIndex + 1];
+              if (incrementHeader) {
+                this.$set(this.tbodyData[rowIndex][incrementHeader], 'active', true);
+                if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, incrementHeader); }
+                this.updateSelectedCell(incrementHeader, rowIndex, colIndex + 1);
+              } else {
+                this.$set(this.tbodyData[rowIndex][header], 'active', true);
+                if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, header); }
+                this.updateSelectedCell(header, rowIndex, colIndex);
+              }
+            }
+            // bottom
+            if (event.keyCode === 40) {
+              if (rowIndex + 1 !== rowMax) {
+                this.$set(this.tbodyData[rowIndex + 1][header], 'active', true);
+                if (dataType === 'select') { this.activeSelectSearch(event, rowIndex + 1, colIndex, header); }
+                this.updateSelectedCell(header, rowIndex + 1, colIndex);
+              } else {
+                this.$set(this.tbodyData[rowIndex][header], 'active', true);
+                if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, header); }
+                this.updateSelectedCell(header, rowIndex, colIndex);
+              }
             }
           }
-          // top
-          if (event.keyCode === 38 && !currentlyEditingCell) {
-            if (rowIndex !== 0) {
-              this.$set(this.tbodyData[rowIndex - 1][header], 'active', true);
-              if (dataType === 'select') { this.activeSelectSearch(event, rowIndex - 1, colIndex, header); }
-              this.updateSelectedCell(header, rowIndex - 1, colIndex);
-            } else {
-              this.$set(this.tbodyData[rowIndex][header], 'active', true);
-              if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, header); }
-              this.updateSelectedCell(header, rowIndex, colIndex);
+          // press backspace
+          if (event.keyCode === 8 && !this.lastSelectOpen) {
+            this.handleTbodyNavBackspace(rowIndex, colIndex, header);
+          }
+          // press enter
+          if (event.keyCode === 13) {
+            if (this.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`]) {
+              this.tbodyData[rowIndex][header].show = true;
+              this.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
             }
+            this.$emit('tbody-nav-enter', event, event.keyCode, this.actualElement, rowIndex, colIndex);
           }
-          // right
-          if (event.keyCode === 39 && !currentlyEditingCell) {
-            const incrementHeader = Object.values(this.headerKeys)[colIndex + 1];
-            if (incrementHeader) {
-              this.$set(this.tbodyData[rowIndex][incrementHeader], 'active', true);
-              if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, incrementHeader); }
-              this.updateSelectedCell(incrementHeader, rowIndex, colIndex + 1);
-            } else {
-              this.$set(this.tbodyData[rowIndex][header], 'active', true);
-              if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, header); }
-              this.updateSelectedCell(header, rowIndex, colIndex);
-            }
+          // press esc
+          if (event.keyCode === 27) {
+            this.tbodyData[rowIndex][header].active = false;
+            this.storeCopyDatas = [];
+            this.removeClass(['stateCopy']);
           }
-          // bottom
-          if (event.keyCode === 40 && !currentlyEditingCell) {
-            if (rowIndex + 1 !== rowMax) {
-              this.$set(this.tbodyData[rowIndex + 1][header], 'active', true);
-              if (dataType === 'select') { this.activeSelectSearch(event, rowIndex + 1, colIndex, header); }
-              this.updateSelectedCell(header, rowIndex + 1, colIndex);
-            } else {
-              this.$set(this.tbodyData[rowIndex][header], 'active', true);
-              if (dataType === 'select') { this.activeSelectSearch(event, rowIndex, colIndex, header); }
-              this.updateSelectedCell(header, rowIndex, colIndex);
-            }
-          }
-        }
-        // press backspace
-        if (event.keyCode === 8 && !this.lastSelectOpen) {
-          this.handleTbodyNavBackspace(rowIndex, colIndex, header);
-        }
-        // press enter
-        if (event.keyCode === 13) {
-          if (this.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`]) {
-            this.tbodyData[rowIndex][header].show = true;
-            this.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
-          }
-          this.$emit('tbody-nav-enter', event, event.keyCode, this.actualElement, rowIndex, colIndex);
-        }
-        // press esc
-        if (event.keyCode === 27) {
-          this.tbodyData[rowIndex][header].active = false;
-          this.storeCopyDatas = [];
-          this.removeClass(['stateCopy']);
         }
       }
     },
