@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import VueTable from 'spreadsheet-vuejs';
+import VueTable from 'vuejs-spreadsheet';
 
 export default {
   name: 'app',
