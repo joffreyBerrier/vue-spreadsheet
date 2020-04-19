@@ -1,8 +1,8 @@
-import { mount } from '@vue/test-utils';
-import Tbody from '@/components/Tbody.vue';
+import { mount } from "@vue/test-utils";
+import Tbody from "@/components/TBody/TBody.vue";
 
 // data
-import exempleData from '@/data';
+import exempleData from "@/data";
 
 let wrapper;
 
@@ -34,204 +34,180 @@ beforeEach(() => {
       tbodyIndex,
     },
   });
+
   return wrapper;
 });
 
-describe('VueTable', () => {
-  describe('Render component with props', () => {
-    test('Vue Instance', () => {
+describe("VueTable", () => {
+  describe("Render component with props", () => {
+    test("Vue Instance", () => {
       expect(wrapper.isVueInstance()).toBeTruthy();
     });
   });
 
-  describe('Methods', () => {
-    describe('DisabledEvent', () => {
-      test('Disabled Col : false | with disableCells', () => {
+  describe("Methods", () => {
+    describe("DisabledEvent", () => {
+      test("Disabled Col : false | with disableCells", () => {
         const fakeData = { disabled: false };
-        expect(wrapper.vm.disabledEvent(fakeData, 'a')).toBeTruthy();
+
+        expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeTruthy();
       });
-      test('Disabled Col : true | with disableCells', () => {
+      test("Disabled Col : true | with disableCells", () => {
         const fakeData = { disabled: true };
-        expect(wrapper.vm.disabledEvent(fakeData, 'a')).toBeFalsy();
+
+        expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeFalsy();
       });
-      test('Disabled Col : false | without disableCells', () => {
+      test("Disabled Col : false | without disableCells", () => {
         const fakeData = { disabled: false };
-        expect(wrapper.vm.disabledEvent(fakeData, 'b')).toBeTruthy();
+
+        expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeTruthy();
       });
-      test('Disabled Col : true | without disableCells', () => {
+      test("Disabled Col : true | without disableCells", () => {
         const fakeData = { disabled: true };
-        expect(wrapper.vm.disabledEvent(fakeData, 'b')).toBeFalsy();
+
+        expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeFalsy();
       });
     });
 
-    describe('handleDownDragToFill', () => {
-      test('return eventDrag to true', () => {
+    describe("handleDownDragToFill", () => {
+      test("return eventDrag to true", () => {
         const tBody = wrapper.vm;
         const col = exempleData.products[0].f;
 
         expect(tBody.eventDrag).toBeFalsy();
-        tBody.handleDownDragToFill('', 'f', col, 0, 7);
+        tBody.handleDownDragToFill("", "f", col, 0, 7);
         expect(tBody.eventDrag).toBeTruthy();
       });
 
-      test('emitted tbody-down-dragtofill', () => {
+      test("emitted tbody-down-dragtofill", () => {
         const tBody = wrapper.vm;
         const col = exempleData.products[0].f;
 
-        tBody.handleDownDragToFill('', 'f', col, 0, 7);
-        expect(wrapper.emitted('tbody-down-dragtofill')).toBeTruthy();
+        tBody.handleDownDragToFill("", "f", col, 0, 7);
+        expect(wrapper.emitted("tbody-down-dragtofill")).toBeTruthy();
       });
 
-      test('not emitted tbody-down-dragtofill', () => {
+      test("not emitted tbody-down-dragtofill", () => {
         const tBody = wrapper.vm;
         const col = exempleData.products[0].a;
 
-        tBody.handleDownDragToFill('', 'a', col, 0, 7);
-        expect(wrapper.emitted('tbody-down-dragtofill')).toBeFalsy();
+        tBody.handleDownDragToFill("", "a", col, 0, 7);
+        expect(wrapper.emitted("tbody-down-dragtofill")).toBeFalsy();
       });
     });
 
-    describe('handleMoveDragToFill', () => {
-      test('not emitted tbody-move-dragtofill', () => {
+    describe("handleMoveDragToFill", () => {
+      test("not emitted tbody-move-dragtofill", () => {
         const tBody = wrapper.vm;
         const col = exempleData.products[0].f;
 
-        tBody.handleMoveDragToFill('', 'f', col, 0, 7);
-        expect(wrapper.emitted('tbody-move-dragtofill')).toBeFalsy();
+        tBody.handleMoveDragToFill("", "f", col, 0, 7);
+        expect(wrapper.emitted("tbody-move-dragtofill")).toBeFalsy();
       });
 
-      test('emitted tbody-move-dragtofill', () => {
+      test("emitted tbody-move-dragtofill", () => {
         const tBody = wrapper.vm;
         const col = exempleData.products[0].f;
 
         tBody.eventDrag = true;
-        tBody.handleMoveDragToFill('', 'f', col, 0, 7);
-        expect(wrapper.emitted('tbody-move-dragtofill')).toBeTruthy();
+        tBody.handleMoveDragToFill("", "f", col, 0, 7);
+        expect(wrapper.emitted("tbody-move-dragtofill")).toBeTruthy();
       });
     });
 
-    describe('handleUpDragToFill', () => {
-      test('not emitted tbody-up-dragtofill', () => {
+    describe("handleUpDragToFill", () => {
+      test("not emitted tbody-up-dragtofill", () => {
         const tBody = wrapper.vm;
         const col = exempleData.products[0].f;
 
-        tBody.handleUpDragToFill('', 'f', col, 0, 7);
-        expect(wrapper.emitted('tbody-up-dragtofill')).toBeFalsy();
+        tBody.handleUpDragToFill("", "f", col, 0, 7);
+        expect(wrapper.emitted("tbody-up-dragtofill")).toBeFalsy();
       });
 
-      test('emitted tbody-up-dragtofill', () => {
+      test("emitted tbody-up-dragtofill", () => {
         const tBody = wrapper.vm;
         const col = exempleData.products[0].f;
 
         tBody.eventDrag = true;
-        tBody.handleUpDragToFill('', 'f', col, 0, 7);
-        expect(wrapper.emitted('tbody-up-dragtofill')).toBeTruthy();
+        tBody.handleUpDragToFill("", "f", col, 0, 7);
+        expect(wrapper.emitted("tbody-up-dragtofill")).toBeTruthy();
         expect(Tbody.eventDrag).toBeFalsy();
       });
     });
 
-    describe('handleClickTd', () => {
-      test('emitted tbody-td-click', () => {
+    describe("handleClickTd", () => {
+      test("emitted tbody-td-click", () => {
         const tBody = wrapper.vm;
         const col = exempleData.products[0].f;
 
-        tBody.handleClickTd('', 'f', col, 0, 7);
-        expect(tBody.searchInput).toEqual('');
-        expect(wrapper.emitted('tbody-td-click')).toBeTruthy();
+        tBody.handleClickTd("", "f", col, 0, 7);
+        // expect(tBody.searchInput).toEqual("");
+        expect(wrapper.emitted("tbody-td-click")).toBeTruthy();
       });
     });
 
-    describe('handleDoubleClickTd', () => {
-      test('not emitted tbody-td-double-click', () => {
+    describe("handleDoubleClickTd", () => {
+      test("not emitted tbody-td-double-click", () => {
         const tBody = wrapper.vm;
         const col = exempleData.products[0].a;
 
-        tBody.handleDoubleClickTd('', 'a', col, 0, 7, 'input');
-        expect(wrapper.emitted('tbody-td-double-click')).toBeFalsy();
+        tBody.handleDoubleClickTd("", "a", col, 0, 7, "input");
+        expect(wrapper.emitted("tbody-td-double-click")).toBeFalsy();
       });
     });
 
-    describe('handleContextMenuTd', () => {
-      test('submenuEnableCol / submenuEnableRow', () => {
+    describe("handleContextMenuTd", () => {
+      test("submenuEnableCol / submenuEnableRow", () => {
         const tBody = wrapper.vm;
-        tBody.handleContextMenuTd('', 'a', 0, 7, 'input');
+
+        tBody.handleContextMenuTd("", "a", 0, 7, "input");
 
         expect(tBody.submenuEnableCol).toEqual(7);
         expect(tBody.submenuEnableRow).toEqual(0);
       });
 
-      test('emitted handle-to-calculate-position', () => {
+      test("emitted handle-to-calculate-position", () => {
         const tBody = wrapper.vm;
-        tBody.handleContextMenuTd('', 'a', 0, 7, 'input');
 
-        expect(wrapper.emitted('handle-to-calculate-position')).toBeTruthy();
+        tBody.handleContextMenuTd("", "a", 0, 7, "input");
+
+        expect(wrapper.emitted("handle-to-calculate-position")).toBeTruthy();
       });
 
-      test('emitted submenu-enable', () => {
+      test("emitted submenu-enable", () => {
         const tBody = wrapper.vm;
-        tBody.handleContextMenuTd('', 'a', 0, 7, 'input');
 
-        expect(wrapper.emitted('submenu-enable')).toBeTruthy();
+        tBody.handleContextMenuTd("", "a", 0, 7, "input");
+
+        expect(wrapper.emitted("submenu-enable")).toBeTruthy();
       });
 
-      test('emitted tbody-td-context-menu', () => {
+      test("emitted tbody-td-context-menu", () => {
         const tBody = wrapper.vm;
-        tBody.handleContextMenuTd('', 'a', 0, 7, 'input');
 
-        expect(wrapper.emitted('tbody-td-context-menu')).toBeTruthy();
-      });
-    });
+        tBody.handleContextMenuTd("", "a", 0, 7, "input");
 
-    describe('inputHandleChange', () => {
-      test('emitted tbody-input-change', () => {
-        const tBody = wrapper.vm;
-        tBody.inputHandleChange('', 'a', 0, 7, 'input');
-
-        expect(wrapper.emitted('tbody-input-change')).toBeTruthy();
+        expect(wrapper.emitted("tbody-td-context-menu")).toBeTruthy();
       });
     });
 
-    describe('validSearch', () => {
-      test('emitted tbody-select-change', () => {
+    describe("inputHandleChange", () => {
+      test("emitted tbody-input-change", () => {
         const tBody = wrapper.vm;
-        tBody.validSearch('', 'a', 0, 7, 'input');
 
-        expect(wrapper.emitted('tbody-select-change')).toBeTruthy();
+        tBody.inputHandleChange("", "a", 0, 7, "input");
+
+        expect(wrapper.emitted("tbody-input-change")).toBeTruthy();
       });
     });
 
-    describe('selectHandleChange', () => {
-      test('emitted tbody-select-change', () => {
+    describe("handleClickSubmenu", () => {
+      test("emitted tbody-submenu-click-callback", () => {
         const tBody = wrapper.vm;
-        tBody.selectHandleChange('', 'a', 0, 7, 'input');
 
-        expect(wrapper.emitted('tbody-select-change')).toBeTruthy();
-      });
-    });
+        tBody.handleClickSubmenu("", "a", 0, 7, "input");
 
-    describe('handleSearchInputSelect', () => {
-      test('emitted tbody-handle-search-input-select', () => {
-        const tBody = wrapper.vm;
-        tBody.handleSearchInputSelect('', 'f', 0, 7, 'input');
-
-        expect(wrapper.emitted('tbody-handle-search-input-select')).toBeTruthy();
-      });
-
-      test('not emitted tbody-handle-search-input-select', () => {
-        const tBody = wrapper.vm;
-        const col = exempleData.products[0].a;
-        tBody.handleSearchInputSelect('', col, 'a', 0, 7, 'input');
-
-        expect(wrapper.emitted('tbody-handle-search-input-select')).toBeFalsy();
-      });
-    });
-
-    describe('handleClickSubmenu', () => {
-      test('emitted tbody-submenu-click-callback', () => {
-        const tBody = wrapper.vm;
-        tBody.handleClickSubmenu('', 'a', 0, 7, 'input');
-
-        expect(wrapper.emitted('tbody-submenu-click-callback')).toBeTruthy();
+        expect(wrapper.emitted("tbody-submenu-click-callback")).toBeTruthy();
       });
     });
   });

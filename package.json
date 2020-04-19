@@ -1,51 +1,60 @@
 {
   "name": "vuejs-spreadsheet",
-  "version": "1.9.2",
+  "version": "2.0.0",
   "description": "An easier Spreadsheet in Vue",
-  "main": "src/index.js",
+  "main": "dist/vuespreadsheet.common.js",
   "author": "Joffrey Berrier <joffrey.berrier@gmail.com>",
   "repository": {
-    "url": "git+https://github.com/joffreyBerrier/vuejs-spreadsheet.git",
+    "url": "git+https://github.com/joffreyBerrier/vue-spreadsheet.git",
     "type": "git"
   },
+  "files": [
+    "dist/*",
+    "src/*",
+    "*.json"
+  ],
   "keywords": [
     "vue",
     "vue-table",
     "vue-spreadsheet",
-    "vuejs-spreadsheet",
     "vue-spreadsheet-component"
   ],
   "scripts": {
     "serve": "vue-cli-service serve",
+    "build-lib": "vue-cli-service build --target lib --name vuespreadsheet ./src/index.js",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint"
   },
   "license": "MIT",
   "dependencies": {
+    "core-js": "^3.6.4",
     "fuse.js": "^3.3.0",
+    "lodash.clonedeep": "^4.5.0",
     "path": "^0.12.7",
-    "vue": "^2.5.17",
-    "webpack": "^4.25.1"
+    "vue": "^2.6.11"
   },
   "devDependencies": {
-    "@vue/cli-plugin-unit-jest": "^3.0.4",
-    "@vue/test-utils": "^1.0.0-beta.20",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.6.0",
-    "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "@vue/cli-plugin-babel": "^3.0.4",
-    "@vue/cli-plugin-eslint": "^3.0.4",
-    "@vue/cli-service": "^3.0.4",
-    "@vue/eslint-config-airbnb": "^3.0.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@vue/cli-plugin-babel": "~4.2.0",
+    "@vue/cli-plugin-eslint": "~4.2.0",
+    "@vue/cli-plugin-unit-jest": "~4.2.0",
+    "@vue/cli-service": "~4.2.0",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/test-utils": "1.0.0-beta.31",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-vue": "^6.1.2",
     "node-sass": "^4.9.0",
-    "sass-loader": "^7.0.1",
-    "vue-template-compiler": "^2.5.17"
+    "prettier": "^2.0.2",
+    "sass-loader": "^8.0.2",
+    "vue-template-compiler": "^2.6.11"
   },
   "bugs": {
-    "url": "https://github.com/joffreyBerrier/vuejs-spreadsheet/issues"
+    "url": "https://github.com/joffreyBerrier/vue-spreadsheet/issues"
   },
-  "homepage": "https://github.com/joffreyBerrier/vuejs-spreadsheet#readme"
+  "homepage": "https://github.com/joffreyBerrier/vue-spreadsheet#readme"
 }

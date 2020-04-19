@@ -29,8 +29,7 @@
 </template>
 
 <script>
-
-import VueTable from 'vuejs-spreadsheet';
+import VueTable from 'spreadsheet-vuejs';
 
 export default {
   name: 'app',
@@ -309,7 +308,7 @@ export default {
     };
   },
   components: {
-    VueTable,
+    VueTable
   },
   mounted() {
     this.loading = true;

@@ -1,8 +1,8 @@
-import { mount } from '@vue/test-utils';
-import Tbody from '@/components/Tbody.vue';
+import { mount } from "@vue/test-utils";
+import Tbody from "@/components/TBody/TBody.vue";
 
 // data
-import exempleData from '@/data';
+import exempleData from "@/data";
 
 let wrapper;
 
@@ -34,24 +34,25 @@ beforeEach(() => {
       tbodyIndex,
     },
   });
+
   return wrapper;
 });
 
-describe('VueTable', () => {
-  describe('Render component with props', () => {
-    test('Vue Instance', () => {
+describe("VueTable", () => {
+  describe("Render component with props", () => {
+    test("Vue Instance", () => {
       expect(wrapper.isVueInstance()).toBeTruthy();
     });
   });
 
-  describe('Data', () => {
-    test('Present Data', () => {
+  describe("Data", () => {
+    test("Present Data", () => {
       const tBody = wrapper.vm;
 
-      expect(tBody.emptyCell).toEqual('');
+      expect(tBody.emptyCell).toEqual("");
       expect(tBody.eventDrag).toBeFalsy();
       expect(tBody.oldValue).toBeNull();
-      expect(tBody.searchInput).toEqual('');
+      // expect(tBody.searchInput).toEqual("");
       expect(tBody.submenuEnableCol).toBeNull();
       expect(tBody.submenuEnableRow).toBeNull();
     });

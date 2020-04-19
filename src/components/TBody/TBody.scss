@@ -1,0 +1,447 @@
+.vue-spreadsheet {
+  $rectangleBorder: 1px solid #3183fc;
+  $rectangleBg: #a0c3ff99;
+
+  $dragToFillSize: 10px;
+  $dragToFillColor: #3183fc;
+
+  $chedkedColor: #b2d1ff;
+
+  .table_row {
+    min-height: 40px;
+    height: 40px;
+    transition: background ease 0.3s;
+    &.checked_row {
+      background: $chedkedColor;
+      td {
+        background: $chedkedColor;
+      }
+    }
+    .vuejsspreadsheet_checkbox {
+      position: relative;
+      label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  .td {
+    min-height: 40px;
+    line-height: 40px;
+    position: relative;
+    background-color: white;
+    border-right: 1px solid #e7ecf5;
+    border-bottom: 1px solid #e7ecf5;
+    padding: 0;
+    text-align: left;
+    box-sizing: border-box;
+    &:first-child {
+      border-left: 1px solid #e7ecf5;
+    }
+    &.active_td {
+      .drag_to_fill {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    &.active_td:after {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: 0;
+      height: 40px;
+      left: 0;
+      right: 0;
+      top: 0;
+      width: 100%;
+      z-index: 3;
+      border: $rectangleBorder;
+      background: $rectangleBg;
+      box-sizing: border-box;
+    }
+    &.rectangleSelection:after {
+      content: "";
+      position: absolute;
+      bottom: var(--rectangleBottom);
+      height: var(--rectangleHeight);
+      left: var(--rectangleLeft);
+      right: var(--rectangleRight);
+      top: var(--rectangleTop);
+      width: var(--rectangleWidth);
+      z-index: 3;
+      border: $rectangleBorder;
+      background: $rectangleBg;
+      box-sizing: border-box;
+    }
+    &.selected {
+      &.rectangleSelection:after {
+        display: block;
+      }
+      &.active_td:after {
+        display: none;
+      }
+      &.active_td.rectangleSelection:after {
+        display: block;
+      }
+      &.active_td.copy:after {
+        display: block;
+      }
+    }
+    &.copy:after {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: var(--rectangleBottom);
+      height: var(--rectangleHeight);
+      left: var(--rectangleLeft);
+      right: var(--rectangleRight);
+      top: var(--rectangleTop);
+      width: var(--rectangleWidth);
+      z-index: 3;
+      border: $rectangleBorder;
+      border-style: dashed;
+      box-sizing: border-box;
+    }
+    &.disabled {
+      background: #e0e0e0;
+      span {
+        opacity: 0.8;
+      }
+      .enable_select {
+        opacity: 0;
+      }
+    }
+    &.show {
+      textarea,
+      select {
+        opacity: 1;
+        z-index: 13;
+      }
+      .dropdown {
+        opacity: 1;
+      }
+      textarea {
+        font-size: 11px;
+        line-height: 1.3;
+        border: 1px solid #e9e9e9;
+        z-index: 20;
+        resize: none;
+      }
+      span {
+        opacity: 0;
+      }
+    }
+    textarea,
+    select,
+    .dropdown {
+      opacity: 0;
+    }
+    textarea,
+    span,
+    select,
+    .dropdown {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      text-align: left;
+      padding: 2px 8px;
+      line-height: 36px;
+      box-sizing: border-box;
+      border: 1px solid transparent;
+      outline: none;
+    }
+    textarea,
+    select {
+      z-index: 5;
+    }
+    span {
+      width: 100%;
+      font-size: 11px;
+      z-index: 10;
+      opacity: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    img {
+      width: auto;
+      height: 100%;
+      display: block;
+      margin: auto;
+    }
+    .drag_to_fill {
+      position: absolute;
+      right: -4px;
+      bottom: -4px;
+      width: $dragToFillSize;
+      height: $dragToFillSize;
+      background: $dragToFillColor;
+      border: 1px solid white;
+      display: block;
+      z-index: 11;
+      padding: 0;
+      cursor: cell;
+      opacity: 0;
+      visibility: hidden;
+      outline: none;
+    }
+    .dropdown {
+      border: 0;
+      input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 11px;
+        padding: 2px 8px;
+        text-align: left;
+        height: 100%;
+        width: 100%;
+        border: 0;
+        background: transparent;
+        outline: none;
+        box-sizing: border-box;
+      }
+      ul {
+        opacity: 0;
+        visibility: hidden;
+        position: fixed;
+        margin: 0 auto;
+        background-color: #fff;
+        border: 1px solid #e7ecf5;
+        box-shadow: 0px -8px 34px 0px rgba(0, 0, 0, 0.05);
+        padding: 0;
+        margin: 0;
+        max-height: 135px;
+        min-height: 135px;
+        overflow-y: auto;
+        transition: opacity ease 0.5s, visibility ease 0.5s;
+        // select style
+        left: var(--selectLeft);
+        top: var(--selectTop);
+        width: var(--selectWidth);
+        li {
+          list-style: none;
+          font-size: 11px;
+          line-height: 40px;
+          padding: 2px 8px;
+          text-decoration: none;
+          display: block;
+          cursor: pointer;
+          transition: all ease 0.5s;
+          border-bottom: 1px solid #ebebeb;
+          &:hover {
+            background: #e7ecf5;
+          }
+          &.active {
+            background: #b2d1ff;
+            &:hover {
+              background: #b2d1ff55;
+            }
+          }
+        }
+        &.show {
+          opacity: 1;
+          visibility: visible;
+          z-index: 15;
+        }
+      }
+    }
+    .vuetable_triange {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: var(--borderCommentSize) var(--borderCommentSize) 0 0;
+      border-color: var(--borderCommentColor) transparent transparent transparent;
+      position: absolute;
+      top: 0;
+      padding: 0;
+      z-index: 12;
+      cursor: pointer;
+      left: 0;
+      overflow: visible;
+      .vuetable_triange_comment {
+        width: var(--boxCommentWidth);
+        height: var(--BoxCommentHeight);
+        position: absolute;
+        white-space: normal;
+        top: -10px;
+        left: calc(#{var(--boxCommentWidth)} * -1);
+        background: #fff;
+        padding: 10px 7px;
+        line-height: 1.2;
+        box-sizing: border-box;
+        box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
+        z-index: 99999;
+      }
+    }
+  }
+
+  .vuetable_tooltip {
+    background: white;
+    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    font-size: 11px;
+    height: auto;
+    left: 0;
+    line-height: 1.3;
+    max-height: 80px;
+    min-height: 40px;
+    overflow-y: auto;
+    padding: 5px;
+    position: absolute;
+    position: absolute;
+    top: 40px;
+    width: 100%;
+    z-index: 20;
+  }
+
+  .icon_glass {
+    position: absolute;
+    top: calc(20px - 8px);
+    right: 25px;
+    z-index: 13;
+    width: 12px;
+    height: 12px;
+    border-radius: 50px;
+    border: 1px solid #000000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all ease 0.2s;
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      transform: rotate(45deg);
+      bottom: 0;
+      right: -4px;
+      height: 1px;
+      width: 5px;
+      background: #000000;
+    }
+    &.show {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  .enable_select {
+    position: absolute;
+    top: calc(20px - 8px);
+    right: 5px;
+    z-index: 13;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    transform: rotate(0deg);
+    transition: transform ease 0.5s;
+    i {
+      display: block;
+      position: absolute;
+      top: 50%;
+      right: 5px;
+      transform: translateY(-50%) rotate(180deg);
+      font-size: 16px;
+      transition: all ease 0.5s;
+      &:before {
+        content: "";
+        display: block;
+        height: 1px;
+        width: 5px;
+        transform: rotate(45deg) translate(1px, -2px);
+        background: black;
+      }
+      &:after {
+        content: "";
+        display: block;
+        height: 1px;
+        width: 5px;
+        transform: rotate(135deg) translate(0px, 2px);
+        background: black;
+      }
+    }
+    &.active {
+      transform: rotate(180deg);
+    }
+  }
+  .submenu {
+    position: fixed;
+    z-index: 20;
+    background: white;
+    left: var(--selectLeft);
+    top: var(--selectTop);
+  }
+  .submenu_wrap {
+    margin: 0 auto;
+    padding: 7px 14px;
+    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
+    button {
+      width: 100%;
+      height: 30px;
+      line-height: 30px;
+      padding: 0;
+      text-align: center;
+      border-radius: 4px;
+      background: white;
+      border: 1px solid #eee;
+      outline: none;
+      &:focus {
+        box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+  .index {
+    width: 20px;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #e6ecf6;
+    border-right: 1px solid #e6ecf6;
+    border-left: 1px solid #e6ecf6;
+    background: transparent;
+    box-sizing: border-box;
+    transition: background ease 0.5s;
+    &.highlight_spreadsheet {
+      background: #d5ddec;
+    }
+  }
+
+  // transition tooltip
+  .transitionTooltip-enter-active {
+    transition: all 0.5s ease 1.5s;
+  }
+  .transitionTooltip-leave-active {
+    transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+  }
+  .transitionTooltip-enter,
+  .transitionTooltip-leave-to {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+
+  // transition comment
+  .transitionComment-enter-active {
+    transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+  }
+  .transitionComment-leave-active {
+    transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+  }
+  .transitionComment-enter,
+  .transitionComment-leave-to {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+}

@@ -4,24 +4,23 @@ export default {
     tbodyCheckbox: true,
     sortHeader: true,
     trad: {
-      lang: 'fr',
+      lang: "fr",
       en: {
         select: {
-          placeholder: 'Search by typing',
+          placeholder: "Search by typing",
         },
       },
       fr: {
         select: {
-          placeholder: 'Taper pour chercher',
+          placeholder: "Taper pour chercher",
         },
       },
     },
     newData: {
-      type: 'input',
-      value: '',
-      active: false,
+      type: "input",
+      value: "",
       style: {
-        color: '#000',
+        color: "#000",
       },
     },
     fuseOptions: {
@@ -33,179 +32,174 @@ export default {
       minMatchCharLength: 1,
       findAllMatches: false,
       tokenize: false,
-      keys: [
-        'value',
-      ],
+      keys: ["value"],
     },
   },
   loading: false,
-  disableCells: ['a'],
+  disableCells: ["a"],
   parentScrollElement: {
-    attribute: 'html',
+    attribute: "html",
     positionTop: 0,
   },
   selectPosition: {
     top: 0,
     left: 0,
   },
-  disableSortThead: ['a'],
+  disableSortThead: ["a"],
   styleWrapVueTable: {
-    height: '400px',
-    overflow: 'visible',
-    fontSize: '12px',
+    height: "400px",
+    overflow: "visible",
+    fontSize: "12px",
     comment: {
-      borderColor: '#696969',
-      borderSize: '8px',
-      widthBox: '120px',
-      heightBox: '80px',
+      borderColor: "#696969",
+      borderSize: "8px",
+      widthBox: "120px",
+      heightBox: "80px",
     },
   },
   headers: [
     {
-      headerName: 'A',
-      headerKey: 'a',
+      headerName: "A",
+      headerKey: "a",
       style: {
-        width: '200px',
-        minWidth: '200px',
-        color: '#000',
+        width: "200px",
+        minWidth: "200px",
+        color: "#000",
       },
     },
     {
-      headerName: 'B',
-      headerKey: 'b',
+      headerName: "B",
+      headerKey: "b",
       style: {
-        width: '200px',
-        minWidth: '200px',
-        color: '#000',
+        width: "200px",
+        minWidth: "200px",
+        color: "#000",
       },
     },
     {
-      headerName: 'C',
-      headerKey: 'c',
+      headerName: "C",
+      headerKey: "c",
       style: {
-        width: '200px',
-        minWidth: '200px',
-        color: '#000',
+        width: "200px",
+        minWidth: "200px",
+        color: "#000",
       },
     },
     {
-      headerName: 'D',
-      headerKey: 'd',
+      headerName: "D",
+      headerKey: "d",
       style: {
-        width: '200px',
-        minWidth: '200px',
-        color: '#000',
+        width: "200px",
+        minWidth: "200px",
+        color: "#000",
       },
     },
     {
-      headerName: 'E',
-      headerKey: 'e',
+      headerName: "E",
+      headerKey: "e",
       style: {
-        width: '200px',
-        minWidth: '200px',
-        color: '#000',
+        width: "200px",
+        minWidth: "200px",
+        color: "#000",
       },
     },
     {
-      headerName: 'F',
-      headerKey: 'f',
+      headerName: "F",
+      headerKey: "f",
       style: {
-        width: '200px',
-        minWidth: '200px',
-        color: '#000',
+        width: "200px",
+        minWidth: "200px",
+        color: "#000",
       },
     },
     {
-      headerName: 'G',
-      headerKey: 'g',
+      headerName: "G",
+      headerKey: "g",
       style: {
-        width: '200px',
-        minWidth: '200px',
-        color: '#000',
+        width: "200px",
+        minWidth: "200px",
+        color: "#000",
       },
     },
   ],
   products: [
     {
       a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
+        type: "img",
+        value: "https://via.placeholder.com/350x150",
       },
       c: {
-        type: 'input',
-        value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec aliquam magna. Sed consequat amet..',
-        active: false,
+        type: "input",
+        value:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec aliquam magna. Sed consequat amet..",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       d: {
-        type: 'input',
-        value: 'France',
-        active: false,
+        type: "input",
+        value: "disabled cell",
+        disabled: true,
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
+        type: "input",
+        value: "Boe",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       f: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#eee',
+          value: "comment",
+          borderColor: "#eee",
         },
         selectOptions: [
           {
-            value: 'Harry Potter',
-            label: 'harry potter',
+            value: "Harry Potter",
+            label: "harry potter",
           },
           {
-            value: 'Hermione Granger',
-            label: 'hermione granger',
+            value: "Hermione Granger",
+            label: "hermione granger",
           },
           {
-            value: 'Ron Whisley',
-            label: 'ron whisley',
+            value: "Ron Whisley",
+            label: "ron whisley",
           },
           {
-            value: 'Dobby',
-            label: 'dobby',
+            value: "Dobby",
+            label: "dobby",
           },
           {
-            value: 'Hagrid',
-            label: 'hagrid',
+            value: "Hagrid",
+            label: "hagrid",
           },
           {
-            value: 'Professeur Rogue',
-            label: 'professeur rogue',
+            value: "Professeur Rogue",
+            label: "professeur rogue",
           },
           {
-            value: 'Professeur Mcgonagal',
-            label: 'professeur mcgonagal',
+            value: "Professeur Mcgonagal",
+            label: "professeur mcgonagal",
           },
           {
-            value: 'Professeur Dumbledor',
-            label: 'professeur dumbledor',
+            value: "Professeur Dumbledor",
+            label: "professeur dumbledor",
           },
         ],
-        value: 'professeur dumbledor',
-        active: false,
+        value: "professeur dumbledor",
       },
       g: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#eee',
+          value: "comment",
+          borderColor: "#eee",
         },
         selectOptions: [
           {
@@ -231,89 +225,83 @@ export default {
           },
         ],
         value: 1983,
-        active: false,
       },
     },
     {
       a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
+        type: "img",
+        value: "https://via.placeholder.com/350x150",
       },
       b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
+        type: "input",
+        value: "Jane",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       d: {
-        type: 'input',
-        value: 'France',
-        active: false,
+        type: "input",
+        value: "France",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
+        type: "input",
+        value: "Boe",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       f: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#eee',
+          value: "comment",
+          borderColor: "#eee",
         },
         selectOptions: [
           {
-            value: 'Harry Potter',
-            label: 'harry potter',
+            value: "Harry Potter",
+            label: "harry potter",
           },
           {
-            value: 'Hermione Granger',
-            label: 'hermione granger',
+            value: "Hermione Granger",
+            label: "hermione granger",
           },
           {
-            value: 'Ron Whisley',
-            label: 'ron whisley',
+            value: "Ron Whisley",
+            label: "ron whisley",
           },
           {
-            value: 'Dobby',
-            label: 'dobby',
+            value: "Dobby",
+            label: "dobby",
           },
           {
-            value: 'Hagrid',
-            label: 'hagrid',
+            value: "Hagrid",
+            label: "hagrid",
           },
           {
-            value: 'Professeur Rogue',
-            label: 'professeur rogue',
+            value: "Professeur Rogue",
+            label: "professeur rogue",
           },
           {
-            value: 'Professeur Mcgonagal',
-            label: 'professeur mcgonagal',
+            value: "Professeur Mcgonagal",
+            label: "professeur mcgonagal",
           },
           {
-            value: 'Professeur Dumbledor',
-            label: 'professeur dumbledor',
+            value: "Professeur Dumbledor",
+            label: "professeur dumbledor",
           },
         ],
-        value: 'Harry Potter',
-        active: false,
+        value: "Harry Potter",
       },
       g: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#eee',
+          value: "comment",
+          borderColor: "#eee",
         },
         selectOptions: [
           {
@@ -339,97 +327,90 @@ export default {
           },
         ],
         value: 1983,
-        active: false,
       },
     },
     {
       a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
+        type: "img",
+        value: "https://via.placeholder.com/350x150",
       },
       b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
+        type: "input",
+        value: "Jane",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       c: {
-        type: 'input',
-        value: 'Paris',
-        active: false,
+        type: "input",
+        value: "Paris",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       d: {
-        type: 'input',
-        value: 'France',
-        active: false,
+        type: "input",
+        value: "France",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
+        type: "input",
+        value: "Boe",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       f: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
-            value: 'Harry Potter',
-            label: 'harry potter',
+            value: "Harry Potter",
+            label: "harry potter",
           },
           {
-            value: 'Hermione Granger',
-            label: 'hermione granger',
+            value: "Hermione Granger",
+            label: "hermione granger",
           },
           {
-            value: 'Ron Whisley',
-            label: 'ron whisley',
+            value: "Ron Whisley",
+            label: "ron whisley",
           },
           {
-            value: 'Dobby',
-            label: 'dobby',
+            value: "Dobby",
+            label: "dobby",
           },
           {
-            value: 'Hagrid',
-            label: 'hagrid',
+            value: "Hagrid",
+            label: "hagrid",
           },
           {
-            value: 'Professeur Rogue',
-            label: 'professeur rogue',
+            value: "Professeur Rogue",
+            label: "professeur rogue",
           },
           {
-            value: 'Professeur Mcgonagal',
-            label: 'professeur mcgonagal',
+            value: "Professeur Mcgonagal",
+            label: "professeur mcgonagal",
           },
           {
-            value: 'Professeur Dumbledor',
-            label: 'professeur dumbledor',
+            value: "Professeur Dumbledor",
+            label: "professeur dumbledor",
           },
         ],
-        value: 'Hermione Granger',
-        active: false,
+        value: "Hermione Granger",
       },
       g: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -455,97 +436,90 @@ export default {
           },
         ],
         value: 1983,
-        active: false,
       },
     },
     {
       a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
+        type: "img",
+        value: "https://via.placeholder.com/350x150",
       },
       b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
+        type: "input",
+        value: "Jane",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       c: {
-        type: 'input',
-        value: 'Paris',
-        active: false,
+        type: "input",
+        value: "Paris",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       d: {
-        type: 'input',
-        value: 'France',
-        active: false,
+        type: "input",
+        value: "France",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
+        type: "input",
+        value: "Boe",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       f: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
-            value: 'Harry Potter',
-            label: 'harry potter',
+            value: "Harry Potter",
+            label: "harry potter",
           },
           {
-            value: 'Hermione Granger',
-            label: 'hermione granger',
+            value: "Hermione Granger",
+            label: "hermione granger",
           },
           {
-            value: 'Ron Whisley',
-            label: 'ron whisley',
+            value: "Ron Whisley",
+            label: "ron whisley",
           },
           {
-            value: 'Dobby',
-            label: 'dobby',
+            value: "Dobby",
+            label: "dobby",
           },
           {
-            value: 'Hagrid',
-            label: 'hagrid',
+            value: "Hagrid",
+            label: "hagrid",
           },
           {
-            value: 'Professeur Rogue',
-            label: 'professeur rogue',
+            value: "Professeur Rogue",
+            label: "professeur rogue",
           },
           {
-            value: 'Professeur Mcgonagal',
-            label: 'professeur mcgonagal',
+            value: "Professeur Mcgonagal",
+            label: "professeur mcgonagal",
           },
           {
-            value: 'Professeur Dumbledor',
-            label: 'professeur dumbledor',
+            value: "Professeur Dumbledor",
+            label: "professeur dumbledor",
           },
         ],
-        value: 'Professeur Rogue',
-        active: false,
+        value: "Professeur Rogue",
       },
       g: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -571,97 +545,90 @@ export default {
           },
         ],
         value: 1983,
-        active: false,
       },
     },
     {
       a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
+        type: "img",
+        value: "https://via.placeholder.com/350x150",
       },
       b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
+        type: "input",
+        value: "Jane",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       c: {
-        type: 'input',
-        value: 'Paris',
-        active: false,
+        type: "input",
+        value: "Paris",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       d: {
-        type: 'input',
-        value: 'France',
-        active: false,
+        type: "input",
+        value: "France",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
+        type: "input",
+        value: "Boe",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       f: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
-            value: 'Harry Potter',
-            label: 'harry potter',
+            value: "Harry Potter",
+            label: "harry potter",
           },
           {
-            value: 'Hermione Granger',
-            label: 'hermione granger',
+            value: "Hermione Granger",
+            label: "hermione granger",
           },
           {
-            value: 'Ron Whisley',
-            label: 'ron whisley',
+            value: "Ron Whisley",
+            label: "ron whisley",
           },
           {
-            value: 'Dobby',
-            label: 'dobby',
+            value: "Dobby",
+            label: "dobby",
           },
           {
-            value: 'Hagrid',
-            label: 'hagrid',
+            value: "Hagrid",
+            label: "hagrid",
           },
           {
-            value: 'Professeur Rogue',
-            label: 'professeur rogue',
+            value: "Professeur Rogue",
+            label: "professeur rogue",
           },
           {
-            value: 'Professeur Mcgonagal',
-            label: 'professeur mcgonagal',
+            value: "Professeur Mcgonagal",
+            label: "professeur mcgonagal",
           },
           {
-            value: 'Professeur Dumbledor',
-            label: 'professeur dumbledor',
+            value: "Professeur Dumbledor",
+            label: "professeur dumbledor",
           },
         ],
-        value: 'Dobby',
-        active: false,
+        value: "Dobby",
       },
       g: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -687,97 +654,90 @@ export default {
           },
         ],
         value: 1983,
-        active: false,
       },
     },
     {
       a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
+        type: "img",
+        value: "https://via.placeholder.com/350x150",
       },
       b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
+        type: "input",
+        value: "Jane",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       c: {
-        type: 'input',
-        value: 'Paris',
-        active: false,
+        type: "input",
+        value: "Paris",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       d: {
-        type: 'input',
-        value: 'France',
-        active: false,
+        type: "input",
+        value: "France",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
+        type: "input",
+        value: "Boe",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       f: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
-            value: 'Harry Potter',
-            label: 'harry potter',
+            value: "Harry Potter",
+            label: "harry potter",
           },
           {
-            value: 'Hermione Granger',
-            label: 'hermione granger',
+            value: "Hermione Granger",
+            label: "hermione granger",
           },
           {
-            value: 'Ron Whisley',
-            label: 'ron whisley',
+            value: "Ron Whisley",
+            label: "ron whisley",
           },
           {
-            value: 'Dobby',
-            label: 'dobby',
+            value: "Dobby",
+            label: "dobby",
           },
           {
-            value: 'Hagrid',
-            label: 'hagrid',
+            value: "Hagrid",
+            label: "hagrid",
           },
           {
-            value: 'Professeur Rogue',
-            label: 'professeur rogue',
+            value: "Professeur Rogue",
+            label: "professeur rogue",
           },
           {
-            value: 'Professeur Mcgonagal',
-            label: 'professeur mcgonagal',
+            value: "Professeur Mcgonagal",
+            label: "professeur mcgonagal",
           },
           {
-            value: 'Professeur Dumbledor',
-            label: 'professeur dumbledor',
+            value: "Professeur Dumbledor",
+            label: "professeur dumbledor",
           },
         ],
-        value: 'Professeur Dumbledor',
-        active: false,
+        value: "Professeur Dumbledor",
       },
       g: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -803,53 +763,47 @@ export default {
           },
         ],
         value: 1983,
-        active: false,
       },
     },
     {
       a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
+        type: "img",
+        value: "https://via.placeholder.com/350x150",
       },
       b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
+        type: "input",
+        value: "Jane",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       c: {
-        type: 'input',
-        value: 'Paris',
-        active: false,
+        type: "input",
+        value: "Paris",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       d: {
-        type: 'input',
-        value: 'France',
-        active: false,
+        type: "input",
+        value: "France",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
+        type: "input",
+        value: "Boe",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       f: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -875,14 +829,13 @@ export default {
           },
         ],
         value: 30,
-        active: false,
       },
       g: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -908,53 +861,47 @@ export default {
           },
         ],
         value: 1983,
-        active: false,
       },
     },
     {
       a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
+        type: "img",
+        value: "https://via.placeholder.com/350x150",
       },
       b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
+        type: "input",
+        value: "Jane",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       c: {
-        type: 'input',
-        value: 'Paris',
-        active: false,
+        type: "input",
+        value: "Paris",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       d: {
-        type: 'input',
-        value: 'France',
-        active: false,
+        type: "input",
+        value: "France",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
+        type: "input",
+        value: "Boe",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       f: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -980,14 +927,13 @@ export default {
           },
         ],
         value: 30,
-        active: false,
       },
       g: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -1013,53 +959,47 @@ export default {
           },
         ],
         value: 1983,
-        active: false,
       },
     },
     {
       a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
+        type: "img",
+        value: "https://via.placeholder.com/350x150",
       },
       b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
+        type: "input",
+        value: "Jane",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       c: {
-        type: 'input',
-        value: 'Paris',
-        active: false,
+        type: "input",
+        value: "Paris",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       d: {
-        type: 'input',
-        value: 'France',
-        active: false,
+        type: "input",
+        value: "France",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
+        type: "input",
+        value: "Boe",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       f: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -1085,14 +1025,13 @@ export default {
           },
         ],
         value: 30,
-        active: false,
       },
       g: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -1118,53 +1057,47 @@ export default {
           },
         ],
         value: 1983,
-        active: false,
       },
     },
     {
       a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
+        type: "img",
+        value: "https://via.placeholder.com/350x150",
       },
       b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
+        type: "input",
+        value: "Jane",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       c: {
-        type: 'input',
-        value: 'Paris',
-        active: false,
+        type: "input",
+        value: "Paris",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       d: {
-        type: 'input',
-        value: 'France',
-        active: false,
+        type: "input",
+        value: "France",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
+        type: "input",
+        value: "Boe",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       f: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -1190,14 +1123,13 @@ export default {
           },
         ],
         value: 30,
-        active: false,
       },
       g: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -1223,53 +1155,47 @@ export default {
           },
         ],
         value: 1983,
-        active: false,
       },
     },
     {
       a: {
-        type: 'img',
-        value: 'https://via.placeholder.com/350x150',
-        active: false,
+        type: "img",
+        value: "https://via.placeholder.com/350x150",
       },
       b: {
-        type: 'input',
-        value: 'Jane',
-        active: false,
+        type: "input",
+        value: "Jane",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       c: {
-        type: 'input',
-        value: 'Paris',
-        active: false,
+        type: "input",
+        value: "Paris",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       d: {
-        type: 'input',
-        value: 'France',
-        active: false,
+        type: "input",
+        value: "France",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       e: {
-        type: 'input',
-        value: 'Boe',
-        active: false,
+        type: "input",
+        value: "Boe",
         style: {
-          color: '#000',
+          color: "#000",
         },
       },
       f: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -1295,14 +1221,13 @@ export default {
           },
         ],
         value: 30,
-        active: false,
       },
       g: {
-        type: 'select',
+        type: "select",
         handleSearch: true,
         comment: {
-          value: 'comment',
-          borderColor: '#000',
+          value: "comment",
+          borderColor: "#000",
         },
         selectOptions: [
           {
@@ -1328,59 +1253,58 @@ export default {
           },
         ],
         value: 1983,
-        active: false,
       },
     },
   ],
   submenuThead: [
     {
-      type: 'button',
-      value: 'change color',
-      function: 'change-color',
-      disabled: ['a'],
+      type: "button",
+      value: "change color",
+      function: "change-color",
+      disabled: ["a"],
     },
     {
-      type: 'select',
-      disabled: ['a'],
-      subtitle: 'Select state:',
+      type: "select",
+      disabled: ["a"],
+      subtitle: "Select state:",
       selectOptions: [
         {
-          value: 'new-york',
-          label: 'new-york',
+          value: "new-york",
+          label: "new-york",
         },
         {
-          value: 'france',
-          label: 'france',
+          value: "france",
+          label: "france",
         },
       ],
-      value: 'new-york',
+      value: "new-york",
       buttonOption: {
-        value: 'change city',
-        function: 'change-city',
+        value: "change city",
+        function: "change-city",
         style: {
-          display: 'block',
+          display: "block",
         },
       },
     },
     {
-      type: 'button',
-      value: 'change value',
-      function: 'change-value',
-      disabled: ['a', 'b'],
+      type: "button",
+      value: "change value",
+      function: "change-value",
+      disabled: ["a", "b"],
     },
   ],
   submenuTbody: [
     {
-      type: 'button',
-      value: 'change color',
-      function: 'change-color',
-      disabled: ['img'],
+      type: "button",
+      value: "change color",
+      function: "change-color",
+      disabled: ["img"],
     },
     {
-      type: 'button',
-      value: 'change value',
-      function: 'change-value',
-      disabled: ['img', 'name'],
+      type: "button",
+      value: "change value",
+      function: "change-value",
+      disabled: ["img", "name"],
     },
   ],
 };

@@ -1,8 +1,8 @@
-import { mount } from '@vue/test-utils';
-import VueTable from '@/components/VueTable.vue';
+import { mount } from "@vue/test-utils";
+import VueTable from "@/components/VueTable.vue";
 
 // data
-import exempleData from '@/data';
+import exempleData from "@/data";
 
 let wrapper;
 
@@ -34,18 +34,19 @@ beforeEach(() => {
       submenuThead,
     },
   });
+
   return wrapper;
 });
 
-describe('VueTable', () => {
-  describe('Render component with props', () => {
-    test('Vue Instance', () => {
+describe("VueTable", () => {
+  describe("Render component with props", () => {
+    test("Vue Instance", () => {
       expect(wrapper.isVueInstance()).toBeTruthy();
     });
   });
 
-  describe('Data', () => {
-    test('Present Data', () => {
+  describe("Data", () => {
+    test("Present Data", () => {
       const vueTable = wrapper.vm;
 
       expect(vueTable.disableKeyTimeout).toBeNull();

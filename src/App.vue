@@ -19,13 +19,14 @@
       @tbody-submenu-click-change-value="changeValueTbody"
       @thead-submenu-click-change-color="changeColorThead"
       @thead-submenu-click-change-value="changeValueThead"
-      @thead-td-sort="sortProduct">
-    <div slot="header">
-      Specific Header
-    </div>
-    <div slot="loader">
-      Loader
-    </div>
+      @thead-td-sort="sortProduct"
+    >
+      <div slot="header">
+        Specific Header
+      </div>
+      <div slot="loader">
+        Loader
+      </div>
     </vue-table>
   </div>
 </template>
@@ -36,7 +37,7 @@ import VueTable from './components/VueTable.vue';
 import exempleData from './data';
 
 export default {
-  name: 'app',
+  name: 'VueSpreadsheet',
   data() {
     return exempleData;
   },
@@ -47,20 +48,20 @@ export default {
     this.loading = true;
     setTimeout(() => {
       this.loading = false;
-    }, 300);
+    }, 200);
   },
   methods: {
     checkedAllData(isChecked) {
-      console.log('checked all data', isChecked)
+      // console.log('checked all data', isChecked)
     },
     checkedData(row) {
-      console.log('checked data', row)
+      // console.log('checked data', row)
     },
     changeData(row, header) {
-      console.log(row, header);
+      // console.log(row, header);
     },
     sortProduct(event, header, colIndex) {
-      console.log('sort product');
+      // console.log('sort product');
     },
     // callback
     changeColorThead(event, header, colIndex) {

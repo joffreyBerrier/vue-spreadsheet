@@ -1,13 +1,13 @@
 <template>
-  <thead class="thead"
-    @mouseup="handleUpDragToFill($event)">
+  <thead class="thead" @mouseup="handleUpDragToFill($event)">
     <tr>
       <th class="index" v-if="tbodyCheckbox">
         <input
           type="checkbox"
           :id="`checkbox-all-${currentTable}`"
           v-model="checkedAll"
-          @change="checkedAllRow">
+          @change="checkedAllRow"
+        />
         <label :for="`checkbox-all-${currentTable}`"></label>
       </th>
       <th v-if="tbodyIndex" class="index" key="th-index"></th>
@@ -15,75 +15,103 @@
         <th
           class="th"
           :class="{
-            'disabled': header.disabled,
-            'highlight_spreadsheet': theadHighlight.includes(colIndex),
-            'dragged': beforeChangeSize.col === colIndex
+            disabled: header.disabled,
+            highlight_spreadsheet: theadHighlight.includes(colIndex),
+            dragged: beforeChangeSize.col === colIndex,
           }"
           :ref="'th-' + colIndex"
           :key="header.headerKey"
-          :style="[header.style, header.style.top = headerTop > 0 ? headerTop + 'px' : 'auto']">
-
-          <span>{{header.headerName}}</span>
+          :style="[header.style, (header.style.top = headerTop > 0 ? headerTop + 'px' : 'auto')]"
+        >
+          <span>{{ header.headerName }}</span>
 
           <template
-            v-if="submenuThead &&
-            submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)">
-              <button
-                @click="handleContextMenuTd($event, header.headerKey, colIndex)"
-                :class="{'active': submenuThead && submenuStatusThead && colIndex === submenuEnableCol}"
-                class="button_submenu button_submenu-2">
-                <span class="icon icon_menu">
-                  <i class="bullet bullet-1"></i>
-                  <i class="bullet bullet-2"></i>
-                  <i class="bullet bullet-3"></i>
-                </span>
-              </button>
+            v-if="
+              submenuThead &&
+              submenuThead.find((sub) => sub.disabled.includes(header.headerKey) == 0)
+            "
+          >
+            <button
+              @click="handleContextMenuTd($event, header.headerKey, colIndex)"
+              :class="{
+                active: submenuThead && submenuStatusThead && colIndex === submenuEnableCol,
+              }"
+              class="button_submenu button_submenu-2"
+            >
+              <span class="icon icon_menu">
+                <i class="bullet bullet-1"></i>
+                <i class="bullet bullet-2"></i>
+                <i class="bullet bullet-3"></i>
+              </span>
+            </button>
           </template>
 
-          <template
-            v-if="sortHeader &&
-            disableSortThead.indexOf(header.headerKey) === -1">
-              <button
-                @click="handleSort($event, header, colIndex)"
-                :class="{'sort_A': header.activeSort === 'A', 'sort_Z' : header.activeSort === 'Z'}"
-                class="button_submenu">
-                <i class="icon sort"></i>
-                <i class="icon sort"></i>
-              </button>
+          <template v-if="sortHeader && disableSortThead.indexOf(header.headerKey) === -1">
+            <button
+              @click="handleSort($event, header, colIndex)"
+              :class="{
+                sort_A: header.activeSort === 'A',
+                sort_Z: header.activeSort === 'Z',
+              }"
+              class="button_submenu"
+            >
+              <i class="icon sort"></i>
+              <i class="icon sort"></i>
+            </button>
           </template>
 
           <transition name="fade">
             <div
-              v-if="submenuThead &&
-              submenuStatusThead &&
-              colIndex === submenuEnableCol &&
-              submenuThead.find(sub => sub.disabled.includes(header.headerKey) == 0)"
+              v-if="
+                submenuThead &&
+                submenuStatusThead &&
+                colIndex === submenuEnableCol &&
+                submenuThead.find((sub) => sub.disabled.includes(header.headerKey) == 0)
+              "
               :key="'submenu-' + header.headerKey"
-              class="submenu_wrap">
+              class="submenu_wrap"
+            >
               <template v-for="(sub, index) in submenuThead">
                 <template v-if="sub.type === 'button'">
                   <button
                     v-if="sub.disabled.includes(header.headerKey) == 0"
                     :key="index"
-                    @click.stop="handleClickSubmenu($event, header, colIndex, sub.function)">
-                    {{sub.value}}
+                    @click.stop="handleClickSubmenu($event, header, colIndex, sub.function)"
+                  >
+                    {{ sub.value }}
                   </button>
                 </template>
                 <template v-if="sub.type === 'select'">
-                  <div class="menu_option" :key="index" v-if="sub.disabled.includes(header.headerKey) == 0">
-                    <template v-if="sub.subtitle"><h3>{{sub.subtitle}}</h3></template>
+                  <div
+                    class="menu_option"
+                    :key="index"
+                    v-if="sub.disabled.includes(header.headerKey) == 0"
+                  >
+                    <template v-if="sub.subtitle"
+                      ><h3>{{ sub.subtitle }}</h3></template
+                    >
                     <select v-model="sub.value">
                       <option
                         v-for="(option, index) in sub.selectOptions"
                         :value="option.value"
-                        :key="index">
-                          {{option.label}}
+                        :key="index"
+                      >
+                        {{ option.label }}
                       </option>
                     </select>
                     <button
                       :style="sub.buttonOption.style"
-                      @click.stop="handleClickSubmenu($event, header, colIndex, sub.buttonOption.function, sub.value)">
-                        {{sub.buttonOption.value}}
+                      @click.stop="
+                        handleClickSubmenu(
+                          $event,
+                          header,
+                          colIndex,
+                          sub.buttonOption.function,
+                          sub.value
+                        )
+                      "
+                    >
+                      {{ sub.buttonOption.value }}
                     </button>
                   </div>
                 </template>
@@ -96,8 +124,8 @@
             @mousedown="handleDownChangeSize($event, header, colIndex)"
             @mouseup="handleUpDragToFill($event, header, colIndex)"
             class="resize"
-            :class="{'active': header.active}">
-          </button>
+            :class="{ active: header.active }"
+          ></button>
         </th>
       </template>
     </tr>
@@ -106,7 +134,7 @@
 
 <script type="text/javascript">
 export default {
-  name: 'vue-thead',
+  name: "vue-thead",
   props: {
     theadHighlight: {
       type: Array,
@@ -154,22 +182,22 @@ export default {
       checkedAll: false,
       beforeChangeSize: {},
       eventDrag: false,
-      newSize: '',
+      newSize: "",
       submenuEnableCol: null,
       vueTableHeight: 0,
     };
   },
   mounted() {
-    window.addEventListener('mousemove', this.handleMoveChangeSize);
+    window.addEventListener("mousemove", this.handleMoveChangeSize);
   },
   methods: {
     checkedAllRow() {
-      this.$emit('thead-checked-all-callback', this.checkedAll);
+      this.$emit("thead-checked-all-callback", this.checkedAll);
     },
     removeClass(params, colIndex) {
       this.headers.forEach((header, index) => {
         if (index !== colIndex) {
-          this.$set(this.headers[index], 'activeSort', '');
+          this.$set(this.headers[index], "activeSort", "");
         }
       });
     },
@@ -187,6 +215,7 @@ export default {
       };
 
       const [element] = this.$refs[`resize-${this.beforeChangeSize.col}`];
+
       element.style.top = `${element.parentElement.offsetTop}px`;
     },
     handleMoveChangeSize(event) {
@@ -197,8 +226,9 @@ export default {
 
         if (offsetTopVueTable <= event.clientY && offsetBottomVueTable >= event.clientY) {
           const element = this.$refs[`resize-${this.beforeChangeSize.col}`][0];
+
           element.style.left = `${event.clientX}px`;
-          element.style.setProperty('--dragHeaderHeight', `${this.vueTableHeight}px`);
+          element.style.setProperty("--dragHeaderHeight", `${this.vueTableHeight}px`);
         } else {
           this.handleUpDragToFill(event);
         }
@@ -221,43 +251,55 @@ export default {
 
         // set initial style on button resize
         const [element] = this.$refs[`resize-${this.beforeChangeSize.col}`];
-        element.style.left = 'auto';
-        element.style.top = '0';
-        element.style.setProperty('--dragHeaderHeight', '100%');
+
+        element.style.left = "auto";
+        element.style.top = "0";
+        element.style.setProperty("--dragHeaderHeight", "100%");
 
         // set new size on header
-        this.$set(this.headers[this.beforeChangeSize.col].style, 'width', `${this.newSize}px`);
-        this.$set(this.headers[this.beforeChangeSize.col].style, 'minWidth', `${this.newSize}px`);
-        this.$set(this.headers[this.beforeChangeSize.col], 'active', false);
+        this.$set(this.headers[this.beforeChangeSize.col].style, "width", `${this.newSize}px`);
+        this.$set(this.headers[this.beforeChangeSize.col].style, "minWidth", `${this.newSize}px`);
+        this.$set(this.headers[this.beforeChangeSize.col], "active", false);
 
         this.beforeChangeSize = {};
-        this.$emit('handle-up-drag-size-header', event, this.headers);
+        this.$emit("handle-up-drag-size-header", event, this.headers);
       }
     },
     handleSort(event, h, colIndex) {
       const header = h;
-      if (!header.activeSort || header.activeSort === 'Z') {
-        this.$set(this.headers[colIndex], 'activeSort', 'A');
+
+      if (!header.activeSort || header.activeSort === "Z") {
+        this.$set(this.headers[colIndex], "activeSort", "A");
       } else {
-        this.$set(this.headers[colIndex], 'activeSort', 'Z');
+        this.$set(this.headers[colIndex], "activeSort", "Z");
       }
-      this.removeClass('activeSort', colIndex);
-      this.$emit('thead-td-sort', event, header, colIndex);
+
+      this.removeClass("activeSort", colIndex);
+      this.$emit("thead-td-sort", event, header, colIndex);
     },
     handleContextMenuTd(event, header, colIndex) {
       this.submenuEnableCol = colIndex;
+
       if (this.submenuStatusThead === true) {
-        this.$emit('submenu-enable', 'tbody');
+        this.$emit("submenu-enable", "tbody");
       } else {
-        this.$emit('submenu-enable', 'thead');
+        this.$emit("submenu-enable", "thead");
       }
-      this.$emit('thead-td-context-menu', event, header, colIndex);
+
+      this.$emit("thead-td-context-menu", event, header, colIndex);
     },
     handleClickSubmenu(event, header, colIndex, submenuFunction, selectOptions) {
       if (selectOptions) {
-        this.$emit('thead-submenu-click-callback', event, header, colIndex, submenuFunction, selectOptions);
+        this.$emit(
+          "thead-submenu-click-callback",
+          event,
+          header,
+          colIndex,
+          submenuFunction,
+          selectOptions
+        );
       } else {
-        this.$emit('thead-submenu-click-callback', event, header, colIndex, submenuFunction);
+        this.$emit("thead-submenu-click-callback", event, header, colIndex, submenuFunction);
       }
     },
   },
@@ -277,7 +319,7 @@ export default {
   border-right: 0;
   border-top: 0;
   border-right: 1px solid white;
-  transition: width ease .5s, background ease .5s;
+  transition: width ease 0.5s, background ease 0.5s;
   &.dragged .resize {
     opacity: 1;
     position: fixed;
@@ -291,7 +333,7 @@ export default {
     pointer-events: none;
     span {
       background: #cccccc;
-      opacity: .5;
+      opacity: 0.5;
     }
   }
   &.highlight_spreadsheet {
@@ -318,12 +360,12 @@ export default {
   box-shadow: none;
   outline: none;
   opacity: 0;
-  transition: opacity ease .5s;
+  transition: opacity ease 0.5s;
   &:hover {
     opacity: 1;
   }
   &:after {
-    content: '';
+    content: "";
     display: block;
     height: var(--dragHeaderHeight);
     position: absolute;
@@ -402,18 +444,18 @@ export default {
     }
   }
   cursor: pointer;
-  .sort{
+  .sort {
     display: block;
     position: absolute;
     top: 20px;
     right: 2px;
     transform: rotate(0deg);
     font-size: 16px;
-    opacity: .4;
-    transition: all ease .5s;
+    opacity: 0.4;
+    transition: all ease 0.5s;
     &:before,
     &:after {
-      content: '';
+      content: "";
       display: block;
       height: 2px;
       width: 5px;
@@ -423,20 +465,20 @@ export default {
     &:after {
       transform: rotate(135deg) translate(0px, 3px);
     }
-    &+.sort {
+    & + .sort {
       top: 25px;
       transform: rotate(180deg);
       right: 3px;
     }
   }
-  &.sort_Z .sort{
+  &.sort_Z .sort {
     opacity: 1;
     &:after,
     &:before {
       background: #000;
     }
-    &+.sort {
-      opacity: .4;
+    & + .sort {
+      opacity: 0.4;
       &:before,
       &:after {
         background: #000;
@@ -463,13 +505,13 @@ export default {
       margin: 0 auto;
       background: #555;
       border-radius: 50%;
-      transition: all ease .5s;
+      transition: all ease 0.5s;
       &-2 {
         margin: 2px auto;
       }
     }
   }
-  &.active .icon_menu .bullet{
+  &.active .icon_menu .bullet {
     background: #000;
     &-2 {
       background: #000;
@@ -489,7 +531,7 @@ export default {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity 0.5s;
 }
 .fade-enter,
 .fade-leave-to {
