@@ -258,23 +258,29 @@ export default {
       const currentSelect = this.$refs[`${this.customTable}-vueTbody`].$refs[
         `vsSelect-${this.customTable}-${colIndex}-${rowIndex}`
       ][0].$refs[`dropdown-${this.customTable}-${colIndex}-${rowIndex}`];
+      const contextMenu = this.$refs[`${this.customTable}-vueTbody`].$refs[
+        `contextMenu-${this.customTable}-${colIndex}-${rowIndex}`
+      ][0];
+      const currentSelection = currentSelect || contextMenu;
 
-      if (currentSelect) {
-        currentSelect.style.setProperty("--selectWidth", `${width}px`);
-        currentSelect.style.setProperty("--selectLeft", `${left}px`);
+      if (currentSelection) {
+        currentSelection.style.setProperty("--selectWidth", `${width}px`);
+        currentSelection.style.setProperty("--selectLeft", `${left}px`);
 
-        // stock dynamic height of dropdown
-        const heightOfAbsoluteItem = currentSelect.offsetHeight || 180;
-        // stock cell(40) + dynamic height of dropdown
-        const heightOfCellDropdown = cellHeight + heightOfAbsoluteItem;
+        this.$nextTick(() => {
+          // stock dynamic height of dropdown
+          const heightOfAbsoluteItem = currentSelection.offsetHeight || 180;
+          // stock cell(40) + dynamic height of dropdown
+          const heightOfCellDropdown = cellHeight + heightOfAbsoluteItem;
 
-        if (realHeightTable + firstCellOffsetTop < el.offsetTop + 250) {
-          // Set on top of cell
-          currentSelect.style.setProperty("--selectTop", `${top - heightOfCellDropdown}px`);
-        } else {
-          // Set on bottom of cell
-          currentSelect.style.setProperty("--selectTop", `${top}px`);
-        }
+          if (realHeightTable + firstCellOffsetTop < el.offsetTop + 250) {
+            // Set on top of cell
+            currentSelection.style.setProperty("--selectTop", `${top - heightOfCellDropdown}px`);
+          } else {
+            // Set on bottom of cell
+            currentSelection.style.setProperty("--selectTop", `${top}px`);
+          }
+        });
       }
     },
     checkedRow(row) {

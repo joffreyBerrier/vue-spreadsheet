@@ -24,6 +24,7 @@
     "build-lib": "vue-cli-service build --target lib --name vuespreadsheet ./src/index.js",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
+    "snapshots": "percy exec -- node ./tests/snapshots.js",
     "lint": "vue-cli-service lint"
   },
   "license": "MIT",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
+    "@percy/script": "^1.0.3",
     "@vue/cli-plugin-babel": "~4.2.0",
     "@vue/cli-plugin-eslint": "~4.2.0",
     "@vue/cli-plugin-unit-jest": "~4.2.0",
