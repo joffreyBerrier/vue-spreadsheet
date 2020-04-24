@@ -6045,12 +6045,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0c411cda-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTable.vue?vue&type=template&id=45d30c1b&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"15ab758c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTable.vue?vue&type=template&id=d5c9b716&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:(_vm.customTable + "-vueTable"),staticClass:"vue-spreadsheet",style:(_vm.styleWrapVueTable),on:{"scroll":_vm.scrollFunction}},[_vm._t("header"),_c('table',{ref:(_vm.customTable + "-table"),staticClass:"vue_table",attrs:{"oncontextmenu":"return false;"}},[_c('vue-thead',{ref:(_vm.customTable + "-vueThead"),attrs:{"disable-sort-thead":_vm.disableSortThead,"header-top":_vm.headerTop,"headers":_vm.headers,"sort-header":_vm.customOptions.sortHeader,"submenu-status-thead":_vm.submenuStatusThead,"submenu-thead":_vm.submenuThead,"tbody-index":_vm.customOptions.tbodyIndex,"tbody-checkbox":_vm.customOptions.tbodyCheckbox,"thead-highlight":_vm.highlight.thead,"current-table":_vm.customTable},on:{"handle-up-drag-size-header":_vm.handleUpDragSizeHeader,"handle-up-drag-to-fill":_vm.handleUpDragToFill,"submenu-enable":_vm.enableSubmenu,"thead-checked-all-callback":_vm.callbackCheckedAll,"thead-submenu-click-callback":_vm.callbackSubmenuThead,"thead-td-context-menu":_vm.handleTheadContextMenu,"thead-td-sort":_vm.callbackSort}}),(_vm.loading)?_vm._t("loader"):_vm._e(),(!_vm.loading)?_c('vue-tbody',{ref:(_vm.customTable + "-vueTbody"),attrs:{"tbody-data":_vm.tbodyData,"headers":_vm.headers,"tbody-checkbox":_vm.customOptions.tbodyCheckbox,"tbody-index":_vm.customOptions.tbodyIndex,"trad":_vm.customOptions.trad,"disable-cells":_vm.disableCells,"submenu-tbody":_vm.submenuTbody,"filtered-list":_vm.filteredList,"submenu-status-tbody":_vm.submenuStatusTbody,"tbody-highlight":_vm.highlight.tbody,"current-table":_vm.customTable},on:{"tbody-checked-row":_vm.checkedRow,"handle-to-calculate-position":_vm.calculPosition,"handle-to-open-select":_vm.enableSelect,"submenu-enable":_vm.enableSubmenu,"tbody-down-dragtofill":_vm.handleDownDragToFill,"tbody-handle-search-input-select":_vm.handleSearchInputSelect,"tbody-handle-set-oldvalue":_vm.setOldValueOnInputSelect,"tbody-input-change":_vm.handleTbodyInputChange,"tbody-move-dragtofill":_vm.handleMoveDragToFill,"tbody-select-change":_vm.handleTbodySelectChange,"tbody-select-multiple-cell":_vm.handleSelectMultipleCell,"tbody-submenu-click-callback":_vm.callbackSubmenuTbody,"tbody-td-click":_vm.handleTbodyTdClick,"tbody-td-context-menu":_vm.handleTBodyContextMenu,"tbody-td-double-click":_vm.handleTbodyTdDoubleClick,"tbody-up-dragtofill":_vm.handleUpDragToFill}}):_vm._e()],2)],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/VueTable.vue?vue&type=template&id=45d30c1b&
+// CONCATENATED MODULE: ./src/components/VueTable.vue?vue&type=template&id=d5c9b716&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -6731,7 +6731,6 @@ var callback = {
 // CONCATENATED MODULE: ./src/mixins/VueTable/handleTBody.js
 
 
-
 // eslint-disable-next-line import/prefer-default-export
 var handleTBody = {
   data: function data() {
@@ -6875,7 +6874,6 @@ var handleTHead = {
 var es_number_constructor = __webpack_require__("a9e3");
 
 // CONCATENATED MODULE: ./src/mixins/VueTable/moveOnTable.js
-
 
 
 
@@ -7404,7 +7402,7 @@ var undo = {
     }
   }
 };
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0c411cda-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Thead.vue?vue&type=template&id=0b83778e&scoped=true&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"15ab758c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Thead.vue?vue&type=template&id=0b83778e&scoped=true&
 var Theadvue_type_template_id_0b83778e_scoped_true_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('thead',{staticClass:"thead",on:{"mouseup":function($event){return _vm.handleUpDragToFill($event)}}},[_c('tr',[(_vm.tbodyCheckbox)?_c('th',{staticClass:"index"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.checkedAll),expression:"checkedAll"}],attrs:{"type":"checkbox","id":("checkbox-all-" + _vm.currentTable)},domProps:{"checked":Array.isArray(_vm.checkedAll)?_vm._i(_vm.checkedAll,null)>-1:(_vm.checkedAll)},on:{"change":[function($event){var $$a=_vm.checkedAll,$$el=$event.target,$$c=$$el.checked?(true):(false);if(Array.isArray($$a)){var $$v=null,$$i=_vm._i($$a,$$v);if($$el.checked){$$i<0&&(_vm.checkedAll=$$a.concat([$$v]))}else{$$i>-1&&(_vm.checkedAll=$$a.slice(0,$$i).concat($$a.slice($$i+1)))}}else{_vm.checkedAll=$$c}},_vm.checkedAllRow]}}),_c('label',{attrs:{"for":("checkbox-all-" + _vm.currentTable)}})]):_vm._e(),(_vm.tbodyIndex)?_c('th',{key:"th-index",staticClass:"index"}):_vm._e(),_vm._l((_vm.headers),function(header,colIndex){return [_c('th',{key:header.headerKey,ref:'th-' + colIndex,refInFor:true,staticClass:"th",class:{
           disabled: header.disabled,
           highlight_spreadsheet: _vm.theadHighlight.includes(colIndex),
@@ -7857,7 +7855,7 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var Thead = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0c411cda-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TBody/TBody.vue?vue&type=template&id=04384643&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"15ab758c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TBody/TBody.vue?vue&type=template&id=04384643&
 var TBodyvue_type_template_id_04384643_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('tbody',[_vm._l((_vm.tbodyData),function(row,rowIndex){return [_c('tr',{key:("row" + rowIndex),staticClass:"table_row",class:{
         checked_row:
           'vuetable_checked' in _vm.tbodyData[rowIndex] &&
@@ -7905,7 +7903,7 @@ var TBodyvue_type_template_id_04384643_staticRenderFns = []
 
 // CONCATENATED MODULE: ./src/components/TBody/TBody.vue?vue&type=template&id=04384643&
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0c411cda-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TBody/VSelect.vue?vue&type=template&id=0c0039d6&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"15ab758c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TBody/VSelect.vue?vue&type=template&id=0c0039d6&
 var VSelectvue_type_template_id_0c0039d6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.row[_vm.header].type === 'select' && _vm.row[_vm.header].handleSearch)?_c('div',[_c('span',{ref:("span-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex)},[_vm._v(_vm._s(_vm.row[_vm.header].value))]),_c('i',{staticClass:"icon_glass",class:{ show: _vm.row[_vm.header].search }}),_c('button',{staticClass:"enable_select",class:{ active: _vm.row[_vm.header].search === true },on:{"click":function($event){$event.stopPropagation();return _vm.enableSelect($event, _vm.header, _vm.row[_vm.header], _vm.rowIndex, _vm.colIndex)}}},[_c('i')]),(_vm.row[_vm.header].search === true)?_c('div',{staticClass:"dropdown"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.searchInput),expression:"searchInput"}],ref:("input-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex),attrs:{"placeholder":_vm.trad[_vm.trad.lang].select.placeholder},domProps:{"value":(_vm.searchInput)},on:{"keyup":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }return _vm.escKeyup(_vm.row[_vm.header], _vm.rowIndex, _vm.header, _vm.colIndex, _vm.row[_vm.header].type)},function($event){if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.handleSearchInputSelect($event, _vm.row[_vm.header], _vm.header, _vm.rowIndex, _vm.colIndex)}],"input":function($event){if($event.target.composing){ return; }_vm.searchInput=$event.target.value}}}),_c('ul',{ref:("dropdown-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex),class:{ show: _vm.row[_vm.header].search }},_vm._l((_vm.filteredList),function(option,index){return _c('li',{key:index,class:{ active: option.active },attrs:{"value":option.value},on:{"click":function($event){$event.stopPropagation();return _vm.selectHandleChange($event, _vm.header, _vm.row[_vm.header], option, _vm.rowIndex, _vm.colIndex)}}},[_vm._v(" "+_vm._s(option.label)+" ")])}),0)]):_vm._e()]):(_vm.row[_vm.header].type === 'select')?_c('div',[_c('span',{ref:("span-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex)},[_vm._v(_vm._s(_vm.row[_vm.header].value))]),_c('select',{directives:[{name:"model",rawName:"v-model",value:(_vm.row[_vm.header].value),expression:"row[header].value"}],on:{"change":[function($event){var $$selectedVal = Array.prototype.filter.call($event.target.options,function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val}); _vm.$set(_vm.row[_vm.header], "value", $event.target.multiple ? $$selectedVal : $$selectedVal[0])},function($event){return _vm.selectHandleChange($event, _vm.header, _vm.row[_vm.header], _vm.option, _vm.rowIndex, _vm.colIndex)}]}},_vm._l((_vm.row[_vm.header].selectOptions),function(option,index){return _c('option',{key:index,domProps:{"value":option.value}},[_vm._v(" "+_vm._s(option.label)+" ")])}),0)]):_vm._e()}
 var VSelectvue_type_template_id_0c0039d6_staticRenderFns = []
 
@@ -8214,9 +8212,9 @@ var VSelect_component = normalizeComponent(
     handleContextMenuTd: function handleContextMenuTd(event, header, rowIndex, colIndex, type) {
       this.submenuEnableCol = colIndex;
       this.submenuEnableRow = rowIndex;
-      this.$emit("handle-to-calculate-position", event, rowIndex, colIndex, "contextMenu");
       this.$emit("submenu-enable", "tbody");
       this.$emit("tbody-td-context-menu", event, header, rowIndex, colIndex, type);
+      this.$emit("handle-to-calculate-position", event, rowIndex, colIndex, "contextMenu");
     },
     inputHandleChange: function inputHandleChange(event, header, rowIndex, colIndex) {
       this.$emit("tbody-input-change", event, header, rowIndex, colIndex);
@@ -8508,22 +8506,26 @@ var Fuse = __webpack_require__("ffe7");
 
 
       var currentSelect = this.$refs["".concat(this.customTable, "-vueTbody")].$refs["vsSelect-".concat(this.customTable, "-").concat(colIndex, "-").concat(rowIndex)][0].$refs["dropdown-".concat(this.customTable, "-").concat(colIndex, "-").concat(rowIndex)];
+      var contextMenu = this.$refs["".concat(this.customTable, "-vueTbody")].$refs["contextMenu-".concat(this.customTable, "-").concat(colIndex, "-").concat(rowIndex)][0];
+      var currentSelection = currentSelect || contextMenu;
 
-      if (currentSelect) {
-        currentSelect.style.setProperty("--selectWidth", "".concat(width, "px"));
-        currentSelect.style.setProperty("--selectLeft", "".concat(left, "px")); // stock dynamic height of dropdown
+      if (currentSelection) {
+        currentSelection.style.setProperty("--selectWidth", "".concat(width, "px"));
+        currentSelection.style.setProperty("--selectLeft", "".concat(left, "px"));
+        this.$nextTick(function () {
+          // stock dynamic height of dropdown
+          var heightOfAbsoluteItem = currentSelection.offsetHeight || 180; // stock cell(40) + dynamic height of dropdown
 
-        var heightOfAbsoluteItem = currentSelect.offsetHeight || 180; // stock cell(40) + dynamic height of dropdown
+          var heightOfCellDropdown = cellHeight + heightOfAbsoluteItem;
 
-        var heightOfCellDropdown = cellHeight + heightOfAbsoluteItem;
-
-        if (realHeightTable + firstCellOffsetTop < el.offsetTop + 250) {
-          // Set on top of cell
-          currentSelect.style.setProperty("--selectTop", "".concat(top - heightOfCellDropdown, "px"));
-        } else {
-          // Set on bottom of cell
-          currentSelect.style.setProperty("--selectTop", "".concat(top, "px"));
-        }
+          if (realHeightTable + firstCellOffsetTop < el.offsetTop + 250) {
+            // Set on top of cell
+            currentSelection.style.setProperty("--selectTop", "".concat(top - heightOfCellDropdown, "px"));
+          } else {
+            // Set on bottom of cell
+            currentSelection.style.setProperty("--selectTop", "".concat(top, "px"));
+          }
+        });
       }
     },
     checkedRow: function checkedRow(row) {

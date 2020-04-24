@@ -4,6 +4,16 @@ node_js:
 cache:
   directories:
   - node_modules
-script:
-  - yarn build
-  - yarn test:unit
+jobs:
+  include:
+    - stage: tdd
+      script:
+      - yarn build
+      - yarn test:unit
+
+    - stage: e2e
+      before_script:
+        - yarn install
+      script:
+      - yarn run serve &
+      - yarn snapshots

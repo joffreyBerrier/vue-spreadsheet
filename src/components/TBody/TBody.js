@@ -163,9 +163,9 @@ export default {
     handleContextMenuTd(event, header, rowIndex, colIndex, type) {
       this.submenuEnableCol = colIndex;
       this.submenuEnableRow = rowIndex;
-      this.$emit("handle-to-calculate-position", event, rowIndex, colIndex, "contextMenu");
       this.$emit("submenu-enable", "tbody");
       this.$emit("tbody-td-context-menu", event, header, rowIndex, colIndex, type);
+      this.$emit("handle-to-calculate-position", event, rowIndex, colIndex, "contextMenu");
     },
     inputHandleChange(event, header, rowIndex, colIndex) {
       this.$emit("tbody-input-change", event, header, rowIndex, colIndex);
