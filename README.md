@@ -42,9 +42,14 @@ npm i vuejs-spreadsheet
 - First, fork the repo on github.
 - Clone your forked repo and run: `yarn` or `npm i`
 - Then, make your changes on any branch you want and push it.
+- Naming your branch with the gitflow convention:
+  - Feature branches? [feature/]
+  - Release branches? [release/]
+  - Hotfix branches? [hotfix/]
+  - Support branches? [support/]
+- When you have done, execute the `npm run build-lib`command
 - Finally, open a pull request on the official repo, using the source branch from your forked repo.
 
-Please do not push the `package-lock.json`.
 
 ## Wiki :mortar_board:
 
