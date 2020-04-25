@@ -5,8 +5,8 @@ https://github.com/joffreyBerrier/vue-spreadsheet/releases/tag/2.0.2
 https://medium.com/scalia/vuejs-spreadsheet-692cab2cb5c8
 
 # Sandbox example
-[![Edit vuejs-spreadsheet](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vuejs-spreadsheet-wctsv?fontsize=14)
 
+[![Edit vuejs-spreadsheet](https://codesandbox.io/static/img/play-codesandbox.svg)](https://wctsv.csb.app/{:target="_blank"})
 
 ## Description
 
