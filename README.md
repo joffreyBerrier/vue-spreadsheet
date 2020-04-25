@@ -6,7 +6,10 @@ https://medium.com/scalia/vuejs-spreadsheet-692cab2cb5c8
 
 # Sandbox example
 
-[![Edit vuejs-spreadsheet](https://codesandbox.io/static/img/play-codesandbox.svg)](https://wctsv.csb.app/{:target="_blank"})
+*Open this link on a new tab*
+
+[![Edit vuejs-spreadsheet](https://codesandbox.io/static/img/play-codesandbox.svg)](https://wctsv.csb.app/)
+
 
 ## Description
 
