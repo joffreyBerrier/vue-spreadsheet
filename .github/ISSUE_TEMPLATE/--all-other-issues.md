@@ -1,7 +1,7 @@
 ---
 name: "❗️All other issues"
 about: Please create all other issues here.
-title: "[ISSUES]"
+title: "[QUESTION]"
 labels: question
 assignees: joffreyBerrier
 
