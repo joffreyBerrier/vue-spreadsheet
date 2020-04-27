@@ -1,4 +1,4 @@
-# :fire: Vue Spreadsheet 2.0.2 :fire:
+# :fire: Vue Spreadsheet 2.1.0 :fire:
 https://github.com/joffreyBerrier/vue-spreadsheet/releases/tag/2.0.2
 
 # Medium article (in french)
