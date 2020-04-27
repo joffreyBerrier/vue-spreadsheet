@@ -38,7 +38,7 @@ beforeEach(() => {
   return wrapper;
 });
 
-describe("VueTable", () => {
+describe("TBody", () => {
   describe("Render component with props", () => {
     test("Vue Instance", () => {
       expect(wrapper.isVueInstance()).toBeTruthy();

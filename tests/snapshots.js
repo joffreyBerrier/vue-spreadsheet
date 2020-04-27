@@ -73,4 +73,26 @@ PercyScript.run(async (page, percySnapshot) => {
   await page.keyboard.press("ArrowRight");
   await page.keyboard.up("ShiftLeft");
   await percySnapshot("move shift to right");
+
+  // Type letter on numeric field
+  const inputNumericTypeString = await page.$('[data-row-index="0"][data-col-index="2"]');
+
+  await inputNumericTypeString.click();
+  await new Promise((x) => setTimeout(x, 1000));
+  await inputNumericTypeString.click({ clickCount: 2 });
+  await page.type('[data-row-index="0"][data-col-index="2"] textarea', "test comment", {
+    delay: 20,
+  });
+  await percySnapshot("type string on numeric field");
+
+  // Type number on numeric field
+  const inputNumericTypeNumber = await page.$('[data-row-index="0"][data-col-index="2"]');
+
+  await inputNumericTypeNumber.click();
+  await new Promise((x) => setTimeout(x, 1000));
+  await inputNumericTypeNumber.click({ clickCount: 2 });
+  await page.type('[data-row-index="0"][data-col-index="2"] textarea', "123", {
+    delay: 20,
+  });
+  await percySnapshot("type number on numeric field");
 });

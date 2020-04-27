@@ -1,6 +1,6 @@
 {
   "name": "vuejs-spreadsheet",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "An easier Spreadsheet in Vue",
   "main": "dist/vuespreadsheet.common.js",
   "author": "Joffrey Berrier <joffrey.berrier@gmail.com>",
@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build-lib": "vue-cli-service build --target lib --name vuespreadsheet ./src/index.js",
+    "build-package": "vue-cli-service build --target lib --name vuespreadsheet ./src/index.js",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "snapshots": "percy exec -- node ./tests/snapshots.js",

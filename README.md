@@ -84,11 +84,12 @@ Function                               | Type       | Description
   v-on:tbody-checked-row               | Function   | Fired when row has checked
   v-on:tbody-change-data               | Function   | Fired when data undergo modifications
   v-on:tbody-input-change              | Function   | When the **input changes**
+  v-on:tbody-input-keydown             | Function   | Trigger keydown when the **input changes**
   v-on:tbody-select-change             | Function   | When the **select change**
   v-on:handle-up-drag-size-header      | Function   | Fired when the header size changed
   v-on:thead-td-sort                   | Function   | When you press the button sort
-  v-on:tbody-up-dragtofill              | Function   | Fired when pressed up on dragToFill
-  v-on:tbody-move-dragtofill            | Function   | Fired when moved on dragToFill
+  v-on:tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
+  v-on:tbody-move-dragtofill           | Function   | Fired when moved on dragToFill
   v-on:tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
   v-on:tbody-nav-multiple-backspace    | Function   | Fired when the multiple cell are delete
   v-on:tbody-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-tbody**
@@ -312,6 +313,7 @@ headers: [
   active              | Boolean | Of the cell, false by default
   handleSearch        | Boolean | -	Activates search when selected
   disabled            | Boolean | optional - Disabled cell
+  numeric             | Boolean | optional - Restrict input to numeric value
 
 #### Example
 

@@ -38,7 +38,7 @@ beforeEach(() => {
   return wrapper;
 });
 
-describe("VueTable", () => {
+describe("TBody", () => {
   describe("Render component with props", () => {
     test("Vue Instance", () => {
       expect(wrapper.isVueInstance()).toBeTruthy();
@@ -208,6 +208,19 @@ describe("VueTable", () => {
         tBody.handleClickSubmenu("", "a", 0, 7, "input");
 
         expect(wrapper.emitted("tbody-submenu-click-callback")).toBeTruthy();
+      });
+    });
+
+    describe("inputHandleKeydow", () => {
+      test("emitted tbody-input-keydown", () => {
+        const fakeEvent = {
+          which: 8,
+        };
+        const tBody = wrapper.vm;
+
+        tBody.inputHandleKeydow(fakeEvent, "a", 0, 7);
+
+        expect(wrapper.emitted("tbody-input-keydown")).toBeTruthy();
       });
     });
   });
