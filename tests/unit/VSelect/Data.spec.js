@@ -44,7 +44,7 @@ beforeEach(() => {
   return wrapper;
 });
 
-describe("Select", () => {
+describe("VSelect", () => {
   describe("Render component with props", () => {
     test("Vue Instance", () => {
       expect(wrapper.isVueInstance()).toBeTruthy();

@@ -128,6 +128,9 @@ export const handleTBody = {
       this.$emit("tbody-input-change", event, header, rowIndex, colIndex);
       this.changeData(rowIndex, header);
     },
+    handleTbodyInputKeydown(event, header, rowIndex, colIndex) {
+      this.$emit("tbody-input-keydown", event, header, rowIndex, colIndex);
+    },
     handleTbodyTdDoubleClick(event, header, col, rowIndex, colIndex) {
       // stock oldTdShow in object
       if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;

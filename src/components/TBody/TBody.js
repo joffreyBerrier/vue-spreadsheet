@@ -181,5 +181,18 @@ export default {
         submenuFunction
       );
     },
+    autorizeOnlyNumericValue(e) {
+      const k = e.which;
+
+      if (k !== 8 && k !== 13 && k !== 27 && e.key !== "0" && !Number(e.key)) return true;
+
+      return false;
+    },
+    inputHandleKeydow(event, header, rowIndex, colIndex) {
+      if (this.tbodyData[rowIndex][header].numeric && this.autorizeOnlyNumericValue(event))
+        event.preventDefault();
+
+      this.$emit("tbody-input-keydown", event, header, rowIndex, colIndex);
+    },
   },
 };

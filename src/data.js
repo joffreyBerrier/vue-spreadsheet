@@ -130,8 +130,8 @@ export default {
       },
       c: {
         type: "input",
-        value:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec aliquam magna. Sed consequat amet..",
+        numeric: true,
+        value: "1234567890",
         style: {
           color: "#000",
         },
