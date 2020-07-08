@@ -58,6 +58,7 @@ npm i vuejs-spreadsheet
 
 If you want to link the local project to another project 'B' with access to the sources, follow these intructions:
 - go to the root of this project's folder
+- update the package.json to point to the source entry point instead of the dist/ `main: 'src/index.js'`
 - run `npm link` (or `yarn link`).
 - go to the project you import the library
 - run `npm link vuejs-spreadsheet`
