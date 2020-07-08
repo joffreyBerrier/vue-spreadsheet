@@ -73,7 +73,6 @@ describe("VueTable", () => {
       expect(vueTable.storeRectangleSelection).toEqual([]);
       expect(vueTable.submenuStatusTbody).toBeFalsy();
       expect(vueTable.submenuStatusThead).toBeFalsy();
-      expect(vueTable.changeDataIncrement).toEqual(0);
       expect(vueTable.storeUndoData).toEqual([]);
       expect(vueTable.headerTop).toEqual(0);
     });
