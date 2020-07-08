@@ -1,14 +1,13 @@
 <template>
   <div v-if="row[header].type === 'select' && row[header].handleSearch">
-    <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{ row[header].value }}</span>
-    <i class="icon_glass" :class="{ show: row[header].search }" />
-    <button
-      :class="{ active: row[header].search === true }"
-      class="enable_select"
-      @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)"
-    >
-      <i />
-    </button>
+    <div @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)">
+      <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{ row[header].value }}</span>
+      <i class="icon_glass" :class="{ show: row[header].search }" />
+      <button :class="{ active: row[header].search === true }" class="enable_select">
+        <i />
+      </button>
+    </div>
+
     <div v-if="row[header].search === true" class="dropdown">
       <input
         :ref="`input-${currentTable}-${colIndex}-${rowIndex}`"
