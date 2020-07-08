@@ -341,7 +341,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 ::-moz-selection {
   color: #2c3e50;
   background: transparent;

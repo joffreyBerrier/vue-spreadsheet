@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "vue": "^2.5.17",
-    "vuejs-spreadsheet": "^2.1.0"
+    "vuejs-spreadsheet": "file:.."
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.4",
