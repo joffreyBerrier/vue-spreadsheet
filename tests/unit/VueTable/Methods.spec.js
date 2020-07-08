@@ -86,20 +86,30 @@ describe("VueTable", () => {
     test("Disabled Col : false | with disableCells", () => {
       const fakeData = { disabled: false };
 
-      expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeTruthy();
+      expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeFalsy();
     });
     test("Disabled Col : true | with disableCells", () => {
       const fakeData = { disabled: true };
 
-      expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeFalsy();
+      expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeTruthy();
+    });
+    test("Disabled Col : undefined | with disableCells", () => {
+      const fakeData = {};
+
+      expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeTruthy();
     });
     test("Disabled Col : false | without disableCells", () => {
       const fakeData = { disabled: false };
 
-      expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeTruthy();
+      expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeFalsy();
     });
     test("Disabled Col : true | without disableCells", () => {
       const fakeData = { disabled: true };
+
+      expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeTruthy();
+    });
+    test("Disabled Col : undefined | without disableCells", () => {
+      const fakeData = {};
 
       expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeFalsy();
     });

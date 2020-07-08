@@ -29,14 +29,10 @@ export const copyPaste = {
   methods: {
     disabledEvent(col, header) {
       if (col.disabled === undefined) {
-        return !this.disableCells.find((x) => x === header);
+        return this.disableCells.some((x) => x === header);
       }
 
-      if (col.disabled) {
-        return !col.disabled;
-      }
-
-      return true;
+      return col.disabled;
     },
     copyStoreData(params) {
       const tbodyData = lodashClonedeep(this.tbodyData);
@@ -132,7 +128,7 @@ export const copyPaste = {
         !this.copyMultipleCell &&
         !this.selectedMultipleCell &&
         !this.eventDrag &&
-        this.disabledEvent(this.selectedCell.col, this.selectedCell.header)
+        !this.disabledEvent(this.selectedCell.col, this.selectedCell.header)
       ) {
         const { duplicate } = this.tbodyData[this.selectedCell.row][this.selectedCell.header];
 
@@ -148,7 +144,7 @@ export const copyPaste = {
         this.changeData(this.selectedCell.row, this.selectedCell.header);
         // disable on disabled cell
       } else if (
-        this.disabledEvent(this.selectedCell.col, this.selectedCell.header) &&
+        !this.disabledEvent(this.selectedCell.col, this.selectedCell.header) &&
         this.selectedCoordCells
       ) {
         // if paste in multiple selection
@@ -386,7 +382,7 @@ export const copyPaste = {
         // disable on disabled cell
         if (
           params === "removeValue" &&
-          this.disabledEvent(this.tbodyData[rowMin][header], header)
+          !this.disabledEvent(this.tbodyData[rowMin][header], header)
         ) {
           this.$emit("tbody-nav-backspace", rowMin, colMin, header, this.tbodyData[rowMin][header]);
           this.changeData(rowMin, header);

@@ -99,17 +99,13 @@ export default {
     },
     disabledEvent(col, header) {
       if (col.disabled === undefined) {
-        return !this.disableCells.find((x) => x === header);
+        return this.disableCells.some((x) => x === header);
       }
 
-      if (col.disabled) {
-        return !col.disabled;
-      }
-
-      return true;
+      return col.disabled;
     },
     escKeyup(col, rowIndex, header, colIndex, type) {
-      if (this.disabledEvent(col, header)) {
+      if (!this.disabledEvent(col, header)) {
         this.$emit("tbody-handle-set-oldvalue", col, rowIndex, header, colIndex, type);
       }
     },
@@ -135,18 +131,18 @@ export default {
       this.$emit("tbody-select-multiple-cell", event, header, rowIndex, colIndex, type);
     },
     handleDownDragToFill(event, header, col, rowIndex, colIndex) {
-      if (this.disabledEvent(col, header)) {
+      if (!this.disabledEvent(col, header)) {
         this.eventDrag = true;
         this.$emit("tbody-down-dragtofill", event, header, col, rowIndex, colIndex);
       }
     },
     handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
-      if (this.eventDrag && this.disabledEvent(col, header)) {
+      if (this.eventDrag && !this.disabledEvent(col, header)) {
         this.$emit("tbody-move-dragtofill", event, header, col, rowIndex, colIndex);
       }
     },
     handleUpDragToFill(event, header, col, rowIndex, colIndex, type) {
-      if (this.eventDrag && this.disabledEvent(col, header)) {
+      if (this.eventDrag && !this.disabledEvent(col, header)) {
         this.eventDrag = false;
         this.$emit("tbody-up-dragtofill", event, header, rowIndex, colIndex, type);
       }
@@ -156,7 +152,7 @@ export default {
       this.$emit("tbody-td-click", event, col, header, rowIndex, colIndex, type);
     },
     handleDoubleClickTd(event, header, col, rowIndex, colIndex) {
-      if (this.disabledEvent(col, header)) {
+      if (!this.disabledEvent(col, header)) {
         this.$emit("tbody-td-double-click", event, header, col, rowIndex, colIndex);
       }
     },

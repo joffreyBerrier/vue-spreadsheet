@@ -5,7 +5,7 @@
     class="vue-spreadsheet"
     @scroll="scrollFunction"
   >
-    <slot name="header"> </slot>
+    <slot name="header"></slot>
 
     <table class="vue_table" oncontextmenu="return false;" :ref="`${customTable}-table`">
       <vue-thead
@@ -30,7 +30,7 @@
       >
       </vue-thead>
 
-      <slot name="loader" v-if="loading"> </slot>
+      <slot name="loader" v-if="loading"></slot>
 
       <vue-tbody
         v-if="!loading"

@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     enableSelect(event, header, col, rowIndex, colIndex) {
-      if (this.disabledEvent(col, header)) {
+      if (!this.disabledEvent(col, header)) {
         this.searchInput = "";
         this.$emit("tbody-handle-to-open-select", event, header, col, rowIndex, colIndex);
       }
@@ -110,7 +110,7 @@ export default {
       this.$emit("tbody-handle-select-change", event, header, col, option, rowIndex, colIndex);
     },
     handleSearchInputSelect(event, col, header, rowIndex, colIndex) {
-      if (this.disabledEvent(col, header)) {
+      if (!this.disabledEvent(col, header)) {
         this.$emit(
           "tbody-handle-search-input-select",
           event,
