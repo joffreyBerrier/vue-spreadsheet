@@ -133,7 +133,9 @@ export const handleTBody = {
     },
     handleTbodyTdDoubleClick(event, header, col, rowIndex, colIndex) {
       // stock oldTdShow in object
-      if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      if (this.oldTdShow) {
+        this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      }
 
       // add class show on element
       this.$set(this.tbodyData[rowIndex][header], "show", true);

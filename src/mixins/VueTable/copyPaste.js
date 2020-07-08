@@ -378,26 +378,24 @@ export const copyPaste = {
 
       while (rowMin <= rowMax) {
         const header = this.headerKeys[colMin];
+        const cell = this.tbodyData[rowMin][header];
 
         // disable on disabled cell
-        if (
-          params === "removeValue" &&
-          !this.disabledEvent(this.tbodyData[rowMin][header], header)
-        ) {
-          this.$emit("tbody-nav-backspace", rowMin, colMin, header, this.tbodyData[rowMin][header]);
+        if (params === "removeValue" && !this.disabledEvent(cell, header) && !!cell.value) {
           this.changeData(rowMin, header);
-          this.$set(this.tbodyData[rowMin][header], "value", "");
-          this.$set(this.tbodyData[rowMin][header], "selected", false);
+          this.$set(cell, "value", "");
+          this.$set(cell, "selected", false);
+          this.$emit("tbody-nav-backspace", rowMin, colMin, header, cell);
         }
 
         if (params === "selected") {
-          this.$set(this.tbodyData[rowMin][header], "selected", true);
+          this.$set(cell, "selected", true);
           this.selectedMultipleCellActive = true;
 
           if (colMin === colMax && rowMin === rowMax) {
             // add active on the last cell
             this.removeClass(["active"]);
-            this.$set(this.tbodyData[rowMin][header], "active", true);
+            this.$set(cell, "active", true);
           }
         }
 
