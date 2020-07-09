@@ -964,6 +964,30 @@ module.exports = function (it) {
 
 /***/ }),
 
+/***/ "45fc":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__("23e7");
+var $some = __webpack_require__("b727").some;
+var arrayMethodIsStrict = __webpack_require__("a640");
+var arrayMethodUsesToLength = __webpack_require__("ae40");
+
+var STRICT_METHOD = arrayMethodIsStrict('some');
+var USES_TO_LENGTH = arrayMethodUsesToLength('some');
+
+// `Array.prototype.some` method
+// https://tc39.github.io/ecma262/#sec-array.prototype.some
+$({ target: 'Array', proto: true, forced: !STRICT_METHOD || !USES_TO_LENGTH }, {
+  some: function some(callbackfn /* , thisArg */) {
+    return $some(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+
+/***/ }),
+
 /***/ "46be":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1406,7 +1430,7 @@ var store = __webpack_require__("c6cd");
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.6.4',
+  version: '3.6.5',
   mode: IS_PURE ? 'pure' : 'global',
   copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 });
@@ -2528,84 +2552,6 @@ exports.BROKEN_CARET = fails(function () {
 
 /***/ }),
 
-/***/ "a434":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $ = __webpack_require__("23e7");
-var toAbsoluteIndex = __webpack_require__("23cb");
-var toInteger = __webpack_require__("a691");
-var toLength = __webpack_require__("50c4");
-var toObject = __webpack_require__("7b0b");
-var arraySpeciesCreate = __webpack_require__("65f0");
-var createProperty = __webpack_require__("8418");
-var arrayMethodHasSpeciesSupport = __webpack_require__("1dde");
-var arrayMethodUsesToLength = __webpack_require__("ae40");
-
-var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('splice');
-var USES_TO_LENGTH = arrayMethodUsesToLength('splice', { ACCESSORS: true, 0: 0, 1: 2 });
-
-var max = Math.max;
-var min = Math.min;
-var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
-var MAXIMUM_ALLOWED_LENGTH_EXCEEDED = 'Maximum allowed length exceeded';
-
-// `Array.prototype.splice` method
-// https://tc39.github.io/ecma262/#sec-array.prototype.splice
-// with adding support of @@species
-$({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGTH }, {
-  splice: function splice(start, deleteCount /* , ...items */) {
-    var O = toObject(this);
-    var len = toLength(O.length);
-    var actualStart = toAbsoluteIndex(start, len);
-    var argumentsLength = arguments.length;
-    var insertCount, actualDeleteCount, A, k, from, to;
-    if (argumentsLength === 0) {
-      insertCount = actualDeleteCount = 0;
-    } else if (argumentsLength === 1) {
-      insertCount = 0;
-      actualDeleteCount = len - actualStart;
-    } else {
-      insertCount = argumentsLength - 2;
-      actualDeleteCount = min(max(toInteger(deleteCount), 0), len - actualStart);
-    }
-    if (len + insertCount - actualDeleteCount > MAX_SAFE_INTEGER) {
-      throw TypeError(MAXIMUM_ALLOWED_LENGTH_EXCEEDED);
-    }
-    A = arraySpeciesCreate(O, actualDeleteCount);
-    for (k = 0; k < actualDeleteCount; k++) {
-      from = actualStart + k;
-      if (from in O) createProperty(A, k, O[from]);
-    }
-    A.length = actualDeleteCount;
-    if (insertCount < actualDeleteCount) {
-      for (k = actualStart; k < len - actualDeleteCount; k++) {
-        from = k + actualDeleteCount;
-        to = k + insertCount;
-        if (from in O) O[to] = O[from];
-        else delete O[to];
-      }
-      for (k = len; k > len - actualDeleteCount + insertCount; k--) delete O[k - 1];
-    } else if (insertCount > actualDeleteCount) {
-      for (k = len - actualDeleteCount; k > actualStart; k--) {
-        from = k + actualDeleteCount - 1;
-        to = k + insertCount - 1;
-        if (from in O) O[to] = O[from];
-        else delete O[to];
-      }
-    }
-    for (k = 0; k < insertCount; k++) {
-      O[k + actualStart] = arguments[k + 2];
-    }
-    O.length = len - actualDeleteCount + insertCount;
-    return A;
-  }
-});
-
-
-/***/ }),
-
 /***/ "a4d3":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3217,6 +3163,35 @@ var classof = __webpack_require__("f5df");
 module.exports = TO_STRING_TAG_SUPPORT ? {}.toString : function toString() {
   return '[object ' + classof(this) + ']';
 };
+
+
+/***/ }),
+
+/***/ "b0c0":
+/***/ (function(module, exports, __webpack_require__) {
+
+var DESCRIPTORS = __webpack_require__("83ab");
+var defineProperty = __webpack_require__("9bf2").f;
+
+var FunctionPrototype = Function.prototype;
+var FunctionPrototypeToString = FunctionPrototype.toString;
+var nameRE = /^\s*function ([^ (]*)/;
+var NAME = 'name';
+
+// Function instances `.name` property
+// https://tc39.github.io/ecma262/#sec-function-instances-name
+if (DESCRIPTORS && !(NAME in FunctionPrototype)) {
+  defineProperty(FunctionPrototype, NAME, {
+    configurable: true,
+    get: function () {
+      try {
+        return FunctionPrototypeToString.call(this).match(nameRE)[1];
+      } catch (error) {
+        return '';
+      }
+    }
+  });
+}
 
 
 /***/ }),
@@ -6045,12 +6020,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"15ab758c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTable.vue?vue&type=template&id=58b03c62&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"725e33d8-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTable.vue?vue&type=template&id=66f831ea&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:(_vm.customTable + "-vueTable"),staticClass:"vue-spreadsheet",style:(_vm.styleWrapVueTable),on:{"scroll":_vm.scrollFunction}},[_vm._t("header"),_c('table',{ref:(_vm.customTable + "-table"),staticClass:"vue_table",attrs:{"oncontextmenu":"return false;"}},[_c('vue-thead',{ref:(_vm.customTable + "-vueThead"),attrs:{"disable-sort-thead":_vm.disableSortThead,"header-top":_vm.headerTop,"headers":_vm.headers,"sort-header":_vm.customOptions.sortHeader,"submenu-status-thead":_vm.submenuStatusThead,"submenu-thead":_vm.submenuThead,"tbody-index":_vm.customOptions.tbodyIndex,"tbody-checkbox":_vm.customOptions.tbodyCheckbox,"thead-highlight":_vm.highlight.thead,"current-table":_vm.customTable},on:{"handle-up-drag-size-header":_vm.handleUpDragSizeHeader,"handle-up-drag-to-fill":_vm.handleUpDragToFill,"submenu-enable":_vm.enableSubmenu,"thead-checked-all-callback":_vm.callbackCheckedAll,"thead-submenu-click-callback":_vm.callbackSubmenuThead,"thead-td-context-menu":_vm.handleTheadContextMenu,"thead-td-sort":_vm.callbackSort}}),(_vm.loading)?_vm._t("loader"):_vm._e(),(!_vm.loading)?_c('vue-tbody',{ref:(_vm.customTable + "-vueTbody"),attrs:{"tbody-data":_vm.tbodyData,"headers":_vm.headers,"tbody-checkbox":_vm.customOptions.tbodyCheckbox,"tbody-index":_vm.customOptions.tbodyIndex,"trad":_vm.customOptions.trad,"disable-cells":_vm.disableCells,"submenu-tbody":_vm.submenuTbody,"filtered-list":_vm.filteredList,"submenu-status-tbody":_vm.submenuStatusTbody,"tbody-highlight":_vm.highlight.tbody,"current-table":_vm.customTable},on:{"handle-to-calculate-position":_vm.calculPosition,"handle-to-open-select":_vm.enableSelect,"submenu-enable":_vm.enableSubmenu,"tbody-checked-row":_vm.checkedRow,"tbody-down-dragtofill":_vm.handleDownDragToFill,"tbody-handle-search-input-select":_vm.handleSearchInputSelect,"tbody-handle-set-oldvalue":_vm.setOldValueOnInputSelect,"tbody-input-change":_vm.handleTbodyInputChange,"tbody-input-keydown":_vm.handleTbodyInputKeydown,"tbody-move-dragtofill":_vm.handleMoveDragToFill,"tbody-select-change":_vm.handleTbodySelectChange,"tbody-select-multiple-cell":_vm.handleSelectMultipleCell,"tbody-submenu-click-callback":_vm.callbackSubmenuTbody,"tbody-td-click":_vm.handleTbodyTdClick,"tbody-td-context-menu":_vm.handleTBodyContextMenu,"tbody-td-double-click":_vm.handleTbodyTdDoubleClick,"tbody-up-dragtofill":_vm.handleUpDragToFill}}):_vm._e()],2)],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/VueTable.vue?vue&type=template&id=58b03c62&
+// CONCATENATED MODULE: ./src/components/VueTable.vue?vue&type=template&id=66f831ea&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -6088,15 +6063,20 @@ var es_string_search = __webpack_require__("841c");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom-collections.for-each.js
 var web_dom_collections_for_each = __webpack_require__("159b");
 
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {
-      arr2[i] = arr[i];
-    }
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
 
-    return arr2;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
   }
+
+  return arr2;
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
 }
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.symbol.js
 var es_symbol = __webpack_require__("a4d3");
@@ -6116,9 +6096,6 @@ var es_array_iterator = __webpack_require__("e260");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.to-string.js
 var es_object_to_string = __webpack_require__("d3b7");
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.regexp.to-string.js
-var es_regexp_to_string = __webpack_require__("25f0");
-
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.string.iterator.js
 var es_string_iterator = __webpack_require__("3ca3");
 
@@ -6134,23 +6111,48 @@ var web_dom_collections_iterator = __webpack_require__("ddb0");
 
 
 
-
 function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.slice.js
+var es_array_slice = __webpack_require__("fb6a");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
+var es_function_name = __webpack_require__("b0c0");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.regexp.to-string.js
+var es_regexp_to_string = __webpack_require__("25f0");
+
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js
+
+
+
+
+
+
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
 }
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js
 function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js
 
 
 
+
 function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.find.js
-var es_array_find = __webpack_require__("7db0");
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.some.js
+var es_array_some = __webpack_require__("45fc");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.values.js
 var es_object_values = __webpack_require__("07ac");
@@ -6167,12 +6169,8 @@ function _arrayWithHoles(arr) {
 
 
 
-
 function _iterableToArrayLimit(arr, i) {
-  if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
-    return;
-  }
-
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
   var _arr = [];
   var _n = true;
   var _d = false;
@@ -6199,14 +6197,15 @@ function _iterableToArrayLimit(arr, i) {
 }
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js
 function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance");
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js
 
 
 
+
 function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
 // CONCATENATED MODULE: ./src/mixins/VueTable/copyPaste.js
 
@@ -6253,16 +6252,12 @@ var copyPaste = {
   methods: {
     disabledEvent: function disabledEvent(col, header) {
       if (col.disabled === undefined) {
-        return !this.disableCells.find(function (x) {
+        return this.disableCells.some(function (x) {
           return x === header;
         });
       }
 
-      if (col.disabled) {
-        return !col.disabled;
-      }
-
-      return true;
+      return col.disabled;
     },
     copyStoreData: function copyStoreData(params) {
       var tbodyData = lodashClonedeep(this.tbodyData);
@@ -6335,7 +6330,7 @@ var copyPaste = {
       var maxRow = this.tbodyData.length;
       this.cleanPropertyOnCell("paste"); // copy / paste one cell || disable on disabled cell
 
-      if (this.storeCopyDatas[0].value && !this.copyMultipleCell && !this.selectedMultipleCell && !this.eventDrag && this.disabledEvent(this.selectedCell.col, this.selectedCell.header)) {
+      if (this.storeCopyDatas[0].value && !this.copyMultipleCell && !this.selectedMultipleCell && !this.eventDrag && !this.disabledEvent(this.selectedCell.col, this.selectedCell.header)) {
         var duplicate = this.tbodyData[this.selectedCell.row][this.selectedCell.header].duplicate;
         this.storeCopyDatas[0].duplicate = duplicate; // this.storeCopyDatas[0].active = true;
         // create newCopyData
@@ -6348,7 +6343,7 @@ var copyPaste = {
         this.tbodyData[this.selectedCell.row][this.selectedCell.header] = _newCopyData[0];
         // callback changeData
         this.changeData(this.selectedCell.row, this.selectedCell.header); // disable on disabled cell
-      } else if (this.disabledEvent(this.selectedCell.col, this.selectedCell.header) && this.selectedCoordCells) {
+      } else if (!this.disabledEvent(this.selectedCell.col, this.selectedCell.header) && this.selectedCoordCells) {
         // if paste in multiple selection
         var conditionPasteToMultipleSelection = this.selectedCoordCopyCells !== null && this.selectedCoordCells !== this.selectedCoordCopyCells; // new paste data
 
@@ -6543,23 +6538,24 @@ var copyPaste = {
       var colMax = Math.max(this.selectedCoordCells.colStart, this.selectedCoordCells.colEnd);
 
       while (rowMin <= rowMax) {
-        var header = this.headerKeys[colMin]; // disable on disabled cell
+        var header = this.headerKeys[colMin];
+        var cell = this.tbodyData[rowMin][header]; // disable on disabled cell
 
-        if (params === "removeValue" && this.disabledEvent(this.tbodyData[rowMin][header], header)) {
-          this.$emit("tbody-nav-backspace", rowMin, colMin, header, this.tbodyData[rowMin][header]);
+        if (params === "removeValue" && !this.disabledEvent(cell, header) && !!cell.value) {
           this.changeData(rowMin, header);
-          this.$set(this.tbodyData[rowMin][header], "value", "");
-          this.$set(this.tbodyData[rowMin][header], "selected", false);
+          this.$set(cell, "value", "");
+          this.$set(cell, "selected", false);
+          this.$emit("tbody-nav-backspace", rowMin, colMin, header, cell);
         }
 
         if (params === "selected") {
-          this.$set(this.tbodyData[rowMin][header], "selected", true);
+          this.$set(cell, "selected", true);
           this.selectedMultipleCellActive = true;
 
           if (colMin === colMax && rowMin === rowMax) {
             // add active on the last cell
             this.removeClass(["active"]);
-            this.$set(this.tbodyData[rowMin][header], "active", true);
+            this.$set(cell, "active", true);
           }
         }
 
@@ -6731,6 +6727,7 @@ var callback = {
 // CONCATENATED MODULE: ./src/mixins/VueTable/handleTBody.js
 
 
+
 // eslint-disable-next-line import/prefer-default-export
 var handleTBody = {
   data: function data() {
@@ -6848,7 +6845,10 @@ var handleTBody = {
     },
     handleTbodyTdDoubleClick: function handleTbodyTdDoubleClick(event, header, col, rowIndex, colIndex) {
       // stock oldTdShow in object
-      if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false; // add class show on element
+      if (this.oldTdShow) {
+        this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      } // add class show on element
+
 
       this.$set(this.tbodyData[rowIndex][header], "show", true);
       event.currentTarget.lastElementChild.focus();
@@ -6873,10 +6873,14 @@ var handleTHead = {
     }
   }
 };
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.find.js
+var es_array_find = __webpack_require__("7db0");
+
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.number.constructor.js
 var es_number_constructor = __webpack_require__("a9e3");
 
 // CONCATENATED MODULE: ./src/mixins/VueTable/moveOnTable.js
+
 
 
 
@@ -7273,9 +7277,13 @@ var moveOnTable_moveOnTable = {
       if (this.selectedMultipleCell) {
         this.modifyMultipleCell("removeValue");
       } else {
-        this.$emit("tbody-nav-backspace", rowIndex, colIndex, header, this.tbodyData[rowIndex][header]);
-        this.changeData(rowIndex, header);
-        this.tbodyData[rowIndex][header].value = "";
+        var cell = this.tbodyData[rowIndex][header];
+
+        if (!cell.disabled || !!cell.value) {
+          cell.value = "";
+          this.$emit("tbody-nav-backspace", rowIndex, colIndex, header, cell);
+          this.changeData(rowIndex, header);
+        }
       }
     },
     handleTbodySelectChange: function handleTbodySelectChange(event, header, col, option, rowIndex, colIndex) {
@@ -7365,23 +7373,17 @@ var scrollOnTable = {
     }
   }
 };
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.splice.js
-var es_array_splice = __webpack_require__("a434");
-
 // CONCATENATED MODULE: ./src/mixins/VueTable/undo.js
-
 // eslint-disable-next-line import/prefer-default-export
 var undo = {
   data: function data() {
     return {
-      changeDataIncrement: 0,
       storeUndoData: []
     };
   },
   methods: {
     changeData: function changeData(rowIndex, header) {
       var cell = this.tbodyData[rowIndex][header];
-      this.changeDataIncrement += 1;
       this.storeUndoData.push({
         rowIndex: rowIndex,
         header: header,
@@ -7390,22 +7392,19 @@ var undo = {
       this.$emit("tbody-change-data", rowIndex, header);
     },
     rollBackUndo: function rollBackUndo() {
-      if (this.storeUndoData.length && this.changeDataIncrement > 0) {
-        var index = this.changeDataIncrement - 1;
-        var store = this.storeUndoData[index];
-        this.$emit("tbody-undo-data", store.rowIndex, store.header);
-        this.tbodyData[store.rowIndex][store.header] = store.cell.duplicate;
-        this.storeUndoData.splice(index, 1);
-        this.changeDataIncrement -= 1;
+      if (this.storeUndoData.length) {
+        var lastEdit = this.storeUndoData.pop();
+        var previousValue = this.tbodyData[lastEdit.rowIndex][lastEdit.header].value;
+        this.tbodyData[lastEdit.rowIndex][lastEdit.header] = lastEdit.cell.duplicate;
+        this.$emit("tbody-undo-data", lastEdit.rowIndex, lastEdit.header, previousValue);
       }
     },
     clearStoreUndo: function clearStoreUndo() {
-      this.changeDataIncrement = 0;
       this.storeUndoData = [];
     }
   }
 };
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"15ab758c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Thead.vue?vue&type=template&id=0b83778e&scoped=true&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"725e33d8-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Thead.vue?vue&type=template&id=0b83778e&scoped=true&
 var Theadvue_type_template_id_0b83778e_scoped_true_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('thead',{staticClass:"thead",on:{"mouseup":function($event){return _vm.handleUpDragToFill($event)}}},[_c('tr',[(_vm.tbodyCheckbox)?_c('th',{staticClass:"index"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.checkedAll),expression:"checkedAll"}],attrs:{"type":"checkbox","id":("checkbox-all-" + _vm.currentTable)},domProps:{"checked":Array.isArray(_vm.checkedAll)?_vm._i(_vm.checkedAll,null)>-1:(_vm.checkedAll)},on:{"change":[function($event){var $$a=_vm.checkedAll,$$el=$event.target,$$c=$$el.checked?(true):(false);if(Array.isArray($$a)){var $$v=null,$$i=_vm._i($$a,$$v);if($$el.checked){$$i<0&&(_vm.checkedAll=$$a.concat([$$v]))}else{$$i>-1&&(_vm.checkedAll=$$a.slice(0,$$i).concat($$a.slice($$i+1)))}}else{_vm.checkedAll=$$c}},_vm.checkedAllRow]}}),_c('label',{attrs:{"for":("checkbox-all-" + _vm.currentTable)}})]):_vm._e(),(_vm.tbodyIndex)?_c('th',{key:"th-index",staticClass:"index"}):_vm._e(),_vm._l((_vm.headers),function(header,colIndex){return [_c('th',{key:header.headerKey,ref:'th-' + colIndex,refInFor:true,staticClass:"th",class:{
           disabled: header.disabled,
           highlight_spreadsheet: _vm.theadHighlight.includes(colIndex),
@@ -7807,7 +7806,12 @@ function normalizeComponent (
     options._ssrRegister = hook
   } else if (injectStyles) {
     hook = shadowMode
-      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      ? function () {
+        injectStyles.call(
+          this,
+          (options.functional ? this.parent : this).$root.$options.shadowRoot
+        )
+      }
       : injectStyles
   }
 
@@ -7858,7 +7862,7 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var Thead = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"15ab758c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TBody/TBody.vue?vue&type=template&id=2f07dd12&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"725e33d8-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TBody/TBody.vue?vue&type=template&id=2f07dd12&
 var TBodyvue_type_template_id_2f07dd12_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('tbody',[_vm._l((_vm.tbodyData),function(row,rowIndex){return [_c('tr',{key:("row" + rowIndex),staticClass:"table_row",class:{
         checked_row:
           'vuetable_checked' in _vm.tbodyData[rowIndex] &&
@@ -7906,12 +7910,12 @@ var TBodyvue_type_template_id_2f07dd12_staticRenderFns = []
 
 // CONCATENATED MODULE: ./src/components/TBody/TBody.vue?vue&type=template&id=2f07dd12&
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"15ab758c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TBody/VSelect.vue?vue&type=template&id=0c0039d6&
-var VSelectvue_type_template_id_0c0039d6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.row[_vm.header].type === 'select' && _vm.row[_vm.header].handleSearch)?_c('div',[_c('span',{ref:("span-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex)},[_vm._v(_vm._s(_vm.row[_vm.header].value))]),_c('i',{staticClass:"icon_glass",class:{ show: _vm.row[_vm.header].search }}),_c('button',{staticClass:"enable_select",class:{ active: _vm.row[_vm.header].search === true },on:{"click":function($event){$event.stopPropagation();return _vm.enableSelect($event, _vm.header, _vm.row[_vm.header], _vm.rowIndex, _vm.colIndex)}}},[_c('i')]),(_vm.row[_vm.header].search === true)?_c('div',{staticClass:"dropdown"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.searchInput),expression:"searchInput"}],ref:("input-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex),attrs:{"placeholder":_vm.trad[_vm.trad.lang].select.placeholder},domProps:{"value":(_vm.searchInput)},on:{"keyup":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }return _vm.escKeyup(_vm.row[_vm.header], _vm.rowIndex, _vm.header, _vm.colIndex, _vm.row[_vm.header].type)},function($event){if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.handleSearchInputSelect($event, _vm.row[_vm.header], _vm.header, _vm.rowIndex, _vm.colIndex)}],"input":function($event){if($event.target.composing){ return; }_vm.searchInput=$event.target.value}}}),_c('ul',{ref:("dropdown-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex),class:{ show: _vm.row[_vm.header].search }},_vm._l((_vm.filteredList),function(option,index){return _c('li',{key:index,class:{ active: option.active },attrs:{"value":option.value},on:{"click":function($event){$event.stopPropagation();return _vm.selectHandleChange($event, _vm.header, _vm.row[_vm.header], option, _vm.rowIndex, _vm.colIndex)}}},[_vm._v(" "+_vm._s(option.label)+" ")])}),0)]):_vm._e()]):(_vm.row[_vm.header].type === 'select')?_c('div',[_c('span',{ref:("span-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex)},[_vm._v(_vm._s(_vm.row[_vm.header].value))]),_c('select',{directives:[{name:"model",rawName:"v-model",value:(_vm.row[_vm.header].value),expression:"row[header].value"}],on:{"change":[function($event){var $$selectedVal = Array.prototype.filter.call($event.target.options,function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val}); _vm.$set(_vm.row[_vm.header], "value", $event.target.multiple ? $$selectedVal : $$selectedVal[0])},function($event){return _vm.selectHandleChange($event, _vm.header, _vm.row[_vm.header], _vm.option, _vm.rowIndex, _vm.colIndex)}]}},_vm._l((_vm.row[_vm.header].selectOptions),function(option,index){return _c('option',{key:index,domProps:{"value":option.value}},[_vm._v(" "+_vm._s(option.label)+" ")])}),0)]):_vm._e()}
-var VSelectvue_type_template_id_0c0039d6_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"725e33d8-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TBody/VSelect.vue?vue&type=template&id=2a724f01&
+var VSelectvue_type_template_id_2a724f01_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.row[_vm.header].type === 'select' && _vm.row[_vm.header].handleSearch)?_c('div',[_c('span',{ref:("span-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex)},[_vm._v(_vm._s(_vm.row[_vm.header].value))]),_c('i',{staticClass:"icon_glass",class:{ show: _vm.row[_vm.header].search }}),_c('button',{staticClass:"enable_select",class:{ active: _vm.row[_vm.header].search === true },on:{"click":function($event){$event.stopPropagation();return _vm.enableSelect($event, _vm.header, _vm.row[_vm.header], _vm.rowIndex, _vm.colIndex)}}},[_c('i')]),(_vm.row[_vm.header].search === true)?_c('div',{staticClass:"dropdown"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.searchInput),expression:"searchInput"}],ref:("input-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex),attrs:{"placeholder":_vm.trad[_vm.trad.lang].select.placeholder},domProps:{"value":(_vm.searchInput)},on:{"keyup":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }return _vm.escKeyup(_vm.row[_vm.header], _vm.rowIndex, _vm.header, _vm.colIndex, _vm.row[_vm.header].type)},function($event){if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.handleSearchInputSelect($event, _vm.row[_vm.header], _vm.header, _vm.rowIndex, _vm.colIndex)}],"input":function($event){if($event.target.composing){ return; }_vm.searchInput=$event.target.value}}}),_c('ul',{ref:("dropdown-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex),class:{ show: _vm.row[_vm.header].search }},_vm._l((_vm.filteredList),function(option,index){return _c('li',{key:index,class:{ active: option.active },attrs:{"value":option.value},on:{"click":function($event){$event.stopPropagation();return _vm.selectHandleChange($event, _vm.header, _vm.row[_vm.header], option, _vm.rowIndex, _vm.colIndex)}}},[_vm._v(" "+_vm._s(option.label)+" ")])}),0)]):_vm._e()]):(_vm.row[_vm.header].type === 'select')?_c('div',[_c('span',{ref:("span-" + _vm.currentTable + "-" + _vm.colIndex + "-" + _vm.rowIndex)},[_vm._v(_vm._s(_vm.row[_vm.header].value))]),_c('select',{directives:[{name:"model",rawName:"v-model",value:(_vm.row[_vm.header].value),expression:"row[header].value"}],on:{"change":[function($event){var $$selectedVal = Array.prototype.filter.call($event.target.options,function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val}); _vm.$set(_vm.row[_vm.header], "value", $event.target.multiple ? $$selectedVal : $$selectedVal[0])},function($event){return _vm.selectHandleChange($event, _vm.header, _vm.row[_vm.header], _vm.option, _vm.rowIndex, _vm.colIndex)}]}},_vm._l((_vm.row[_vm.header].selectOptions),function(option,index){return _c('option',{key:index,domProps:{"value":option.value}},[_vm._v(" "+_vm._s(option.label)+" ")])}),0)]):_vm._e()}
+var VSelectvue_type_template_id_2a724f01_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/TBody/VSelect.vue?vue&type=template&id=0c0039d6&
+// CONCATENATED MODULE: ./src/components/TBody/VSelect.vue?vue&type=template&id=2a724f01&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/TBody/VSelect.vue?vue&type=script&lang=js&
 
@@ -8017,7 +8021,7 @@ var VSelectvue_type_template_id_0c0039d6_staticRenderFns = []
   },
   methods: {
     enableSelect: function enableSelect(event, header, col, rowIndex, colIndex) {
-      if (this.disabledEvent(col, header)) {
+      if (!this.disabledEvent(col, header)) {
         this.searchInput = "";
         this.$emit("tbody-handle-to-open-select", event, header, col, rowIndex, colIndex);
       }
@@ -8026,7 +8030,7 @@ var VSelectvue_type_template_id_0c0039d6_staticRenderFns = []
       this.$emit("tbody-handle-select-change", event, header, col, option, rowIndex, colIndex);
     },
     handleSearchInputSelect: function handleSearchInputSelect(event, col, header, rowIndex, colIndex) {
-      if (this.disabledEvent(col, header)) {
+      if (!this.disabledEvent(col, header)) {
         this.$emit("tbody-handle-search-input-select", event, header, col, this.searchInput, rowIndex, colIndex);
       }
     }
@@ -8044,8 +8048,8 @@ var VSelectvue_type_template_id_0c0039d6_staticRenderFns = []
 
 var VSelect_component = normalizeComponent(
   TBody_VSelectvue_type_script_lang_js_,
-  VSelectvue_type_template_id_0c0039d6_render,
-  VSelectvue_type_template_id_0c0039d6_staticRenderFns,
+  VSelectvue_type_template_id_2a724f01_render,
+  VSelectvue_type_template_id_2a724f01_staticRenderFns,
   false,
   null,
   null,
@@ -8157,19 +8161,15 @@ var VSelect_component = normalizeComponent(
     },
     disabledEvent: function disabledEvent(col, header) {
       if (col.disabled === undefined) {
-        return !this.disableCells.find(function (x) {
+        return this.disableCells.some(function (x) {
           return x === header;
         });
       }
 
-      if (col.disabled) {
-        return !col.disabled;
-      }
-
-      return true;
+      return col.disabled;
     },
     escKeyup: function escKeyup(col, rowIndex, header, colIndex, type) {
-      if (this.disabledEvent(col, header)) {
+      if (!this.disabledEvent(col, header)) {
         this.$emit("tbody-handle-set-oldvalue", col, rowIndex, header, colIndex, type);
       }
     },
@@ -8187,18 +8187,18 @@ var VSelect_component = normalizeComponent(
       this.$emit("tbody-select-multiple-cell", event, header, rowIndex, colIndex, type);
     },
     handleDownDragToFill: function handleDownDragToFill(event, header, col, rowIndex, colIndex) {
-      if (this.disabledEvent(col, header)) {
+      if (!this.disabledEvent(col, header)) {
         this.eventDrag = true;
         this.$emit("tbody-down-dragtofill", event, header, col, rowIndex, colIndex);
       }
     },
     handleMoveDragToFill: function handleMoveDragToFill(event, header, col, rowIndex, colIndex) {
-      if (this.eventDrag && this.disabledEvent(col, header)) {
+      if (this.eventDrag && !this.disabledEvent(col, header)) {
         this.$emit("tbody-move-dragtofill", event, header, col, rowIndex, colIndex);
       }
     },
     handleUpDragToFill: function handleUpDragToFill(event, header, col, rowIndex, colIndex, type) {
-      if (this.eventDrag && this.disabledEvent(col, header)) {
+      if (this.eventDrag && !this.disabledEvent(col, header)) {
         this.eventDrag = false;
         this.$emit("tbody-up-dragtofill", event, header, rowIndex, colIndex, type);
       }
@@ -8208,7 +8208,7 @@ var VSelect_component = normalizeComponent(
       this.$emit("tbody-td-click", event, col, header, rowIndex, colIndex, type);
     },
     handleDoubleClickTd: function handleDoubleClickTd(event, header, col, rowIndex, colIndex) {
-      if (this.disabledEvent(col, header)) {
+      if (!this.disabledEvent(col, header)) {
         this.$emit("tbody-td-double-click", event, header, col, rowIndex, colIndex);
       }
     },
@@ -8750,6 +8750,63 @@ var VueTable_component = normalizeComponent(
 
 /* harmony default export */ var entry_lib = __webpack_exports__["default"] = (src);
 
+
+
+/***/ }),
+
+/***/ "fb6a":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__("23e7");
+var isObject = __webpack_require__("861d");
+var isArray = __webpack_require__("e8b5");
+var toAbsoluteIndex = __webpack_require__("23cb");
+var toLength = __webpack_require__("50c4");
+var toIndexedObject = __webpack_require__("fc6a");
+var createProperty = __webpack_require__("8418");
+var wellKnownSymbol = __webpack_require__("b622");
+var arrayMethodHasSpeciesSupport = __webpack_require__("1dde");
+var arrayMethodUsesToLength = __webpack_require__("ae40");
+
+var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('slice');
+var USES_TO_LENGTH = arrayMethodUsesToLength('slice', { ACCESSORS: true, 0: 0, 1: 2 });
+
+var SPECIES = wellKnownSymbol('species');
+var nativeSlice = [].slice;
+var max = Math.max;
+
+// `Array.prototype.slice` method
+// https://tc39.github.io/ecma262/#sec-array.prototype.slice
+// fallback for not array-like ES3 strings and DOM objects
+$({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGTH }, {
+  slice: function slice(start, end) {
+    var O = toIndexedObject(this);
+    var length = toLength(O.length);
+    var k = toAbsoluteIndex(start, length);
+    var fin = toAbsoluteIndex(end === undefined ? length : end, length);
+    // inline `ArraySpeciesCreate` for usage native `Array#slice` where it's possible
+    var Constructor, result, n;
+    if (isArray(O)) {
+      Constructor = O.constructor;
+      // cross-realm fallback
+      if (typeof Constructor == 'function' && (Constructor === Array || isArray(Constructor.prototype))) {
+        Constructor = undefined;
+      } else if (isObject(Constructor)) {
+        Constructor = Constructor[SPECIES];
+        if (Constructor === null) Constructor = undefined;
+      }
+      if (Constructor === Array || Constructor === undefined) {
+        return nativeSlice.call(O, k, fin);
+      }
+    }
+    result = new (Constructor === undefined ? Array : Constructor)(max(fin - k, 0));
+    for (n = 0; k < fin; k++, n++) if (k in O) createProperty(result, n, O[k]);
+    result.length = n;
+    return result;
+  }
+});
 
 
 /***/ }),
