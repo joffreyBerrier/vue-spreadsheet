@@ -160,7 +160,13 @@ $icon-color: lighten(black, 10%);
 .select_btn {
   cursor: pointer;
   border: none;
+  outline: none;
   background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 .select_icon {
   $size: 7px;
