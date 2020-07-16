@@ -12,14 +12,10 @@ beforeEach(() => {
 
   const disabledEvent = (col, header) => {
     if (col.disabled === undefined) {
-      return !this.disableCells.find((x) => x === header);
+      return this.disableCells.some((x) => x === header);
     }
 
-    if (col.disabled) {
-      return !col.disabled;
-    }
-
-    return true;
+    return col.disabled;
   };
 
   const filteredList = exempleData.products[0].f.selectOptions;

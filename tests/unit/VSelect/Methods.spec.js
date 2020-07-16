@@ -9,7 +9,7 @@ const colIndex = 1;
 const currentTable = Date.now();
 
 let disabledEvent = () => {
-  return true;
+  return false;
 };
 
 const header = "f";
@@ -52,7 +52,7 @@ describe("VSelect", () => {
     });
     test("not emitted tbody-handle-to-open-select", () => {
       disabledEvent = () => {
-        return false;
+        return true;
       };
 
       const newWrapper = mount(VSelect, {
@@ -78,7 +78,7 @@ describe("VSelect", () => {
   describe("selectHandleChange", () => {
     test("emitted tbody-select-change", () => {
       disabledEvent = () => {
-        return true;
+        return false;
       };
 
       const select = wrapper.vm;
@@ -100,7 +100,7 @@ describe("VSelect", () => {
 
     test("not emitted tbody-handle-search-input-select", () => {
       disabledEvent = () => {
-        return false;
+        return true;
       };
 
       const newWrapper = mount(VSelect, {

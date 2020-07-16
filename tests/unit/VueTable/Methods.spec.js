@@ -86,20 +86,30 @@ describe("VueTable", () => {
     test("Disabled Col : false | with disableCells", () => {
       const fakeData = { disabled: false };
 
-      expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeTruthy();
+      expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeFalsy();
     });
     test("Disabled Col : true | with disableCells", () => {
       const fakeData = { disabled: true };
 
-      expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeFalsy();
+      expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeTruthy();
+    });
+    test("Disabled Col : undefined | with disableCells", () => {
+      const fakeData = {};
+
+      expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeTruthy();
     });
     test("Disabled Col : false | without disableCells", () => {
       const fakeData = { disabled: false };
 
-      expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeTruthy();
+      expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeFalsy();
     });
     test("Disabled Col : true | without disableCells", () => {
       const fakeData = { disabled: true };
+
+      expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeTruthy();
+    });
+    test("Disabled Col : undefined | without disableCells", () => {
+      const fakeData = {};
 
       expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeFalsy();
     });
@@ -705,14 +715,6 @@ describe("VueTable", () => {
   });
 
   describe("changeData", () => {
-    test("return changeDataIncrement", () => {
-      const tBody = wrapper.vm;
-
-      tBody.changeData(1, "a");
-
-      expect(tBody.changeDataIncrement).toEqual(1);
-    });
-
     test("return storeUndoData", () => {
       const tBody = wrapper.vm;
 
@@ -731,20 +733,18 @@ describe("VueTable", () => {
   });
 
   describe("rollBackUndo", () => {
-    test("return changeDataIncrement", () => {
+    test("empty stored history", () => {
       const tBody = wrapper.vm;
 
       tBody.tbodyData[1].a.value = "fake";
       tBody.changeData(1, "a");
-      const index = tBody.changeDataIncrement - 1;
-      const store = tBody.storeUndoData[index];
+      const store = tBody.storeUndoData[tBody.storeUndoData.length - 1];
 
       tBody.rollBackUndo();
 
       expect(tBody.tbodyData[store.rowIndex][store.header]).toEqual(store.cell.duplicate);
-      expect(tBody.changeDataIncrement).toEqual(0);
       expect(tBody.storeUndoData).toEqual([]);
-      expect(wrapper.emitted("tbody-undo-data")).toEqual([[store.rowIndex, store.header]]);
+      expect(wrapper.emitted("tbody-undo-data")).toEqual([[store.rowIndex, store.header, "fake"]]);
     });
   });
 });

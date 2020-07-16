@@ -422,15 +422,13 @@ export const moveOnTable = {
       if (this.selectedMultipleCell) {
         this.modifyMultipleCell("removeValue");
       } else {
-        this.$emit(
-          "tbody-nav-backspace",
-          rowIndex,
-          colIndex,
-          header,
-          this.tbodyData[rowIndex][header]
-        );
-        this.changeData(rowIndex, header);
-        this.tbodyData[rowIndex][header].value = "";
+        const cell = this.tbodyData[rowIndex][header];
+
+        if (!cell.disabled || !!cell.value) {
+          cell.value = "";
+          this.$emit("tbody-nav-backspace", rowIndex, colIndex, header, cell);
+          this.changeData(rowIndex, header);
+        }
       }
     },
     handleTbodySelectChange(event, header, col, option, rowIndex, colIndex) {

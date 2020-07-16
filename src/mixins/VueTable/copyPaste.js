@@ -29,14 +29,10 @@ export const copyPaste = {
   methods: {
     disabledEvent(col, header) {
       if (col.disabled === undefined) {
-        return !this.disableCells.find((x) => x === header);
+        return this.disableCells.some((x) => x === header);
       }
 
-      if (col.disabled) {
-        return !col.disabled;
-      }
-
-      return true;
+      return col.disabled;
     },
     copyStoreData(params) {
       const tbodyData = lodashClonedeep(this.tbodyData);
@@ -132,7 +128,7 @@ export const copyPaste = {
         !this.copyMultipleCell &&
         !this.selectedMultipleCell &&
         !this.eventDrag &&
-        this.disabledEvent(this.selectedCell.col, this.selectedCell.header)
+        !this.disabledEvent(this.selectedCell.col, this.selectedCell.header)
       ) {
         const { duplicate } = this.tbodyData[this.selectedCell.row][this.selectedCell.header];
 
@@ -148,7 +144,7 @@ export const copyPaste = {
         this.changeData(this.selectedCell.row, this.selectedCell.header);
         // disable on disabled cell
       } else if (
-        this.disabledEvent(this.selectedCell.col, this.selectedCell.header) &&
+        !this.disabledEvent(this.selectedCell.col, this.selectedCell.header) &&
         this.selectedCoordCells
       ) {
         // if paste in multiple selection
@@ -382,26 +378,24 @@ export const copyPaste = {
 
       while (rowMin <= rowMax) {
         const header = this.headerKeys[colMin];
+        const cell = this.tbodyData[rowMin][header];
 
         // disable on disabled cell
-        if (
-          params === "removeValue" &&
-          this.disabledEvent(this.tbodyData[rowMin][header], header)
-        ) {
-          this.$emit("tbody-nav-backspace", rowMin, colMin, header, this.tbodyData[rowMin][header]);
+        if (params === "removeValue" && !this.disabledEvent(cell, header) && !!cell.value) {
           this.changeData(rowMin, header);
-          this.$set(this.tbodyData[rowMin][header], "value", "");
-          this.$set(this.tbodyData[rowMin][header], "selected", false);
+          this.$set(cell, "value", "");
+          this.$set(cell, "selected", false);
+          this.$emit("tbody-nav-backspace", rowMin, colMin, header, cell);
         }
 
         if (params === "selected") {
-          this.$set(this.tbodyData[rowMin][header], "selected", true);
+          this.$set(cell, "selected", true);
           this.selectedMultipleCellActive = true;
 
           if (colMin === colMax && rowMin === rowMax) {
             // add active on the last cell
             this.removeClass(["active"]);
-            this.$set(this.tbodyData[rowMin][header], "active", true);
+            this.$set(cell, "active", true);
           }
         }
 

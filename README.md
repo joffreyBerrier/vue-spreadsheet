@@ -42,8 +42,9 @@ npm i vuejs-spreadsheet
 
 ## Contributing to development
 
-- First, fork the repo on github.
+- First, fork the repo from github.
 - Clone your forked repo and run: `yarn` or `npm i`
+- You can use the `/example` folder to test out the component, or use `npm link` to another project (_cf. next sub section_).
 - Then, make your changes on any branch you want and push it.
 - Naming your branch with the gitflow convention:
   - Feature branches? [feature/]
@@ -53,6 +54,28 @@ npm i vuejs-spreadsheet
 - When you have done, execute the `npm run build-lib`command
 - Finally, open a pull request on the official repo, using the source branch from your forked repo.
 
+### Debugging and testing from another project
+
+If you want to link the local project to another project 'B' with access to the sources, follow these intructions:
+- go to the root of this project's folder
+- update the package.json to point to the source entry point instead of the dist/ `main: 'src/index.js'`
+- run `npm link` (or `yarn link`).
+- go to the project you import the library
+- run `npm link vuejs-spreadsheet`
+- Now, in your `node_modules`, the vuejs-spreadsheet dependencies should be a symlink to this local folder!
+
+In order to make it work, you make change your webpack's configuration by using:
+```
+config: {
+  resolve: {
+    symlinks: true,
+  }
+}
+```
+
+This will enable your project's B to compile this library using the babel / webpack configuration here, as if it was a real compiled _node_module_.
+
+_(This configuration may depend on your webpack builder)_
 
 ## Wiki :mortar_board:
 
@@ -88,6 +111,7 @@ Function                               | Type       | Description
   v-on:tbody-select-change             | Function   | When the **select change**
   v-on:handle-up-drag-size-header      | Function   | Fired when the header size changed
   v-on:thead-td-sort                   | Function   | When you press the button sort
+  v-on:tbody-undo-data                 | Function   | When you hit Ctrl / Cmd + Z for undo
   v-on:tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
   v-on:tbody-move-dragtofill           | Function   | Fired when moved on dragToFill
   v-on:tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
@@ -112,6 +136,7 @@ Function                               | Type       | Description
     v-on:tbody-checked-row="checkedData"
     v-on:tbody-all-checked-row="checkedAllData"
     v-on:tbody-change-data="changeData"
+    v-on:tbody-undo-data="undoData"
     v-on:tbody-submenu-click-change-color="changeColorTbody"
     v-on:tbody-submenu-click-change-value="changeValueTbody"
     v-on:thead-submenu-click-change-color="changeColorThead"

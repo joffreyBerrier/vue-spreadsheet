@@ -47,25 +47,25 @@ describe("TBody", () => {
 
   describe("Methods", () => {
     describe("DisabledEvent", () => {
-      test("Disabled Col : false | with disableCells", () => {
+      test("TBODY Disabled Col : false | with disableCells", () => {
         const fakeData = { disabled: false };
 
-        expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeTruthy();
+        expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeFalsy();
       });
       test("Disabled Col : true | with disableCells", () => {
         const fakeData = { disabled: true };
 
-        expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeFalsy();
+        expect(wrapper.vm.disabledEvent(fakeData, "a")).toBeTruthy();
       });
       test("Disabled Col : false | without disableCells", () => {
         const fakeData = { disabled: false };
 
-        expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeTruthy();
+        expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeFalsy();
       });
       test("Disabled Col : true | without disableCells", () => {
         const fakeData = { disabled: true };
 
-        expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeFalsy();
+        expect(wrapper.vm.disabledEvent(fakeData, "b")).toBeTruthy();
       });
     });
 
