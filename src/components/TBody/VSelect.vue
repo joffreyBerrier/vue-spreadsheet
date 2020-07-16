@@ -1,53 +1,57 @@
 <template>
-  <div v-if="row[header].type === 'select' && row[header].handleSearch">
-    <button
-      class="select_btn"
-      @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)"
-    >
-      <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{ row[header].value }}</span>
-      <i class="glass_icon" :class="{ show: row[header].search }" />
-      <i class="select_icon" :class="{ active: row[header].search === true }" />
-    </button>
+  <div v-if="row[header].type === 'select'">
+    <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{ row[header].value }}</span>
 
-    <div v-if="row[header].search === true" class="dropdown">
-      <input
-        :ref="`input-${currentTable}-${colIndex}-${rowIndex}`"
-        v-model="searchInput"
-        :placeholder="trad[trad.lang].select.placeholder"
-        @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
-        @keyup.exact="handleSearchInputSelect($event, row[header], header, rowIndex, colIndex)"
-      />
-      <ul
-        :ref="`dropdown-${currentTable}-${colIndex}-${rowIndex}`"
-        :class="{ show: row[header].search }"
+    <!-- Select with custom dropdown -->
+    <template v-if="row[header].handleSearch">
+      <i class="glass_icon" :class="{ show: row[header].search }" />
+      <button
+        class="select_btn"
+        @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)"
       >
-        <li
-          v-for="(option, index) in filteredList"
+        <i class="select_icon" :class="{ active: row[header].search === true }" />
+      </button>
+
+      <div v-if="row[header].search === true" class="dropdown">
+        <input
+          :ref="`input-${currentTable}-${colIndex}-${rowIndex}`"
+          v-model="searchInput"
+          :placeholder="trad[trad.lang].select.placeholder"
+          @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
+          @keyup.exact="handleSearchInputSelect($event, row[header], header, rowIndex, colIndex)"
+        />
+        <ul
+          :ref="`dropdown-${currentTable}-${colIndex}-${rowIndex}`"
+          :class="{ show: row[header].search }"
+        >
+          <li
+            v-for="(option, index) in filteredList"
+            :key="index"
+            :class="{ active: option.active }"
+            :value="option.value"
+            @click.stop="selectHandleChange($event, header, row[header], option, rowIndex, colIndex)"
+          >
+            {{ option.label }}
+          </li>
+        </ul>
+      </div>
+    </template>
+
+    <!-- Defaut user-agent select -->
+    <template v-else>
+      <select
+        v-model="row[header].value"
+        @change="selectHandleChange($event, header, row[header], option, rowIndex, colIndex)"
+      >
+        <option
+          v-for="(option, index) in row[header].selectOptions"
           :key="index"
-          :class="{ active: option.active }"
           :value="option.value"
-          @click.stop="selectHandleChange($event, header, row[header], option, rowIndex, colIndex)"
         >
           {{ option.label }}
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <div v-else-if="row[header].type === 'select'">
-    <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{ row[header].value }}</span>
-    <select
-      v-model="row[header].value"
-      @change="selectHandleChange($event, header, row[header], option, rowIndex, colIndex)"
-    >
-      <option
-        v-for="(option, index) in row[header].selectOptions"
-        :key="index"
-        :value="option.value"
-      >
-        {{ option.label }}
-      </option>
-    </select>
+        </option>
+      </select>
+    </template>
   </div>
 </template>
 
@@ -100,10 +104,16 @@ export default {
     };
   },
   methods: {
-    enableSelect(event, header, col, rowIndex, colIndex) {
-      if (!this.disabledEvent(col, header)) {
+    enableSelect(event, header, cell, rowIndex, colIndex) {
+      if (!this.disabledEvent(cell, header)) {
         this.searchInput = "";
-        this.$emit("tbody-handle-to-open-select", event, header, col, rowIndex, colIndex);
+        const activeOption = cell.selectOptions.find((opt) => opt.value === cell.value);
+
+        if (activeOption) {
+          activeOption.active = true;
+        }
+
+        this.$emit("tbody-handle-to-open-select", event, header, cell, rowIndex, colIndex);
       }
     },
     selectHandleChange(event, header, col, option, rowIndex, colIndex) {
@@ -162,20 +172,16 @@ $icon-color: lighten(black, 10%);
   border: none;
   outline: none;
   background: transparent;
+
   position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-}
-.select_icon {
-  $size: 7px;
-  position: absolute;
-  display: inline-block;
+  z-index: 10;
   right: 8px;
   top: 0;
   bottom: 0;
-  margin: auto;
+}
+.select_icon {
+  display: inline-block;
+  $size: 7px;
   width: $size;
   height: $size;
   border-top: 1px solid $icon-color;
