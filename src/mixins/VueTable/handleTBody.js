@@ -132,8 +132,12 @@ export const handleTBody = {
       this.$emit("tbody-input-keydown", event, header, rowIndex, colIndex);
     },
     handleTbodyTdDoubleClick(event, header, col, rowIndex, colIndex) {
+      if (col.handleSearch) return;
+
       // stock oldTdShow in object
-      if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      if (this.oldTdShow) {
+        this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      }
 
       // add class show on element
       this.$set(this.tbodyData[rowIndex][header], "show", true);

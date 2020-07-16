@@ -1,14 +1,14 @@
 <template>
   <div v-if="row[header].type === 'select' && row[header].handleSearch">
-    <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{ row[header].value }}</span>
-    <i class="icon_glass" :class="{ show: row[header].search }" />
     <button
-      :class="{ active: row[header].search === true }"
-      class="enable_select"
+      class="select_btn"
       @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)"
     >
-      <i />
+      <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{ row[header].value }}</span>
+      <i class="glass_icon" :class="{ show: row[header].search }" />
+      <i class="select_icon" :class="{ active: row[header].search === true }" />
     </button>
+
     <div v-if="row[header].search === true" class="dropdown">
       <input
         :ref="`input-${currentTable}-${colIndex}-${rowIndex}`"
@@ -125,3 +125,62 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+$icon-color: lighten(black, 10%);
+
+.glass_icon {
+  position: absolute;
+  top: 12px;
+  right: 25px;
+  z-index: 13;
+  width: 12px;
+  height: 12px;
+  border-radius: 50px;
+  border: 1px solid $icon-color;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 300ms ease;
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    transform: rotate(45deg);
+    bottom: 0;
+    right: -4px;
+    height: 1px;
+    width: 5px;
+    background: $icon-color;
+  }
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+.select_btn {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+.select_icon {
+  $size: 7px;
+  position: absolute;
+  display: inline-block;
+  right: 8px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: $size;
+  height: $size;
+  border-top: 1px solid $icon-color;
+  border-left: 1px solid $icon-color;
+  background: transparent;
+  color: transparent;
+  text-decoration: none;
+  transform: rotate(225deg);
+  transition: transform 250ms ease-in-out;
+  &.active {
+    transform: rotate(45deg);
+  }
+}
+</style>
