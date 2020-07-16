@@ -25,11 +25,6 @@ PercyScript.run(async (page, percySnapshot) => {
   });
   await percySnapshot("context-menu on disable cell");
 
-  // Select Cell
-  await page.click('[data-row-index="2"][data-col-index="5"]');
-  await page.click('[data-row-index="2"][data-col-index="5"] .enable_select');
-  await percySnapshot("cell with select");
-
   // keys navigation
   await page.click('[data-row-index="2"][data-col-index="2"]');
   // top
