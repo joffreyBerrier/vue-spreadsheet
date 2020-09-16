@@ -29,7 +29,9 @@
             :key="index"
             :class="{ active: option.active }"
             :value="option.value"
-            @click.stop="selectHandleChange($event, header, row[header], option, rowIndex, colIndex)"
+            @click.stop="
+              selectHandleChange($event, header, row[header], option, rowIndex, colIndex)
+            "
           >
             {{ option.label }}
           </li>
