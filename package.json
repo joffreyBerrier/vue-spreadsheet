@@ -1,6 +1,6 @@
 {
   "name": "vuejs-spreadsheet",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "description": "An easier Spreadsheet in Vue",
   "main": "dist/vuespreadsheet.common.js",
   "author": "Joffrey Berrier <joffrey.berrier@gmail.com>",

@@ -51,7 +51,6 @@ npm i vuejs-spreadsheet
   - Release branches? [release/]
   - Hotfix branches? [hotfix/]
   - Support branches? [support/]
-- When you have done, execute the `npm run build-lib`command
 - Finally, open a pull request on the official repo, using the source branch from your forked repo.
 
 ### Debugging and testing from another project
