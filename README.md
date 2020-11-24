@@ -111,6 +111,7 @@ Function                               | Type       | Description
   v-on:handle-up-drag-size-header      | Function   | Fired when the header size changed
   v-on:thead-td-sort                   | Function   | When you press the button sort
   v-on:tbody-undo-data                 | Function   | When you hit Ctrl / Cmd + Z for undo
+  v-on:tbody-paste-data                | Function   | When you paste data to a cell
   v-on:tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
   v-on:tbody-move-dragtofill           | Function   | Fired when moved on dragToFill
   v-on:tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
