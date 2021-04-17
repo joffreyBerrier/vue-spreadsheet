@@ -7,7 +7,7 @@ import exempleData from "@/data";
 let wrapper;
 
 beforeEach(() => {
-  const tbodyData = exempleData.products;
+  const value = exempleData.products;
   const { headers } = exempleData;
   const { customOptions } = exempleData;
   const { styleWrapVueTable } = exempleData;
@@ -21,7 +21,7 @@ beforeEach(() => {
 
   wrapper = mount(VueTable, {
     propsData: {
-      tbodyData,
+      value,
       headers,
       customOptions,
       styleWrapVueTable,
@@ -41,7 +41,7 @@ beforeEach(() => {
 describe("VueTable", () => {
   describe("Render component with props", () => {
     test("Vue Instance", () => {
-      expect(wrapper.isVueInstance()).toBeTruthy();
+      expect(wrapper.vm).toBeTruthy();
     });
   });
 

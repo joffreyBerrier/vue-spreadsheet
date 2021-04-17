@@ -185,8 +185,9 @@ export default {
       return false;
     },
     inputHandleKeydow(event, header, rowIndex, colIndex) {
-      if (this.tbodyData[rowIndex][header].numeric && this.autorizeOnlyNumericValue(event))
+      if (this.tbodyData[rowIndex][header].numeric && this.autorizeOnlyNumericValue(event)) {
         event.preventDefault();
+      }
 
       this.$emit("tbody-input-keydown", event, header, rowIndex, colIndex);
     },

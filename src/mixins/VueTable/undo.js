@@ -7,7 +7,7 @@ export const undo = {
   },
   methods: {
     changeData(rowIndex, header) {
-      const cell = this.tbodyData[rowIndex][header];
+      const cell = this.value[rowIndex][header];
 
       this.storeUndoData.push({ rowIndex, header, cell });
       this.$emit("tbody-change-data", rowIndex, header);
@@ -15,9 +15,9 @@ export const undo = {
     rollBackUndo() {
       if (this.storeUndoData.length) {
         const lastEdit = this.storeUndoData.pop();
-        const previousValue = this.tbodyData[lastEdit.rowIndex][lastEdit.header].value;
+        const previousValue = this.value[lastEdit.rowIndex][lastEdit.header].value;
 
-        this.tbodyData[lastEdit.rowIndex][lastEdit.header] = lastEdit.cell.duplicate;
+        this.value[lastEdit.rowIndex][lastEdit.header] = lastEdit.cell.duplicate;
         this.$emit("tbody-undo-data", lastEdit.rowIndex, lastEdit.header, previousValue);
       }
     },

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <vue-table
-      :tbody-data="products"
+      v-model="products"
       :headers="headers"
       :custom-options="customOptions"
       :style-wrap-vue-table="styleWrapVueTable"
@@ -12,12 +12,12 @@
       :select-position="selectPosition"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead"
-      v-on:tbody-change-data="changeData"
-      v-on:tbody-submenu-click-change-color="changeColorTbody"
-      v-on:tbody-submenu-click-change-value="changeValueTbody"
-      v-on:thead-submenu-click-change-color="changeColorThead"
-      v-on:thead-submenu-click-change-value="changeValueThead"
-      v-on:thead-td-sort="sortProduct">
+      @tbody-change-data="changeData"
+      @tbody-submenu-click-change-color="changeColorTbody"
+      @tbody-submenu-click-change-value="changeValueTbody"
+      @thead-submenu-click-change-color="changeColorThead"
+      @thead-submenu-click-change-value="changeValueThead"
+      @thead-td-sort="sortProduct">
     <div slot="header">
       Specific Header
     </div>

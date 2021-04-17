@@ -1,39 +1,39 @@
 <template>
-  <div v-if="row[header].type === 'select'">
-    <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{ row[header].value }}</span>
+  <div v-if="value[header] && value[header].type === 'select'">
+    <span :ref="`span-${currentTable}-${colIndex}-${rowIndex}`">{{ value[header].value }}</span>
 
     <!-- Select with custom dropdown -->
-    <template v-if="row[header].handleSearch">
-      <i class="glass_icon" :class="{ show: row[header].search }" />
+    <template v-if="value[header].handleSearch">
+      <i class="glass_icon" :class="{ show: value[header].search }" />
       <button
         class="select_btn"
-        @click.stop="enableSelect($event, header, row[header], rowIndex, colIndex)"
+        @click.stop="enableSelect($event, header, value[header], rowIndex, colIndex)"
       >
-        <i class="select_icon" :class="{ active: row[header].search === true }" />
+        <i class="select_icon" :class="{ active: value[header].search === true }" />
       </button>
 
-      <div v-if="row[header].search === true" class="dropdown">
+      <div v-if="value[header].search === true" class="dropdown">
         <input
           :ref="`input-${currentTable}-${colIndex}-${rowIndex}`"
           v-model="searchInput"
           :placeholder="trad[trad.lang].select.placeholder"
-          @keyup.esc="escKeyup(row[header], rowIndex, header, colIndex, row[header].type)"
-          @keyup.exact="handleSearchInputSelect($event, row[header], header, rowIndex, colIndex)"
+          @keyup.esc="escKeyup(value[header], rowIndex, header, colIndex, value[header].type)"
+          @keyup.exact="handleSearchInputSelect($event, value[header], header, rowIndex, colIndex)"
         />
         <ul
           :ref="`dropdown-${currentTable}-${colIndex}-${rowIndex}`"
-          :class="{ show: row[header].search }"
+          :class="{ show: value[header].search }"
         >
           <li
             v-for="(option, index) in filteredList"
             :key="index"
             :class="{ active: option.active }"
-            :value="option.value"
+            :value="option.value || option.item.value"
             @click.stop="
-              selectHandleChange($event, header, row[header], option, rowIndex, colIndex)
+              selectHandleChange($event, header, value[header], option, rowIndex, colIndex)
             "
           >
-            {{ option.label }}
+            {{ option.label || option.item.label }}
           </li>
         </ul>
       </div>
@@ -42,11 +42,11 @@
     <!-- Defaut user-agent select -->
     <template v-else>
       <select
-        v-model="row[header].value"
-        @change="selectHandleChange($event, header, row[header], option, rowIndex, colIndex)"
+        :value="value[header].value"
+        @change="selectHandleChange($event, header, value[header], option, rowIndex, colIndex)"
       >
         <option
-          v-for="(option, index) in row[header].selectOptions"
+          v-for="(option, index) in value[header].selectOptions"
           :key="index"
           :value="option.value"
         >
@@ -83,7 +83,7 @@ export default {
       type: String,
       default: "",
     },
-    row: {
+    value: {
       type: Object,
       default: () => {
         return {};
@@ -119,6 +119,7 @@ export default {
       }
     },
     selectHandleChange(event, header, col, option, rowIndex, colIndex) {
+      this.$emit("input", event.target.value);
       this.$emit("tbody-handle-select-change", event, header, col, option, rowIndex, colIndex);
     },
     handleSearchInputSelect(event, col, header, rowIndex, colIndex) {
@@ -174,7 +175,6 @@ $icon-color: lighten(black, 10%);
   border: none;
   outline: none;
   background: transparent;
-
   position: absolute;
   z-index: 10;
   right: 8px;

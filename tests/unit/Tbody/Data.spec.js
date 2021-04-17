@@ -41,7 +41,7 @@ beforeEach(() => {
 describe("TBody", () => {
   describe("Render component with props", () => {
     test("Vue Instance", () => {
-      expect(wrapper.isVueInstance()).toBeTruthy();
+      expect(wrapper.vm).toBeTruthy();
     });
   });
 

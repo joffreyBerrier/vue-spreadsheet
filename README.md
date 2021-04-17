@@ -1,8 +1,11 @@
-# :fire: Vue Spreadsheet 2.1.6 :fire:
-https://github.com/joffreyBerrier/vue-spreadsheet/releases/tag/2.1.5
+# :fire: Vue Spreadsheet 2.2.0 :fire:
+https://github.com/joffreyBerrier/vue-spreadsheet/releases/tag/2.2.0
 
 # Medium article (in french)
 https://medium.com/scalia/vuejs-spreadsheet-692cab2cb5c8
+
+# Medium article for publish your own component on npm
+https://medium.com/js-dojo/how-to-publish-a-vuejs-component-on-npm-aa703714b512
 
 # Sandbox example
 
@@ -78,9 +81,12 @@ _(This configuration may depend on your webpack builder)_
 
 ## Wiki :mortar_board:
 
+Data binding                           | Type       | Description
+---------------------------------------|------------|-------------------------
+v-model                                | Array      | That contains data
+
 Props                                  | Type       | Description
 ---------------------------------------|------------|-------------------------
-  :tbody-data                          | Array      | That contains data
   :headers                             | Array      | That contains headers
   :custom-options                      | Object     | That contains Options
   :style-wrap-vue-table                | Object     | That contains style of the wrapper tableVue
@@ -102,27 +108,27 @@ Options                                | Type       | Description
 
 Function                               | Type       | Description
 ---------------------------------------|------------|-------------------------
-  v-on:tbody-all-checked-row           | Function   | Fired when the checkedAll row has checked
-  v-on:tbody-checked-row               | Function   | Fired when row has checked
-  v-on:tbody-change-data               | Function   | Fired when data undergo modifications
-  v-on:tbody-input-change              | Function   | When the **input changes**
-  v-on:tbody-input-keydown             | Function   | Trigger keydown when the **input changes**
-  v-on:tbody-select-change             | Function   | When the **select change**
-  v-on:handle-up-drag-size-header      | Function   | Fired when the header size changed
-  v-on:thead-td-sort                   | Function   | When you press the button sort
-  v-on:tbody-undo-data                 | Function   | When you hit Ctrl / Cmd + Z for undo
-  v-on:tbody-paste-data                | Function   | When you paste data to a cell
-  v-on:tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
-  v-on:tbody-move-dragtofill           | Function   | Fired when moved on dragToFill
-  v-on:tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
-  v-on:tbody-nav-multiple-backspace    | Function   | Fired when the multiple cell are delete
-  v-on:tbody-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-tbody**
+  @tbody-all-checked-row           | Function   | Fired when the checkedAll row has checked
+  @tbody-checked-row               | Function   | Fired when row has checked
+  @tbody-change-data               | Function   | Fired when data undergo modifications
+  @tbody-input-change              | Function   | When the **input changes**
+  @tbody-input-keydown             | Function   | Trigger keydown when the **input changes**
+  @tbody-select-change             | Function   | When the **select change**
+  @handle-up-drag-size-header      | Function   | Fired when the header size changed
+  @thead-td-sort                   | Function   | When you press the button sort
+  @tbody-undo-data                 | Function   | When you hit Ctrl / Cmd + Z for undo
+  @tbody-paste-data                | Function   | When you paste data to a cell
+  @tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
+  @tbody-move-dragtofill           | Function   | Fired when moved on dragToFill
+  @tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
+  @tbody-nav-multiple-backspace    | Function   | Fired when the multiple cell are delete
+  @tbody-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-tbody**
 
 
 ### Example
 ``` javascript
   <vue-table
-    :tbody-data="Array"
+    v-model="Array"
     :headers="Array"
     :custom-options="Object"
     :style-wrap-vue-table="Object"
@@ -133,15 +139,15 @@ Function                               | Type       | Description
     :select-position="Object"
     :submenu-tbody="Array"
     :submenu-thead="Array"
-    v-on:tbody-checked-row="checkedData"
-    v-on:tbody-all-checked-row="checkedAllData"
-    v-on:tbody-change-data="changeData"
-    v-on:tbody-undo-data="undoData"
-    v-on:tbody-submenu-click-change-color="changeColorTbody"
-    v-on:tbody-submenu-click-change-value="changeValueTbody"
-    v-on:thead-submenu-click-change-color="changeColorThead"
-    v-on:thead-submenu-click-change-value="changeValueThead"
-    v-on:thead-td-sort="sortProduct">
+    @tbody-checked-row="checkedData"
+    @tbody-all-checked-row="checkedAllData"
+    @tbody-change-data="changeData"
+    @tbody-undo-data="undoData"
+    @tbody-submenu-click-change-color="changeColorTbody"
+    @tbody-submenu-click-change-value="changeValueTbody"
+    @thead-submenu-click-change-color="changeColorThead"
+    @thead-submenu-click-change-value="changeValueThead"
+    @thead-td-sort="sortProduct">
 
     // if your want to add an specific header
     <div slot="header">
@@ -489,7 +495,7 @@ newData: {
 <template>
   <div id="app">
     <vue-table
-      :tbody-data="products"
+      v-model="products"
       :headers="headers"
       :custom-options="customOptions"
       :style-wrap-vue-table="styleWrapVueTable"
@@ -500,12 +506,12 @@ newData: {
       :select-position="selectPosition"
       :submenu-tbody="submenuTbody"
       :submenu-thead="submenuThead"
-      v-on:tbody-change-data="changeData"
-      v-on:tbody-submenu-click-change-color="changeColorTbody"
-      v-on:tbody-submenu-click-change-value="changeValueTbody"
-      v-on:thead-submenu-click-change-color="changeColorThead"
-      v-on:thead-submenu-click-change-value="changeValueThead"
-      v-on:thead-td-sort="sortProduct">
+      @tbody-change-data="changeData"
+      @tbody-submenu-click-change-color="changeColorTbody"
+      @tbody-submenu-click-change-value="changeValueTbody"
+      @thead-submenu-click-change-color="changeColorThead"
+      @thead-submenu-click-change-value="changeValueThead"
+      @thead-td-sort="sortProduct">
     <div slot="header">
       Specific Header
     </div>
