@@ -1,4 +1,6 @@
-// eslint-disable-next-line import/prefer-default-export
+import { cleanProperty } from "../../helpers";
+
+/* eslint-disable-next-line import/prefer-default-export */
 export const moveOnTable = {
   data() {
     return {
@@ -454,6 +456,13 @@ export const moveOnTable = {
       this.changeData(rowIndex, header);
     },
     updateSelectedCell(header, rowIndex, colIndex) {
+      const td = this.$refs[`${this.customTable}-vueTbody`].$refs[
+        `td-${this.customTable}-${colIndex}-${rowIndex}`
+      ][0];
+
+      this.tbodyData[rowIndex][header].stateCopy = false;
+      cleanProperty(td);
+
       if (!this.setFirstCell) {
         this.$set(this.tbodyData[rowIndex][header], "rectangleSelection", true);
         this.setFirstCell = true;
