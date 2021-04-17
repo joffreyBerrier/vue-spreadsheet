@@ -139,7 +139,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 $icon-color: lighten(black, 10%);
 
 .glass_icon {
@@ -154,22 +154,21 @@ $icon-color: lighten(black, 10%);
   opacity: 0;
   visibility: hidden;
   transition: all 300ms ease;
-}
-.glass_icon:after {
-  content: "";
-  display: block;
-  position: absolute;
-  transform: rotate(45deg);
-  bottom: 0;
-  right: -4px;
-  height: 1px;
-  width: 5px;
-  background: $icon-color;
-}
-
-.glass_icon.show {
-  opacity: 1;
-  visibility: visible;
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    transform: rotate(45deg);
+    bottom: 0;
+    right: -4px;
+    height: 1px;
+    width: 5px;
+    background: $icon-color;
+  }
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 .select_btn {
   cursor: pointer;
@@ -194,8 +193,8 @@ $icon-color: lighten(black, 10%);
   text-decoration: none;
   transform: rotate(225deg);
   transition: transform 250ms ease-in-out;
-}
-.select_icon.active {
-  transform: rotate(45deg);
+  &.active {
+    transform: rotate(45deg);
+  }
 }
 </style>

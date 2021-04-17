@@ -108,38 +108,21 @@ Options                                | Type       | Description
 
 Function                               | Type       | Description
 ---------------------------------------|------------|-------------------------
-<<<<<<< HEAD
-  v-on:tbody-all-checked-row           | Function   | Fired when the checkedAll row has checked
-  v-on:tbody-checked-row               | Function   | Fired when row has checked
-  v-on:tbody-change-data               | Function   | Fired when data undergo modifications
-  v-on:tbody-input-change              | Function   | When the **input changes**
-  v-on:tbody-input-keydown             | Function   | Trigger keydown when the **input changes**
-  v-on:tbody-select-change             | Function   | When the **select change**
-  v-on:handle-up-drag-size-header      | Function   | Fired when the header size changed
-  v-on:thead-td-sort                   | Function   | When you press the button sort
-  v-on:tbody-undo-data                 | Function   | When you hit Ctrl / Cmd + Z for undo
-  v-on:tbody-paste-data                | Function   | When you paste data to a cell
-  v-on:tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
-  v-on:tbody-move-dragtofill           | Function   | Fired when moved on dragToFill
-  v-on:tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
-  v-on:tbody-nav-multiple-backspace    | Function   | Fired when the multiple cell are delete
-  v-on:tbody-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-tbody**
-=======
-  @tbody-all-checked-row               | Function   | Fired when the checkedAll row has checked
-  @tbody-checked-row                   | Function   | Fired when row has checked
-  @tbody-change-data                   | Function   | Fired when data undergo modifications
-  @tbody-input-change                  | Function   | When the **input changes**
-  @tbody-input-keydown                 | Function   | Trigger keydown when the **input changes**
-  @tbody-select-change                 | Function   | When the **select change**
-  @handle-up-drag-size-header          | Function   | Fired when the header size changed
-  @thead-td-sort                       | Function   | When you press the button sort
-  @tbody-undo-data                     | Function   | When you hit Ctrl / Cmd + Z for undo
-  @tbody-up-dragtofill                 | Function   | Fired when pressed up on dragToFill
-  @tbody-move-dragtofill               | Function   | Fired when moved on dragToFill
-  @tbody-nav-backspace                 | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
-  @tbody-nav-multiple-backspace         | Function   | Fired when the multiple cell are delete
-  @tbody-submenu-click-{#}              | Function   | {#} - Name of the function declared on **submenu-tbody**
->>>>>>> 014c909 (release 2.2.0)
+  @tbody-all-checked-row           | Function   | Fired when the checkedAll row has checked
+  @tbody-checked-row               | Function   | Fired when row has checked
+  @tbody-change-data               | Function   | Fired when data undergo modifications
+  @tbody-input-change              | Function   | When the **input changes**
+  @tbody-input-keydown             | Function   | Trigger keydown when the **input changes**
+  @tbody-select-change             | Function   | When the **select change**
+  @handle-up-drag-size-header      | Function   | Fired when the header size changed
+  @thead-td-sort                   | Function   | When you press the button sort
+  @tbody-undo-data                 | Function   | When you hit Ctrl / Cmd + Z for undo
+  @tbody-paste-data                | Function   | When you paste data to a cell
+  @tbody-up-dragtofill             | Function   | Fired when pressed up on dragToFill
+  @tbody-move-dragtofill           | Function   | Fired when moved on dragToFill
+  @tbody-nav-backspace             | Function   | When you press backspace on cell (event, actualElement, actualCol, rowIndex, colIndex)
+  @tbody-nav-multiple-backspace    | Function   | Fired when the multiple cell are delete
+  @tbody-submenu-click-{#}         | Function   | {#} - Name of the function declared on **submenu-tbody**
 
 
 ### Example

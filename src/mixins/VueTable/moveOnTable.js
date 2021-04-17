@@ -457,7 +457,7 @@ export const moveOnTable = {
         `td-${this.customTable}-${colIndex}-${rowIndex}`
       ][0];
 
-      this.tbodyData[rowIndex][header].stateCopy = false;
+      this.value[rowIndex][header].stateCopy = false;
       cleanProperty(td);
 
       if (!this.setFirstCell) {

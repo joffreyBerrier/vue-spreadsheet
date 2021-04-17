@@ -10,10 +10,3 @@ jobs:
       script:
       - yarn build
       - yarn test:unit
-
-    - stage: e2e
-      before_script:
-        - yarn install
-      script:
-      - yarn run serve &
-      - yarn snapshots
