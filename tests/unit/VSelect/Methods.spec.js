@@ -38,7 +38,7 @@ beforeEach(() => {
 describe("VSelect", () => {
   describe("Render component with props", () => {
     test("Vue Instance", () => {
-      expect(wrapper.isVueInstance()).toBeTruthy();
+      expect(wrapper.vm).toBeTruthy();
     });
   });
 
@@ -46,10 +46,11 @@ describe("VSelect", () => {
     test("emitted tbody-handle-to-open-select", () => {
       const select = wrapper.vm;
 
-      select.enableSelect("", header, row, rowIndex, colIndex);
+      select.enableSelect("", header, row.f, rowIndex, colIndex);
 
       expect(wrapper.emitted("tbody-handle-to-open-select")).toBeTruthy();
     });
+
     test("not emitted tbody-handle-to-open-select", () => {
       disabledEvent = () => {
         return true;
@@ -81,9 +82,14 @@ describe("VSelect", () => {
         return false;
       };
 
+      const fakeEvent = {
+        target: {
+          value: "",
+        },
+      };
       const select = wrapper.vm;
 
-      select.selectHandleChange("", header, row, "", rowIndex, colIndex);
+      select.selectHandleChange(fakeEvent, header, row, "", rowIndex, colIndex);
 
       expect(wrapper.emitted("tbody-handle-select-change")).toBeTruthy();
     });

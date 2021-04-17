@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <vue-table
-      :tbody-data="products"
+      v-model="products"
       :headers="headers"
       :custom-options="customOptions"
       :style-wrap-vue-table="styleWrapVueTable"
@@ -21,12 +21,8 @@
       @thead-submenu-click-change-value="changeValueThead"
       @thead-td-sort="sortProduct"
     >
-      <div slot="header">
-        Specific Header
-      </div>
-      <div slot="loader">
-        Loader
-      </div>
+      <div slot="header">Specific Header</div>
+      <div slot="loader">Loader</div>
     </vue-table>
   </div>
 </template>
@@ -81,7 +77,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 ::-moz-selection {
   color: #2c3e50;
   background: transparent;

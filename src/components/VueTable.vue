@@ -35,7 +35,7 @@
       <vue-tbody
         v-if="!loading"
         :ref="`${customTable}-vueTbody`"
-        :tbody-data="tbodyData"
+        :tbody-data="value"
         :headers="headers"
         :tbody-checkbox="customOptions.tbodyCheckbox"
         :tbody-index="customOptions.tbodyIndex"
@@ -79,11 +79,11 @@ import { moveOnTable } from "@/mixins/VueTable/moveOnTable";
 import { scrollOnTable } from "@/mixins/VueTable/scrollOnTable";
 import { undo } from "@/mixins/VueTable/undo";
 
+import Fuse from "fuse.js";
 import VueThead from "./Thead.vue";
 import VueTbody from "./TBody/TBody.vue";
 
 const lodashClonedeep = require("lodash.clonedeep");
-const Fuse = require("fuse.js");
 
 export default {
   name: "VueTable",
@@ -106,7 +106,7 @@ export default {
       type: Array,
       required: true,
     },
-    tbodyData: {
+    value: {
       type: Array,
       required: true,
     },
@@ -168,7 +168,7 @@ export default {
   },
   computed: {
     checkedRows() {
-      return this.tbodyData.filter((x) => x.checked);
+      return this.value.filter((x) => x.checked);
     },
     colHeaderWidths() {
       return this.headers.map((x) => parseInt(x.style.width, 10));
@@ -176,7 +176,7 @@ export default {
     filteredList() {
       if (this.lastSelectOpen) {
         const { selectOptions } = this.lastSelectOpen.col;
-        const { searchValue } = this.lastSelectOpen;
+        const { searchValue } = this.lastSelectOpen || "";
         const fuseSearch = new Fuse(selectOptions, this.customOptions.fuseOptions);
 
         if (searchValue && searchValue.length > 1) {
@@ -193,7 +193,7 @@ export default {
     },
   },
   watch: {
-    tbodyData() {
+    value() {
       this.createdCell();
     },
     headers() {
@@ -214,10 +214,7 @@ export default {
     },
     calculPosition(event, rowIndex, colIndex, header) {
       // If we calculPosition for dropdown, but there is no dropdown to render.
-      if (
-        header === "dropdown" &&
-        !this.tbodyData[rowIndex][this.headers[colIndex].headerKey].search
-      ) {
+      if (header === "dropdown" && !this.value[rowIndex][this.headers[colIndex].headerKey].search) {
         return;
       }
 
@@ -290,32 +287,32 @@ export default {
     },
     createdCell() {
       // create cell if isn't exist
-      this.tbodyData.forEach((tbody, rowIndex) => {
+      this.value.forEach((tbody, rowIndex) => {
         if (this.customOptions.tbodyCheckbox && !tbody.vuetable_checked) {
-          this.$set(this.tbodyData[rowIndex], "vuetable_checked", false);
+          this.$set(this.value[rowIndex], "vuetable_checked", false);
         }
 
         this.headerKeys.forEach((header) => {
           if (!tbody[header]) {
             const data = lodashClonedeep(this.customOptions.newData);
 
-            this.$set(this.tbodyData[rowIndex], header, data);
+            this.$set(this.value[rowIndex], header, data);
           } else if (!tbody[header].type && "value" in tbody[header]) {
             const data = lodashClonedeep(this.customOptions.newData);
             const copyTbody = lodashClonedeep(tbody[header]);
 
             copyTbody.type = data.type;
-            this.$set(this.tbodyData[rowIndex], header, copyTbody);
+            this.$set(this.value[rowIndex], header, copyTbody);
           }
 
-          const copy = lodashClonedeep(this.tbodyData[rowIndex][header]);
+          const copy = lodashClonedeep(this.value[rowIndex][header]);
 
           if (
-            !this.tbodyData[rowIndex][header].duplicate ||
-            (this.tbodyData[rowIndex][header].duplicate &&
-              this.tbodyData[rowIndex][header].duplicate === copy)
+            !this.value[rowIndex][header].duplicate ||
+            (this.value[rowIndex][header].duplicate &&
+              this.value[rowIndex][header].duplicate === copy)
           ) {
-            this.$set(this.tbodyData[rowIndex][header], "duplicate", copy);
+            this.$set(this.value[rowIndex][header], "duplicate", copy);
           }
         });
       });
@@ -333,7 +330,7 @@ export default {
       }
     },
     enableSelect(event, header, col, rowIndex, colIndex) {
-      const currentElement = this.tbodyData[rowIndex][header];
+      const currentElement = this.value[rowIndex][header];
 
       if (!col.search) {
         this.removeClass(["search", "show"]);
@@ -397,14 +394,14 @@ export default {
       }
 
       params.forEach((param) => {
-        this.tbodyData.forEach((data, index) => {
+        this.value.forEach((data, index) => {
           Object.keys(data).forEach((key) => {
             if (
-              this.tbodyData[index] &&
-              this.tbodyData[index][key] &&
-              this.tbodyData[index][key][param] === true
+              this.value[index] &&
+              this.value[index][key] &&
+              this.value[index][key][param] === true
             ) {
-              this.tbodyData[index][key][param] = false;
+              this.$set(this.value[index][key], param, false);
             }
           });
 
@@ -478,7 +475,7 @@ export default {
       const column = col;
 
       column.show = false;
-      this.$set(this.tbodyData[rowIndex][header], "value", this.tbodyData[rowIndex][header].value);
+      this.$set(this.value[rowIndex][header], "value", this.value[rowIndex][header].value);
 
       if (type === "select") {
         column.search = false;
@@ -488,20 +485,20 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 :root {
-  // select style
+  /* select style */
   --selectLeft: 0;
   --selectTop: 0;
   --selectWidth: 0;
 
-  // bg of comment triangle
+  /* bg of comment triangle */
   --borderCommentColor: #696969;
   --borderCommentSize: 8px;
   --boxCommentWidth: 120px;
   --BoxCommentHeight: 80px;
 
-  // rectangle style
+  /* rectangle style */
   --rectangleBottom: 0;
   --rectangleHeight: 40px;
   --rectangleLeft: 0;
@@ -509,24 +506,21 @@ export default {
   --rectangleTop: 0;
   --rectangleWidth: 100%;
 
-  // drag Header
+  /* drag Header */
   --dragHeaderHeight: 100%;
 }
-
-.vue-spreadsheet {
-  table {
-    table-layout: fixed;
-    margin: 0;
-    border-collapse: collapse;
-    border-spacing: 0;
-    th {
-      color: #000;
-      font-weight: normal;
-    }
-    td,
-    th {
-      margin: 0;
-    }
-  }
+.vue-spreadsheet table {
+  table-layout: fixed;
+  margin: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.vue-spreadsheet table th {
+  color: #000;
+  font-weight: normal;
+}
+.vue-spreadsheet table td,
+.vue-spreadsheet table th {
+  margin: 0;
 }
 </style>

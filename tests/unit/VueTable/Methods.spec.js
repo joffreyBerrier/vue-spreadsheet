@@ -7,7 +7,7 @@ import exempleData from "@/data";
 let wrapper;
 
 beforeEach(() => {
-  const tbodyData = exempleData.products;
+  const value = exempleData.products;
   const { headers } = exempleData;
   const { customOptions } = exempleData;
   const { styleWrapVueTable } = exempleData;
@@ -21,7 +21,7 @@ beforeEach(() => {
 
   wrapper = mount(VueTable, {
     propsData: {
-      tbodyData,
+      value,
       headers,
       customOptions,
       styleWrapVueTable,
@@ -41,7 +41,7 @@ beforeEach(() => {
 describe("VueTable", () => {
   describe("Render component with props", () => {
     test("Vue Instance", () => {
-      expect(wrapper.isVueInstance()).toBeTruthy();
+      expect(wrapper.vm).toBeTruthy();
     });
   });
 
@@ -70,15 +70,15 @@ describe("VueTable", () => {
 
       expect(tBody.headerKeys.find((x) => x === "h")).toBeTruthy();
       expect(tBody.customOptions.newData).toEqual(newData);
-      expect(tBody.tbodyData[0].h).toBeUndefined();
+      expect(tBody.value[0].h).toBeUndefined();
 
       tBody.createdCell();
 
-      expect(tBody.tbodyData[0].h).toBeTruthy();
-      expect(tBody.tbodyData[1].h).toBeTruthy();
-      expect(tBody.tbodyData[2].h).toBeTruthy();
-      expect(tBody.tbodyData[3].h).toBeTruthy();
-      expect(tBody.tbodyData[4].h).toBeTruthy();
+      expect(tBody.value[0].h).toBeTruthy();
+      expect(tBody.value[1].h).toBeTruthy();
+      expect(tBody.value[2].h).toBeTruthy();
+      expect(tBody.value[3].h).toBeTruthy();
+      expect(tBody.value[4].h).toBeTruthy();
     });
   });
 
@@ -131,13 +131,13 @@ describe("VueTable", () => {
       wrapper.vm.setFirstCell = false;
       wrapper.vm.updateSelectedCell(header, row, col);
       expect(wrapper.vm.setFirstCell).toBeTruthy();
-      expect(wrapper.vm.tbodyData[row][header].rectangleSelection).toBeTruthy();
+      expect(wrapper.vm.value[row][header].rectangleSelection).toBeTruthy();
     });
     test("setFirstCell = true", () => {
       wrapper.vm.setFirstCell = true;
       wrapper.vm.updateSelectedCell(header, row, col);
       expect(wrapper.vm.setFirstCell).toBeTruthy();
-      expect(wrapper.vm.tbodyData[row][header].rectangleSelection).toBeTruthy();
+      expect(wrapper.vm.value[row][header].rectangleSelection).toBeTruthy();
     });
   });
 
@@ -152,8 +152,8 @@ describe("VueTable", () => {
       };
 
       wrapper.vm.enableSelect("", header, col, rowIndex, colIndex);
-      expect(wrapper.vm.tbodyData[rowIndex][header].search).toBeFalsy();
-      expect(wrapper.vm.tbodyData[rowIndex][header].show).toBeFalsy();
+      expect(wrapper.vm.value[rowIndex][header].search).toBeFalsy();
+      expect(wrapper.vm.value[rowIndex][header].show).toBeFalsy();
       expect(wrapper.vm.lastSelectOpen).toBeNull();
     });
   });
@@ -170,7 +170,7 @@ describe("VueTable", () => {
   describe("handleTbodySelectChange", () => {
     test("return emit tbody-select-change", () => {
       const tBody = wrapper.vm;
-      const data = tBody.tbodyData[0].f;
+      const data = tBody.value[0].f;
       const fakeEvent = {
         keyCode: 99,
       };
@@ -189,7 +189,7 @@ describe("VueTable", () => {
 
     test("return emit tbody-change-data", () => {
       const tBody = wrapper.vm;
-      const data = tBody.tbodyData[1].f;
+      const data = tBody.value[1].f;
       const fakeEvent = {
         keyCode: 99,
       };
@@ -206,7 +206,7 @@ describe("VueTable", () => {
 
     test("return currentData", () => {
       const tBody = wrapper.vm;
-      const data = tBody.tbodyData[0].f;
+      const data = tBody.value[0].f;
       const fakeEvent = {
         keyCode: 99,
       };
@@ -230,7 +230,7 @@ describe("VueTable", () => {
 
     test("return currentData.show: false", () => {
       const tBody = wrapper.vm;
-      const data = tBody.tbodyData[0].f;
+      const data = tBody.value[0].f;
       const fakeEvent = {
         keyCode: 99,
       };
@@ -246,7 +246,7 @@ describe("VueTable", () => {
       expect(data.search).toBeFalsy();
       expect(data.show).toBeFalsy();
       expect(data.value).toEqual(option.value);
-      expect(tBody.tbodyData[tBody.oldTdShow.row][tBody.oldTdShow.key].show).toBeFalsy();
+      expect(tBody.value[tBody.oldTdShow.row][tBody.oldTdShow.key].show).toBeFalsy();
 
       expect(data.selectOptions.find((x) => x.value === option.value).active).toBeTruthy();
 
@@ -260,7 +260,7 @@ describe("VueTable", () => {
       const rowIndex = 0;
       const colIndex = 7;
       const header = "f";
-      const data = wrapper.vm.tbodyData[rowIndex][header];
+      const data = wrapper.vm.value[rowIndex][header];
       const { type } = data;
 
       data.show = true;
@@ -303,11 +303,11 @@ describe("VueTable", () => {
     const header = "a";
 
     test("show => be false | active => be truthly", () => {
-      wrapper.vm.tbodyData[row][header].show = true;
-      wrapper.vm.tbodyData[row][header].active = false;
+      wrapper.vm.value[row][header].show = true;
+      wrapper.vm.value[row][header].active = false;
       wrapper.vm.bindClassActiveOnTd(header, row, col);
-      expect(wrapper.vm.tbodyData[row][header].show).toBeFalsy();
-      expect(wrapper.vm.tbodyData[row][header].active).toBeTruthy();
+      expect(wrapper.vm.value[row][header].show).toBeFalsy();
+      expect(wrapper.vm.value[row][header].active).toBeTruthy();
     });
     test("oldTdActive equal to actualTd", () => {
       wrapper.vm.bindClassActiveOnTd(header, row, col);
@@ -329,7 +329,7 @@ describe("VueTable", () => {
         "stateCopy",
       ];
       // Add keys to true
-      const data = wrapper.vm.tbodyData[0].a;
+      const data = wrapper.vm.value[0].a;
 
       data.rectangleSelection = false;
       data.active = true;
@@ -341,8 +341,8 @@ describe("VueTable", () => {
       wrapper.vm.removeClass(fakeParams);
 
       // Expect keys are false
-      Object.values(wrapper.vm.tbodyData[0]).forEach((tbodyData) => {
-        const dataCompare = tbodyData;
+      Object.values(wrapper.vm.value[0]).forEach((value) => {
+        const dataCompare = value;
 
         expect(dataCompare.selected).toBeFalsy();
         expect(dataCompare.rectangleSelection).toBeFalsy();
@@ -374,7 +374,7 @@ describe("VueTable", () => {
       const rowIndex = 0;
       const colIndex = 7;
       const header = "f";
-      const data = vueTable.tbodyData[rowIndex][header];
+      const data = vueTable.value[rowIndex][header];
 
       vueTable.selectedCell = {
         header,
@@ -409,8 +409,8 @@ describe("VueTable", () => {
       };
       vueTable.selectedCoordCells = multipleProduct;
 
-      const col1 = vueTable.tbodyData[multipleProduct.rowStart][multipleProduct.keyStart];
-      const col2 = vueTable.tbodyData[multipleProduct.rowEnd][multipleProduct.keyEnd];
+      const col1 = vueTable.value[multipleProduct.rowStart][multipleProduct.keyStart];
+      const col2 = vueTable.value[multipleProduct.rowEnd][multipleProduct.keyEnd];
 
       vueTable.selectedMultipleCell = true;
       vueTable.copyStoreData("copy");
@@ -451,10 +451,10 @@ describe("VueTable", () => {
       };
       wrapper.vm.selectedCoordCells = multipleProduct;
 
-      const product1Col1 = wrapper.vm.tbodyData[multipleProduct.rowStart][multipleProduct.keyStart];
-      const product1Col2 = wrapper.vm.tbodyData[multipleProduct.rowStart][multipleProduct.keyEnd];
-      const product2Col1 = wrapper.vm.tbodyData[multipleProduct.rowEnd][multipleProduct.keyStart];
-      const product2Col2 = wrapper.vm.tbodyData[multipleProduct.rowEnd][multipleProduct.keyEnd];
+      const product1Col1 = wrapper.vm.value[multipleProduct.rowStart][multipleProduct.keyStart];
+      const product1Col2 = wrapper.vm.value[multipleProduct.rowStart][multipleProduct.keyEnd];
+      const product2Col1 = wrapper.vm.value[multipleProduct.rowEnd][multipleProduct.keyStart];
+      const product2Col2 = wrapper.vm.value[multipleProduct.rowEnd][multipleProduct.keyEnd];
 
       wrapper.vm.selectedMultipleCell = true;
       wrapper.vm.copyStoreData("copy");
@@ -736,13 +736,13 @@ describe("VueTable", () => {
     test("empty stored history", () => {
       const tBody = wrapper.vm;
 
-      tBody.tbodyData[1].a.value = "fake";
+      tBody.value[1].a.value = "fake";
       tBody.changeData(1, "a");
       const store = tBody.storeUndoData[tBody.storeUndoData.length - 1];
 
       tBody.rollBackUndo();
 
-      expect(tBody.tbodyData[store.rowIndex][store.header]).toEqual(store.cell.duplicate);
+      expect(tBody.value[store.rowIndex][store.header]).toEqual(store.cell.duplicate);
       expect(tBody.storeUndoData).toEqual([]);
       expect(wrapper.emitted("tbody-undo-data")).toEqual([[store.rowIndex, store.header, "fake"]]);
     });

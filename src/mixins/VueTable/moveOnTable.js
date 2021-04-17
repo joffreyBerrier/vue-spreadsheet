@@ -90,13 +90,7 @@ export const moveOnTable = {
       if (
         this.actualElement &&
         this.actualElement.getAttribute("current-table") === this.customTable.toString() &&
-        (event.keyCode === 37 ||
-          event.keyCode === 39 ||
-          event.keyCode === 40 ||
-          event.keyCode === 38 ||
-          event.keyCode === 13 ||
-          event.keyCode === 27 ||
-          event.keyCode === 8)
+        [37, 39, 40, 38, 13, 27, 8].includes(event.keyCode)
       ) {
         this.removeClass(["selected"]);
 
@@ -104,16 +98,16 @@ export const moveOnTable = {
         const rowIndex = Number(this.actualElement.getAttribute("data-row-index"));
         const dataType = this.actualElement.getAttribute("data-type");
         const header = this.actualElement.getAttribute("data-header");
-        const currentlyEditingCell = this.tbodyData[rowIndex][header].show;
+        const currentlyEditingCell = this.value[rowIndex][header].show;
 
         if (!currentlyEditingCell) {
           if (!this.setFirstCell) {
-            this.$set(this.tbodyData[rowIndex][header], "rectangleSelection", true);
+            this.$set(this.value[rowIndex][header], "rectangleSelection", true);
             this.setFirstCell = true;
           }
 
           // set colMax rowMax
-          const rowMax = this.tbodyData.length;
+          const rowMax = this.value.length;
           const colMax = this.headers.length;
 
           this.moveOnTable(event, colIndex, rowIndex);
@@ -126,7 +120,7 @@ export const moveOnTable = {
               this.selectedMultipleCell = false;
             }
 
-            this.$set(this.tbodyData[rowIndex][header], "active", false);
+            this.$set(this.value[rowIndex][header], "active", false);
             this.removeClass(["rectangleSelection"]);
 
             // left
@@ -134,7 +128,7 @@ export const moveOnTable = {
               const decrementHeader = Object.values(this.headerKeys)[colIndex - 1];
 
               if (decrementHeader) {
-                this.$set(this.tbodyData[rowIndex][decrementHeader], "active", true);
+                this.$set(this.value[rowIndex][decrementHeader], "active", true);
 
                 if (dataType === "select") {
                   this.activeSelectSearch(event, rowIndex, colIndex, decrementHeader);
@@ -142,7 +136,7 @@ export const moveOnTable = {
 
                 this.updateSelectedCell(decrementHeader, rowIndex, colIndex - 1);
               } else {
-                this.$set(this.tbodyData[rowIndex][header], "active", true);
+                this.$set(this.value[rowIndex][header], "active", true);
 
                 if (dataType === "select") {
                   this.activeSelectSearch(event, rowIndex, colIndex, header);
@@ -155,7 +149,7 @@ export const moveOnTable = {
             // top
             if (event.keyCode === 38) {
               if (rowIndex !== 0) {
-                this.$set(this.tbodyData[rowIndex - 1][header], "active", true);
+                this.$set(this.value[rowIndex - 1][header], "active", true);
 
                 if (dataType === "select") {
                   this.activeSelectSearch(event, rowIndex - 1, colIndex, header);
@@ -163,7 +157,7 @@ export const moveOnTable = {
 
                 this.updateSelectedCell(header, rowIndex - 1, colIndex);
               } else {
-                this.$set(this.tbodyData[rowIndex][header], "active", true);
+                this.$set(this.value[rowIndex][header], "active", true);
 
                 if (dataType === "select") {
                   this.activeSelectSearch(event, rowIndex, colIndex, header);
@@ -178,7 +172,7 @@ export const moveOnTable = {
               const incrementHeader = Object.values(this.headerKeys)[colIndex + 1];
 
               if (incrementHeader) {
-                this.$set(this.tbodyData[rowIndex][incrementHeader], "active", true);
+                this.$set(this.value[rowIndex][incrementHeader], "active", true);
 
                 if (dataType === "select") {
                   this.activeSelectSearch(event, rowIndex, colIndex, incrementHeader);
@@ -186,7 +180,7 @@ export const moveOnTable = {
 
                 this.updateSelectedCell(incrementHeader, rowIndex, colIndex + 1);
               } else {
-                this.$set(this.tbodyData[rowIndex][header], "active", true);
+                this.$set(this.value[rowIndex][header], "active", true);
 
                 if (dataType === "select") {
                   this.activeSelectSearch(event, rowIndex, colIndex, header);
@@ -199,7 +193,7 @@ export const moveOnTable = {
             // bottom
             if (event.keyCode === 40) {
               if (rowIndex + 1 !== rowMax) {
-                this.$set(this.tbodyData[rowIndex + 1][header], "active", true);
+                this.$set(this.value[rowIndex + 1][header], "active", true);
 
                 if (dataType === "select") {
                   this.activeSelectSearch(event, rowIndex + 1, colIndex, header);
@@ -207,7 +201,7 @@ export const moveOnTable = {
 
                 this.updateSelectedCell(header, rowIndex + 1, colIndex);
               } else {
-                this.$set(this.tbodyData[rowIndex][header], "active", true);
+                this.$set(this.value[rowIndex][header], "active", true);
 
                 if (dataType === "select") {
                   this.activeSelectSearch(event, rowIndex, colIndex, header);
@@ -226,7 +220,7 @@ export const moveOnTable = {
           // press enter
           if (event.keyCode === 13) {
             if (this.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`]) {
-              this.tbodyData[rowIndex][header].show = true;
+              this.value[rowIndex][header].show = true;
               this.$refs[`input-${this.customTable}-${colIndex}-${rowIndex}`][0].focus();
             }
 
@@ -242,7 +236,7 @@ export const moveOnTable = {
 
           // press esc
           if (event.keyCode === 27) {
-            this.tbodyData[rowIndex][header].active = false;
+            this.value[rowIndex][header].active = false;
             this.storeCopyDatas = [];
             this.removeClass(["stateCopy"]);
           }
@@ -344,7 +338,7 @@ export const moveOnTable = {
       // enter
       if (event.keyCode === 13) {
         const oldSelect = this.lastSelectOpen;
-        const currentSelect = this.tbodyData[oldSelect.rowIndex][oldSelect.header];
+        const currentSelect = this.value[oldSelect.rowIndex][oldSelect.header];
 
         this.handleTbodySelectChange(
           event,
@@ -360,7 +354,7 @@ export const moveOnTable = {
       event.preventDefault();
       let header = h;
 
-      this.$set(this.tbodyData[rowIndex][header], "active", false);
+      this.$set(this.value[rowIndex][header], "active", false);
       this.incrementCol = this.incrementCol ? this.incrementCol : colIndex;
       this.incrementRow = this.incrementRow ? this.incrementRow : rowIndex;
 
@@ -403,7 +397,7 @@ export const moveOnTable = {
         if (colMax >= this.incrementCol + 2) {
           this.incrementCol += 1;
         } else {
-          this.$set(this.tbodyData[rowIndex][header], "active", true);
+          this.$set(this.value[rowIndex][header], "active", true);
         }
       }
 
@@ -412,19 +406,19 @@ export const moveOnTable = {
         if (rowMax >= this.incrementRow + 2) {
           this.incrementRow += 1;
         } else {
-          this.$set(this.tbodyData[rowIndex][header], "active", true);
+          this.$set(this.value[rowIndex][header], "active", true);
         }
       }
 
       header = Object.values(this.headerKeys)[this.incrementCol];
-      this.$set(this.tbodyData[this.incrementRow][header], "active", true);
+      this.$set(this.value[this.incrementRow][header], "active", true);
       this.handleSelectMultipleCell(event, header, this.incrementRow, this.incrementCol);
     },
     handleTbodyNavBackspace(rowIndex, colIndex, header) {
       if (this.selectedMultipleCell) {
         this.modifyMultipleCell("removeValue");
       } else {
-        const cell = this.tbodyData[rowIndex][header];
+        const cell = this.value[rowIndex][header];
 
         if (!cell.disabled || !!cell.value) {
           cell.value = "";
@@ -434,22 +428,25 @@ export const moveOnTable = {
       }
     },
     handleTbodySelectChange(event, header, col, option, rowIndex, colIndex) {
-      const currentData = this.tbodyData[rowIndex][header];
+      const currentData = this.value[rowIndex][header];
 
       currentData.selectOptions.forEach((selectOption) => {
         const sOption = selectOption;
 
         sOption.active = false;
       });
-      currentData.selectOptions.find((x) => x.value === option.value).active = true;
+
+      const value = option.value || option.item.value;
+
+      currentData.selectOptions.find((x) => x.value === value).active = true;
 
       this.$set(currentData, "search", false);
       this.$set(currentData, "show", false);
-      this.$set(currentData, "value", option.value);
+      this.$set(currentData, "value", value);
 
       this.lastSelectOpen = null;
       // remove class show on select when it change
-      if (this.oldTdShow) this.tbodyData[this.oldTdShow.row][this.oldTdShow.key].show = false;
+      if (this.oldTdShow) this.value[this.oldTdShow.row][this.oldTdShow.key].show = false;
       this.enableSubmenu();
       // callback
       this.$emit("tbody-select-change", event, header, col, option, rowIndex, colIndex);
@@ -464,7 +461,7 @@ export const moveOnTable = {
       cleanProperty(td);
 
       if (!this.setFirstCell) {
-        this.$set(this.tbodyData[rowIndex][header], "rectangleSelection", true);
+        this.$set(this.value[rowIndex][header], "rectangleSelection", true);
         this.setFirstCell = true;
       }
 
