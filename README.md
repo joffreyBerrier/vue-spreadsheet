@@ -11,7 +11,7 @@ https://medium.com/js-dojo/how-to-publish-a-vuejs-component-on-npm-aa703714b512
 
 *Open this link on a new tab*
 
-[![Edit vuejs-spreadsheet](https://codesandbox.io/static/img/play-codesandbox.svg)](https://wctsv.csb.app/)
+[![Edit vuejs-spreadsheet](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vue-spreadsheet-wctsv?fontsize=14&hidenavigation=1&theme=dark&view=preview)
 
 
 ## Description
