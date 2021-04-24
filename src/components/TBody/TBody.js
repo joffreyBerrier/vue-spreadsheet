@@ -55,8 +55,6 @@ export default {
     return {
       emptyCell: "",
       eventDrag: false,
-      oldTooltipHover: {},
-      oldValue: null,
       submenuEnableCol: null,
       submenuEnableRow: null,
       vuetableTooltip: {},

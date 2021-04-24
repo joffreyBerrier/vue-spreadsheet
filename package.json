@@ -1,6 +1,6 @@
 {
   "name": "vuejs-spreadsheet",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "An easier Spreadsheet in Vue",
   "main": "dist/vuespreadsheet.common.js",
   "author": "Joffrey Berrier <joffrey.berrier@gmail.com>",
@@ -10,12 +10,15 @@
   },
   "files": [
     "dist/*",
-    "src/*",
+    "types/*",
     "*.json"
   ],
   "keywords": [
     "vue",
     "vue-table",
+    "vuejs",
+    "typescript",
+    "components",
     "vue-spreadsheet",
     "vue-spreadsheet-component"
   ],
@@ -26,6 +29,7 @@
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
+  "types": "./types/main.d.ts",
   "license": "MIT",
   "dependencies": {
     "core-js": "^3.6.4",
@@ -56,5 +60,8 @@
   "bugs": {
     "url": "https://github.com/joffreyBerrier/vue-spreadsheet/issues"
   },
-  "homepage": "https://github.com/joffreyBerrier/vue-spreadsheet#readme"
+  "homepage": "https://github.com/joffreyBerrier/vue-spreadsheet#readme",
+  "engines": {
+    "node": "14.15.4"
+  }
 }
