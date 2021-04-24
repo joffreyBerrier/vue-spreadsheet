@@ -51,7 +51,6 @@ describe("TBody", () => {
 
       expect(tBody.emptyCell).toEqual("");
       expect(tBody.eventDrag).toBeFalsy();
-      expect(tBody.oldValue).toBeNull();
       // expect(tBody.searchInput).toEqual("");
       expect(tBody.submenuEnableCol).toBeNull();
       expect(tBody.submenuEnableRow).toBeNull();
