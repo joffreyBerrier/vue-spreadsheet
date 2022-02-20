@@ -1,3 +1,6 @@
+# Vue3 version
+https://github.com/joffreyBerrier/vue-datepicker
+
 # :fire: Vue Spreadsheet 2.2.1 :fire:
 https://github.com/joffreyBerrier/vue-spreadsheet/releases/tag/2.2.1
 
