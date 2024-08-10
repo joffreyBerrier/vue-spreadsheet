@@ -19,7 +19,7 @@ https://medium.com/js-dojo/how-to-publish-a-vuejs-component-on-npm-aa703714b512
 
 ## Description
 
-:facepunch: An easier Spreadsheet in Vue.js :facepunch:
+:facepunch: An easy-to-use Spreadsheet in Vue.js :facepunch:
 
 Do not hesitate to :star: my repo
 
